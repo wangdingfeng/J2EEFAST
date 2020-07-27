@@ -1,4 +1,7 @@
-> #### 已更新前端组件功能,重构权限控制.
+> #### 近期更新 新增第三方登录集成JustAuth插件，后台配置既可以实现、优化表格多列显示不友好问题,支持冻结首尾列、新增上传文件上传组件(使用webUploadex插件)
+|  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/173811_96de4cdf_1816537.png "屏幕截图.png")| ![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/173850_37942597_1816537.png "屏幕截图.png")  |
+|---|---|
+|![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/174616_6347cc67_1816537.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/175000_0d2f94f5_1816537.png "屏幕截图.png")|
 
 * [J2eeFast技术交流群[805468934]](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
 #### ***工作流模块 演示体验***
