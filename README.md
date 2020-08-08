@@ -86,7 +86,7 @@ spring:
 注意:
     fast-admin模块 资源目录 application-Test.yml 中修改连接数据库 链接地址 如果你是按照initDb.sql 建库，test.sql导入初始数据 则账号密码用户名都不需要修改
 
-6. ****[搭建文档](https://gitee.com/zhouhuanOGP/J2EEFAST/wikis)**** 
+6. ****[搭建文档](https://www.yuque.com/u1174484/j2eefast/kt0nbi)**** 
 #### 参与贡献
 
 1.  本项目设计思路借鉴了当前gitee中 开源项目中后台管理框架众多优秀项目的设计思路
@@ -122,13 +122,13 @@ spring:
     * 新增用户查询侧边栏关联机构
     * 优化其他细节
 
-2. [更新日志](https://gitee.com/zhouhuanOGP/J2EEFAST/wikis/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97?sort_id=2192344) 
+2. [更新日志](https://www.yuque.com/u1174484/j2eefast/yscyux4) 
 
 #### 关于系统
 * J2eeFAST (快速开发开源系统)名字由来:包含作者对于软件开发的美好幻想，希望软件开发变的快速而简单，每个人都能分享自己的技术从而达到快速又强大的软件系统,让我们有更多的时间去陪伴家人!你可能在本系统中看到众多优秀开源项目的影子，因为她本身集成了众多优秀的开源项目精华功能，在这种环境中成长的，但是她目前还有很多缺点，希望大神们嘴下留情。如果你也喜欢开源、喜欢本项目,作者欢迎您的加入, J2eeFAST会因为您的加入而变的更加完善与丰富!
 * 如果本项目对你有帮助,[请点击Star收藏](https://gitee.com/zhouhuanOGP/J2EEFAST),**本项目会长期维护**,若你在使用中有任何问题或建议,欢迎在[码云issue提交问题](https://gitee.com/zhouhuanOGP/J2EEFAST/issues)作者会第一时间处理，让我们一起完善J2eeFAST
 * 官网: [http://www.j2eefast.com](http://www.j2eefast.com)
-* 关于文档：[Gitee Wiki 文档](https://gitee.com/zhouhuanOGP/J2EEFAST/wikis/pages)
+* 关于文档：[雀语 文档](https://www.yuque.com/u1174484/j2eefast)
 * 关于更新：项目现在会放缓更新优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
 * QQ群：[805468934](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
 #### 免责声明：
