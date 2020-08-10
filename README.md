@@ -1,20 +1,3 @@
-> #### 近期更新 新增第三方登录集成JustAuth插件，后台配置既可以实现、优化表格多列显示不友好问题,支持冻结首尾列、新增上传文件上传组件(使用webUploadex插件)
-|  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/173811_96de4cdf_1816537.png "屏幕截图.png")| ![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/173850_37942597_1816537.png "屏幕截图.png")  |
-|---|---|
-|![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/174616_6347cc67_1816537.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2020/0727/175000_0d2f94f5_1816537.png "屏幕截图.png")|
-
-* [J2eeFast技术交流群[805468934]](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
-#### ***工作流模块 演示体验***
-最大管理员 账号:admin  密码:admin  登陆用户管理可以看到所以用户,请假流程请对应相关人员登陆系统体验,其他账户密码都是123456
-
-|  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/094307_dbb5d455_1816537.png "屏幕截图.png")   |   ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/094414_5227f8e5_1816537.png "屏幕截图.png")  |  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/094709_13054ff3_1816537.png "屏幕截图.png")   |
-| --- | --- | --- |
-|   ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/094858_be36796f_1816537.png "屏幕截图.png")  |  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/094942_c0626c47_1816537.png "屏幕截图.png")   | ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/095112_bcddcb0a_1816537.png "屏幕截图.png")    |
-|  ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/095150_40d615d7_1816537.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/095915_bde5078e_1816537.png "屏幕截图.png") | ![输入图片说明](https://images.gitee.com/uploads/images/2020/0430/095223_c92dffe5_1816537.png "屏幕截图.png") |
-
-
-  **_说明:最新代码已更新大家可以下载体验,有问题可以加群** 
-
 # J2eeFAST
 
 J2eeFAST 是一个 Java EE 企业级快速开发平台，基于经典技术组合（Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE）采用经典开发模式，让初学者能够更快的入门并投入到团队开发中去。 在线代码生成功能，包括核心模块如：组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、内容管理、license认证,BPM工作流等。采用松耦合设计；界面无刷新，一键换肤；众多账号安全设置，密码策略；在线定时任务配置；支持多数据源；支持读写分离、分库分表.
@@ -93,35 +76,30 @@ spring:
 
 ####  版本更新
 * 本次更新
-    * `2020-06-23 v2.0.7 ` 
-    * 删除多余依赖
-    * @paradisehere 修复新建菜单，尚未新建菜单时左侧菜单栏404报错
-    * 新增一个表单显示国际化案例
-    * @临时的 增加了代码产生模块表构结刷新功能
-    * @临时的 代码生成模块修正checkbox在增删改查，列表使用问题
-    *  @临时的 增加了一个单表的增删改查范例，基本包含了目前的所有表单控件
-    * 修复代码生成页面大量空格格式问题
-    * 新增多级菜单演示
-    * 修复代码生成器选择生成路径获取本地磁盘有光驱报错问题
-    * 修复弹窗加载遮罩问题
-    * 重构项目系统数据权限
-    * 重构前端页面布局
-    * 新增前端组件功能
-    * 优化项目启动
-    * 升级fastjson 1.2.69, 防止安全漏洞
-    * 新增系统手动热加载mapper.xml, 修改mapper文件无需重启项目,配合开发工具到此本项目开发无需重启项目整体实现热加载
-    * 新增前端引擎使用，组件使用demo
-    * 新增登录提示音
-    * 修复bootstrap-table.js源码压缩阅读不友好问题
-    * 新增表格行title提示
-    * 优化用户登录解密异常问题
-    * 重构项目定时任务模块
-    * 修改权限控制，数据控制精确到菜单权限上.便于更加细致化的控制
-    * layer.js 增强type=2 iframe 层POST可以POST 提交
-    * 参数管理、字典管理新增缓存清除功能,便于开发清除缓存
-    * 新增用户查询侧边栏关联机构
-    * 优化其他细节
-
+    * `2020-08-10 v2.0.8 ` 
+    *  解决issues #I1LLJX 问题,页面多个表格回调混乱问题.
+    *  修复用户头像不存在、或者头像地址异常显示问题
+    *  修复CVE-2020-11996 | Apache Tomcat HTTP/2拒绝服务漏洞
+    *  修复JAT 设置日志名称路径无效问题
+    *  修改输入框后图标带点击事件样式.
+    *  优化页面ibox卡片样式UI
+    *  新增登录验证码类型[支持算数格式]
+    *  修复系统监控获取硬盘信息光驱问题
+    *  修复表格冻结列问题
+    *  优化表格冻结列样式
+    *  扩增字典表数据值长度
+    *  新增上传组件.
+    *  优化代码生成器新增关联公司机构，支持生成TAB页面
+    *  新增第三方登录集成JustAuth插件
+    *  新增上传文件管理表与业务关联表
+    *  代码生成器支持单独生成实体类，支持代码生成业务关联上传组件
+    *  支持上传信息在线预览功能，fastJS.js 新增打开视图方法
+    *  新增多级联动控件(未优化完),新增多级异步联动示例
+    *  项目文档转移至[语雀]、Gitee WIKI文档不在维护、更新
+    *  针对项目关键JS进行加密压缩、生成环境提高项目安全性
+    *  新增无密登录方法
+    *  优化其他细节
+    
 2. [更新日志](https://www.yuque.com/u1174484/j2eefast/yscyux) 
 
 #### 关于系统
@@ -144,18 +122,13 @@ spring:
 >  **Github(辅): [https://github.com/zhouhuan751312/J2EEFAST](https://github.com/zhouhuan751312/J2EEFAST)** 
 
 #### 演示图
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0411/013701_bdeebf4a_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0411/013817_82639c6c_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0417/093813_bbe9a509_1816537.jpeg "在这里输入图片标题")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0328/234931_48e39435_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/142557_2b61c8bb_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143045_4257591d_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143126_14c6028e_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143208_4fc272f0_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143225_79a0cc62_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143804_b6608568_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0328/235226_d2af8f89_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143840_e4b06bc2_1816537.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143916_9cfb2619_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/142538_cbb9c00b_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/142603_c1621423_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/142654_9e13c66b_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/142907_d37c6adf_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/142932_30f1f459_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/143020_d4583af2_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/143057_462c279f_1816537.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0810/143152_b0ff9fd0_1816537.png "屏幕截图.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/143945_f7f210f4_1816537.png "屏幕截图.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0320/144019_b2834f9c_1816537.png "屏幕截图.png")
