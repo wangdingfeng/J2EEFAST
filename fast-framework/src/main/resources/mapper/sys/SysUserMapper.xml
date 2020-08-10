@@ -117,6 +117,20 @@
         WHERE username = #{userName} AND del_flag = '0'
     </select>
 
+    <select id="findAuthByUuid" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
+        SELECT b.id AS "id", b.username AS "username",b.password AS "password" FROM sys_auth_user a LEFT JOIN sys_user b on a.user_id = b.id
+        WHERE a.uuid = #{uuid} AND b.del_flag = '0'
+    </select>
+
+    <select id="findAuthByUserName" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
+        SELECT b.id AS "id", b.username AS "username",b. name AS "name", b.password AS "password",
+        b.salt AS "salt", b.email AS "email", b.mobile AS "mobile", b.status AS "status", b.pwd_security_level AS "pwdSecurityLevel",
+        b.pwd_update_date AS "pwdUpdateDate", b.comp_id AS "compId", b.dept_id AS "deptId",
+        b.create_time AS "createTime", b.card_id AS "cardId", b.avatar AS "avatar", b.update_time AS "updateTime", a.source AS "source",
+        b.update_by AS "updateBy", b.create_by AS "createBy", b.remark AS "remark" FROM sys_auth_user a LEFT JOIN sys_user b on a.user_id = b.id
+        WHERE b.username = #{username} AND b.del_flag = '0'
+    </select>
+
     <select id="findUserByMobile" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="selectsysUserVo"/>
         WHERE mobile = #{mobile} AND del_flag = '0'

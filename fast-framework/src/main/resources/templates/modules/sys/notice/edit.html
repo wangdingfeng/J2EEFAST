@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>公告标题：</label>
                 <div class="col-sm-8">
-                    <@form.input name="noticeTitle" value="${notice.noticeTitle}" placeholder="请输入公告标题" required="true"/>
+                    <@form.input name="noticeTitle" value="${notice.noticeTitle}" placeholder="请输入公告标题" required=true/>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>公告类型：</label>
                 <div class="col-sm-8">
-                    <@form.select name="noticeType" value="${notice.noticeType}" dictType="sys_notice_type" required="true"/>
+                    <@form.select name="noticeType" value="${notice.noticeType}" dictType="sys_notice_type" required=true/>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">提示标题：</label>
                 <div class="col-sm-8">
-                    <@form.input name="noticeTipTitle" value="${notice.noticeTipTitle}" maxlength="100" placeholder="提示标题" required="true"/>
+                    <@form.input name="noticeTipTitle" value="${notice.noticeTipTitle}" maxlength="100" placeholder="提示标题" required=true/>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>等级：</label>
                 <div class="col-sm-8">
-                    <@form.select name="noticeLevel" value="${notice.noticeLevel}" dictType="sys_notice_level" required="true"/>
+                    <@form.select name="noticeLevel" value="${notice.noticeLevel}" dictType="sys_notice_level" required=true/>
                 </div>
             </div>
         </div>

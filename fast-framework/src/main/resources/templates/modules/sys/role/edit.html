@@ -19,7 +19,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "管理模块"/>：</label>
         <div class="col-sm-8">
-            <@form.checkbox name="moduleCodes" value="${selectModules}" items=modules itemLabel="moduleName" itemValue="moduleCode" required="true"/>
+            <@form.checkbox name="moduleCodes" value="${selectModules}" items=modules itemLabel="moduleName" itemValue="moduleCode" required=true/>
 <#--            <#list modules>-->
 <#--                <#items as d>-->
 <#--                    <#if d.status =='0' >-->
@@ -52,7 +52,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>显示顺序：</label>
         <div class="col-sm-8">
-            <@form.input name="roleSort" value="${role.roleSort?default('')}"  required="true"/>
+            <@form.input name="roleSort" value="${role.roleSort?default('')}"  required=true/>
         </div>
     </div>
     <div class="form-group">

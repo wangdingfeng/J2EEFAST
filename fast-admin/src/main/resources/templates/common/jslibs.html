@@ -5,7 +5,6 @@
   @date 2020-05-20
   @version v1.0.1
 -->
-
 <#macro js Libs=""
 >
 <#-- Bootstrap 3.3.7 -->
@@ -25,6 +24,7 @@
         <#list Libs as x>
             <#if x == "table">
                 <#--bootstrap-table 表格插件-->
+<#--                <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.js?V=${config.getDvVersion()}"></script>-->
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.min.js?V=${config.getDvVersion()}"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/resizable/colResizable-1.5.min.js?V=${config.getDvVersion()}"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/resizable/bootstrap-table-resizable.js?V=${config.getDvVersion()}"></script>
@@ -51,6 +51,9 @@
             <#-- 头像裁剪-->
             <#if x == "cropbox">
                 <script src="${ctxStatic}/static/plugins/cropbox/cropbox.js?V=${config.getDvVersion()}"></script>
+            </#if>
+            <#if x == "cropper">
+                <script src="${ctxStatic}/static/plugins/cropper/cropper.min.js?V=${config.getDvVersion()}"></script>
             </#if>
             <#-- 页面代码格式化-->
             <#if x == "prism">
@@ -84,6 +87,17 @@
             <#-- 左右布局-->
             <#if x == "layout-latest">
                 <script src="${ctxStatic}/static/plugins/jquery-layout/jquery.layout-latest.js?V=${config.getDvVersion()}"></script>
+            </#if>
+            <#-- 文件上传-->
+            <#if x == "fileupload">
+            	<script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.js?V=${config.getDvVersion()}"></script>
+<#--                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.js?V=${config.getDvVersion()}"></script>-->
+            </#if>
+            <#-- 表格拖拽-->
+            <#if x == "tableReorder">
+                <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/reorder/bootstrap-table-reorder.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/reorder/jquery.tablednd.js?V=${config.getDvVersion()}"></script>
             </#if>
             <#-- 可自行扩展, 如果插件有CSS样式请在 cssLibs 相应添加-->
         </#list>

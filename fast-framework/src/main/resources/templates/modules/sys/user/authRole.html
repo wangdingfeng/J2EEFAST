@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "账号"/>：</label>
                 <div class="col-sm-8">
-                    <@form.input name="username" value="${user.username?default('')}" readonly="true" />
+                    <@form.input name="username" value="${user.username?default('')}" readonly=true />
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "用户姓名"/>：</label>
                 <div class="col-sm-7">
-                    <@form.input name="name" value="${user.name?default('')}" readonly="true" />
+                    <@form.input name="name" value="${user.name?default('')}" readonly=true />
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                 modalName: "角色",
                 columns: [
                     {
-                        field: 'state',
+                        // field: 'state',
                         checkbox: true
                         ,formatter:function (value, row, index) {
                             for(var i=0; i<data.length; i++){ /*设置默认勾选*/

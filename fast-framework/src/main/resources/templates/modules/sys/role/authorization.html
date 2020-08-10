@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "角色名称"/>：</label>
                 <div class="col-sm-8">
-                    <@form.input name="roleName" value="${role.roleName?default('')}" readonly="true"  required="true"/>
+                    <@form.input name="roleName" value="${role.roleName?default('')}" readonly=true  required=true/>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "角色编码"/>：</label>
                 <div class="col-sm-7">
-                    <@form.input name="roleKey" value="${role.roleKey?default('')}" readonly="true"  required="true"/>
+                    <@form.input name="roleKey" value="${role.roleKey?default('')}" readonly=true  required=true/>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "管理模块"/>：</label>
                 <div class="col-sm-8">
-                    <@form.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${selectModules}" itemValue="moduleCode" required="true"/>
+                    <@form.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${selectModules}" itemValue="moduleCode" required=true/>
                 </div>
             </div>
         </div>

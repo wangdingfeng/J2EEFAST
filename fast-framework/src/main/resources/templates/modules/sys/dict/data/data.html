@@ -65,8 +65,8 @@
             },
             /*页面重置按钮*/
             resetPre:function() {
-                opt.form.reset("","","dictType");
-                $("#dictType").val($("#dictType").val()).trigger("change");
+                // $("#dictType").val($("#dictType").val()).trigger("change");
+                opt.form.reset("data-form","","dictType");
             },
             /*字典数据-新增字典*/
             add :function() {
@@ -89,26 +89,40 @@
                 columns: [
                      /*{checkbox: true},*/
                     {field: 'id', title: "<@ctx.i18n text = "字典编码"/>", sortable: true},
+                    {field: 'dictValue', title: "<@ctx.i18n text = "字典键值"/>",formatter:function (value) {
+                            return $.table.tooltip(value,20);
+                    }},
                     {field: 'dictLabel', title: "<@ctx.i18n text = "字典标签"/>", formatter: function(value, row, index) {
+
                             var actions = [];
                             var listClass = "";
-                            if(!opt.common.isEmpty(row.cssClass)){
-                                listClass = opt.common.isEmpty(row.cssClass) ? "" : row.cssClass;
-                            }
+                            var style = "";
+
                             if(!opt.common.isEmpty(row.cssStyle)){
-                                listClass = row.cssStyle;
+                                style = row.cssStyle;
                             }
+                            if(!opt.common.isEmpty(row.cssClass)){
+                                listClass = row.cssClass;
+                            }
+
                             if(opt.common.isEmpty(listClass)){
-                                listClass = opt.common.equals("default", row.listClass) || opt.common.isEmpty(row.listClass) ? "" : "badge badge-" + row.listClass;
+                                if(!opt.common.isEmpty(row.listClass)){
+                                    listClass = row.listClass;
+                                }
                             }
-                            if(!opt.common.isEmpty(row.cssStyle)) {
-                                actions.push(opt.common.sprintf("<span style='%s'>%s</span>", listClass, value));
+
+                            if(!opt.common.isEmpty(style) || !opt.common.isEmpty(listClass)){
+                                actions.push(opt.common.sprintf("<span %s %s>%s</span>",
+                                    !opt.common.isEmpty(style)?"style='"+style + "'":"",
+                                    opt.common.isEmpty(listClass)  || !opt.common.isEmpty(style)  ? "":opt.common.equals("default", row.listClass) || opt.common.isEmpty(row.listClass) ?
+                                        "class='"+listClass+"'" : "class='badge badge-" + row.listClass+"'",
+                                    value));
+                                return actions.join('');
                             }else{
-                                actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, value));
+                                return $.table.tooltip(value,20);
                             }
-                            return actions.join('');
-                    }},
-                    {field: 'dictValue', title: "<@ctx.i18n text = "字典键值"/>"},
+
+                        }},
                     {field: 'dictSort', title: "<@ctx.i18n text = "字典排序"/>",sortable: true},
                     {field: 'status', title: "<@ctx.i18n text = "状态"/>", align: 'center', formatter: function(value, row, index) {
                             return $.table.selectDictLabel(datas, value);

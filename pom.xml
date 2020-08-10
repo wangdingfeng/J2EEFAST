@@ -44,12 +44,15 @@
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <commons-logging.version>1.2</commons-logging.version>
+        <!-- 验证码-->
         <easy.captcha>1.6.2</easy.captcha>
+        <!--<captcha.version>1.2.4</captcha.version>-->
         <velocity.version>1.7</velocity.version>
         <hutool.version>5.2.1</hutool.version>
         <spring-cloud.version>Finchley.SR2</spring-cloud.version>
         <lombok.versin>1.18.4</lombok.versin>
         <oracle.version>11.2.0.3</oracle.version>
+        <oauth.version>1.15.6</oauth.version>
     </properties>
     <!-- 依赖声明 -->
     <dependencyManagement>
@@ -80,6 +83,12 @@
                 <version>${slf4j.version}</version>
                 <optional>true</optional>
             </dependency>
+
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>${oauth.version}</version>
+            </dependency>
             
             <!-- Java图形验证码-->
             <dependency>
@@ -87,6 +96,13 @@
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy.captcha}</version>
             </dependency>
+            <!--
+            <dependency>
+                <groupId>com.github.anji-plus</groupId>
+                <artifactId>captcha-spring-boot-starter</artifactId>
+                <version>${captcha.version}</version>
+            </dependency>
+            -->
 
             <dependency>
                 <groupId>org.slf4j</groupId>

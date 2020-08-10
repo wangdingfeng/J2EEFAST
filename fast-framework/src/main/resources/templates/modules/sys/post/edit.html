@@ -8,27 +8,27 @@
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "岗位编码"/>：
         </label>
         <div class="col-sm-8">
-            <@form.input name="postCode" value="${sysPost.postCode?default('')}" required="true"/>
+            <@form.input name="postCode" value="${sysPost.postCode?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "岗位名称"/>：
         </label>
         <div class="col-sm-8">
-            <@form.input name="postName"  value="${sysPost.postName?default('')}" required="true"/>
+            <@form.input name="postName"  value="${sysPost.postName?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "显示顺序"/>：
         </label>
         <div class="col-sm-8">
-            <@form.input name="postSort"  value="${sysPost.postSort?default('')}" required="true"/>
+            <@form.input name="postSort"  value="${sysPost.postSort?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "岗位分类"/>：</label>
         <div class="col-sm-8">
-            <@form.select name="postType" value="${sysPost.postType?default('')}" dictType="sys_post_type" required="true"/>
+            <@form.select name="postType" value="${sysPost.postType?default('')}" dictType="sys_post_type" required=true/>
         </div>
     </div>
     <div class="form-group">

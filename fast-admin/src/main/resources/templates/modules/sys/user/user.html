@@ -39,7 +39,7 @@
                                 <label><@ctx.i18n text = "机构查询"/></label>：
                                 <div class="control-div width-150">
                                 <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-                                expandLevel="true"
+                                expandLevel=true
                                 placeholder="请选择上级机构"/>
                                 </div>
                             </li>
@@ -108,7 +108,10 @@
             pageSize: 12,
             pageList: [12, 24, 36],
             sortName: "createTime",
-
+            // fixedColumns: true,
+            // fixedNumber: 3,
+            // rightFixedColumns: true,
+            // rightFixedNumber: 1,
             uniqueId: "id", /* 唯一ID */
             modalName: "用户",
             columns:[

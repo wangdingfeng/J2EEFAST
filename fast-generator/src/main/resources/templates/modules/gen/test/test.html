@@ -1,137 +1,58 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="单表范例列表" bodyClass="gray-bg animated fadeInRight" isAnimation="false" libs=["table","zTree","layout-latest"]/>
+<@header title="代码生成范例列表" bodyClass="gray-bg animated fadeInRight" isAnimation="false" libs=["table","zTree","layout-latest"]/>
 <div class="container-div">
-<div class="row">
-<div class="col-sm-12 search-collapse">
-<@form.form id="test-form" class="form-inline">
-<div class="select-list">
-    <ul>
+ <div class="row">
+  <div class="col-sm-12 search-collapse">
+    <@form.form id="test-form" class="form-inline">
+     <div class="select-list">
+      <ul>
            <li>
-              <label> <@ctx.i18n text = "name"/>：
-               <input type="text" placeholder="LIKE" name="name"/> </label>
+              <label> <@ctx.i18n text = "员工编号"/>：
+               <input type="text" placeholder="员工编号" name="code"/> </label>
             </li>
            <li>
-              <label> <@ctx.i18n text = "email"/>：
-               <input type="text" placeholder="EQ" name="email"/> </label>
+              <label> <@ctx.i18n text = "姓名"/>：
+               <input type="text" placeholder="姓名" name="name"/> </label>
+            </li>
+           <li>
+              <label> <@ctx.i18n text = "邮箱"/>：
+               <input type="text" placeholder="邮箱" name="email"/> </label>
             </li>
            <li>
               <label> <@ctx.i18n text = "电话"/>：
-               <input type="text" placeholder="EQ" name="phone"/> </label>
-            </li>
-           <li>
-              <label> <@ctx.i18n text = "age"/>：
-               <input type="text" placeholder="GT" name="age"/> </label>
-            </li>
-           <li>
-                 <label> <@ctx.i18n text = "性别"/>： </label>
-                <select name="sex" class="form-control">
-                    <option value=""><@ctx.i18n text = "所有"/></option>
-                <#list dict.getType('sys_user_sex')>
-                    <#items as d>
-                        <#if d.status =='0' >
-                            <option value="${d.dictValue}" text="${d.dictLabel}"><@ctx.i18n text = "${d.dictLabel}"/></option>
-                        </#if>
-                    </#items>
-                </#list>
-                </select>
-           </li>
-          <li class="select-time">
-             <label> <@ctx.i18n text = "出生日期"/>： </label>
-            <input type="text" class="time-input" placeholder="开始时间" name="beginBirthday"/>
-            <span>-</span>
-            <input type="text" class="time-input" placeholder="结束时间" name="endBirthday"/>
-        </li>
-          <li class="select-time">
-             <label> <@ctx.i18n text = "离职日期"/>： </label>
-            <input type="text" class="time-input" placeholder="" name="LeaveDate"/>
-        </li>
-           <li>
-              <label> <@ctx.i18n text = "员工编号"/>：
-               <input type="text" placeholder="LT" name="pin"/> </label>
-            </li>
-           <li>
-                 <label> <@ctx.i18n text = "职位"/>： </label>
-                <select name="position" class="form-control">
-                    <option value=""><@ctx.i18n text = "所有"/></option>
-                <#list dict.getType('sys_post_type')>
-                    <#items as d>
-                        <#if d.status =='0' >
-                            <option value="${d.dictValue}" text="${d.dictLabel}"><@ctx.i18n text = "${d.dictLabel}"/></option>
-                        </#if>
-                    </#items>
-                </#list>
-                </select>
-           </li>
-          <li class="select-time">
-             <label> <@ctx.i18n text = "入职日期"/>： </label>
-            <input type="text" class="time-input" placeholder="" name="JoinDate"/>
-        </li>
-           <li>
-              <label> <@ctx.i18n text = "身份证号"/>：
-               <input type="text" placeholder="EQ" name="noationalId"/> </label>
-            </li>
-           <li>
-                 <label> <@ctx.i18n text = "education"/>： </label>
-                <select name="education" class="form-control">
-                    <option value=""><@ctx.i18n text = "所有"/></option>
-                <#list dict.getType('sys_post_type')>
-                    <#items as d>
-                        <#if d.status =='0' >
-                            <option value="${d.dictValue}" text="${d.dictLabel}"><@ctx.i18n text = "${d.dictLabel}"/></option>
-                        </#if>
-                    </#items>
-                </#list>
-                </select>
-           </li>
-           <li>
-              <label> <@ctx.i18n text = "上级领导"/>：
-               <input type="text" placeholder="EQ" name="leader"/> </label>
-            </li>
-       <li>
-         <label> <@ctx.i18n text = "公司"/>：</label>
-         <@form.treeselect id="company" name="company.id"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel="true"  placeholder="请选择归属公司"/>
-       </li>
-
-           <li>
-              <label> <@ctx.i18n text = "deptIds"/>：
-               <input type="text" placeholder="EQ" name="dept"/> </label>
+               <input type="text" placeholder="电话" name="phone"/> </label>
             </li>
         <li>
           <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
           <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
        </li>
-    </ul>
-</div>
-</div>
-</@form.form>
-<@table id="bootstrap-table">
+      </ul>
+   </div>
+  </@form.form>
+ </div>
+  <@table id="bootstrap-table">
     <@shiro.hasPermission name="gen:test:add">
-                    <a class="btn btn-success" onclick="opt.operate.add()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+        <a class="btn btn-success" onclick="opt.operate.addTab()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="gen:test:edit">
-        <a class="btn btn-primary single disabled" onclick="opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+        <a class="btn btn-primary single disabled" onclick="opt.operate.editTab()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="gen:test:del">
         <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()">
             <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
         </a>
     </@shiro.hasPermission>
-
-</@table>
-</div>
+   </@table>
+  <div>
 </div>
 <@footer>
-<script>
+<script type="text/javascript">
     var editFlag = "${permission.hasPermi("gen:test:edit")}";
     var listFlag = "${permission.hasPermi("gen:test:add")}";
     var delFlag = "${permission.hasPermi("gen:test:del")}";
     var visible = ${permission.isPermitteds("gen:test:edit,gen:test:del,gen:test:add")?string('true', 'false')};
-   var sexDatas = ${dict.getDictListJson('sys_user_sex')};
-   var delFlagDatas = ${dict.getDictListJson('sys_status')};
-   var positionDatas = ${dict.getDictListJson('sys_post_type')};
-   var hobbyDatas = ${dict.getDictListJson('sys_post_type')};
-   var educationDatas = ${dict.getDictListJson('sys_post_type')};
+    var sexDatas = ${dict.getDictListJson('sys_user_sex')};
     var prefix = baseURL + "gen/test";
 
     $(function() {
@@ -140,51 +61,39 @@
             addUrl: prefix + "/add",
             editUrl: prefix + "/edit/{id}",
             delUrl: prefix + "/del",
-            modalName: "单表范例",
-            uniqueId:    'id'/* 唯一ID */                                                           ,
-            escape: true,            /* 分页设置 */
-            showPageGo: true,       /* 分页设置 */
-            pageSize: 10,            /* 分页设置 */
-            pageList: [10, 30, 50], /* 分页设置 */
+            modalName: "代码生成范例",
+            uniqueId:  'id',/* 唯一ID */
+            escape: true,/* 分页设置 */
+            showPageGo: true,/* 分页设置 */
+            pageSize: 10,/* 分页设置 */
+            pageList: [10, 30, 50],/* 分页设置 */
             columns: [
-                 {title: $.i18n.prop("序号"), width: 5, align: "center", formatter: function (value, row, index) {
+                {title: $.i18n.prop("序号"), width: 5, align: "center", formatter: function (value, row, index) {
                             return $.table.serialNumber(index);
-                 }}
-                 ,{field : 'id',title : '<@ctx.i18n text = "id"/>',visible: false}
-                ,{field : 'name',title : '<@ctx.i18n text = "name"/>',sortable: true, align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'email',title : '<@ctx.i18n text = "email"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'phone',title : '<@ctx.i18n text = "电话"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'age',title : '<@ctx.i18n text = "age"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'sex',title : '<@ctx.i18n text = "性别"/>',formatter: function(value, row, index) { return $.table.selectDictLabels(sexDatas, value); }}
-                ,{field : 'birthday',title : '<@ctx.i18n text = "出生日期"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'leaveDate',title : '<@ctx.i18n text = "离职日期"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                  ,{field : 'pin',title : '<@ctx.i18n text = "员工编号"/>',sortable: true, align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'position',title : '<@ctx.i18n text = "职位"/>',formatter: function(value, row, index) { return $.table.selectDictLabels(positionDatas, value); }}
-                ,{field : 'hobby',title : '<@ctx.i18n text = "爱好"/>',formatter: function(value, row, index) { return $.table.selectDictLabels(hobbyDatas, value); }}
-                ,{field : 'joinDate',title : '<@ctx.i18n text = "入职日期"/>',sortable: true, align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'noationalId',title : '<@ctx.i18n text = "身份证号"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'education',title : '<@ctx.i18n text = "education"/>',formatter: function(value, row, index) { return $.table.selectDictLabels(educationDatas, value); }}
-                ,{field : 'leader',title : '<@ctx.i18n text = "上级领导"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'createTime',title : '<@ctx.i18n text = "创建时间"/>',sortable: true, align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'company.name',title : '<@ctx.i18n text = "公司"/>' }
-                 ,{field : 'dept',title : '<@ctx.i18n text = "deptIds"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-                 ,{field : 'roleIds',title : '<@ctx.i18n text = "roleIds"/>', align: 'center'}
-
-                ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible,class:'action',formatter: function(value, row, index) {
+                }}
+                ,{field : 'id',title : '<@ctx.i18n text = "id"/>',visible: false}
+              ,{field : 'code',title : '<@ctx.i18n text = "员工编号"/>'}
+              ,{field : 'name',title : '<@ctx.i18n text = "姓名"/>'}
+              ,{field : 'email',title : '<@ctx.i18n text = "邮箱"/>'}
+               ,{field : 'phone',title : '<@ctx.i18n text = "电话"/>'}
+               ,{field : 'sex',title : '<@ctx.i18n text = "性别"/>',formatter: function(value, row, index) {
+                            return $.table.selectDictLabels(sexDatas, value); }}
+              ,{field : 'age',title : '<@ctx.i18n text = "年龄"/>'}
+              ,{field : 'joinDate',title : '<@ctx.i18n text = "入职日期"/>'}
+               ,{field : 'compName',title : '<@ctx.i18n text = "归属公司"/>' }
+              ,{field : 'deptName',title : '<@ctx.i18n text = "归属部门"/>' }
+                       ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible,formatter: function(value, row, index) {
                         var actions = [];
-                          actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "编辑"/>" onclick="opt.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i></a> ');
-                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-trash-o"></i></a> ');
-                         return actions.join('');
+                          actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="opt.operate.editTab(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+ 
+                        return actions.join('');
                     }
                 }
-
-                ]
-            };
+            ]};
             $.table.init(options);
         });
-        
-        
-       
+
 </script>
 </@footer>
 </@pageTheme>

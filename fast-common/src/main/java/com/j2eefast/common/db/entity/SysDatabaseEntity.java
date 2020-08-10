@@ -48,7 +48,6 @@ public class SysDatabaseEntity extends BaseEntity {
 	/**
 	 * 数据库密码
 	 */
-	@NotBlank(message = "参数值不能为空")
 	private String password;
 
 	/**

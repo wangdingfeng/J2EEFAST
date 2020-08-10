@@ -769,6 +769,9 @@
             searchables: []
         };
 
+        //
+
+
         $.each(this.options.columns, function (i, columns) {
             html.push('<tr>');
 
@@ -911,6 +914,9 @@
             that[checked ? 'checkAll' : 'uncheckAll']();
             that.updateSelected();
         });
+
+
+
     };
 
     BootstrapTable.prototype.initFooter = function () {
@@ -1693,6 +1699,7 @@
             }
 
             $.each(this.header.fields, function (j, field) {
+
                 var text = '',
                     value = getItemField(item, field, that.options.escape),
                     type = '',
@@ -1704,7 +1711,6 @@
                     colspan_ = '',
                     title_ = '',
                     column = that.columns[j];
-
                 if (that.fromHtml && typeof value === 'undefined') {
                     return;
                 }
@@ -1850,18 +1856,23 @@
                 column = that.columns[getFieldIndex(that.columns, field)],
                 value = getItemField(item, field, that.options.escape);
 
-            if ($td.find('.detail-icon').length) {
-                return;
-            }
+            if(that.options.fixedColumns){
+                $("#"+that.options.id+"-left-fixed-body-columns").find('tbody').find('tr[data-index="'+$tr.data('index')+'"]')
+                    .children(".bs-checkbox").find("input[name=btSelectItem]").trigger("click");
+            }else{
+                if ($td.find('.detail-icon').length) {
+                    return;
+                }
 
-            that.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item, $td);
-            that.trigger(e.type === 'click' ? 'click-row' : 'dbl-click-row', item, $tr, field);
+                that.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item, $td);
+                that.trigger(e.type === 'click' ? 'click-row' : 'dbl-click-row', item, $tr, field);
 
-            // if click to select - then trigger the checkbox/radio click
-            if (e.type === 'click' && that.options.clickToSelect && column.clickToSelect) {
-                var $selectItem = $tr.find(sprintf('[name="%s"]', that.options.selectItemName));
-                if ($selectItem.length) {
-                    $selectItem[0].click(); // #144: .trigger('click') bug
+                // if click to select - then trigger the checkbox/radio click
+                if (e.type === 'click' && that.options.clickToSelect && column.clickToSelect) {
+                    var $selectItem = $tr.find(sprintf('[name="%s"]', that.options.selectItemName));
+                    if ($selectItem.length) {
+                        $selectItem[0].click(); // #144: .trigger('click') bug
+                    }
                 }
             }
         });
@@ -1892,29 +1903,59 @@
 
         this.$selectItem = this.$body.find(sprintf('[name="%s"]', this.options.selectItemName));
         this.$selectItem.off('click').on('click', function (event) {
+
+            //勾选点击事件
             event.stopImmediatePropagation();
 
             var $this = $(this),
                 checked = $this.prop('checked'),
                 row = that.data[$this.data('index')];
 
-            if (that.options.maintainSelected && $(this).is(':radio')) {
-                $.each(that.options.data, function (i, row) {
-                    row[that.header.stateField] = false;
-                });
+            if(that.options.fixedColumns){
+                //冻结点击事件
+                var index = $this.data('index');
+                // checked? that.$body.find('tr[data-index="'+index+'"]').addClass('selected'): that.$body.find('tr[data-index="'+index+'"]').removeClass('selected');
+                // console.log("----"+that.$body.find('tr[data-index="'+index+'"]').children(".bs-checkbox").html());
+                $this.parent().parent('tr[data-index="'+index+'"]').toggleClass("selected");
+                that.$body.find('tr[data-index="'+index+'"]').children(".bs-checkbox").find("input[name=btSelectItem]").prop('checked', checked);
+                if (that.options.maintainSelected && $(this).is(':radio')) {
+                    $.each(that.options.data, function (i, row) {
+                        row[that.header.stateField] = false;
+                    });
+                }
+
+                row[that.header.stateField] = checked;
+
+                // //只能选一个
+                if (that.options.singleSelect) {
+                    that.$selectItem.not(this).each(function () {
+                        that.data[$(this).data('index')][that.header.stateField] = false;
+                    });
+                    that.$selectItem.filter(':checked').not(this).prop('checked', false);
+                }
+
+                that.updateSelected();
+                that.trigger(checked ? 'check' : 'uncheck', row, that.$body.find('tr[data-index="'+index+'"]').children(".bs-checkbox"));
+                // checked? that.$body.find('tr[data-index="'+index+'"]').addClass('selected'): that.$body.find('tr[data-index="'+index+'"]').removeClass('selected');
+            }else{
+                if (that.options.maintainSelected && $(this).is(':radio')) {
+                    $.each(that.options.data, function (i, row) {
+                        row[that.header.stateField] = false;
+                    });
+                }
+
+                row[that.header.stateField] = checked;
+
+                if (that.options.singleSelect) {
+                    that.$selectItem.not(this).each(function () {
+                        that.data[$(this).data('index')][that.header.stateField] = false;
+                    });
+                    that.$selectItem.filter(':checked').not(this).prop('checked', false);
+                }
+
+                that.updateSelected();
+                that.trigger(checked ? 'check' : 'uncheck', row, $this);
             }
-
-            row[that.header.stateField] = checked;
-
-            if (that.options.singleSelect) {
-                that.$selectItem.not(this).each(function () {
-                    that.data[$(this).data('index')][that.header.stateField] = false;
-                });
-                that.$selectItem.filter(':checked').not(this).prop('checked', false);
-            }
-
-            that.updateSelected();
-            that.trigger(checked ? 'check' : 'uncheck', row, $this);
         });
 
         $.each(this.header.events, function (i, events) {
@@ -2013,6 +2054,21 @@
         }
 
         if (!silent) {
+            //TODO 冻结列扩展
+            if(this.options.fixedColumns){
+                if($("#"+this.options.id + "-left-fixed-table-columns")){
+                    $("#"+this.options.id + "-left-fixed-table-columns").hide();
+                }
+                if($("#"+this.options.id + "-left-fixed-body-columns")){
+                    $("#"+this.options.id + "-left-fixed-body-columns").hide();
+                }
+            }
+            if(this.options.rightFixedColumns){
+                if($("#"+this.options.id + "-right-fixed-table-columns")){
+                    console.log("右侧隐藏---");
+                    $("#"+this.options.id + "-right-fixed-table-columns").hide();
+                }
+            }
             this.$tableLoading.show();
         }
         request = $.extend({}, calculateObjectValue(null, this.options.ajaxOptions), {
@@ -2107,6 +2163,7 @@
     };
 
     BootstrapTable.prototype.trigger = function (name) {
+
         var args = Array.prototype.slice.call(arguments, 1);
 
         name += '.bs.table';
@@ -2282,19 +2339,17 @@
 
         elWidth = this.$el.css('width');
         scrollWidth = elWidth > this.$tableBody.width() ? getScrollBarWidth() : 0;
-
         this.$tableFooter.css({
             'margin-right': scrollWidth
-        }).find('table').css('width', elWidth)
+        }).find('table')
+            // .css('width', elWidth)
             .attr('class', this.$el.attr('class'));
 
-        $footerTd = this.$tableFooter.find('td');
-
-        this.$body.find('>tr:first-child:not(.no-records-found) > *').each(function (i) {
-            var $this = $(this);
-
-            $footerTd.eq(i).find('.fht-cell').width($this.innerWidth());
-        });
+        // $footerTd = this.$tableFooter.find('td');
+        // this.$body.find('>tr:first-child:not(.no-records-found) > *').each(function (i) {
+        //     var $this = $(this);
+        //     $footerTd.eq(i).find('.fht-cell').width($this.innerWidth());
+        // });
     };
 
     BootstrapTable.prototype.toggleColumn = function (index, checked, needUpdate) {
@@ -2368,7 +2423,10 @@
         }
 
         if (this.options.cardView) {
-            // remove the element css
+            //TODO 表格列表冻结清除 宽度
+            if (this.options.fixedColumns || this.options.rightFixedColumns) {
+                this.$el.removeAttr("style");
+            }
             this.$el.css('margin-top', '0');
             this.$tableContainer.css('padding-bottom', '0');
             this.$tableFooter.hide();
@@ -2897,6 +2955,7 @@
         //TODO 浮动提示框特效
         $("[data-toggle='tooltip']").tooltip();
         $('[data-toggle="popover"]').popover();
+
         this.trigger('toggle', this.options.cardView);
     };
 

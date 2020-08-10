@@ -23,8 +23,8 @@
                             var data = {
                                 href: 'sys/user/profile/password',
                                 icon: 'fa fa-shield',
-                                title: '<@ctx.i18n text = "修改密码"/>',
-                                id: '-2',
+                                title: '<@ctx.i18n text = "个人中心"/>',
+                                id: '-1',
                                 module:'_sysInfo'
                             };
                             opt.variable.navtab.tabAdd(data);
@@ -34,7 +34,7 @@
                     /*登录提示音*/
                     setTimeout(function(){
                         opt.common.playSound("1");
-                    },50);
+                    },100);
                 })
             </script>
         </#if>

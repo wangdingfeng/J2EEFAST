@@ -5,21 +5,21 @@
 <@form.form id="form-dict-edit" class="form-horizontal">
 	<@form.hidden  name="id"  value="${dictHtml.id}"/>
 	<div class="form-group">
-		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典标签：</label>
+		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典键值：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictLabel" value="${dictHtml.dictLabel?default('')}"  required="true"/>
+			<@form.input name="dictValue" value="${dictHtml.dictValue?default('')?html}"  required=true/>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典键值：</label>
+		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典标签：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictValue" value="${dictHtml.dictValue?default('')}"  required="true"/>
+			<@form.input name="dictLabel" value="${dictHtml.dictLabel?default('')?html}"  required=true/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">字典类型：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictType" value="${dictHtml.dictType?default('')}" readonly="true" />
+			<@form.input name="dictType" value="${dictHtml.dictType?default('')}" readonly=true />
 		</div>
 	</div>
 	<div class="form-group">
@@ -43,7 +43,7 @@
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span style="color: red; ">*</span>字典排序：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictSort" value="${dictHtml.dictSort?default('')}" required="true"/>
+			<@form.input name="dictSort" value="${dictHtml.dictSort?default('')}" required=true/>
 		</div>
 	</div>
 	<div class="form-group">

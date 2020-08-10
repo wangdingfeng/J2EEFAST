@@ -16,6 +16,7 @@ import com.j2eefast.framework.log.service.SysLoginInfoSerice;
 import com.j2eefast.framework.sys.entity.*;
 import com.j2eefast.framework.sys.service.*;
 import com.j2eefast.framework.utils.Global;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;

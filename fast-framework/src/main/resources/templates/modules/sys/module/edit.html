@@ -7,13 +7,13 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块名称"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleName" value="${sysModule.moduleName?default('')}" required="true"/>
+            <@form.input name="moduleName" value="${sysModule.moduleName?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块编码"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required="true"/>
+            <@form.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
@@ -29,20 +29,20 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块描述"/>：</label>
         <div class="col-sm-8">
-            <@form.textarea name="description" value="${sysModule.description?default('')}" required="true"/>
+            <@form.textarea name="description" value="${sysModule.description?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "主类全名"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="mainClassName" required="true" value="${sysModule.mainClassName?default('')}"
+            <@form.input name="mainClassName" required=true value="${sysModule.mainClassName?default('')}"
             helpTip = "该模块的状态验证类，如果该类检测不存在，则该模块状态提示 \"未安装\",验证原理：Class.forName()"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "版本"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required="true"/>
+            <@form.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">

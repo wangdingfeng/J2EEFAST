@@ -19,7 +19,7 @@ ${pageTheme}
 #if($column.htmlType == "input")##
            <li>
               <label> <@ctx.i18n text = "${comment}"/>：
-              #if($column.queryType == "BETWEEN")<input type="text"  placeholder="begin" name="begin${AttrName}"/><span>-</span> <input type="text"  placeholder="end" name="end${AttrName}"/> #else <input type="text" placeholder="${column.queryType}" name="${column.javaField}"/>#end </label>
+              #if($column.queryType == "BETWEEN")<input type="text"  placeholder="begin" name="begin${AttrName}"/><span>-</span> <input type="text"  placeholder="${comment}" name="end${AttrName}"/> #else <input type="text" placeholder="${comment}" name="${column.javaField}"/>#end </label>
             </li>
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)##
            <li>
@@ -56,7 +56,7 @@ ${pageTheme}
 #elseif($column.htmlType == "comp")##
        <li>
          <label> <@ctx.i18n text = "${comment}"/>：</label>
-         <@form.treeselect id="${column.javaField}" name="${column.javaField}.id"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel="true"  placeholder="请选择归属公司"/>
+         <@form.treeselect name = "${column.javaField}"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel=true  placeholder="请选择归属公司"/>
        </li>
                                                     
 #end
@@ -73,10 +73,10 @@ ${pageTheme}
   <@table id="bootstrap-table">
 #if($table.crud)####
     <@shiro.hasPermission name="${permissionPrefix}:add">
-                    <a class="btn btn-success" onclick="opt.operate.add()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+        <a class="btn btn-success" onclick="#if($table.target == "tab")opt.operate.addTab()#else opt.operate.add()#end"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="${permissionPrefix}:edit">
-        <a class="btn btn-primary single disabled" onclick="opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+        <a class="btn btn-primary single disabled" onclick="#if($table.target == "tab")opt.operate.editTab()#else opt.operate.edit()#end"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="${permissionPrefix}:del">
         <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()">
@@ -94,19 +94,19 @@ ${pageTheme}
   <div>
 </div>
 <@footer>
-<script>
+<script type="text/javascript">
 #if($table.crud)####$table.crud CURD权限
     var editFlag = "<$>{permission.hasPermi("${permissionPrefix}:edit")}";
     var listFlag = "<$>{permission.hasPermi("${permissionPrefix}:add")}";
     var delFlag = "<$>{permission.hasPermi("${permissionPrefix}:del")}";
     var visible = <$>{permission.isPermitteds("${permissionPrefix}:edit,${permissionPrefix}:del,${permissionPrefix}:add")?string('true', 'false')};
-#elseif($table.r && $table.rDel)
+#elseif($table.r && $table.rDel)####
     var delFlag = "<$>{permission.hasPermi("${permissionPrefix}:del")}";
     var visible = <$>{permission.isPermitteds("${permissionPrefix}:del")?string('true', 'false')};
 #end#### CURD权限
 #foreach($column in $columns)##获取dictDatas
-#if(${column.dictType} != '')##
-   var ${column.javaField}Datas = <$>{dict.getDictListJson('${column.dictType}')};
+#if(${column.dictType} != '')####
+    var ${column.javaField}Datas = <$>{dict.getDictListJson('${column.dictType}')};
 #end
 #end##获取dictDatas
     var prefix = baseURL + "${moduleName}/${businessName}";
@@ -123,12 +123,12 @@ ${pageTheme}
             delUrl: prefix + "/del",
             modalName: "${functionName}",
 #end## 只读含删除选项
-            uniqueId:  #foreach($column in $columns) #if($column.pk) '${column.javaField}'/* 唯一ID */##
-            #end #end,
-            escape: true,            /* 分页设置 */
-            showPageGo: true,       /* 分页设置 */
-            pageSize: 10,            /* 分页设置 */
-            pageList: [10, 30, 50], /* 分页设置 */
+            uniqueId:  #foreach($column in $columns)#if($column.pk)'${column.javaField}',#end#end/* 唯一ID */#####
+
+            escape: true,/* 分页设置 */
+            showPageGo: true,/* 分页设置 */
+            pageSize: 10,/* 分页设置 */
+            pageList: [10, 30, 50],/* 分页设置 */
             columns: [
                 {title: $.i18n.prop("序号"), width: 5, align: "center", formatter: function (value, row, index) {
                             return $.table.serialNumber(index);
@@ -148,12 +148,15 @@ ${pageTheme}
 #if($c.list)## islist是否列表显示 
 ##if($c.sort == $indexTag)## indexTag ##不使用了
 #if($c.list && "" != $c.dictType)## dictType 类型
-              ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) { return $.table.selectDictLabels(${c.javaField}Datas, value); }}
+              ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) {
+                            return $.table.selectDictLabels(${c.javaField}Datas, value); }}
 #elseif($c.list && "" != ${c.javaField})## 非dictType
-#if(${c.javaType} == "SysCompEntity" || $c.javaType == "SysUserEntity" || $c.javaType == "SysDeptEntity")## 是否是系统实体业关联字段
-             ,{field : '${c.javaField}.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+#if(${c.htmlType} == "comp")## 是否是系统实体业关联字段
+             ,{field : 'compName',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+#elseif(${c.htmlType} == "dept")
+             ,{field : 'deptName',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #else###是否是系统实体业关联字段
-             ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end, align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+             ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end}
 #end##是否是系统实体业关联字段
 #end##dictType 
 ##end### end for indexTag
@@ -161,33 +164,40 @@ ${pageTheme}
 #end##end foreach
 #if($table.crud)###crud2按钮
                ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
-                        var actions = [];
+                        var actions = [];###
+
  #if($table.actionsType == "default") ##按钮显示样式
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="opt.operate.edit(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i>编辑</a> ');####
+
+                        actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');####
+
  #elseif($table.actionsType == "icon") ##按钮显示样式
-                        actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "编辑"/>" onclick="opt.operate.edit(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i></a> ');
-                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
+                        actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "编辑"/>" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i></a> ');####
+
+                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');###
  #end##按钮显示样式
+
                         return actions.join('');
                     }
                 }
 #elseif($table.r && $table.rDel) ###只读表是否含有删除
 
                 ,{title:"<@ctx.i18n text = "操作"/>",align: 'left',visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
-                        var actions = [];
+                        var actions = [];####
+
  #if($table.actionsType == "default")###
-                        actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');####
+
  #elseif($table.actionsType == "icon")###
-                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
+                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');####
+
  #end##
+
                         return actions.join('');
                     }
                  }
 #end###crud2按钮
-
-                ]
-            };
+            ]};
             $.table.init(options);
         });
 

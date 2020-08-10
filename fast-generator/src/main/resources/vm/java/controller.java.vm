@@ -47,8 +47,15 @@ public class ${ClassName}Controller extends BaseController{##
     @RequestMapping("/list")
     @RequiresPermissions("${permissionPrefix}:list")
     @ResponseBody
-    public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {
-		PageUtil page = ${className}Service.findPage(params,${className}Entity);
+    public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {####
+        #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
+        PageUtil page = ${className}Service.findPage(params);####
+
+        #else###
+
+        PageUtil page = ${className}Service.findPage(params,${className}Entity);#####
+        #end###
+
 		return success(page);
     }##
     #end
@@ -63,7 +70,7 @@ public class ${ClassName}Controller extends BaseController{##
     @GetMapping(value = { "/select${BusinessName}Tree/{${pkColumn.javaField}}", "/select${BusinessName}Tree/" })
     public String select${BusinessName}Tree(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap){
         if (StringUtils.isNotNull(${pkColumn.javaField})){
-            mmap.put("${className}", ${className}Service.select${ClassName}ById(${pkColumn.javaField}));
+            mmap.put("${className}", ${className}Service.find${ClassName}ById(${pkColumn.javaField}));
         }
         return prefix + "/tree";
     }##
@@ -82,8 +89,6 @@ public class ${ClassName}Controller extends BaseController{##
     #*新增*#
     @GetMapping("/add")
     public String add(ModelMap mmap){
-         ${ClassName}Entity ${className} = new ${ClassName}Entity();
-          mmap.put("${className}", ${className});
         return prefix + "/add";
     }##
 
@@ -98,8 +103,10 @@ public class ${ClassName}Controller extends BaseController{##
     @ResponseBody
     public ResponseData add${ClassName}(@Validated ${ClassName}Entity ${className}){
         //校验参数
-        ValidatorUtil.validateEntity(${className});
-        return ${className}Service.save${ClassName}(${className})? success(): error("新增失败!");
+        ValidatorUtil.validateEntity(${className});####
+
+        return ${className}Service.add${ClassName}(${className})? success(): error("新增失败!");####
+
     }##
     #end
 
@@ -111,7 +118,7 @@ public class ${ClassName}Controller extends BaseController{##
     @RequiresPermissions("${permissionPrefix}:edit")
     @GetMapping("/edit/{${pkColumn.javaField}}")
     public String edit(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}, ModelMap mmap){
-        ${ClassName}Entity ${className} = ${className}Service.get${ClassName}ById(${pkColumn.javaField});
+        ${ClassName}Entity ${className} = ${className}Service.find${ClassName}ById(${pkColumn.javaField});
         mmap.put("${className}", ${className});
         return prefix + "/edit";
     }##
@@ -126,9 +133,11 @@ public class ${ClassName}Controller extends BaseController{##
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData edit${ClassName}(${ClassName}Entity ${className}){
-		ValidatorUtil.validateEntity(${className});
-        return ${className}Service.update${ClassName}ById(${className})? success(): error("修改失败!");
-    }##
+		ValidatorUtil.validateEntity(${className});####
+
+        return ${className}Service.update${ClassName}ById(${className})? success(): error("修改失败!");####
+
+    }###
     #end
 
 
@@ -142,7 +151,7 @@ public class ${ClassName}Controller extends BaseController{##
     @RequiresPermissions("${permissionPrefix}:del")
     @ResponseBody
     public ResponseData del(${pkColumn.javaType}[] ids) {
-      return ${className}Service.delete${ClassName}ByIds(ids)? success(): error("删除失败!");
+      return ${className}Service.del${ClassName}ByIds(ids)? success(): error("删除失败!");
     }##
     #end
 

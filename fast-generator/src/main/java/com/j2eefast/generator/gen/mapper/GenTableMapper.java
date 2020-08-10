@@ -41,7 +41,8 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 	List<GenTableEntity> generateTableList(@Param("dbType") String dbType ,
 			                               @Param("schema") String schema ,
 			                               @Param("tableName")  String tableName,  
-			                               @Param("tableComment") String tableComment);
+			                               @Param("tableComment") String tableComment,
+										   @Param("notList") List<String> notList);
 	
 	/**
 	* @Title: generateTableListByNames 
@@ -72,7 +73,8 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 											@Param("dbType") String dbType ,
 											@Param("schema") String schema,
 								            @Param("tableName")  String tableName,  
-								            @Param("tableComment") String tableComment);
+								            @Param("tableComment") String tableComment,
+										    @Param("notList") List<String> notList);
 	
 	
 

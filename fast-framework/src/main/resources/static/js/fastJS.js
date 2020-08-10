@@ -5,7 +5,9 @@
  * @date 2020-02-20
  *       2020-05-17 修复导出报表问题
  *       2020-06-24 修复表格控件 页面多表格 回调函数错乱问题
- * @version v1.0.11
+ *       2020-07-22 修复表格首列多选勾选☑️ 字段名称必须state
+ *       2020-08-05 新增常用方法
+ * @version v1.0.12
  */
 if (typeof jQuery === "undefined") {
     throw new Error("fastJS JavaScript requires jQuery")
@@ -19,7 +21,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.11',
+            version:'1.0.12',
             debug:true,
             //表格类型
             table_type : {
@@ -283,11 +285,20 @@ if (typeof jQuery === "undefined") {
 
         //页面遮罩
         block: function(value,element){
-            if(opt.common.isNotEmpty(element)){
-                $(element).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + $.i18n.prop(value) + '</div>' });
+            if(opt.common.isEmpty(value)){
+                if(opt.common.isNotEmpty(element)){
+                    $(element).block();
+                }else{
+                    $.blockUI();
+                }
             }else{
-                $.blockUI({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + $.i18n.prop(value) + '</div>' });
+                if(opt.common.isNotEmpty(element)){
+                    $(element).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + $.i18n.prop(value) + '</div>' });
+                }else{
+                    $.blockUI({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + $.i18n.prop(value) + '</div>' });
+                }
             }
+
         },
 
         unblock: function(element){
@@ -619,6 +630,7 @@ if (typeof jQuery === "undefined") {
                     }
                     return arg;
                 });
+
                 return flag ? str : '';
             },
             // 指定随机数返回
@@ -878,6 +890,29 @@ if (typeof jQuery === "undefined") {
                     audio.play();
                 }
             },
+            /**
+             * 通过下载地址 静默下载
+             * @param url
+             */
+            downLoadFile :function(url){
+                console.log(url);
+                var judgeDiv = document.getElementById("dwDiv");
+                if(judgeDiv!=null){
+                    document.body.removeChild(judgeDiv);
+                }
+                var divObj = document.createElement("div");
+                divObj.id="dwDiv";
+                var aObj = document.createElement("a");
+                aObj.href=encodeURI(url);
+                aObj.id = "hrefFile";
+                divObj.appendChild(aObj);
+                document.body.appendChild(divObj);
+                document.getElementById("hrefFile").click();
+                judgeDiv = document.getElementById("dwDiv");
+                if(judgeDiv!=null){
+                    document.body.removeChild(judgeDiv);
+                }
+            },
             digit: function(e, t) {
                 var i = "";
                 e = String(e),
@@ -895,10 +930,54 @@ if (typeof jQuery === "undefined") {
                 return t = t || "yyyy-MM-dd HH:mm:ss",
                     t.replace(/yyyy/g, a[0]).replace(/MM/g, a[1]).replace(/dd/g, a[2]).replace(/HH/g, o[0]).replace(/mm/g, o[1]).replace(/ss/g, o[2])
             },
-            escape: function(e) {
-                return String(e || "").replace(/&(?!#?[a-zA-Z0-9]+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;").replace(/"/g, "&quot;")
+            //HTML转义
+            escape: function(html){
+                return String(html||'').replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
+                    .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
             },
-        },
+            //url编码
+            encodeUrl: function(a) {
+                return encodeURIComponent(a)
+            },
+            //url解码
+            decodeUrl: function(a) {
+                return decodeURIComponent(a)
+            },
+            /**
+             * 截取字符串考虑中文字符
+             * @param str 源字符
+             * @param len 长度
+             * @param hasDot 超过长度是否用...代替
+             * @returns 截取之后字符串
+             */
+            subString: function(str, len, hasDot) {
+                var newLength = 0;
+                var newStr = "";
+                var chineseRegex = /[^\x00-\xff]/g;
+                var singleChar = "";
+                var strLength = str.replace(chineseRegex,"**").length;
+                for(var i = 0;i < strLength;i++){
+                    singleChar = str.charAt(i).toString();
+                    if(singleChar.match(chineseRegex) != null)
+                    {
+                        newLength += 2;
+                    }
+                    else
+                    {
+                        newLength++;
+                    }
+                    if(newLength > len)
+                    {
+                        break;
+                    }
+                    newStr += singleChar;
+                }
+                if(hasDot && strLength > len){
+                    newStr += "...";
+                }
+                return newStr;
+            }
+},
         // 弹出层封装处理
         modal: {
             // 显示图标
@@ -1063,7 +1142,7 @@ if (typeof jQuery === "undefined") {
              * @param callback 弹出窗口点击确定按钮回调 弹出本页函数 [非必输] 如果不输入 则回调弹出的页面submitHandler 方法
              * @param yes [非必输] 只有在传 true 则先回调弹出层submitHandler 方法如果此submitHandler方法返回true,则再回调 callback 方法
              */
-            open: function (title, url,width, height,callback,yes) {
+            open: function (title, url,width, height,callback,yes,type) {
                 //如果是移动端，就使用自适应大小弹窗
                 if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                     width = 'auto';
@@ -1080,6 +1159,9 @@ if (typeof jQuery === "undefined") {
                 }
                 if (opt.common.isEmpty(height)) {
                     height = ($(window).height() - 50);
+                }
+                if (opt.common.isEmpty(type)) {
+                    type = 2;
                 }
                 var full = false;
                 //自动适配窗口大小 如果传的大小比所在窗口大 则最大化
@@ -1118,7 +1200,7 @@ if (typeof jQuery === "undefined") {
                 opt.modal.loading($.i18n.prop("数据加载中，请稍后..."));
 
                 var index = opt.selfLayer.open({
-                    type: 2,
+                    type: type,
                     area: [width + 'px', height + 'px'],
                     fix: false,
                     //不固定
@@ -1161,6 +1243,8 @@ if (typeof jQuery === "undefined") {
                 var _width = opt.common.isEmpty(options.width) ? "800" : options.width;
                 var _height = opt.common.isEmpty(options.height) ? ($(window).height() - 50) : options.height;
                 var _framData = opt.common.isEmpty(options.fromData) ? {} : options.fromData;
+                var _type = opt.common.isEmpty(options.type) ? 2 : options.type;
+                console.log("type:"+ _type)
                 var _btn = [];
                 if(options.clear){
                     _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
@@ -1173,7 +1257,7 @@ if (typeof jQuery === "undefined") {
                     }
                 }
                 opt.selfLayer.open({
-                    type: 2,
+                    type: _type,
                     maxmin: true,
                     shade: 0.3,
                     title: _title,
@@ -1247,10 +1331,17 @@ if (typeof jQuery === "undefined") {
                     }
                     if (!opt.common.isEmpty(options.callBack)) {
                         options.yes = function(index, layero) {
-                            /**
-                             * 注意返回入参
-                             */
-                            options.callBack(index,layero,opt.layer);
+                            var iframeWin = layero.find('iframe')[0];
+                            if(typeof iframeWin.contentWindow.submitHandler == 'function'){
+                                if(iframeWin.contentWindow.submitHandler(index, layero)){
+                                    options.callBack(index,layero,opt.layer);
+                                }
+                            }else{
+                                /**
+                                 * 注意返回入参
+                                 */
+                                options.callBack(index,layero,opt.layer);
+                            }
                         }
                     }else{
                         options.yes = function(index, layero) {
@@ -1264,6 +1355,7 @@ if (typeof jQuery === "undefined") {
                         title: _title,
                         area: [_width+'px',
                             _height + 'px'],
+                        scrollbar: false,
                         content:_url,
                         fromData: _framData,
                         success: function(layero, index){
@@ -1287,9 +1379,10 @@ if (typeof jQuery === "undefined") {
                             opt.layer.close(index);
                         },
                         cancel: function(index, layero){
-                            if (opt.common.isEmpty(options.cancel)) {
+                            if (!opt.common.isEmpty(options.cancel)) {
                                 options.cancel(index,layero);
                             }
+                            //opt.layer.close(index);
                             return true;
                         }
                     });
@@ -1354,6 +1447,30 @@ if (typeof jQuery === "undefined") {
                 });
                 opt.selfLayer.full(index);
             },
+            //预览文件
+            openView:function(name,url,width,height){
+                var url = baseURL + "sys/component/fileViwe?fileName="+ opt.common.encodeUrl(name) +
+                    "&fileUrl=" + opt.common.encodeUrl(url);
+                width = opt.common.isEmpty(width)? $(top.window).width() - 200:width;
+                height = opt.common.isEmpty(height)? $(top.window).height() - 50:height;
+                opt.layer? opt.layer.open({
+                    type: 2,
+                    maxmin: false,
+                    shadeClose: true,
+                    title: false,
+                    area: [width + "px", height + "px"],
+                    content: url
+                }):opt.modal.windowOpen(url);
+            },
+            windowOpen: function(url, title, width, height) {
+                width && height || (width = window.screen.width - 200,
+                    height = window.screen.height - 150);
+                var top = parseInt((window.screen.height - height) / 2 - 20, 10)
+                    , left = parseInt((window.screen.width - width) / 2, 10);
+                window.open(url, title, "location=no,menubar=no,toolbar=no," +
+                    "dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes," +
+                    "scrollbars=yes,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left)
+            },
             // 选卡页方式打开
             openTab: function (title, url) {
                 opt.createMenuItem(url, title);
@@ -1387,12 +1504,11 @@ if (typeof jQuery === "undefined") {
             },
             // 打开遮罩层
             loading: function (message) {
-                // console.log(top.location != self.location);
-                // if(top.location != self.location){
-                //     $('.content-wrapper',  window.parent.document).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + message + '</div>' });
-                // }else{
+                if(opt.common.isEmpty(message)){
+                    $.blockUI();
+                }else{
                     $.blockUI({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + message + '</div>' });
-                // }
+                }
             },
             // 关闭遮罩层
             closeLoading: function () {
@@ -1947,6 +2063,8 @@ if (typeof jQuery === "undefined") {
         form: {
             // 表单重置
             reset: function(formId, tableId,notName) {
+
+                var notNames = opt.common.isEmpty(notName)?[]:notName.split(",");
                 opt.table.set(tableId);
                 // var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var currentId;
@@ -1963,7 +2081,19 @@ if (typeof jQuery === "undefined") {
                 var inpt = $("#" + currentId).find('input, select');
                 $.each(inpt, function() {
                     if(this.tagName == "SELECT"){
-                        $(this).val(null).trigger("change");
+                        if(opt.common.isEmpty(notName)){
+                            $(this).val(null).trigger("change");
+                        }else{
+                            var temp = false;
+                            for(var i=0; i<notNames.length;i++){
+                                if($(this).attr("name") == notNames[i]){
+                                    temp = true;
+                                }
+                            }
+                            if(!temp){
+                                $(this).val(null).trigger("change");
+                            }
+                        }
                     }
                     else if(this.tagName == "INPUT"){
                         //表单域输入框
@@ -1979,7 +2109,13 @@ if (typeof jQuery === "undefined") {
                         if(opt.common.isEmpty(notName)){
                             $(this).val(null).trigger("change");
                         }else{
-                            if(notName != $(this).attr("name")){
+                            var temp = false;
+                            for(var i=0; i<notNames.length;i++){
+                                if($(this).attr("name") == notNames[i]){
+                                    temp = true;
+                                }
+                            }
+                            if(!temp){
                                 $(this).val(null).trigger("change");
                             }
                         }
@@ -2425,6 +2561,8 @@ if (typeof jQuery === "undefined") {
                     }
                 }
 
+
+
                 //
                 if(!opt.common.isEmpty(options.columns.length)){
                     for(var i=0; i<options.columns.length; i++ ){
@@ -2434,10 +2572,11 @@ if (typeof jQuery === "undefined") {
                         if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"halign"))){
                             options.columns[i].halign = 'center';
                         }
-
-
+                        // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
+                        if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
+                            options.columns[i].field = 'state';
+                        }
                     }
-
                     // if(row['checked']){
                     //
                     // }
@@ -2455,6 +2594,7 @@ if (typeof jQuery === "undefined") {
                     // }
                 }
                 opt.table.options = options;
+                console.log(options);
                 opt.table.config[options.id] = options;
                 $.table.initEvent();
                 $('#' + options.id).bootstrapTable({
@@ -2578,6 +2718,7 @@ if (typeof jQuery === "undefined") {
                         return res.rows;
                     } else {
                         if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                            console.log("记住数据"+opt.table.rememberSelectedIds);
                             var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
                             $.each(res.data.list, function(i, row) {
                                 if(opt.table.rememberSelectedIds[opt.table.options.id]){
@@ -2697,8 +2838,8 @@ if (typeof jQuery === "undefined") {
             },
             // 当所有数据被加载时触发
             onLoadSuccess: function(data) {
-                if (typeof opt.table.options.onLoadSuccess == "function") {
-                    opt.table.options.onLoadSuccess(data);
+                if (typeof opt.table.get(this.id).onLoadSuccess == "function") {
+                    opt.table.get(this.id).onLoadSuccess(data);
                 }
                 // 浮动提示框特效
                 $("[data-toggle='tooltip']").tooltip();
@@ -3603,18 +3744,18 @@ if (typeof jQuery === "undefined") {
             return;
         }
     });*/
-    $.ajaxSetup({
-        complete: function(XMLHttpRequest, textStatus) {
-            if (textStatus == 'timeout') {
-                //window.opt.wclearInterval();
-                opt.outLogin("",$.i18n.prop('sys.login.out.error'));
-                return;
-            } else if (textStatus == "parsererror" || textStatus == "error") {
-                opt.outLogin("",$.i18n.prop('sys.login.out.error'));
-                return;
-            }
-        }
-    });
+    // $.ajaxSetup({
+    //     complete: function(XMLHttpRequest, textStatus) {
+    //         if (textStatus == 'timeout') {
+    //             //window.opt.wclearInterval();
+    //             opt.outLogin("",$.i18n.prop('sys.login.out.error'));
+    //             return;
+    //         } else if (textStatus == "parsererror" || textStatus == "error") {
+    //             opt.outLogin("",$.i18n.prop('sys.login.out.error'));
+    //             return;
+    //         }
+    //     }
+    // });
 }();
 /**
  * 页面模板引擎

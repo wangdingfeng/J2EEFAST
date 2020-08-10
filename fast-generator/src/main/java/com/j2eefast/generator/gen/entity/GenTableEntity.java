@@ -88,8 +88,15 @@ public class GenTableEntity extends BaseEntity {
     /**代码生成路径*/
     private String runPath;
 
+    /** 表单打开形式*/
+    private String  target;
+
     /**是否需要删除按钮*/
     private String isDel;
+    /**是否需要上传图片*/
+    private String isImg;
+    /** 是否需要上传文件*/
+    private String isFile;
 
   /** 主从数据库*/
     private String dbName;
@@ -114,7 +121,22 @@ public class GenTableEntity extends BaseEntity {
     @TableField(exist = false)
     private List<GenTableColumnEntity> columns;
 
- 
+
+    public String getIsImg() {
+        return isImg;
+    }
+
+    public void setIsImg(String isImg) {
+        this.isImg = isImg;
+    }
+
+    public String getIsFile() {
+        return isFile;
+    }
+
+    public void setIsFile(String isFile) {
+        this.isFile = isFile;
+    }
 
     public int getMenuOrder() {
         return menuOrder;
@@ -313,6 +335,13 @@ public class GenTableEntity extends BaseEntity {
         return isDelType(this.isDel);
     }
 
+    public boolean isRImg(){
+        return isDelType(this.isImg);
+    }
+
+    public boolean isRFile(){
+        return isDelType(this.isFile);
+    }
     public boolean isC()
     {
         return isCrud(this.tplCategory,GenConstants.TPL_C);
@@ -405,4 +434,12 @@ public class GenTableEntity extends BaseEntity {
 	public void setOption(Option option) {
 		this.option = option;
 	}
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }

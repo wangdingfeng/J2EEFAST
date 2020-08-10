@@ -10,7 +10,7 @@
                     <i class="fa fa-question-circle-o" style="color: orange"></i></a>
             </label>
             <div class="col-sm-8">
-                <@form.input name="dbName" required="true"  placeholder="请输入数据库名称" />
+                <@form.input name="dbName" required=true  placeholder="请输入数据库名称" />
             </div>
         </div>
         <div class="form-group">
@@ -24,14 +24,14 @@
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据库账号"/>：
             </label>
             <div class="col-sm-8">
-                <@form.input name="userName" required="true"  placeholder="请输入数据库账号" />
+                <@form.input name="userName" required=true  placeholder="请输入数据库账号" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据库密码"/>：</label>
+            <label class="col-sm-3 control-label"><@ctx.i18n text = "数据库密码"/>：</label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.input name="password" required="true" type="password"  placeholder="请输入数据库密码" />
+                    <@form.input name="password" type="password"  placeholder="请输入数据库密码" />
                     <span class="input-group-addon" title="<@ctx.i18n text = "数据库密码,鼠标按下显示密码"/>"
                           data-toggle="tooltip"
                           data-placement="bottom"
@@ -45,7 +45,7 @@
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "URL"/>：
             </label>
             <div class="col-sm-8">
-                <@form.input name="jdbcUrl" required="true"  placeholder="请输入URL" helpTip = "例如: jdbc:mysql://192.168.20.110:3306/fastdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false"/>
+                <@form.input name="jdbcUrl" required=true  placeholder="请输入URL" helpTip = "例如: jdbc:mysql://192.168.20.110:3306/fastdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false"/>
             </div>
         </div>
         <div class="form-group">

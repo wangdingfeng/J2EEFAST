@@ -8,6 +8,7 @@ import com.j2eefast.common.config.entity.SysConfigEntity;
 import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
+import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,7 @@ public class SysConfigController extends BaseController {
 	@BussinessLog(title = "参数管理", businessType = BusinessType.CLEAN)
 	@RequestMapping(value = "/clearConfig", method = RequestMethod.GET)
 	@RequiresPermissions("sys:config:clear")
+	@RepeatSubmit
 	@ResponseBody
 	public ResponseData clearConfig(){
 		return sysConfigService.clearConfigRedis()?success():error("Redis没有开启无需清理!");

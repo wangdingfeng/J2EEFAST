@@ -139,9 +139,50 @@ public class SysLoginService implements AuthService {
 		this.authorization(loginUser,user.getId());
 
 		//设置登陆
-		this.setLoginDetails(loginUser,user.getId());
+		this.setLoginDetails(loginUser,user.getId(),"sys");
+
 		return loginUser;
 	}
+
+	/**
+	 * 免密授权登录
+	 * @param openId
+	 * @return
+	 */
+	@Override
+	public LoginUserEntity freeLoginVerify(String openId) {
+		//检查第三方账号是否有绑定用户ID
+		SysUserEntity user = this.sysUserMapper.findUserByUserName(openId);
+		if(ToolUtil.isEmpty(user)){
+			AsyncManager.me().execute(AsyncFactory.recordLogininfor(openId,-1L,-1L, "60001","第三方授权登录,系统没有绑定用户."));
+			throw new RxcException(ToolUtil.message("sys.login.failure"),"60001");
+		}
+
+		//获取登陆错误次数
+		Integer number = redisUtil.get(RedisKeys.getUserLoginKey(user.getUsername()),Integer.class);
+
+		//用户错误次数大于设定数值直接拒绝
+		if( ToolUtil.isNotEmpty(number) && number >= Global.getLoginMaxCount()) {
+			AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(),-1L,-1L, "50003","账户被锁定,"+Global.getLockTime()+" 分钟后解锁!"));
+			throw new RxcException(ToolUtil.message("sys.login.failedNumLock",Global.getLockTime()),"50003");
+		}
+
+		//清空错误登陆标志
+		redisUtil.delete(RedisKeys.getUserLoginKey(user.getUsername()));
+
+		//转换成用户登录信息
+		LoginUserEntity loginUser = UserFactory.createLoginUser(user);
+
+		//设置授权
+		this.authorization(loginUser,user.getId());
+
+
+		//设置登陆
+		this.setLoginDetails(loginUser,user.getId(),user.getSource());
+
+		return loginUser;
+	}
+
 
 	@Override
 	public List<String> findPermissionsByRoleId(Long roleId) {
@@ -220,7 +261,7 @@ public class SysLoginService implements AuthService {
 	}
 
 	@Override
-	public void setLoginDetails(LoginUserEntity loginUser, Long userId) {
+	public void setLoginDetails(LoginUserEntity loginUser, Long userId, String source) {
 
 		SysLoginInfoEntity loginInfo = ConstantFactory.me().getFirstLoginInfo(loginUser.getUsername());
 
@@ -239,8 +280,9 @@ public class SysLoginService implements AuthService {
 
 		//插入登陆表
 		AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(),
-				loginUser.getCompId(),loginUser.getDeptId(), "00000","登陆成功!",loginUser.getNowLoginTime(),
-				loginUser.getNowLoginLocation(), loginUser.getLoginLocation()));
+				loginUser.getCompId(),loginUser.getDeptId(), "00000","登陆成功!",
+				loginUser.getNowLoginTime(),loginUser.getNowLoginLocation(),
+				source));
 
 	}
 }

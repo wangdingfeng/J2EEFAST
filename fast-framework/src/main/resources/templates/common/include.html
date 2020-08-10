@@ -53,7 +53,8 @@
 <link rel="stylesheet" href="${ctxStatic}/static/plugins/layui/css/layui.css?V=${config.getDvVersion()}"/>
 <#nested>
 <link rel="stylesheet" href="${ctxStatic}/static/css/style.css?V=${config.getDvVersion()}">
-<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>
+<#--<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>-->
+<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.css?V=${config.getDvVersion()}"/>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico">
 <#-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <#-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -131,7 +132,8 @@
 <#--全局遮罩-->
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
 <#--bootstrap-table 表格插件-->
-<script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.js?V=${config.getDvVersion()}"></script>-->
+<script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.min.js?V=${config.getDvVersion()}"></script>
 <script src="${ctxStatic}/static/plugins/bootstrap-table/locale/bootstrap-table-i18n.js?V=${config.getDvVersion()}"></script>
 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js?V=${config.getDvVersion()}"></script>
 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js?V=${config.getDvVersion()}"></script>
@@ -147,8 +149,8 @@
 <#-- jquery-validate 表单验证插件 -->
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.min.js?V=${config.getDvVersion()}"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js?V=${config.getDvVersion()}"></script>
-<script src="${request.contextPath}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${request.contextPath}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
+<#--<script src="${request.contextPath}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>-->
+<script src="${request.contextPath}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>
 <#--VUE-->
 <script src="${ctxStatic}/static/libs/vue.min.js?V=${config.getDvVersion()}"></script>
 <#nested>
