@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="menuOrder"     column="menu_order"     />
 		<result property="menuTarget"     column="menu_target"     />
 		<result property="remark"         column="remark"          />
+		<result property="target"         column="target"          />
 	<!-- 	<collection  property="columns"  javaType="java.util.List"  resultMap="GenTableColumnResult" /> -->
 	</resultMap>
 	
@@ -92,7 +93,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		,t.menu_target as   menuTarget
 		,t.menu_order as  menuOrder
 		,t.update_time as updateTime
+		,t.is_img as isImg
+		,t.is_file as isFile
 		,t.remark  as remark
+		,t.target  as target
 	</sql>
 
 <!-- 
@@ -157,11 +161,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="functionName != null and functionName != ''">function_name = #{functionName},</if>
 			<if test="runPath != null and runPath != ''">run_path = #{runPath},</if>
 			<if test="isDel != null and isDel != ''">is_del = #{isDel},</if>
+			<if test="isImg != null and isImg != ''">is_img = #{isImg},</if>
+			<if test="isFile != null and isFile != ''">is_file = #{isFile},</if>
 			<if test="dbName != null and dbName != ''">db_name = #{dbName},</if>
 			<if test="actionsType != null and actionsType != ''">actions_type = #{actionsType},</if>
 			<if test="isCover != null and isCover != ''">is_cover = #{isCover},</if>
 			<if test="options != null and options != ''">options = #{options},</if>
 			<if test="parentId != null">parent_id = #{parentId},</if>
+			<if test="target != null">target = #{target},</if>
 			<if test="menuOrder != null">menu_order = #{menuOrder},</if>
 			<if test="parentName != null and parentName != ''">parent_name = #{parentName},</if>
 			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
@@ -198,6 +205,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		   <if test="tableComment != null and tableComment != ''">
 			  AND table_comment like concat('%', #{tableComment}, '%')
 		   </if>
+			<if test="notList != null">
+				AND table_name NOT IN
+				<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
         </if>
         
        <if test="dbType == 'oracle'">
@@ -216,6 +229,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		    <if test="tableComment != null and tableComment != ''">
 			   AND nvl(c.COMMENTS,t.TABLE_NAME) like '%'|| upper(#{tableComment})||'%'
 		    </if>
+				<if test="notList != null">
+					AND t.table_name NOT IN
+					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
 			</where>
 			ORDER BY t.TABLE_NAME	
        </if>
@@ -266,6 +285,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		   <if test="tableComment != null and tableComment != ''">
 			  AND table_comment like concat('%', #{tableComment}, '%')
 		   </if>
+			<if test="notList != null">
+				AND table_name NOT IN
+				<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
         </if>
         
        <if test="dbType == 'oracle'">
@@ -284,6 +309,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		    <if test="tableComment != null and tableComment != ''">
 			  AND nvl(c.COMMENTS,t.TABLE_NAME) like '%'|| upper(#{tableComment})||'%'
 		    </if>
+			<if test="notList != null">
+				AND t.table_name NOT IN
+				<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 			</where>
 			ORDER BY t.TABLE_NAME	
        </if>

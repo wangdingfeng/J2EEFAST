@@ -53,4 +53,12 @@ public class SysAreaController extends BaseController{
         List<Ztree> list = sysAreaService.getAllAreaZtree();
         return success().put("list", list);
     }
+
+    @RequestMapping("/load")
+    @RequiresPermissions("sys:area:list")
+    @ResponseBody
+    public ResponseData load(@RequestParam Map<String, Object> params) {
+        PageUtil page =  sysAreaService.findSelectPage(params);
+        return ToolUtil.isEmpty(page)?error("数据异常"):success(page);
+    }
 }

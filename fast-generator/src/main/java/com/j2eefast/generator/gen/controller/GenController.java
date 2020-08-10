@@ -1,5 +1,7 @@
 package com.j2eefast.generator.gen.controller;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.google.common.collect.Lists;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
@@ -336,7 +338,7 @@ public class GenController extends BaseController {
     private void genCode(HttpServletResponse response, byte[] data) throws IOException
     {
         response.reset();
-        response.setHeader("Content-Disposition", "attachment; filename=\"fastos.zip\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"J2eeFAST_CODE_"+ DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN) +".zip\"");
         response.addHeader("Content-Length", "" + data.length);
         response.setContentType("application/octet-stream; charset=UTF-8");
         IOUtils.write(data, response.getOutputStream());

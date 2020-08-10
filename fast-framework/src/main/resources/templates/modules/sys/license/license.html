@@ -213,15 +213,7 @@
 	</form>
 	<script>
             function show() {
-                var html='<img src="${ctxStatic}/static/img/verifySn.png" width="100%" height="100%" alt="机器码与验证码">';
-                opt.layer.open({
-                    title: false,
-                    type: 1,
-                    closeBtn:false,
-                    shadeClose:true,
-                    area: ['700px', 'auto'],
-                    content: html
-                 });
+                 opt.modal.openView("verifySn.png","${ctxStatic}/static/img/verifySn.png",800,700);
             };
      </script>
 //-->

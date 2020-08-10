@@ -18,7 +18,7 @@
         <#-- 对应CSS样式-->
         <#if x == "table">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2-bootstrap.css?V=${config.getDvVersion()}"/>
-            <link rel="stylesheet" href="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.min.css?V=${config.getDvVersion()}"/>
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.css?V=${config.getDvVersion()}"/>
         </#if>
         <#if x == "zTree">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/ztree/3.5/css/metroStyle/metroStyle.css?V=${config.getDvVersion()}"/>
@@ -33,12 +33,15 @@
         <#if x == "cropbox">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/cropbox/cropbox.css?V=${config.getDvVersion()}"/>
         </#if>
+        <#if x == "cropper">
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/cropper/cropper.min.css?V=${config.getDvVersion()}"/>
+        </#if>
         <#if x == "prism">
             <#include "/common/code.html"/>
 
         </#if>
         <#if x == "selectPage">
-            <link rel="stylesheet" src="${ctxStatic}/static/plugins/selectpage/selectpage.css?V=${config.getDvVersion()}"/>
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/selectpage/selectpage.css?V=${config.getDvVersion()}"/>
         </#if>
         <#if x == "summernote">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/summernote/summernote.css?V=${config.getDvVersion()}"/>
@@ -50,6 +53,9 @@
         </#if>
         <#if x == "layout-latest">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/jquery-layout/jquery.layout-latest.css?V=${config.getDvVersion()}"/>
+        </#if>
+        <#if x == "fileupload">
+          	<link rel="stylesheet" href="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.css?V=${config.getDvVersion()}"/>
         </#if>
     </#list>
 </#if>

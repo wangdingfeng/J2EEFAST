@@ -125,6 +125,12 @@ public class SysUserEntity extends BaseEntity {
 	@TableField(exist = false)
 	private List<String> RoleKeys;
 
+
+	/**
+	 * 第三方登录源
+	 */
+	private String source;
+
 	/**
 	 * 角色ID列表
 	 */

@@ -43,6 +43,12 @@ public class SysLoginInfoEntity implements Serializable {
 	 *  系统类型
 	 */
 	private String os;
+
+	/**
+	 * 账号登录类型 sys 系统账号 ,  gitee , oschina,  github,  qq
+	 */
+	private String loginType;
+
 	/**
 	 * 登录状态（0成功 1失败）
 	 */

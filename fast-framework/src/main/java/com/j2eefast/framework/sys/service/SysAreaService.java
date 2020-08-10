@@ -61,6 +61,42 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 	public List<SysAreaEntity> selectList(SysAreaEntity sysAreaEntity){
 		return this.baseMapper.selectAreaList(sysAreaEntity);
 	}
+
+
+	/**
+	 * 多级联动数据查询
+	 * @param params
+	 * @return
+	 */
+	public PageUtil findSelectPage(Map<String, Object> params){
+		String type = (String) params.get("type");
+		if(ToolUtil.isNotEmpty(type) && type.equals("-1")){
+			return null;
+		}
+
+		String pId = (String) params.get("pId");
+		String name =(String) params.get("name");
+		//初始化上传
+		String searchValue = (String) params.get("searchValue");
+
+		Page<SysAreaEntity> page = sysAreaMapper.selectPage(new Query<SysAreaEntity>(params).getPage(),
+				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"level",type)
+						.eq(ToolUtil.isNotEmpty(pId),"parent_id",pId)
+						.eq(ToolUtil.isNotEmpty(searchValue),"id",searchValue)
+						.like(ToolUtil.isNotEmpty(name),"name",name));
+		//数据转换
+		List<Ztree> list = new ArrayList<>();
+		for(SysAreaEntity area: page.getRecords()){
+			Ztree ztree = new Ztree();
+			ztree.setId(area.getId());
+			ztree.setpId(area.getParentId());
+			ztree.setName(area.getName());
+			list.add(ztree);
+		}
+		//数据输出前端分页
+		return new PageUtil(list,page.getTotal(),page.getSize(),page.getCurrent());
+	}
+
 	/**
      * 批量删除
      */

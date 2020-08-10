@@ -25,61 +25,85 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--  实体栏位  --> 
     <sql id="${className}Columns">
 #foreach($c in $columns)##
-#if($c.javaType == "SysCompEntity")##  
-          a.$c.columnName as "${c.javaField}.id"  ,
-          comp001.name as "${c.javaField}.name" #if($foreach.hasNext) ,#end    
-               
-#elseif($c.javaType == "SysDeptEntity")## 
-          a.$c.columnName as "${c.javaField}.id" ,
-          dept001.name as "${c.javaField}.name" #if($foreach.hasNext) ,#end 
+#if($c.htmlType == "comp")##
+         comp001.name as "compName",##
+
+#elseif($c.htmlType == "dept")##
+         dept001.name as "deptName",##
           
-#elseif($c.javaType == "SysUserEntity" ) ##关联系统实体
-         a.$c.columnName as "${c.javaField}.id" ,
-         user001.name as "${c.javaField}.name" #if($foreach.hasNext) ,#end 
+#elseif($c.htmlType == "SysUserEntity" ) ##关联系统实体
+         user001.name as "${c.javaField}.name"
                 
-#else####关联系统实体
-         a.$c.columnName as "${c.javaField}"  #if($foreach.hasNext) ,#end
-                 
-#end ###关联系统实体
-#if($c.columnName =="del_flag")#set($delFlagExist ="1") #end##是否存在逻辑删除         
-#if($velocityCount != $columns.size())#end##
+#end
+         a.$c.columnName as "${c.javaField}" #if($velocityCount != $columns.size()),#end##
+
 #end ##
     </sql>
-    
-     <!-- 外联表  --> 
-	<sql id="${className}Joins">
+#set($jion = "0")
 #foreach($c in $columns)##
-#if($c.javaType == "SysCompEntity")##
-        left join sys_comp comp001 ON comp001.id = a.$c.columnName
-#end
-#if($c.javaType == "SysUserEntity")##
-        left join sys_user user001 ON user001.id = a.$c.columnName
-#end
-#if($c.javaType == "SysDeptEntity")##
-        left join sys_dept dept001 ON dept001.id = a.$c.columnName
-#end
-#end##foreach
-		<!--  left join sys_comp c ON c.id = a.$c.columnName   关联查询后，需手动修改 ${className}Columns 中属性值      -->
-    </sql>
+    #if($c.htmlType == "comp")##
+        #set($jion = "1")
+        #break
+    #end
+    #if($c.htmlType == "user")##
+        #set($jion = "1")
+        #break
+    #end
+    #if($c.htmlType == "dept")##
+        #set($jion = "1")
+        #break
+    #end
+#end######
+
+    #if($jion == "1")####
+    <!-- 外联表  -->####
+
+    <sql id="${className}Joins">####
+
+#foreach($c in $columns)##
+            #if($c.htmlType == "comp")##
+
+        left join sys_comp comp001 ON comp001.id = a.$c.columnName####
+            #end
+            #if($c.htmlType == "user")##
+
+        left join sys_user user001 ON user001.id = a.$c.columnName#####
+            #end
+            #if($c.htmlType == "dept")##
+
+        left join sys_comp dept001 ON (dept001.type = 1 AND dept001.id = a.$c.columnName )####
+#end####
+        #end##foreach
+
+    </sql>####
+    #end
+
     
     
     <!--  根据主键获取实体   -->
-     <select id="selectById"  resultType="${packageName}.entity.${ClassName}Entity" > 
+     <select id="find${ClassName}ById"  resultType="${packageName}.entity.${ClassName}Entity" >
           SELECT 
 			<include refid="${className}Columns"/>
 		FROM  ${tableName} a
-		<include refid="${className}Joins"/>
+#if($jion == "1")####
+        <include refid="${className}Joins"/>#end
+
 		WHERE a.${pkColumn.columnName} = #{${pkColumn.javaField}}
     </select>
     
      <!--  根据获取实体List   -->
-     <select id="selectList" resultType="${packageName}.entity.${ClassName}Entity">
+     <select id="findList" resultType="${packageName}.entity.${ClassName}Entity">
 		SELECT 
 			<include refid="${className}Columns"/>
 		FROM ${tableName} a
-		<include refid="${className}Joins"/>
+#if($jion == "1")####
+        <include refid="${className}Joins"/>#end
+
 		<where>
-#if($delFlagExist == "1")      a.del_flag = '0'#end##
+#foreach($c in $columns)##
+    #if($c.javaField == 'delFlag')###
+        a.del_flag = '0'#end##
+#end###
 #foreach($c in $columns)##
 #if($c.isQuery == "1" )## isQuery 
 #if($c.queryType == 'EQ')## queryType  /** 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围） */
@@ -116,18 +140,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                </if>    
 		</where>
 	 </select>
-	 
-	 
-	 
+
 	  <!--  根据获取实体 page   -->
      <select id="findPage" resultType="${packageName}.entity.${ClassName}Entity">
 		SELECT 
 			<include refid="${className}Columns"/>
 		FROM ${tableName} a
-		<include refid="${className}Joins"/>
+#if($jion == "1")####
+         <include refid="${className}Joins"/>#end
+
 		<where>
-#if($delFlagExist == "1")     a.del_flag = '0' #end##
-        
+#foreach($c in $columns)
+    #if($c.javaField == 'delFlag')
+        a.del_flag = '0'
+    #end###
+#end###
 #foreach($c in $columns)##
 #if($c.isQuery == "1" )## isQuery 
 #if($c.queryType == 'EQ')## queryType  /** 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围） */
@@ -162,93 +189,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              </if>  
 		</where>
 	 </select>
-	 
-		<!--  更新获取实体 updateById    -->
-	<update id="updateById">
-		UPDATE  ${tableName}  <set>	
-#foreach ($c in $columns)##
-#if($c.isEdit =="1")##
-#if($c.javaType == "SysCompEntity")##实体对象
-              $c.columnName = #{${c.javaField}.id} #if($foreach.hasNext) ,#end
-              
-#elseif($c.javaType == "SysDeptEntity")
-             $c.columnName = #{${c.javaField}.id} #if($foreach.hasNext) ,#end
-              
-#elseif($c.javaType == "SysUserEntity")
-              $c.columnName = #{${c.javaField}.id} #if($foreach.hasNext) ,#end
-              
-#else
-              $c.columnName = #{$c.javaField} #if($foreach.hasNext) ,#end
-              
-#end##实体对象            
-#end##isEdit
-#end##
-  		</set>
-		WHERE ${pkColumn.columnName} = #{${pkColumn.javaField}}
-	</update>
-	   
-	 
-	<!--  新增实体 insert    --> 
-	 <insert id="insert">
-	 INSERT INTO ${tableName}(
-#foreach ($c in $columns)##
-#if($c.isInsert =="1")##
-          ${c.columnName}#if($foreach.hasNext) ,#end
-          
-#end
-#end
-       ) VALUES (
-#foreach ($c in $columns)##
-#if($c.isInsert =="1")##
-#if($c.javaType == "SysCompEntity")##实体对象
-        #{${c.javaField}.id}#if($foreach.hasNext) ,#end
-        
-#elseif($c.javaType == "SysDeptEntity")
-        #{${c.javaField}.id}#if($foreach.hasNext) ,#end##
-        
-#elseif($c.javaType == "SysUserEntity")
-        #{${c.javaField}.id}#if($foreach.hasNext),#end## 
-
-#else
-        #{${c.javaField}}#if($foreach.hasNext),#end##
-        
-#end##实体对象          
-#end##isInsert
-#end
-		)
-	</insert>
-	 
-
-	<!--  删除 使用mybatits-plus 自带的，    --> 
-  
-
-<!--
-
-
-    <update id="update${ClassName}" parameterType="${packageName}.entity.${ClassName}Entity">
-        update ${tableName}
-        <trim prefix="SET" suffixOverrides=",">
-#foreach($column in $columns)
-#if($column.columnName != $pkColumn.columnName)
-#if($column.javaField != 'createBy' || $column.javaField !='createTime')
-        <if test="$column.javaField != null #if($column.javaType == 'String' ) and $column.javaField != ''#end">$column.columnName = #{$column.javaField},</if>
-#end
-#end
-#end
-            update_time = sysdate()
-        </trim>
-        where ${pkColumn.columnName} = #{${pkColumn.javaField}}
-    </update>
-
-    <delete id="delete${ClassName}ById" parameterType="${pkColumn.javaType}">
-        delete from ${tableName} where ${pkColumn.columnName} = #{${pkColumn.javaField}}
-    </delete>
-
-    <delete id="deleteBatch" parameterType="${pkColumn.javaType}">
-        delete from ${tableName} where ${pkColumn.columnName} in
-        <foreach item="${pkColumn.javaField}" collection="array" open="(" separator="," close=")">
-            #{${pkColumn.javaField}}
-        </foreach>
-    </delete>
--->
 </mapper>

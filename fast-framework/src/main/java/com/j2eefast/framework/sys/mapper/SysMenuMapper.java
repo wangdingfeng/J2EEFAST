@@ -112,5 +112,5 @@ public interface SysMenuMapper extends BaseMapper<SysMenuEntity> {
 	 * @param userId 用户ID
 	 * @return 菜单列表
 	 */
-	List<SysMenuEntity> findMenuAllByUserId(@Param("userdId") Long userId);
+	List<SysMenuEntity> findMenuAllByUserId(@Param("userId") Long userId);
 }

@@ -8,6 +8,7 @@ import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.common.core.enums.BusinessType;
+import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
@@ -250,6 +251,15 @@ public class SysMenuController extends BaseController {
 		}
 		UserUtils.clearCachedAuthorizationInfo(); //清理权限缓存
 		return sysMenuService.removeById(menuId)?success():error("删除失败!");
+	}
+
+	@BussinessLog(title = "菜单管理", businessType = BusinessType.CLEAN)
+	@RequestMapping(value = "/clearMenu", method = RequestMethod.GET)
+	@RequiresPermissions("sys:menu:clear")
+	@RepeatSubmit
+	@ResponseBody
+	public ResponseData clearConfig(){
+		return sysMenuService.clearMenuRedis()?success():error("清除失败!");
 	}
 
 	/**

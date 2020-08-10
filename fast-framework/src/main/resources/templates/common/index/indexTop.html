@@ -158,10 +158,11 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a id="updatePassword" href="javascript:void(0);" class="btn btn-default btn-flat"><i class="fa icon-lock-open"></i> <@ctx.i18n text = "修改密码"/></a>
+                                <a id="updatePassword" href="javascript:void(0);" title="<@ctx.i18n text = "修改密码"/>" class="btn btn-default btn-flat" style="width: 120px;overflow: hidden;
+                                 white-space: nowrap;text-overflow: ellipsis;"><i class="fa icon-lock-open"></i> <@ctx.i18n text = "修改密码"/></a>
                             </div>
                             <div class="pull-right">
-                                <a click-id="logout" href="javascript:void(0);" class="btn btn-default btn-flat"><i class="fa icon-power"></i> <@ctx.i18n text = "退出"/></a>
+                                <a click-id="logout" href="javascript:void(0);" title="<@ctx.i18n text = "退出"/>" class="btn btn-default btn-flat"><i class="fa icon-power"></i> <@ctx.i18n text = "退出"/></a>
                             </div>
                         </li>
                     </ul>

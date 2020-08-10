@@ -43,17 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="sysAreaJoins">
 		<!--  left join sys_comp c ON c.id = a.$c.columnName   关联查询后，需手动修改 sysAreaColumns 中属性值      -->
     </sql>
-    
-    
-    <!--  根据主键获取实体   -->
-     <select id="selectById"  resultType="com.j2eefast.framework.sys.entity.SysAreaEntity" > 
-          SELECT 
-			<include refid="sysAreaColumns"/>
-		FROM  sys_area a
-		<include refid="sysAreaJoins"/>
-		WHERE a.id = #{id}
-    </select>
-    
+
      <!--  根据获取实体List   -->
      <select id="selectAreaList" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
 		SELECT 
@@ -95,87 +85,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                <if test="sysArea.areaCode != null  and sysArea.areaCode != ''"> and a.area_code = #{sysArea.areaCode} </if>
       		</where>
 	 </select>
-	 
-		<!--  更新获取实体 updateById    -->
-	<update id="updateById">
-		UPDATE  sys_area  <set>	
-              lon = #{lon}  ,              
-              lat = #{lat}  ,              
-              city_code = #{cityCode}  ,              
-              zip_code = #{zipCode}  ,              
-              area_code = #{areaCode}  ,              
-  		</set>
-		WHERE id = #{id}
-	</update>
 	   
-	 
-	<!--  新增实体 insert    --> 
-	 <insert id="insert">
-	 INSERT INTO sys_area(
-          parent_id ,          
-          name ,          
-          level ,          
-          whole_name ,          
-          lon ,          
-          lat ,          
-          city_code ,          
-          zip_code ,          
-          area_code ,          
-          pin_yin ,          
-          simple_py ,          
-          per_pin_yin          
-       ) VALUES (
-        #{parentId},        
-        #{name},        
-        #{level},        
-        #{wholeName},        
-        #{lon},        
-        #{lat},        
-        #{cityCode},        
-        #{zipCode},        
-        #{areaCode},        
-        #{pinYin},        
-        #{simplePy},        
-        #{perPinYin}        
-		)
-	</insert>
-	 
-
-	<!--  删除 使用mybatits-plus 自带的，    --> 
-  
-
-<!--
-
-
-    <update id="updateSysArea" parameterType="com.j2eefast.framework.sys.entity.SysAreaEntity">
-        update sys_area
-        <trim prefix="SET" suffixOverrides=",">
-        <if test="parentId != null ">parent_id = #{parentId},</if>
-        <if test="name != null  and name != ''">name = #{name},</if>
-        <if test="level != null ">level = #{level},</if>
-        <if test="wholeName != null  and wholeName != ''">whole_name = #{wholeName},</if>
-        <if test="lon != null  and lon != ''">lon = #{lon},</if>
-        <if test="lat != null  and lat != ''">lat = #{lat},</if>
-        <if test="cityCode != null  and cityCode != ''">city_code = #{cityCode},</if>
-        <if test="zipCode != null  and zipCode != ''">zip_code = #{zipCode},</if>
-        <if test="areaCode != null  and areaCode != ''">area_code = #{areaCode},</if>
-        <if test="pinYin != null  and pinYin != ''">pin_yin = #{pinYin},</if>
-        <if test="simplePy != null  and simplePy != ''">simple_py = #{simplePy},</if>
-        <if test="perPinYin != null  and perPinYin != ''">per_pin_yin = #{perPinYin},</if>
-            update_time = sysdate()
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteSysAreaById" parameterType="Long">
-        delete from sys_area where id = #{id}
-    </delete>
-
-    <delete id="deleteBatch" parameterType="Long">
-        delete from sys_area where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
--->
 </mapper>

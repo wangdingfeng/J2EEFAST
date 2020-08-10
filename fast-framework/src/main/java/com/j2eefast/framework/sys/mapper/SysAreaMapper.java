@@ -18,17 +18,14 @@ public interface SysAreaMapper extends BaseMapper<SysAreaEntity> {
 	/**
      * 自定义分页查询
      * @param  page 
-     * @param  SysAreaEntity 实体类
+     * @param  sysAreaEntity 实体类
      */
      Page<SysAreaEntity> findPage(IPage<SysAreaEntity> page,@Param("sysArea") SysAreaEntity sysAreaEntity);
 
-     SysAreaEntity selectById(Serializable id);
-     
+
      List<SysAreaEntity> selectAreaList(SysAreaEntity sysAreaEntity);
      
-     int insert(SysAreaEntity sysAreaEntity);   
-     
-     int updateById(SysAreaEntity sysAreaEntity);
+
 
      /**删除相关方法  使用mybatis-plus集成的 **/
 }

@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.base.entity.Ztree;
+import com.j2eefast.common.core.constants.Cache;
+import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.entity.SysMenuEntity;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
@@ -38,6 +40,9 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 
 	@Resource
 	private SysMenuMapper sysMenuMapper;
+
+	@Resource
+	private RedisUtil redisUtil;
 	/**
 	 * 获取所有菜单
 	 * @param menu
@@ -242,6 +247,14 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 
 	public List<SysMenuEntity> findListmoduleParentId(Long parentId, String models) {
 		return sysMenuMapper.findListmoduleParentId(parentId,models);
+	}
+
+	/**
+	 * 清空系统参数redis 缓存
+	 * @return
+	 */
+	public boolean clearMenuRedis(){
+		return  redisUtil.deletes(Cache.MENU_CONSTANT+"*");
 	}
 
 	/**

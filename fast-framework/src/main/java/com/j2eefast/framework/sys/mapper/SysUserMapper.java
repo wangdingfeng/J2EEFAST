@@ -116,6 +116,15 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
 
 
     /**
+     * 免密登录通过第三方授权id查询用户情况
+     * @param username
+     * @return
+     */
+    SysUserEntity findAuthByUserName(@Param("username") String username);
+
+
+    SysUserEntity findAuthByUuid(@Param("uuid") String uuid);
+    /**
      * 手机号码获取用户信息
      * @param mobile
      * @return

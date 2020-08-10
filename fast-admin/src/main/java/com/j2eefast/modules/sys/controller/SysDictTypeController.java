@@ -7,6 +7,7 @@ import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
+import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.sys.entity.SysDictTypeEntity;
 import com.j2eefast.framework.sys.service.SysDictTypeSerive;
 import com.j2eefast.common.core.controller.BaseController;
@@ -167,6 +168,7 @@ public class SysDictTypeController extends BaseController {
     @BussinessLog(title = "字典类型", businessType = BusinessType.CLEAN)
     @RequestMapping(value = "/clearDict", method = RequestMethod.GET)
     @RequiresPermissions("sys:dict:clear")
+    @RepeatSubmit
     @ResponseBody
     public ResponseData clearConfig(){
         return sysDictTypeSerive.clearDictRedis()?success():error("Redis没有开启无需清理!");

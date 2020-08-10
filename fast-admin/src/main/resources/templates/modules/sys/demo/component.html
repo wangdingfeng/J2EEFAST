@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="前端组件使用说明" bodyClass="white-bg" libs=["prism","bootstrapSelect","ueditor"]/>
+<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage"]/>
 <div class="wrapper wrapper-content ibox-content">
     <@form.tip class="warning"><strong>重要提示:</strong>J2eeFAST平台 前端模板引擎组件写法类似 HTML 本身控件写法,属性值方式.</@form.tip>
     <@form.code>
@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color: red; ">*</span>输入框组件：</label>
                     <div class="col-sm-10">
-                        <@form.input name="username" placeholder="请输入登录账号"  butClass="fa fa-envelope-open" required="true" helpTip="登录账号数字加字母组合,至少3位"/>
+                        <@form.input name="username" placeholder="请输入登录账号"  butClass="fa fa-envelope-open" required=true helpTip="登录账号数字加字母组合,至少3位"/>
                         <#-- form.code 是为了演示说明 可以删除-->
                         <@form.code>
                          <#noparse>
@@ -38,7 +38,7 @@
                                     11.readonly 控件是否可以编辑 不是必输 默认""
                                     12.maxlength 控件输入最大长度 不是必输 默认 ""
                              //栗子 🌰
-                             <@form.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required="true"
+                             <@form.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required=true
                              helpTip="登录账号数字加字母组合,至少3位"/>
 
                              //表单隐藏域标签:<@form.hidden/>
@@ -80,6 +80,16 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>图片剪切：</label>
+                    <div class="col-sm-10">
+                        <@form.imageclip name="imgCp"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><span style="color: red; ">*</span>下拉单选：</label>
@@ -92,7 +102,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><span style="color: red; ">*</span>下拉多选：</label>
                     <div class="col-sm-8">
-                        <@form.select name="businessTypes" multiple = "true"  dictType="sys_oper_type" required="true"/>
+                        <@form.select name="businessTypes" multiple=true  dictType="sys_oper_type" required=true/>
                     </div>
                 </div>
             </div>
@@ -132,10 +142,20 @@
                                 //从字典获取栗子 🌰:
                                 <@form.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
                                 //从后台传入值栗子 🌰:
-                                <@form.select name="roleIdList" multiple = "true" value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id"
-                                required="true"/>
+                                <@form.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id"
+                                required=true/>
                             </#noparse>
                         </@form.code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>异步多级联动：</label>
+                    <div class="col-sm-10">
+                        <@form.selectLinkage name="cidy"/>
                     </div>
                 </div>
             </div>
@@ -155,7 +175,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><span style="color: red; ">*</span>多选框：</label>
                     <div class="col-sm-8">
-                        <@form.checkbox name="postType" dictType="sys_post_type" required="true"/>
+                        <@form.checkbox name="postType" dictType="sys_post_type" required=true/>
                     </div>
                 </div>
             </div>
@@ -201,7 +221,7 @@
                                 的value值 不是必输
                                 //栗子 🌰
                                 <@form.checkbox name="postType" dictType="sys_post_type"
-                                required="true"/>
+                                required=true/>
                             </#noparse>
                         </@form.code>
                     </div>
@@ -271,7 +291,7 @@
                     <label class="col-sm-2 control-label"><span style="color: red; ">*</span>选择树组件：</label>
                     <div class="col-sm-10">
                         <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-                        expandLevel="true"
+                        expandLevel=true
                         placeholder="请选择上级机构"/>
                         <@form.code>
                             <#noparse>
@@ -303,11 +323,11 @@
 
                                 //栗子 🌰
                                 <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-                                expandLevel="true" placeholder="请选择上级机构"/>
+                                expandLevel=true placeholder="请选择上级机构"/>
 
                                 //关联
                                 <@form.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" value="${user.deptId?default('')}"
-                                labelValue="${user.deptName?default('')}" correlationId="compId" isSelectParent="true"  placeholder="请选择归属部门"/>
+                                labelValue="${user.deptName?default('')}" correlationId="compId" isSelectParent=true  placeholder="请选择归属部门"/>
                             </#noparse>
                         </@form.code>
                     </div>
@@ -343,11 +363,34 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>图片上传：</label>
+                    <div class="col-sm-10">
+                        <@form.fileupload name="uploadImageFile1" uploadType="image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>文件上传：</label>
+                    <div class="col-sm-10">
+                        <@form.fileupload name="uploadFile" bizType="temp_file" uploadType="all"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </@form.form>
     <div class="hr-line-dashed"></div>
     </div>
 <@footer>
 <script type="text/javascript">
+
     /**
      * 下拉选择框 回调函数案例
      * @param id
@@ -380,10 +423,10 @@
      */
     function  redioCallback(id,data,event){
         if(id == "type"){
-            if ($(data).is(':checked')){
+           /* if ($(data).is(':checked')){
                 var menuType = $(event.target).val();
                 opt.modal.alertInfo("redio 单选回调: 控件名称:" + id + " 选中:" + menuType);
-            }
+            } */
         }
     }
 
@@ -408,6 +451,25 @@
 
             if(event == "cancel"){
                 opt.modal.alertInfo("弹出树 点击取消");
+            }
+        }
+    }
+
+    /**
+     * 多级联动控件回调事件
+     * @param name 主控件名称 指<#noparse><@form.selectLinkage name="cidy"/></#noparse>中的name
+     * @param id 点击事件id
+     * @param event 事件名称 load 数据加载, select 选择, clear 清除
+     * @param data 返回事件数据
+     */
+    function selectLinkageCallback(name,id,event,data){
+        console.log("name:" + name + "  id:" + id + "  event:" + event + "  data:" +data);
+        if(name == "cidy"){
+            if(event == "clear"){
+                opt.modal.alertInfo("多级联动 点击清除");
+            }
+            if(event == "select"){
+                opt.modal.alertInfo("多级联动 选择:" + data.name);
             }
         }
     }

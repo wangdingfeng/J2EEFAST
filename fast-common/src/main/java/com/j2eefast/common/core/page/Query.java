@@ -38,6 +38,16 @@ public class Query <T> extends LinkedHashMap<String, Object> {
 		if (params.get("__limit") != null) {
 			limit = Integer.parseInt((String) params.get("__limit"));
 		}
+		// 对多级联动支持
+		if(params.get("__seletPage") != null && params.get("__seletPage").equals("true")){
+			if (params.get("pageNumber") != null) {
+				currPage = Integer.parseInt((String) params.get("pageNumber"));
+			}
+			if (params.get("pageSize") != null) {
+				limit = Integer.parseInt((String) params.get("pageSize"));
+			}
+		}
+
 
 		this.put("offset", (currPage - 1) * limit);
 		this.put("page", currPage);

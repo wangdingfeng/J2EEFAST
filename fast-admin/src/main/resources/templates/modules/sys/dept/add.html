@@ -13,27 +13,27 @@
         <label class="col-sm-3 control-label "><span style="color: red; ">*</span>上级机构：</label>
         <div class="col-sm-8">
             <@form.treeselect id="parentId" name="parentId" boxTitle="请选择上级机构" url="sys/comp/treeData"
-            expandLevel="true" isParentIds="true" value="${(dept.id)!''}" labelValue="${(dept.name)!''}" isParentIds="true"
+            expandLevel=true isparentids=true value="${(dept.id)!''}" labelValue="${(dept.name)!''}" isparentids=true
             parenIdsValue="${(dept.id)!''},${(dept.parentIds)!''}"
-            placeholder="请选择上级机构" required="true"/>
+            placeholder="请选择上级机构" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构名称：</label>
         <div class="col-sm-8">
-            <@form.input name="name" required="true"/>
+            <@form.input name="name" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构全称：</label>
         <div class="col-sm-8">
-            <@form.input name="fullName" required="true"/>
+            <@form.input name="fullName" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>显示排序：</label>
         <div class="col-sm-8">
-            <@form.input name="orderNum" required="true"/>
+            <@form.input name="orderNum" required=true/>
         </div>
     </div>
     <div class="form-group">

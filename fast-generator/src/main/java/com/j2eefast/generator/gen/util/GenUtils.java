@@ -187,7 +187,8 @@ public class GenUtils
             String[] replacementList = emptyList(searchList.length);
             tableName = StringUtils.replaceEach(tableName, searchList, replacementList);
         }
-        return StrUtil.toCamelCase(tableName);
+        String name = StrUtil.toCamelCase(tableName);
+        return name.substring(0,1).toUpperCase() + name.substring(1);
     }
 
     /**

@@ -19,17 +19,16 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}Entity> {
 	/**
      * 自定义分页查询
      * @param  page 
-     * @param  ${ClassName}Entity 实体类
+     * @param  ${className}Entity 实体类
      */
-     Page<${ClassName}Entity> findPage(IPage<${ClassName}Entity> page,@Param("${className}") ${ClassName}Entity ${className}Entity);
+     Page<${ClassName}Entity> findPage(IPage<${ClassName}Entity> page,
+                                       @Param("${className}") ${ClassName}Entity ${className}Entity,
+                                       @Param("sql_filter") String sql_filter);
 
-     ${ClassName}Entity selectById(Serializable id);
-     
-     List<${ClassName}Entity> selectList(${ClassName}Entity ${className}Entity);
-     
-     int insert(${ClassName}Entity ${className}Entity);   
-     
-     int updateById(${ClassName}Entity ${className}Entity);
+     ${ClassName}Entity find${ClassName}ById(Serializable id);
+
+
+     List<${ClassName}Entity> findList(${ClassName}Entity ${className}Entity);
 
      /**删除相关方法  使用mybatis-plus集成的 **/
 }

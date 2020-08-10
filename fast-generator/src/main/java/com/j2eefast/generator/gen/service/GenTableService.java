@@ -46,6 +46,7 @@ import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -108,7 +109,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
      */
     private void generatorCode(String tableName, ZipOutputStream zip){
         // 查询表信息
-        GenTableEntity table = genTableMapper.findByName(tableName);
+        GenTableEntity table = findGenTableByName(tableName);
         // 查询列信息
         List<GenTableColumnEntity> columns = table.getColumns();
         setPkColumn(table, columns);
@@ -118,7 +119,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         VelocityContext context = VelocityUtils.prepareContext(table);
 
         // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
         for (String template : templates){
             // 渲染模板
             StringWriter sw = new StringWriter();
@@ -169,7 +170,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 
         VelocityContext context = VelocityUtils.prepareContext(table);
         // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
         if(table.getIsCover().equals("N")){
             for (String template : templates) {
                 if(!template.contains("sql.vm")){
@@ -197,6 +198,14 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
                     throw  new RxcException("文件生成失败","99991");
                 }
             }
+        }
+
+        //删除无用生成的文件
+        List<String> allTemplates = VelocityUtils.allTemplateList(table.getTarget());
+        allTemplates.removeAll(templates);
+        for(String template: allTemplates){
+            String p = path + VelocityUtils.getFileName(template, table);
+            FileUtil.del(p);
         }
         return true;
     }
@@ -350,7 +359,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         VelocityContext context = VelocityUtils.prepareContext(table);
 
         // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
         for (String template : templates){
             // 渲染模板
             StringWriter sw = new StringWriter();
@@ -369,8 +378,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     * @Description: 获取所有指定数据源的 部分表List
     * @param db
     * @param dbTableName
-    * @param dbUserName
-    * @return  List<GenTableEntity> 
+    * @return  List<GenTableEntity>
     * @author mfksn001@163.com
     * @Date: 2020年5月30日
      */
@@ -378,9 +386,14 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 
 		List<GenTableEntity> list = Lists.newArrayList();
 		String dbType = db.getDbType();
+        List<GenTableEntity> notList = this.list(new QueryWrapper<GenTableEntity>().eq("db_name",db.getDbName()));
+        List<String> names = null;
+        if(ToolUtil.isNotEmpty(notList)){
+            names =  notList.stream().map(GenTableEntity :: getTableName).collect(Collectors.toList());
+        }
 		DataSourceContextHolder.setDataSourceType(db.getDbName());
 		try {
-			list = genTableMapper.generateTableList(dbType, db.getSchema(), dbTableName, dbTableComment);
+			list = genTableMapper.generateTableList(dbType, db.getSchema(), dbTableName, dbTableComment,names);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -394,12 +407,17 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 		
 		List<GenTableEntity> list = Lists.newArrayList();
 		String dbType = db.getDbType();
+        List<GenTableEntity> notList = this.list(new QueryWrapper<GenTableEntity>().eq("db_name",db.getDbName()));
+        List<String> names = null;
+        if(ToolUtil.isNotEmpty(notList)){
+            names =  notList.stream().map(GenTableEntity :: getTableName).collect(Collectors.toList());
+        }
 		if (!DataSourceContext.MASTER_DATASOURCE_NAME.equals(db.getDbName())) {
 			DataSourceContextHolder.setDataSourceType(db.getDbName());
-			list = genTableMapper.generateTableList(dbType, db.getSchema(),null, null);
+			list = genTableMapper.generateTableList(dbType, db.getSchema(),null, null,names);
 			DataSourceContextHolder.clearDataSourceType();
 		} else {
-			list = genTableMapper.generateTableList(dbType, db.getSchema(), null, null);
+			list = genTableMapper.generateTableList(dbType, db.getSchema(), null, null,names);
 		}
 
 		return list;
@@ -425,12 +443,16 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 			SysDatabaseEntity db = sysDatabaseMapper.getByName(dbName);
 			String dbType = db.getDbType();
 			String schema = db.getSchema();
+			List<GenTableEntity> notList = this.list(new QueryWrapper<GenTableEntity>().eq("db_name",dbName));
+            List<String> names = null;
+            if(ToolUtil.isNotEmpty(notList)){
+                names =  notList.stream().map(GenTableEntity :: getTableName).collect(Collectors.toList());
+            }
 			if (!DataSourceContext.MASTER_DATASOURCE_NAME.equals(dbName)) {
 				DataSourceContextHolder.setDataSourceType(db.getDbName());  //指定数据源
-				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment);
-				
+				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment,names);
 			} else {
-				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment);
+				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment,names);
 			}
 			page.setRecords(list);
 		} catch (Exception e) {

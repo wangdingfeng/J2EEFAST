@@ -37,6 +37,9 @@
         <a class="btn btn-info" id="expandAllBtn">
             <i class="fa fa-exchange"></i> <@ctx.i18n text = "展开/折叠"/>
         </a>
+        <@shiro.hasPermission name="sys:menu:clear">
+            <a class="btn btn-danger" onclick="clearRedis()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "清除缓存"/></a>
+        </@shiro.hasPermission>
     </@table>
     </div>
 </div>
@@ -74,6 +77,7 @@
                         }}
                 },
                 {field: 'moduleCodes', title: "<@ctx.i18n text = "归属模块"/>", width: '10%'},
+                {field: 'orderNum', title: "<@ctx.i18n text = "排序"/>", width: '5%'},
                 {title: "<@ctx.i18n text = "请求地址"/>", field: 'url', width: '15%'},
                 {title: "<@ctx.i18n text = "目标"/>", field: 'target', width: '15%', formatter: function(value, row, index) {
                         if(row.type === 1){
@@ -116,6 +120,11 @@
         /*初始化*/
         $.treeTable.init(options);
     })
+
+    /* 清空菜单缓存*/
+    function clearRedis() {
+        opt.operate.get(prefix + "/clearMenu");
+    }
 </script>
 </@footer>
 </@pageTheme>

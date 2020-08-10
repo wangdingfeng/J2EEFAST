@@ -6,13 +6,13 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块名称"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleName" required="true"/>
+            <@form.input name="moduleName" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块编码"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleCode" required="true"/>
+            <@form.input name="moduleCode" required=true/>
         </div>
     </div>
     <div class="form-group">
@@ -28,19 +28,19 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块描述"/>：</label>
         <div class="col-sm-8">
-            <@form.textarea name="description" required="true"/>
+            <@form.textarea name="description" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "主类全名"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="mainClassName" required="true" helpTip = "该模块的状态验证类，如果该类检测不存在，则该模块状态提示 \"未安装\",验证原理：Class.forName()"/>
+            <@form.input name="mainClassName" required=true helpTip = "该模块的状态验证类，如果该类检测不存在，则该模块状态提示 \"未安装\",验证原理：Class.forName()"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "版本"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="currentVersion" required="true"/>
+            <@form.input name="currentVersion" required=true/>
         </div>
     </div>
     <div class="form-group">

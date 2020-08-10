@@ -4,11 +4,18 @@ package ${packageName}.service;
 import ${packageName}.entity.${ClassName}Entity;
 import ${packageName}.mapper.${ClassName}Mapper;
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
+import cn.hutool.core.util.StrUtil;
+import com.j2eefast.common.core.utils.SpringUtil;
+import com.j2eefast.framework.sys.entity.SysCompEntity;
+import com.j2eefast.framework.sys.service.SysCompService;
+import com.j2eefast.framework.utils.FileUploadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.mutidatasource.annotaion.DataSource;
 #end##
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.framework.utils.Constant;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +24,17 @@ import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Arrays;
+import org.springframework.transaction.annotation.Transactional;
+#set($isImg = "0")#####
+#foreach ($column in $columns)####
+#if($column.htmlType == "imgcup")####
+#set($isImg = "1")
+#break###
+#end####
+#end###
+#if($table.rFile || $table.rImg || $isImg == "1")
+import com.j2eefast.framework.utils.FileUploadUtils;
+#end####
 /**
  *
  * ${functionName}Service接口
@@ -25,12 +43,29 @@ import java.util.Arrays;
  */
 @Service
 public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassName}Entity> {
+#set ($iscompId_ = "")
+#set ($isdeptId_ = "")
+#foreach($column in $columns)##
+	#if($column.htmlType == 'comp')
+		#if($foreach.hasNext)#set ($iscompId_ = $column.javaField)#end###
+	#end
+	#if($column.htmlType == 'dept')
+		#if($foreach.hasNext)#set ($isdeptId_ = $column.javaField)#end###
+	#end
+#end
 
-	@Resource
-	private ${ClassName}Mapper ${className}Mapper;
+	@Resource###
 
+	private ${ClassName}Mapper ${className}Mapper;###
+
+	#if($table.dbName !='MASTER' && ($isdeptId_ != '' || $iscompId_ != ''))
+	@Autowired###
+
+	private SysCompService sysCompService;###
+
+	#end
 	/**
-	 * mybaitis-plus 页面分页查询
+	 * mybaitis-plus   单表页面分页查询
      */
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
@@ -66,9 +101,29 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end ##query
 #end##foreach
 		Page<${ClassName}Entity> page = ${className}Mapper.selectPage(new Query<${ClassName}Entity>(params).getPage(), queryWrapper);
+		#if($table.dbName !='MASTER' && ($iscompId_ != '' || $iscompId_ != ''))
+		for(${ClassName}Entity ${className}: page.getRecords()){
+			#if($iscompId_ != '')
+				#set($compName_ = $iscompId_.substring(0,1).toUpperCase() + $iscompId_.substring(1))
+				${className}.setCompName(SpringUtil.getAopProxy(this).getByCompEntity(${className}.get${compName_}(),null).getName());###
+
+			#end
+			#if($isdeptId_ != '')
+				#set($deptName_ = $isdeptId_.substring(0,1).toUpperCase() + $isdeptId_.substring(1))
+				${className}.setDeptName(SpringUtil.getAopProxy(this).getByCompEntity(null,${className}.get${deptName_}()).getName());###
+			#end
+		}
+		#end
 		return new PageUtil(page);
     }
 
+#if($table.dbName !='MASTER' && ($iscompId_ != '' || $iscompId_ != ''))
+	@DataSource(name="MASTER")
+	public SysCompEntity getByCompEntity(Long compId,Long deptId){
+		return sysCompService.getOne(new QueryWrapper<SysCompEntity>().
+				eq("id",ToolUtil.isNotEmpty(compId)?compId:deptId).eq("type",ToolUtil.isNotEmpty(compId)?"0":"1"));
+	}
+#end
     /**
      * 自定义分页查询，含关联实体对像
      */
@@ -76,7 +131,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##
 	public PageUtil findPage(Map<String, Object> params,${ClassName}Entity ${className}Entity) {
-		Page<${ClassName}Entity> page = ${className}Mapper.findPage(new Query<${ClassName}Entity>(params).getPage(), ${className}Entity)  ;
+		Page<${ClassName}Entity> page = ${className}Mapper.findPage(new Query<${ClassName}Entity>(params).getPage(),
+																${className}Entity,
+																(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}
 	/**
@@ -86,8 +143,8 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##     
 	@Transactional(rollbackFor = Exception.class)
-	public boolean delete${ClassName}ByIds(${pkColumn.javaType}[] ids) {
-		return removeByIds(Arrays.asList(ids));
+	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {
+		return this.removeByIds(Arrays.asList(ids));
 	}
 
 	/**
@@ -96,8 +153,8 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
-	public boolean delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
-		return removeById(${pkColumn.javaField});
+	public boolean del${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
+		return this.removeById(${pkColumn.javaField});
 	}
 
 	/**
@@ -106,8 +163,42 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
-	public boolean save${ClassName}(${ClassName}Entity ${className}){
-        return save(${className});
+	public boolean add${ClassName}(${ClassName}Entity ${className}){
+		#foreach ($column in $columns)####
+		#if($column.htmlType == "imgcup")####
+
+		//图片剪切数据转换####
+		#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))#####
+
+		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}()));#####
+		#break###
+		#end####
+		#end###
+
+		if(this.save(${className})){###
+			#if($table.rFile || $table.rImg)####
+
+			//更新关联附件信息####
+			#foreach ($column in $columns)
+			#if($column.pk)
+			#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+
+			${column.javaType} pkId =  ${className}.get${id}();#break###
+			#end####
+			#end####
+			#if($table.rFile)
+
+			FileUploadUtils.saveFileUpload(pkId,"${tableName}_file");####
+			#end
+			#if($table.rImg)
+
+			FileUploadUtils.saveFileUpload(pkId,"${tableName}_img");####
+			#end####
+			#end####
+
+			return true;
+		}
+        return false;
     }
 
 	/**
@@ -117,7 +208,41 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##
 	public boolean update${ClassName}ById(${ClassName}Entity ${className}) {
-		return updateById(${className});
+		#foreach ($column in $columns)####
+		#if($column.htmlType == "imgcup")####
+
+		//图片剪切数据转换####
+		#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))#####
+
+		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}()));#####
+		#break###
+		#end####
+		#end###
+
+		if(this.updateById(${className})){####
+			#if($table.rFile || $table.rImg)####
+
+			//更新关联附件信息#####
+			#foreach ($column in $columns)
+			#if($column.pk)
+			#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+
+			${column.javaType} pkId =  ${className}.get${id}();#break###
+			#end####
+			#end####
+			#if($table.rFile)
+
+			FileUploadUtils.saveFileUpload(pkId,"${tableName}_file");####
+			#end
+			#if($table.rImg)
+
+			FileUploadUtils.saveFileUpload(pkId,"${tableName}_img");####
+			#end####
+			#end####
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -126,7 +251,24 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
-	public ${ClassName}Entity get${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}){
-		return getById(${pkColumn.javaField});
+	public ${ClassName}Entity find${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}){
+		#if($table.dbName !='MASTER' && ($iscompId_ != '' || $isdeptId_ != ''))
+		${ClassName}Entity ${className} = this.getById(${pkColumn.javaField});##
+
+		#if($iscompId_ != '')
+		#set($compName_ = $iscompId_.substring(0,1).toUpperCase() + $iscompId_.substring(1))
+		${className}.setCompName(SpringUtil.getAopProxy(this).getByCompEntity(${className}.get${compName_}(),null).getName());##
+
+		#end
+		#if($isdeptId_ != '')
+		#set($deptName_ = $isdeptId_.substring(0,1).toUpperCase() + $isdeptId_.substring(1))
+		${className}.setDeptName(SpringUtil.getAopProxy(this).getByCompEntity(null,${className}.get${deptName_}()).getName());##
+
+		#end
+		return ${className};
+		#else
+		return ${className}Mapper.find${ClassName}ById(${pkColumn.javaField});####
+		#end
+
 	}
 }

@@ -31,8 +31,6 @@ public class FastApplication extends SpringBootServletInitializer {
 			SpringApplication app = new SpringApplication(FastApplication.class);
 			app.setDefaultProperties(PropertiesUtils.getInstance().getProperties());
 			app.run(args);
-			System.out.println(PropertiesUtils.getInstance().
-					getProperty(Constant.BANNER));
 			//启动成功打印
 			if(!PropertiesUtils.getInstance().
 					getProperty(Constant.BANNER).equals(Constant.FALSE)){

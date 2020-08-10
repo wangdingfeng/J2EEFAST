@@ -1,5 +1,6 @@
 package com.j2eefast.framework.sys.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.j2eefast.common.core.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -60,4 +61,29 @@ public class SysComponentController extends BaseController {
 		mmap.put("iconValue", super.getPara("iconValue"));
 		return urlPrefix + "/iconselect";
 	}
+
+	@GetMapping("/fileViwe")
+	public String fileViwe(ModelMap mmap){
+		String fileName = super.getPara("fileName");
+		String fileUrl = super.getPara("fileUrl");
+		String extName = FileUtil.extName(fileName);
+		mmap.put("fileUrl",fileUrl);
+		mmap.put("extName",extName);
+		return urlPrefix + "/fileView";
+	}
+
+	/**
+	 * 图片裁剪跳转
+	 * @param mmap
+	 * @return
+	 */
+	@RequestMapping(value = "/cropperImg", method = RequestMethod.POST)
+	public String cropperImg(ModelMap mmap) {
+		mmap.put("imgValue", super.getPara("imgValue"));
+		mmap.put("imageDefault", super.getPara("imageDefault"));
+		mmap.put("ratio", super.getPara("ratio"));
+		mmap.put("viewMode", super.getPara("viewMode"));
+		return urlPrefix + "/cropperImg";
+	}
+
 }
