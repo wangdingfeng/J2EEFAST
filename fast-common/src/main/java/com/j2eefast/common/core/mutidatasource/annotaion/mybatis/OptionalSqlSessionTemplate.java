@@ -64,10 +64,14 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 		}
 	}
 
+
+	@Override
 	public ExecutorType getExecutorType() {
 		return this.executorType;
 	}
 
+
+	@Override
 	public PersistenceExceptionTranslator getPersistenceExceptionTranslator() {
 		return this.exceptionTranslator;
 	}

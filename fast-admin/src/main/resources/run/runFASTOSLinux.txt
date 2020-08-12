@@ -72,7 +72,7 @@ start(){
   	echo -e "\033[31m######################################################################################\033[0m"
     echo -e "\033[32m#########运行版本${APP_VERSION}###################################\033[0m"
     #-Djava.library.path 若你的项目需要引用dll或os库 需要放在lib目录下面
-    nohup java -Dfile.encoding=utf-8 -Djava.library.path=${APP_PATH}/lib -Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -jar ${APP_NAME} >sysTemp.out 2>&1 &
+    nohup java -Dfile.encoding=utf-8 -Djava.library.path=${APP_PATH}/lib -Xms1024m -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m -XX:+HeapDumpOnOutOfMemoryError -jar ${APP_NAME} >sysTemp.out 2>&1 &
     
     sleep 10
     

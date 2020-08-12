@@ -61,9 +61,7 @@ public class AsyncFactory {
 												 final String status,
 												 final String message,
 												 final Date loginDate,
-												 final String location,
-												 final String loginType,
-												 final Object... args){
+												 final String loginType){
 			final UserAgent userAgent =   UserAgentUtil.parse(HttpContextUtil.getRequest().getHeader("User-Agent"));
 			final String ip = HttpContextUtil.getIp();
 	        return new TimerTask(){
@@ -77,7 +75,7 @@ public class AsyncFactory {
 	                SysLoginInfoEntity logininfor = new SysLoginInfoEntity();
 	                logininfor.setUsername(username);
 	                logininfor.setIpaddr(ip);
-	                logininfor.setLoginLocation(location);
+	                logininfor.setLoginLocation(AddressUtil.getRealAddressByIP(ip));
 	                logininfor.setBrowser(browser);
 	                logininfor.setOs(os);
 					logininfor.setCompId(compId);
@@ -112,8 +110,7 @@ public class AsyncFactory {
 											 final Long compId,
 											 final Long deptId,
 											 final String status,
-											 final String message,
-											 final Object... args){
+											 final String message){
 		final UserAgent userAgent =   UserAgentUtil.parse(HttpContextUtil.getRequest().getHeader("User-Agent"));
 		final String ip = HttpContextUtil.getIp();
 		return new TimerTask(){

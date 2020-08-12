@@ -69,8 +69,9 @@ public class EnctryptTools {
 		byte[] tempBuf = new byte[8];
 		System.arraycopy(block.getBytes(),0,tempBuf,0,8);
 		byte mode = 0;
-		if(macKye.length == 16)
-			 mode = 2;
+		if(macKye.length == 16) {
+			mode = 2;
+		}
 		res = EncryptUtil.doEncrypt(mode, macKye, tempBuf, null);
 		
 		/**将加密后的结果与后8 个字节异或*/
@@ -103,7 +104,7 @@ public class EnctryptTools {
     /// <param name="key">密钥</param>
     /// <param name="data">数据</param>
     /// <returns>16进制MAC值</returns>
-    public static String StpMac(byte[] data, byte[] keyValue)  throws Exception{
+    public static String stpMac(byte[] data, byte[] keyValue)  throws Exception{
         //把报文以8字节分组，最后一组不足8字节补0,
         int datalen = data.length;
         datalen += (8 - datalen % 8) % 8; //不足8位不足8位
@@ -191,9 +192,9 @@ public class EnctryptTools {
 		/**将运算后的结果（ENC BLOCK2）转换成16 个HEXDECIMAL 取前16个字节作为MAC值*/
 		return HexUtil.bytesToHexStr(mes, 0, 8).toUpperCase();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 *  兴业前置SM4MAC计算方法
 	 * @author zhouzhou Email:loveingowp@163.com
 	 * @date Aug 21, 2018
@@ -203,8 +204,7 @@ public class EnctryptTools {
 	 * @return
 	 *
 	 */
-    public static byte[] posSM4Mac(byte[] keyValue, byte[] data)
-    {
+    public static byte[] posSm4Mac(byte[] keyValue, byte[] data){
         //把报文以8字节分组，最后一组不足8字节补0,
         //byte[] data = Encoding.Default.GetBytes(mac);
         int datalen = data.length;
@@ -230,17 +230,11 @@ public class EnctryptTools {
         {
             for (int j = 0; j < 16; j++)
             {
-                // DESEncrypt0(secdata[i * 8 + j], key1);
                 temp[j] = secdata[i * 16 + j];
                 temp[j] ^= res[j];
             }
-            //res = Encrypt(temp, key1);
-            // res = SM4.EncriptB(temp, keyValue);
             SM4.GMSM4(temp, temp.length, keyValue, res, SM4.ENCRYPT);
-            //res = convertHexStrToByteArray(Encrypt3Des(convertByteArrayToHexStr(res), key));
         }
-        //res = Decrypt(res, key2);
-        //res = Encrypt(res, key1);
         return HexUtil.bytesToHexStr(res, 0, 4).toUpperCase().getBytes();
     }
 
@@ -248,9 +242,9 @@ public class EnctryptTools {
 	public static String SM4Mac(byte[] keyValue, byte[] data)
 	{
 		//把报文以8字节分组，最后一组不足8字节补0,
-		//byte[] data = Encoding.Default.GetBytes(mac);
 		int datalen = data.length;
-		datalen += (16 - datalen % 16) % 16; //不足16位不足16位
+		//不足16位不足16位
+		datalen += (16 - datalen % 16) % 16;
 		byte[] secdata = new byte[datalen];
 		System.arraycopy(data, 0, secdata, 0, data.length);
 		for (int i = data.length; i < datalen; i++)
@@ -260,8 +254,6 @@ public class EnctryptTools {
 		byte[] res = new byte[16];
 		byte[] temp = new byte[16];
 
-		//yte[] key1 = new byte[8];
-		//byte[] key2 = new byte[8];
 
 		//Array.Copy(keyValue, 0, key1, 0, key1.Length); //左部分
 		//Array.Copy(keyValue, 8, key2, 0, key1.Length); //右部分
@@ -276,13 +268,8 @@ public class EnctryptTools {
 				temp[j] = secdata[i * 16 + j];
 				temp[j] ^= res[j];
 			}
-			//res = Encrypt(temp, key1);
-			// res = SM4.EncriptB(temp, keyValue);
 			SM4.GMSM4(temp, temp.length, keyValue, res, SM4.ENCRYPT);
-			//res = convertHexStrToByteArray(Encrypt3Des(convertByteArrayToHexStr(res), key));
 		}
-		//res = Decrypt(res, key2);
-		//res = Encrypt(res, key1);
 		return HexUtil.convertByteArrayToHexStr(res);
 	}
     
@@ -306,12 +293,14 @@ public class EnctryptTools {
 		if(mode >= 2) {
 			LOG.info("Pinblock:" + HexUtil.convertByteArrayToHexStr(Pinblock));
 		}
-		
-		byte[] LK = new byte[8];  //可以分为LK（密钥的左边8字节）,
+		//可以分为LK（密钥的左边8字节）
+		byte[] LK = new byte[8];
 		System.arraycopy(key, 0, LK, 0, 8);
-		byte[] CK = new byte[8];  //CK（密钥的中间8字节）
+		//CK（密钥的中间8字节）
+		byte[] CK = new byte[8];
 		System.arraycopy(key, 8, CK, 0, 8);
-		byte[] RK = new byte[8];//RK（密钥的左边8字节）
+		//RK（密钥的左边8字节）
+		byte[] RK = new byte[8];
 		System.arraycopy(key, 16, RK, 0, 8);
 		/**
 		 	只是第一次计算，使用密钥LK；第二次计算，使用密钥CK；第三次计算，使用密钥LK。基本过程如下：
@@ -343,12 +332,12 @@ public class EnctryptTools {
 	 * @return
 	 *
 	 */
-    public static String StpSM4Mac(byte[] data,byte[] keyValue)
+    public static String stpSm4Mac(byte[] data,byte[] keyValue)
     {
         //把报文以8字节分组，最后一组不足8字节补0,
-        //byte[] data = Encoding.Default.GetBytes(mac);
         int datalen = data.length;
-        datalen += (16 - datalen % 16) % 16; //不足16位不足16位
+		//不足16位不足16位
+        datalen += (16 - datalen % 16) % 16;
         byte[] secdata = new byte[datalen];
         System.arraycopy(data, 0, secdata, 0, data.length);
         for (int i = data.length; i < datalen; i++)
@@ -358,11 +347,6 @@ public class EnctryptTools {
         byte[] res = new byte[16];
         byte[] temp = new byte[16];
 
-        //yte[] key1 = new byte[8];
-        //byte[] key2 = new byte[8];
-
-        //Array.Copy(keyValue, 0, key1, 0, key1.Length); //左部分
-        //Array.Copy(keyValue, 8, key2, 0, key1.Length); //右部分
 
         /**按每8个字节做异或 **/
         int arrayLen = datalen / 16;
@@ -370,17 +354,11 @@ public class EnctryptTools {
         {
             for (int j = 0; j < 16; j++)
             {
-                // DESEncrypt0(secdata[i * 8 + j], key1);
                 temp[j] = secdata[i * 16 + j];
                 temp[j] ^= res[j];
             }
-            //res = Encrypt(temp, key1);
-            // res = SM4.EncriptB(temp, keyValue);
             SM4.GMSM4(temp, temp.length, keyValue, res, SM4.ENCRYPT);
-            //res = convertHexStrToByteArray(Encrypt3Des(convertByteArrayToHexStr(res), key));
         }
-        //res = Decrypt(res, key2);
-        //res = Encrypt(res, key1);
         return HexUtil.bytesToHexStr(res, 0, 8).toUpperCase();
     }
 	
@@ -399,7 +377,6 @@ public class EnctryptTools {
 	 */
 	public static byte[] encryptSM4Pass(byte[] key, String cardNo, String PIN){
 		byte[] pinBlok = EncryptUtil.formatSM4Pinblock(cardNo.getBytes(), PIN.getBytes());
-		//LOG.info("SM4Pinblock:" + HexUtil.convertByteArrayToHexStr(pinBlok));
 		byte[] out = new byte[16];
 		SM4.GMSM4(pinBlok, pinBlok.length, key, out, SM4.ENCRYPT);
 		return out; 
@@ -441,7 +418,6 @@ public class EnctryptTools {
 		LOG.info("Pinblock:" + HexUtil.convertByteArrayToHexStr(pinBlok));
 		//2.加密
 		byte[] pinm = EncryptUtil.doEncrypt(EncryptConst.DECRY_3DES_CBC, key, pinBlok, null);
-		
 		//3.转换16进制
 		return HexUtil.convertByteArrayToHexStr(pinm);
 	}
@@ -455,9 +431,9 @@ public class EnctryptTools {
 	 * @throws Exception
 	 */
 	public static String DesDecode(String str,String key) throws Exception{
-		//
 		int datalen = key.getBytes().length;
-		datalen += (16 - datalen % 16) % 16; //不足16位不足16位
+		//不足16位不足16位
+		datalen += (16 - datalen % 16) % 16;
 		byte[] secdata = new byte[datalen];
 		System.arraycopy(key.getBytes(), 0, secdata, 0, key.getBytes().length);
 		for (int i = key.getBytes().length; i < datalen; i++)
@@ -494,9 +470,9 @@ public class EnctryptTools {
 	 * @throws Exception
 	 */
 	public static String SM4Decode(String str,String key) throws Exception{
-		//
 		int datalen = key.getBytes().length;
-		datalen += (16 - datalen % 16) % 16; //不足16位不足16位
+		//不足16位不足16位
+		datalen += (16 - datalen % 16) % 16;
 		byte[] secdata = new byte[datalen];
 		System.arraycopy(key.getBytes(), 0, secdata, 0, key.getBytes().length);
 		for (int i = key.getBytes().length; i < datalen; i++)
