@@ -272,16 +272,14 @@ public class SysLoginService implements AuthService {
 
 		//登陆IP
 		loginUser.setLoginIp(HttpContextUtil.getIp());
+
 		//设置登陆时间
 		loginUser.setNowLoginTime(DateUtil.date());
-
-		//设置登陆地点
-		loginUser.setNowLoginLocation(AddressUtil.getRealAddressByIP(loginUser.getLoginIp()));
 
 		//插入登陆表
 		AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(),
 				loginUser.getCompId(),loginUser.getDeptId(), "00000","登陆成功!",
-				loginUser.getNowLoginTime(),loginUser.getNowLoginLocation(),
+				loginUser.getNowLoginTime(),
 				source));
 
 	}

@@ -129,6 +129,7 @@ public class SysUserEntity extends BaseEntity {
 	/**
 	 * 第三方登录源
 	 */
+	@TableField(exist = false)
 	private String source;
 
 	/**

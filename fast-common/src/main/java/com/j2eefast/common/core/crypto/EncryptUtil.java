@@ -55,7 +55,7 @@ public class EncryptUtil
 	
 	/**
      * ������DES���ܵ���Կ
-     * @param short keyLen Ҫ��ɵ���Կ����?��λ�ֽڣ�8/16/24
+     * @param  keyLen Ҫ��ɵ���Կ����?��λ�ֽڣ�8/16/24
      * @return byte[] ������Կֵ
      * @throws EncryptException
      */
@@ -140,7 +140,7 @@ public class EncryptUtil
      * @param data ��Ҫ���ܵ����?
      * @param initIV ��ʼ����������CBC���ܣ���Ϊ��Ĭ��Ϊ0
      * @return byte[] ���ܺ�����
-     * @throws util.EncryptException
+     * @throws EncryptException
      */
 	public static byte[] doEncrypt(byte mode, byte[] keyValue, byte[] data,
 			byte[] initIV) throws EncryptException
@@ -184,8 +184,9 @@ public class EncryptUtil
 				if (initIV != null)
 				{
 					int nLen = initIV.length;
-					if (nLen > 8)
+					if (nLen > 8) {
 						nLen = 8;
+					}
 					System.arraycopy(initIV, 0, iv, 0, nLen);
 				}
 				IvParameterSpec spec = new IvParameterSpec(iv);
@@ -211,7 +212,7 @@ public class EncryptUtil
      * @param raw ����ܵ����
      * @param initIV ��ʼ����������CBC���ܣ���Ϊ��Ĭ��Ϊ0
      * @return byte[] ���ܺ�����
-     * @throws util.EncryptException
+     * @throws EncryptException
      */
 	public static byte[] doDecrypt(byte mode, byte[] keyValue, byte[] raw,byte[] initIV) throws EncryptException
 	{
@@ -254,8 +255,9 @@ public class EncryptUtil
 				if (initIV != null)
 				{
 					int nLen = initIV.length;
-					if (nLen > 8)
+					if (nLen > 8) {
 						nLen = 8;
+					}
 					System.arraycopy(initIV, 0, iv, 0, nLen);
 				}
 				IvParameterSpec spec = new IvParameterSpec(iv);
@@ -281,7 +283,7 @@ public class EncryptUtil
      * @param data �����MAC�����?
      * @param initIV ��ʼ������Ϊ��Ĭ��Ϊ0
      * @return byte[] ������MAC
-     * @throws util.EncryptException
+     * @throws EncryptException
      * 1,mac,data,null
      */
 	public static byte[] generateMac(byte mode, byte[] keyValue, byte[] data,byte[] initIV) throws EncryptException
@@ -339,8 +341,9 @@ public class EncryptUtil
 			if (initIV != null)
 			{
 				int nLen = initIV.length;
-				if (nLen > 8)
+				if (nLen > 8) {
 					nLen = 8;
+				}
 				System.arraycopy(initIV, 0, iv, 0, nLen);
 			}
 			IvParameterSpec spec = new IvParameterSpec(iv);
@@ -369,8 +372,9 @@ public class EncryptUtil
 
 	public static byte[] formatPIN(byte[] pin)
 	{
-		if (pin == null)
+		if (pin == null) {
 			pin = new byte[0];
+		}
 		int nLen = pin.length;
 		byte[] fmtPin = new byte[16];
 		fmtPin[0] = '0';
@@ -386,8 +390,9 @@ public class EncryptUtil
 	
 	 public static byte[] formatSM4PIN(byte[] pin)
 	    {
-	        if (pin == null)
-	            pin = new byte[0];
+	        if (pin == null) {
+				pin = new byte[0];
+			}
 	        int nLen = pin.length;
 	        byte[] fmtPin = new byte[32];
 	        fmtPin[0] = (byte)'0';
@@ -404,8 +409,9 @@ public class EncryptUtil
 	
 	public static byte[] formatPIN9564(byte[] pin)
 	{
-		if (pin == null)
+		if (pin == null) {
 			pin = new byte[0];
+		}
 		int nLen = pin.length;
 		byte[] fmtPin = new byte[16];
 		fmtPin[0] = '1';
@@ -425,15 +431,17 @@ public class EncryptUtil
 	public static byte[] formatAccountNo(byte[] accountNo)
 	{
 		byte[] accountNoPart = new byte[16];
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < 16; i++) {
 			accountNoPart[i] = '0';
-		if (accountNo.length > 12)
+		}
+		if (accountNo.length > 12) {
 			System.arraycopy(accountNo, accountNo.length - 13, accountNoPart,
 					4, 12);
-		else {//不含最后一位校验位，不足12位左补0
+		} else {//不含最后一位校验位，不足12位左补0
 			byte[] temp = new byte[12];
-			for (int i = 0; i < 12; i++)
+			for (int i = 0; i < 12; i++) {
 				temp[i] = '0';
+			}
 			System.arraycopy(accountNo, 0, temp, 12-accountNo.length, accountNo.length);
 			System.arraycopy(temp, 0, accountNoPart, 4, temp.length);
 		}
@@ -454,16 +462,18 @@ public class EncryptUtil
     public static byte[] formatSM4AccountNo(byte[] accountNo)
     {
         byte[] accountNoPart = new byte[32];
-        for (int i = 0; i < 32; i++)
-            accountNoPart[i] = (byte)'0';
-        if (accountNo.length > 12)
-        	System.arraycopy(accountNo, accountNo.length - 13, accountNoPart,
-                    20, 12);
-        else {
+        for (int i = 0; i < 32; i++) {
+			accountNoPart[i] = (byte)'0';
+		}
+        if (accountNo.length > 12) {
+			System.arraycopy(accountNo, accountNo.length - 13, accountNoPart,
+					20, 12);
+		} else {
         	//不含最后一位校验位，不足12位左补0
 			byte[] temp = new byte[12];
-			for (int i = 0; i < 12; i++)
+			for (int i = 0; i < 12; i++) {
 				temp[i] = '0';
+			}
 			System.arraycopy(accountNo, 0, temp, 12-accountNo.length, accountNo.length);
 			
 			System.arraycopy(temp, 0, accountNoPart, 20, temp.length);
@@ -594,10 +604,8 @@ public class EncryptUtil
      * ����PIN
      * @param pinFmt ����PINBLOCK�㷨 0-ΪANSI X9.8 1-ISO 9564-1 //2-IBM3624
      * @param keyValue ��Կֵ
-     * @param raw ����ܵ����
-     * @param initIV ��ʼ����������CBC���ܣ���Ϊ��Ĭ��Ϊ0
      * @return byte[] ���ܺ�����
-     * @throws util.EncryptException
+     * @throws EncryptException
      */
 	public static byte[] encryptPIN(byte pinFmt, byte[] keyValue,
 			byte[] accountNo, byte[] pin) throws EncryptException
@@ -606,9 +614,10 @@ public class EncryptUtil
 			throw new EncryptException(
 					"encryptPIN key value cann't is null exception.");
 		}
-		if (pin == null || pin.equals(""))
+		if (pin == null || pin.equals("")) {
 			throw new EncryptException(
 					"encryptPIN pin cann't is null exception.");
+		}
 		try
 		{
 			byte[] pinBlock;

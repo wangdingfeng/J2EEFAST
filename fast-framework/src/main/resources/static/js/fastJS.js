@@ -895,7 +895,6 @@ if (typeof jQuery === "undefined") {
              * @param url
              */
             downLoadFile :function(url){
-                console.log(url);
                 var judgeDiv = document.getElementById("dwDiv");
                 if(judgeDiv!=null){
                     document.body.removeChild(judgeDiv);

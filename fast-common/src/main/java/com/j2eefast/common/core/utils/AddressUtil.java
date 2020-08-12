@@ -18,7 +18,11 @@ import cn.hutool.json.JSONUtil;
 public class AddressUtil {
 	
 	 private static final Logger 					LOG 					= LoggerFactory.getLogger(AddressUtil.class);
-     public static final String IP_URL =  "http://api.map.baidu.com/location/ip?ak=gRhqOOqPOQzvM8nMRnVoQswejvggglqY&ip={}&coor=bd09ll";
+	 //百度API查询 个人一天1000次
+     public static final String IP_BAIDU_URL =  "http://api.map.baidu.com/location/ip?ak=gRhqOOqPOQzvM8nMRnVoQswejvggglqY&ip={}&coor=bd09ll";
+     //百度用完转换
+     public static final String IP_WHOIS_URL =  "http://whois.pconline.com.cn/ipJson.jsp?ip={}&json=true";
+
      public static String getRealAddressByIP(String ip) {
         String address = "XX XX";
         // 内网不查询
@@ -29,9 +33,7 @@ public class AddressUtil {
         JSONObject obj;
         try
         {
-            System.err.println(StrUtil.format(IP_URL, ip));
-            HttpResponse body = HttpRequest.get(StrUtil.format(IP_URL, ip)).charset("GBK").execute();
-
+            HttpResponse body = HttpRequest.get(StrUtil.format(IP_BAIDU_URL, ip)).charset("GBK").execute();
             if (StrUtil.isBlank(body.body()))
             {
                 LOG.error("获取地理位置异常 {}", ip);
@@ -45,10 +47,21 @@ public class AddressUtil {
                 String country = obj.getStr("address", "CN|上海|上海|None|CHINANET|0|0").split("\\|")[0];
                 String province = data.getStr("province", "上海");
                 String city = data.getStr("city", "上海市");
-                //String Isp = data.getStr("Isp", "联通");
                 address = StrUtil.format("{} {}-{}", country,province,city);
             }else {
-                LOG.error("获取地理位置异常 -->", obj.toString());
+                body = HttpRequest.get(StrUtil.format(IP_WHOIS_URL, ip)).charset("GBK").execute();
+                if (StrUtil.isBlank(body.body()))
+                {
+                    LOG.error("获取地理位置异常 {}", ip);
+                    return address;
+                }
+                obj = JSONUtil.parseObj(body.body());
+                String err = obj.getStr("err");
+                if(ToolUtil.isEmpty(err)){
+                    address = obj.getStr("addr");
+                }else{
+                    LOG.error("获取地理位置API用尽");
+                }
             }
         }
         catch (Exception e)
