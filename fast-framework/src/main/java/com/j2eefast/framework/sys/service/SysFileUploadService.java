@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.List;
 /**
  *
  * 系统上传文件业务关联Service接口
@@ -54,6 +55,20 @@ public class SysFileUploadService extends ServiceImpl<SysFileUploadMapper,SysFil
 																	(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}
+	
+	
+	/**
+	* @Title: selectList 
+	* @Description: 获取业务单表的附件列表
+	* @param sysFileUploadEntity
+	* @return  List<SysFileUploadEntity> 
+	* @author mfksn001@163.com
+	* @Date: 2020年8月14日
+	 */
+	 public List<SysFileUploadEntity> selectList(SysFileUploadEntity sysFileUploadEntity){
+		 return sysFileUploadMapper.selectList(sysFileUploadEntity);
+	 }
+	 
 	/**
      * 批量删除
      */

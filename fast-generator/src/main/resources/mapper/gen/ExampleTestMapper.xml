@@ -149,7 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      <if test="_databaseId == 'mssql'">'%'+#{exampleTest.phone}+'%'</if>
                      <if test="_databaseId == 'mysql'">concat('%',#{exampleTest.phone},'%')</if>
 			</if>
-                              <if test = "sql_filter !=null and sql_filter!=''">
+                              <if test = "exampleTest.sql_filter !=null and exampleTest.sql_filter!=''">
                and ${sql_filter}
              </if>  
 		</where>

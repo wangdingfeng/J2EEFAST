@@ -96,7 +96,7 @@ public class SysUserController extends BaseController {
 	public ResponseData export(@RequestParam Map<String, Object> params) throws Exception {
 		String fileName =  "测试";
 		fileName = ToolUtil.encodingExcelFilename(fileName);
-		String folder = Global.getConifgFile() + File.separator + "pio" + File.separator;
+		String folder = Global.getTempPath() + File.separator + "pio" + File.separator;
 		FileUtil.touch(folder + fileName);
 		List<SysUserEntity> listData = sysUserService.findList(params);
 		EasyExcel.write(folder + fileName, SysUserEntity.class).sheet("模板").doWrite(listData);

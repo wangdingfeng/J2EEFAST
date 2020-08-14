@@ -72,7 +72,7 @@ public class WebConfig implements WebMvcConfigurer {
         /**工作流资源拦截 若不用可以屏蔽*/
 		registry.addResourceHandler("/flowable/**").addResourceLocations("classpath:/flowable/");
         /** 本地文件上传路径 */
-        registry.addResourceHandler(Constant.RESOURCE_urlPrefix + "/**").addResourceLocations("file:" + Global.getProfile() + "/");
+        registry.addResourceHandler(Constant.RESOURCE_urlPrefix + "/**").addResourceLocations("file:" + Global.getConifgPath() + "/");
 	}
 
 //    /**

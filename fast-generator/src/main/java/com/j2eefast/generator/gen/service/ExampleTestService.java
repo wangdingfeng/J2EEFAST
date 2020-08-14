@@ -59,6 +59,11 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      */
 	@Transactional(rollbackFor = Exception.class)
 	public boolean delExampleTestByIds(Long[] ids) {
+		 for (Long id : ids) {
+		 FileUploadUtils.removeFileUpload(id, "example_test_file");
+         FileUploadUtils.removeFileUpload(id, "example_test_img");
+		 }
+         
 		return this.removeByIds(Arrays.asList(ids));
 	}
 
@@ -66,6 +71,8 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      * 单个删除
      */
 	public boolean delExampleTestById(Long id) {
+        FileUploadUtils.removeFileUpload(id, "example_test_file");
+        FileUploadUtils.removeFileUpload(id, "example_test_img");
 		return this.removeById(id);
 	}
 
@@ -76,6 +83,7 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 																				
 		//图片剪切数据转换
 		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		
 		if(this.save(exampleTest)){			
 			//更新关联附件信息						
 			Long pkId =  exampleTest.getId();			
