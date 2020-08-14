@@ -36,7 +36,7 @@ public class SysDownloadContorller {
 	public void download(HttpServletRequest request,
 						 HttpServletResponse response, @RequestParam("fileName") String fileName) {
 		try {
-				String path = Global.getConifgFile() + File.separator + "pio" + File.separator + fileName;
+				String path = Global.getTempPath() + File.separator + "pio" + File.separator + fileName;
 				if(FileUtil.exist(path)){
 					//浏览器设置
 					String userAgent = request.getHeader("User-Agent");

@@ -13,15 +13,26 @@ public class ConfigConstant {
 	 * API服务器
 	 */
 	public final static String CLOUD_CONFIG_APP = "CLOUD_CONFIG_APP";
+	
+	public final static String SYS_CONFIG_TITLE = "SYS_CONFIG_TITLE" ;
 
+	
+	public final static String SYS_CONFIG_ROOT_PATH ="SYS_CONFIG_ROOT_PATH" ;
 	/**
-	 * 项目名称
+	 * 项目名称  config 目录
 	 */
-	public final static String SYS_CONFIG_TITLE = "SYS_CONFIG_TITLE";
+	public final static String SYS_CONFIG_CONFIG_PATH = "SYS_CONFIG_CONFIG_PATH";
+	
+	public final static String SYS_CONFIG_EDITOR_PATH =  "SYS_CONFIG_EDITOR_PATH" ;
+	
+	//public final static String SYS_CONFIG_PROFILE = "SYS_CONFIG_PROFILE";
 
-	public final static String SYS_CONFIG_PROFILE = "SYS_CONFIG_PROFILE";
-
-	public final static String SYS_CONFIG_FILE = "SYS_CONFIG_FILE";
+	//不再使用 ----用SYS_CONFIG_ATTACH_PATH 代替
+	//public final static String SYS_CONFIG_FILE = "SYS_CONFIG_FILE";
+	
+	public final static String SYS_CONFIG_ATTACH_PATH = "SYS_CONFIG_ATTACH_PATH"; 
+	
+	public final static String SYS_CONFIG_TEMP_PATH = "SYS_CONFIG_TEMP_PATH"; 
 
 	/*输出前端页面是否压缩*/
 	public final static String SYS_COMPRESS = "SYS_COMPRESS";

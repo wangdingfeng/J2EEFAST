@@ -8,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.j2eefast.framework.sys.entity.SysCompEntity;
+import com.j2eefast.framework.sys.entity.SysDeptEntity;
 import lombok.Data;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import java.util.Date;
@@ -63,12 +65,12 @@ public class ExampleTestEntity extends BaseEntity{
     /** 归属公司 */
     private Long compId;
     @TableField(exist=false)
-    private String compName;
+    private SysCompEntity company;
 
     /** 归属部门 */
     private Long deptId;
     @TableField(exist=false)
-    private String deptName;
+    private SysDeptEntity department;
 
     /** 地址 */
     private String addr;
