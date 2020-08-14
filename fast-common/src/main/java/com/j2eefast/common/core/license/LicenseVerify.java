@@ -85,4 +85,17 @@ public class LicenseVerify {
             return false;
         }
     }
+
+    /**
+     * 最大在线人数校验
+     * @param param
+     * @return
+     */
+    public int onlineNumVerify(LicenseVerifyParam param){
+        try{
+            return  new CustomLicenseManager(initLicenseParam(param)).onlieVerify();
+        }catch (Exception e){
+            return 1;
+        }
+    }
 }

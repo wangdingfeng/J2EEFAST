@@ -45,4 +45,9 @@ public class ConfigConstant {
 	 * 支付参数
 	 */
 	public final static String PAY_CONFIG_KEY = "PAY_CONFIG_KEY";
+
+	/**
+	 * 登录排挤
+	 */
+	public final static String SYS_IS_LOGIN = "SYS_IS_LOGIN";
 }

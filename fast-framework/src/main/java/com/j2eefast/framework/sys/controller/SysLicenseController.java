@@ -1,6 +1,7 @@
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.config.LicenseCheckListener;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -159,13 +160,21 @@ public class SysLicenseController extends BaseController {
         }
     }
 
+    /**
+     *  生成许可证书
+     * @param sn 机器码
+     * @param verifyNo 校验码
+     * @param ip IP
+     * @param maxNum 最大在线人数
+     * @return
+     */
     @RequestMapping(value = "/creatLicense", method = RequestMethod.POST)
     @BussinessLog(title = "生成许可证书", businessType = BusinessType.INSERT)
     @RequiresPermissions("sys:license:creatLicense")
     @RequiresRoles(Constant.SU_ADMIN)
     @RepeatSubmit
     @ResponseBody
-    public ResponseData creatLicense(String sn, String verifyNo, String ip){
+    public ResponseData creatLicense(String sn, String verifyNo, String ip,String maxNum){
 
         try{
             List<String> ipList = null;
@@ -180,6 +189,15 @@ public class SysLicenseController extends BaseController {
                         ipList.add(ipdrr);
                     }
                 }
+            }
+            //默认 -1 不限制
+            int onlineaxNum = -1;
+            //最大现在人数
+            if(ToolUtil.isNotEmpty(maxNum)){
+                if(!NumberUtil.isInteger(maxNum)){
+                    return error("输入的最大在线人数不合法!");
+                }
+                onlineaxNum = Integer.parseInt(maxNum);
             }
             ResponseData r = checkverifyNoUnique(sn, verifyNo);
             if(checkverifyNoUnique(sn, verifyNo).get("code").equals("00000")){
@@ -211,6 +229,14 @@ public class SysLicenseController extends BaseController {
                     licenseCheck.setIpAddress(ipList);
                 }else{
                     licenseCheck.setIpCheck(false);
+                }
+                //新增最大在线人数控制
+                if(onlineaxNum == -1){
+                    licenseCheck.setIpCheck(false);
+                    licenseCheck.setOnlineNum(-1);
+                }else{
+                    licenseCheck.setIpCheck(true);
+                    licenseCheck.setOnlineNum(onlineaxNum);
                 }
                 param.setLicenseCheck(licenseCheck);
                 LicenseCreator licenseCreator = new LicenseCreator(param);

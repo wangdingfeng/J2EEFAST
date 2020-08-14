@@ -28,6 +28,13 @@ public class LicenseCheck implements Serializable {
     private List<String> ipAddress;
 
     /**
+     * 是否认证在线人数
+     */
+    private boolean isOnlineCheck;
+
+    private int onlineNum;
+
+    /**
      * FASTSN
      */
     public String fastSn;
@@ -55,5 +62,21 @@ public class LicenseCheck implements Serializable {
 
     public void setFastSn(String fastSn) {
         this.fastSn = fastSn;
+    }
+
+    public boolean isOnlineCheck() {
+        return isOnlineCheck;
+    }
+
+    public void setOnlineCheck(boolean onlineCheck) {
+        isOnlineCheck = onlineCheck;
+    }
+
+    public int getOnlineNum() {
+        return onlineNum;
+    }
+
+    public void setOnlineNum(int onlineNum) {
+        this.onlineNum = onlineNum;
     }
 }

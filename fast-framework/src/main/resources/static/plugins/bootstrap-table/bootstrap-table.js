@@ -496,6 +496,9 @@
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             return sprintf('Showing %s to %s of %s rows', pageFrom, pageTo, totalRows);
         },
+        formatPageGo: function () {
+            return 'Jump';
+        },
         formatDetailPagination: function (totalRows) {
             return sprintf('Showing %s rows', totalRows);
         },
@@ -1551,6 +1554,21 @@
             $next.off('click').on('click', $.proxy(this.onPageNext, this));
             $last.off('click').on('click', $.proxy(this.onPageLast, this));
             $number.off('click').on('click', $.proxy(this.onPageNumber, this));
+        }
+        //TODO 修复跳转指定页
+        if (this.options.showPageGo) {
+            var pagination = that.$pagination.find("ul.pagination"),
+                pagego = pagination.find("li.pageGo");
+            if (!pagego.length) {
+                pagego = $(['<li class="pageGo">', sprintf('<input type="text" class="form-control" value="%s">', this.options.pageNumber), '<button class="btn' + sprintf(" btn-%s", this.options.buttonsClass) + sprintf(" btn-%s", this.options.iconSize) + '" title="' + this.options.formatPageGo() + '" ' + ' type="button">' + this.options.formatPageGo(), "</button>", "</li>"].join("")).appendTo(pagination);
+                pagego.find("button").click(function() {
+                    var flag = parseInt(pagego.find("input").val()) || 1;
+                    if (flag < 1 || flag > that.options.totalPages) {
+                        flag = 1
+                    }
+                    that.selectPage(flag)
+                })
+            }
         }
     };
 

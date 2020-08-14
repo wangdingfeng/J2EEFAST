@@ -14,6 +14,9 @@
         formatSearch: function () {
             return  $.i18n.prop('查询');
         },
+        formatPageGo: function () {
+            return '跳转';
+        },
         formatNoMatches: function () {
             return  $.i18n.prop('没有找到匹配的记录');
         },

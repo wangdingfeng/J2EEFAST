@@ -80,7 +80,7 @@
         $("#licDownload").click(function(){
             opt.layer.open({
                 type: 1,
-                area: ['590px', '320px'],
+                area: ['590px', '390px'],
                 title: '<i class="fa fa-download"></i>下载许可文件',
                 shadeClose: true,
                 shade: 0.3,
@@ -92,6 +92,11 @@
                 btn1: function(index, layero) {
                     layero.find('#form-downlod').validate({
                         rules:{
+                            maxNum:{
+                                maxlength: 4,
+                                minlength: 1,
+                                digits:true
+                            },
                             sn:{
                                 required:true,
                                 maxlength: 32,
@@ -122,7 +127,8 @@
                         messages: {
                             "verifyNo":{
                                 remote: "<@ctx.i18n text = "机器码或者验证码不正确,请仔细核对!"/>"
-                            }
+                            },
+                            maxNum:"只能是数字,最大4位"
                         },
                         focusCleanup: true
                     });
@@ -198,10 +204,16 @@
 	    		<input type="text"  name="verifyNo" maxlength="6" placeholder="<@ctx.i18n text = "验证码6位"/>" autocomplete="off" class="form-control">
 	    	</div>
 		</div>
+		<div class="layui-form-item">
+	    	<label class="layui-form-label"><@ctx.i18n text = "最大在线人数"/></label>
+	    	<div class="layui-input-inline">
+	    		<input type="text"  name="maxNum" maxlength="4" placeholder="<@ctx.i18n text = "不是必输(默认不限制),如果需要输入数字"/>" autocomplete="off" class="form-control">
+	    	</div>
+		</div>
 		<div class="layui-form-item m0">
 	    	<label class="layui-form-label"><@ctx.i18n text = "IP"/></label>
 	    	<div class="layui-input-inline">
-	    		<input type="text"  name="ip" placeholder="<@ctx.i18n text = "可为不输入,如果需要验证则输入.多个IP,隔开"/>" autocomplete="off" class="form-control">
+	    		<input type="text"  name="ip" placeholder="<@ctx.i18n text = "不是必输(默认不限制),如果需要验证则输入.多个IP,隔开"/>" autocomplete="off" class="form-control">
 	    	</div>
 		</div>
 		<div class="layui-form-item">
