@@ -82,7 +82,7 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	public boolean addExampleTest(ExampleTestEntity exampleTest){
 																				
 		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar"));		
 		
 		if(this.save(exampleTest)){			
 			//更新关联附件信息						
@@ -100,7 +100,7 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	public boolean updateExampleTestById(ExampleTestEntity exampleTest) {
 																				
 		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar"));		
 		if(this.updateById(exampleTest)){			
 			//更新关联附件信息						
 			Long pkId =  exampleTest.getId();			

@@ -7,6 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 
 import com.alibaba.excel.util.FileUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.j2eefast.common.core.utils.HttpContextUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -143,40 +145,67 @@ public class FileUploadUtils {
      * @param imgBase64
      * @return 返回裁剪控件图片存放相对路径
      */
+    
     public static String saveImgBase64(String imgBase64) {
-
-        if (imgBase64.equals(StrUtil.EMPTY)) {
-            return null;
-        }
-
-        String extension = null;
-        String type = StrUtil.subBetween(imgBase64, "data:", ";base64,");
-        if (StrUtil.containsIgnoreCase(type, "image/jpeg")) {
-            extension = "jpg";
-        } else if (StrUtil.containsIgnoreCase(type, "image/gif")) {
-            extension = "gif";
-        } else {
-            extension = "png";
-        }
-
-        String imageUrl = File.separator + "avatar"
-                + File.separator +
-                DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + IdUtil.fastSimpleUUID() + "." + extension;
-
-
-        String base64 = StrUtil.subAfter(imgBase64, "base64,", true);
-        if (StrUtil.isBlank(base64)) {
-            return null;
-        }
-
-        byte[] data = Base64.decode(base64);
-
-        try {
-            FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
-        } catch (IORuntimeException e) {
-            e.printStackTrace();
-        }
-
-        return imageUrl;
+    	return saveImgBase64( imgBase64,null)   ; 	
     }
+    
+    public static String saveImgBase64(String imgBase64,String bizType) {
+    	 if (imgBase64.equals(StrUtil.EMPTY)) {
+             return null;
+         }
+
+         String extension = null;
+         String type = StrUtil.subBetween(imgBase64, "data:", ";base64,");
+         if (StrUtil.containsIgnoreCase(type, "image/jpeg")) {
+             extension = "jpg";
+         } else if (StrUtil.containsIgnoreCase(type, "image/gif")) {
+             extension = "gif";
+         } else {
+             extension = "png";
+         }
+         
+         
+         String fileName = IdUtil.fastSimpleUUID() + "." + extension; 
+
+         String imageUrl = File.separator + "avatar"
+                 + File.separator +
+                 DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + fileName ;
+
+
+         String base64 = StrUtil.subAfter(imgBase64, "base64,", true);
+         if (StrUtil.isBlank(base64)) {
+             return null;
+         }
+
+         byte[] data = Base64.decode(base64);
+
+         try {
+         	String fullPath =  Global.getAttachPath() + imageUrl ;
+             FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
+             SysFilesEntity sysFile = new SysFilesEntity();
+             sysFile.setFileMd5(ToolUtil.encodingFilename(fileName));
+             sysFile.setFileName(fileName);
+             sysFile.setFilePath(imageUrl);
+             
+             sysFile.setFileSize(new BigDecimal(FileUtil.size(new File(fullPath))));
+             sysFileService.save(sysFile);
+             
+             if (StringUtils.isNotBlank(bizType)) {
+	             SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
+	             //sysFileUploadEntity.setBizId(fileName);
+	             sysFileUploadEntity.setFileName(fileName);
+	             sysFileUploadEntity.setFileId(sysFile.getId());
+	             sysFileUploadEntity.setBizType(bizType);
+	             sysFileUploadService.saveSysFileUpload(sysFileUploadEntity);
+             }
+             
+         } catch (IORuntimeException e) {
+             e.printStackTrace();
+         }
+
+         return imageUrl;
+    }
+
+    
 }

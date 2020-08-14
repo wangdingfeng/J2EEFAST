@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           , up.biz_id  as "fileUpload.bizId"
           , up.create_by as "fileUpload.createBy"
           , up.create_time as "fileUpload.createTime"   
-          , CASE WHEN up.biz_id IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
+          , CASE WHEN up.biz_type IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
       </sql>
     
      <!-- 外联表  --> 

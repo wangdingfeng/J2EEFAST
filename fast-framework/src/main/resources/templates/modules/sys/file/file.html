@@ -64,11 +64,15 @@
                             return $.table.serialNumber(index);
                 }}
               ,{field : 'id',title : '<@ctx.i18n text = "文件主键ID"/>',visible: false}
-              ,{field : 'fileName',title : '<@ctx.i18n text = "文件名称"/>'}
+              ,{field : 'fileName',title : '<@ctx.i18n text = "文件名称"/>' ,formatter: function(value, row, index) {
+                            return $.table.tooltip(value,35);
+                        }}
               ,{field : 'fileUpload.bizType',title : '<@ctx.i18n text = "业务类型"/>'} 
               ,{field : 'fileUpload.bizId',title : '<@ctx.i18n text = "业务ID"/>'} 
               ,{field : 'filePath',title : '<@ctx.i18n text = "相对路径"/>'}
               ,{field : 'fileSize',title : '<@ctx.i18n text = "大小(KB)"/>'}
+              ,{field : 'fileUpload.createBy',title : '<@ctx.i18n text = "创建者"/>'}
+              ,{field : 'fileUpload.createTime',title : '<@ctx.i18n text = "创建时间"/>'}
               ,{field: 'status', title: "<@ctx.i18n text = "状态"/>", formatter: function (value, row, index) {
                         return $.table.selectDictLabel(datas, value);
                     }
