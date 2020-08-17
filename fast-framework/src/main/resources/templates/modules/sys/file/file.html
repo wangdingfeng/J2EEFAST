@@ -4,26 +4,20 @@
 <div class="container-div">
  <div class="row">
   <div class="col-sm-12 search-collapse">
-    <@form.form id="file-form" class="form-inline">
+    <@f.form id="file-form" class="form-inline">
      <div class="select-list">
       <ul>
            <li>
               <label> <@ctx.i18n text = "文件名"/>：
-               <input type="text" placeholder="Like" name="fileName"/> </label>
+               <input type="text" placeholder="文件名" name="fileName"/> </label>
             </li>
-           <li>
-              <label> <@ctx.i18n text = "文件大小(KB)"/>：
-               <input type="text" placeholder="大于" name="fileSize"/> </label>
-            </li>
-            
              <li>
               <label> <@ctx.i18n text = "业务类型"/>：
-               <input type="text" placeholder="=" name="fileUpload.bizType"/> </label>
+               <input type="text"  name="fileUpload.bizType"/> </label>
             </li>
-            
              <li>
               <label> <@ctx.i18n text = "业务ID"/>：
-               <input type="text" placeholder="=" name="fileUpload.bizId"/> </label>
+               <input type="text"  name="fileUpload.bizId"/> </label>
             </li>
         <li>
           <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -31,7 +25,7 @@
        </li>
       </ul>
    </div>
-  </@form.form>
+  </@f.form>
  </div>
   <@table id="bootstrap-table">
     <@shiro.hasPermission name="sys:file:del">
@@ -47,6 +41,7 @@
     var delFlag = "${permission.hasPermi("sys:file:del")}";
     var visible = ${permission.isPermitteds("sys:file:del")?string('true', 'false')};
      var datas =  ${dict.getDictListJson('sys_file_status')};
+    var classify =  ${dict.getDictListJson('sys_file_classify')};
     var prefix = baseURL + "sys/file";
 
     $(function() {
@@ -64,20 +59,31 @@
                             return $.table.serialNumber(index);
                 }}
               ,{field : 'id',title : '<@ctx.i18n text = "文件主键ID"/>',visible: false}
-              ,{field : 'fileName',title : '<@ctx.i18n text = "文件名称"/>'}
+              ,{field : 'fileName',title : '<@ctx.i18n text = "文件名称"/>' ,formatter: function(value, row, index) {
+                            return $.table.tooltip(value,10);
+                        }}
+             ,{field : 'classify',title : '<@ctx.i18n text = "文件归类"/>' ,formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(classify, value);
+                }}
               ,{field : 'fileUpload.bizType',title : '<@ctx.i18n text = "业务类型"/>'} 
               ,{field : 'fileUpload.bizId',title : '<@ctx.i18n text = "业务ID"/>'} 
-              ,{field : 'filePath',title : '<@ctx.i18n text = "相对路径"/>'}
-              ,{field : 'fileSize',title : '<@ctx.i18n text = "大小(KB)"/>'}
+              ,{field : 'filePath',title : '<@ctx.i18n text = "相对路径"/>' ,formatter: function(value, row, index) {
+                        return $.table.tooltip(value,20);
+                    }}
+              ,{field : 'fileSize',title : '<@ctx.i18n text = "文件大小"/>',formatter: function(value, row, index) {
+                        return opt.common.bytesToSize(value);
+              }}
+              ,{field : 'fileUpload.createBy',title : '<@ctx.i18n text = "创建者"/>'}
+              ,{field : 'fileUpload.createTime',title : '<@ctx.i18n text = "创建时间"/>'}
               ,{field: 'status', title: "<@ctx.i18n text = "状态"/>", formatter: function (value, row, index) {
                         return $.table.selectDictLabel(datas, value);
                     }
                 }
                  ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible,formatter: function(value, row, index) {
                         var actions = [];
-                         actions.push('<a class="btn btn-default btn-xs preview " href="javascript:void(0)" onclick="opt.modal.openView(\''+row.fileName+'\', \''+baseURL+'sys/comm/fileUploadView?fileId=' + row.id + '\')"><i class="fa fa-eye"></i></a> ');
-                         actions.push('<a class="btn btn-primary btn-xs " href="javascript:void(0)" onclick="opt.common.downLoadFile(\''+baseURL+'sys/comm/download?fileId=' + row.id + '\')" title="下载"><i class="fa fa-download"></i></a> ');
-                         actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-remove"></i></a>');
+                         actions.push('<a class="btn btn-default btn-xs preview " href="javascript:void(0)" onclick="opt.modal.openView(\''+row.fileName+'\', \''+baseURL+'sys/comm/fileUploadView?fileId=' + row.id + '\')"><i class="fa fa-eye"></i> <@ctx.i18n text = "预览"/></a> ');
+                         actions.push('<a class="btn btn-primary btn-xs " href="javascript:void(0)" onclick="opt.common.downLoadFile(\''+baseURL+'sys/comm/download?fileId=' + row.id + '\')" title="下载"><i class="fa fa-download"></i> <@ctx.i18n text = "下载"/></a> ');
+                         actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>');
                         return actions.join('');
 
                     }

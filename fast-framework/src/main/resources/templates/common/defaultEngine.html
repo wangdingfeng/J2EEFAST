@@ -52,7 +52,7 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
 <title>${title}</title>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico"/>
-<script src="${ctxStatic}/static/libs/jquery.2.1.4.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/jquery.2.1.4.min.js"></script>
 <script> var baseURL = "${ctxStatic}/", _lang = "${config.getSysLang()}",  _username = "<@shiro.principal property="username"/>"  ,
  LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var img=event.srcElement;img.src=baseURL+"static/img/user2-160x160.jpg"; img.onerror=null;}</script>
 <@cssLibs.css Libs = libs/>
@@ -104,4 +104,4 @@
 <#-- 引入控件组件-->
 <#import "jslibs.html" as jsLibs>
 <#import "csslibs.html" as cssLibs>
-<#import "/common/component/form.html" as form>
+<#import "/common/component/form.html" as f>

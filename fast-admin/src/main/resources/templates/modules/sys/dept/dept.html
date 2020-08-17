@@ -23,7 +23,7 @@
     <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
-                <@form.form id="dept-form">
+                <@f.form id="dept-form">
                     <input type="hidden" id="id" name="id">
                     <div class="select-list">
                         <ul>
@@ -32,7 +32,7 @@
                             </li>
                             <li>
                                 类型：
-                                <@form.select name="type" blankValue="" blankLabel="所有" dictType="sys_comp_type"/>
+                                <@f.select name="type" blankValue="" blankLabel="所有" dictType="sys_comp_type"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -40,7 +40,7 @@
                             </li>
                         </ul>
                     </div>
-                </@form.form>
+                </@f.form>
             </div>
             <@table id="bootstrap-tree-table">
                 <@shiro.hasPermission name="sys:comp:add">

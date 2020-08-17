@@ -1,17 +1,11 @@
-package com.j2eefast.common.ueditor.upload;
+package com.j2eefast.framework.ueditor.upload;
 
-import com.j2eefast.common.ueditor.define.AppInfo;
-import com.j2eefast.common.ueditor.define.BaseState;
-import com.j2eefast.common.ueditor.define.State;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.j2eefast.framework.ueditor.define.AppInfo;
+import com.j2eefast.framework.ueditor.define.BaseState;
+import com.j2eefast.framework.ueditor.define.State;
 import org.apache.commons.io.FileUtils;
+
+import java.io.*;
 
 public class StorageManager {
 	public static final int BUFFER_SIZE = 8192;
@@ -45,7 +39,7 @@ public class StorageManager {
 	}
 
 	public static State saveFileByInputStream(InputStream is, String path,
-			long maxSize) {
+                                              long maxSize) {
 		State state = null;
 
 		File tmpFile = getTmpFile();

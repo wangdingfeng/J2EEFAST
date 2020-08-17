@@ -4,7 +4,7 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="operlog-form">
+	<@f.form id="operlog-form">
 	<div class="select-list">
 		<ul>
 			<li>
@@ -24,11 +24,11 @@
 <#--						</#items>-->
 <#--					</#list>-->
 <#--				</select>-->
-				<@form.select name="businessTypes" multiple = true class="selectpicker" dictType="sys_oper_type" required=true/>
+				<@f.select name="businessTypes" multiple = true class="selectpicker" dictType="sys_oper_type" required=true/>
 			</li>
 			<li>
 				<label>操作状态：</label>
-				<@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
+				<@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
 			</li>
 			<li class="select-time">
 				<label>操作时间： </label>
@@ -37,12 +37,12 @@
 				<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
 			</li>
 			<li>
-				<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+				<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
 				<a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
 			</li>
 		</ul>
 	</div>
-	</@form.form>
+	</@f.form>
 	</div>
 	<@table id="bootstrap-table">
 		<@shiro.hasPermission name="sys:log:del">

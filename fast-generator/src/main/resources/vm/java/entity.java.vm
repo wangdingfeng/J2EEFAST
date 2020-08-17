@@ -45,11 +45,11 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
 import ${import};
 #end
 #foreach ($column in $columns)##
-#if($column.javaType == 'SysCompEntity')##
+#if($column.htmlType == 'comp')##
 import com.j2eefast.framework.sys.entity.SysCompEntity;
-#elseif($column.javaType == 'SysUserEntity')##
+#elseif($column.htmlType == 'SysUserEntity')##
 import com.j2eefast.framework.sys.entity.SysUserEntity;
-#elseif($column.javaType == 'SysDeptEntity')##
+#elseif($column.htmlType == 'dept')##
 import com.j2eefast.framework.sys.entity.SysDeptEntity;
 #end
 #end
@@ -116,12 +116,12 @@ public class ${ClassName}Entity ${Entity}{
 #if($column.htmlType == "comp")####
 
     @TableField(exist=false)
-    private String compName;####
+    private SysCompEntity company;####
 #end##
 #if($column.htmlType == "dept")####
 
     @TableField(exist=false)
-    private String deptName;####
+    private SysDeptEntity organization;####
 #end##
 #end
 #end
@@ -173,13 +173,13 @@ public class ${ClassName}Entity ${Entity}{
 #if($column.htmlType == "comp")##
 
     @TableField(exist=false)
-    private String compName;###
+    private SysCompEntity company;###
 ####
 #end####
 #if($column.htmlType == "dept")##
 
     @TableField(exist=false)
-    private String deptName;####
+    private SysDeptEntity organization;####
 ####
 #end##
 #end

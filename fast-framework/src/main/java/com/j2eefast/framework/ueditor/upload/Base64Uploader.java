@@ -1,14 +1,13 @@
-package com.j2eefast.common.ueditor.upload;
+package com.j2eefast.framework.ueditor.upload;
 
-import com.j2eefast.common.ueditor.PathFormat;
-import com.j2eefast.common.ueditor.define.AppInfo;
-import com.j2eefast.common.ueditor.define.BaseState;
-import com.j2eefast.common.ueditor.define.FileType;
-import com.j2eefast.common.ueditor.define.State;
+import com.j2eefast.framework.ueditor.PathFormat;
+import com.j2eefast.framework.ueditor.define.AppInfo;
+import com.j2eefast.framework.ueditor.define.BaseState;
+import com.j2eefast.framework.ueditor.define.FileType;
+import com.j2eefast.framework.ueditor.define.State;
+import org.apache.commons.codec.binary.Base64;
 
 import java.util.Map;
-
-import org.apache.commons.codec.binary.Base64;
 
 public final class Base64Uploader {
 

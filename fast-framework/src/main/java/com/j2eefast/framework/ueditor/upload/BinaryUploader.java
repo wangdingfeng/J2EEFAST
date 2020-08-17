@@ -1,21 +1,17 @@
-package com.j2eefast.common.upload;
+package com.j2eefast.framework.ueditor.upload;
 
-import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.ImageUtils;
-import com.j2eefast.common.ueditor.PathFormat;
-import com.j2eefast.common.ueditor.define.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.j2eefast.common.core.utils.Md5Util;
+import com.j2eefast.common.core.utils.SpringUtil;
+import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.framework.sys.entity.SysFilesEntity;
+import com.j2eefast.framework.sys.service.SysFileService;
+import com.j2eefast.framework.ueditor.PathFormat;
+import com.j2eefast.framework.ueditor.define.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -24,30 +20,43 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+@Slf4j
 public class BinaryUploader {
+	public static final String FILEUEDITOR_BASE_URL = "editor";
 
-	public static final String FILEUEDITOR_BASE_URL = "/fileUeditor/";
-
+	/**
+	 * 保存文件
+	 * @param request
+	 * @param conf
+	 * @return
+	 */
 	public static final State save(HttpServletRequest request,
                                    Map<String, Object> conf) {
 		FileItemStream fileStream = null; //原始上传
 		MultipartFile fileStream2 = null; // Spring MVC 上传
 		boolean isAjaxUpload = request.getHeader( "X_Requested_With" ) != null;
-
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			return new BaseState(false, AppInfo.NOT_MULTIPART_CONTENT);
 		}
 
 		ServletFileUpload upload = new ServletFileUpload(
 				new DiskFileItemFactory());
-
         if ( isAjaxUpload ) {
             upload.setHeaderEncoding( "UTF-8" );
         }
 
 		try {
 			FileItemIterator iterator = upload.getItemIterator(request);
-
 			while (iterator.hasNext()) {
 				fileStream = iterator.next();
 
@@ -114,11 +123,22 @@ public class BinaryUploader {
 				String url = PathFormat.format(savePath);
 				int index = url.indexOf(FILEUEDITOR_BASE_URL);
 				if(index >= 0) {
-					url = url.substring(index);
+					url = StrUtil.subAfter(url,FILEUEDITOR_BASE_URL,false);
 				}
+				//保存数据库
+				//文件名称
+				String fileMd5 = Md5Util.hash(FileUtil.getAbsolutePath(physicalPath));
+				SysFilesEntity sysFile = new SysFilesEntity();
+				sysFile.setFileMd5(fileMd5);
+				sysFile.setFileName(storageState.getStr("title"));
+				sysFile.setFilePath(url);
+				sysFile.setClassify("2");
+				sysFile.setFileSize(new BigDecimal(storageState.getLong("size")));
+				SpringUtil.getBean(SysFileService.class).save(sysFile);
 				//解决返回路径问题 j2eefast
-				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + url );
+				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + PathFormat.format(savePath) );
 				storageState.putInfo("type", suffix);
+				storageState.putInfo("fileId", sysFile.getId());
 				storageState.putInfo("original", originFileName + suffix);
 			}
 
@@ -126,6 +146,7 @@ public class BinaryUploader {
 		} catch (FileUploadException e) {
 			return new BaseState(false, AppInfo.PARSE_REQUEST_ERROR);
 		} catch (IOException e) {
+			log.error("IO错误:",e);
 		}
 		return new BaseState(false, AppInfo.IO_ERROR);
 	}

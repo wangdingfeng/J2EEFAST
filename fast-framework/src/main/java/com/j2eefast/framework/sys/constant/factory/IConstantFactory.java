@@ -13,6 +13,8 @@ import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
 import com.j2eefast.framework.sys.entity.SysMenuEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
+import com.j2eefast.framework.sys.service.SysFileService;
+import com.j2eefast.framework.sys.service.SysFileUploadService;
 
 import java.util.List;
 
@@ -134,4 +136,8 @@ public interface IConstantFactory {
 	void clearRole();
 
 	SysLoginInfoEntity getFirstLoginInfo(String username);
+
+	SysFileUploadService getSysFileUploadService();
+
+	SysFileService getSysFileService();
 }

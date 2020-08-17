@@ -45,6 +45,8 @@
 		                    return '<span class="badge badge-primary">在线</span>';
 		                }if (value == '-1') {
 							return '<span class="badge badge-warning">锁屏</span>';
+						}if (value == '-9') {
+							return '<span class="badge badge-warning">已踢,等待下线</span>';
 						}else{
 		                    return '<span class="badge badge-danger">离线</span>';
 		                }

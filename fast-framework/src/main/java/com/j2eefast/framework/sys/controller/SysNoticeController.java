@@ -225,7 +225,7 @@ public class SysNoticeController extends BaseController {
             StringBuffer url = request.getRequestURL();
             String contextPath = request.getServletContext().getContextPath();
             String sysUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(contextPath).toString();
-            String pathName = FileUploadUtil.uploadWeb(Global.getUploadPath(), file);
+            String pathName = FileUploadUtil.uploadWeb(Global.getTempPath(), file);
             return success().put("fileName", pathName).put("url",sysUrl);
         }catch (Exception e){
             return success();

@@ -23,7 +23,7 @@
     <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
-                <@form.form id="user-form">
+                <@f.form id="user-form">
                     <div class="select-list">
                         <ul>
                             <li>
@@ -38,14 +38,14 @@
                             <li>
                                 <label><@ctx.i18n text = "机构查询"/></label>：
                                 <div class="control-div width-150">
-                                <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                                <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
                                 expandLevel=true
                                 placeholder="请选择上级机构"/>
                                 </div>
                             </li>
                             <li>
                                 <label><@ctx.i18n text = "用户状态"/></label>：
-                                <@form.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
+                                <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -53,7 +53,7 @@
                             </li>
                         </ul>
                     </div>
-                </@form.form>
+                </@f.form>
             </div>
             <@table id="bootstrap-table">
                 <@shiro.hasPermission name="sys:user:add">

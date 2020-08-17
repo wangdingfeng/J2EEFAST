@@ -6,10 +6,10 @@
 	button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
 </style>
 </@header>
-	<@form.hidden  name="treeId" value="${treeId?default(0)}"/>
-	<@form.hidden  name="treeName" value="${treeName?default('')}"/>
-	<@form.hidden  name="parentIds" value="${parentIds?default('')}" />
-	<@form.hidden  name="type" />
+	<@f.hidden  name="treeId" value="${treeId?default(0)}"/>
+	<@f.hidden  name="treeName" value="${treeName?default('')}"/>
+	<@f.hidden  name="parentIds" value="${parentIds?default('')}" />
+	<@f.hidden  name="type" />
 	<div class="treeShowHideButton" onclick="$.tree.toggleSearch();">
 		<label id="btnShow" title="显示搜索" style="display:none;">︾</label>
 		<label id="btnHide" title="隐藏搜索">︽</label>

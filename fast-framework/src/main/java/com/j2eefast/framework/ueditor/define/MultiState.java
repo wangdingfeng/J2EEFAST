@@ -1,12 +1,8 @@
-package com.j2eefast.common.ueditor.define;
+package com.j2eefast.framework.ueditor.define;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.j2eefast.framework.ueditor.Encoder;
 
-import com.j2eefast.common.ueditor.Encoder;
+import java.util.*;
 
 /**
  * 多状态集合状态
@@ -35,12 +31,12 @@ public class MultiState implements State {
 		this.state = state;
 		this.info = AppInfo.getStateInfo( infoKey );
 	}
-	
+
 	@Override
 	public boolean isSuccess() {
 		return this.state;
 	}
-	
+
 	public void addState ( State state ) {
 		stateList.add( state.toJSONString() );
 	}
@@ -55,7 +51,7 @@ public class MultiState implements State {
 
 	@Override
 	public String toJSONString() {
-		
+
 		String stateVal = this.isSuccess() ? AppInfo.getStateInfo( AppInfo.SUCCESS ) : this.info;
 		
 		StringBuilder builder = new StringBuilder();
@@ -109,4 +105,13 @@ public class MultiState implements State {
 		this.intMap.put( name, val );
 	}
 
+	@Override
+	public String getStr(String name) {
+		return this.infoMap.get(name);
+	}
+
+	@Override
+	public long getLong(String name) {
+		return Long.parseLong(this.infoMap.get(name));
+	}
 }

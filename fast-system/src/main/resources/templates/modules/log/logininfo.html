@@ -4,7 +4,7 @@
 <div class="container-div">
 	<div class="row">
 		<div class="col-sm-12 search-collapse">
-		<@form.form id="logininfor-form">
+		<@f.form id="logininfor-form">
 		<div class="select-list">
 			<ul>
 				<li>
@@ -19,7 +19,7 @@
 				<li>
 					<label><@ctx.i18n text = "机构查询"/></label>：
 					<div class="control-div width-150">
-						<@form.treeselect name="deptId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+						<@f.treeselect name="deptId" boxTitle="请选择归属机构" url="sys/comp/treeData"
 						expandLevel=true
 						placeholder="请选择上级机构"/>
 					</div>
@@ -49,7 +49,7 @@
 				</li>
 			</ul>
 		</div>
-		</@form.form>
+		</@f.form>
 		</div>
 		<@table id="bootstrap-table">
 			<@shiro.hasPermission name="sys:logininfo:del">

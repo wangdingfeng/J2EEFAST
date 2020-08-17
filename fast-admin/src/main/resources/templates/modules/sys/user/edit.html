@@ -2,14 +2,14 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="修改用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-user-edit" class="form-horizontal">
-    <@form.hidden id="id" name="id" value="${user.id?default('')}"/>
+<@f.form id="form-user-edit" class="form-horizontal">
+    <@f.hidden id="id" name="id" value="${user.id?default('')}"/>
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>登录账号：</label>
                 <div class="col-sm-8">
-                    <@form.input name="username" value="${user.username?default('')}" readonly=true/>
+                    <@f.input name="username" value="${user.username?default('')}" readonly=true/>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>归属公司：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect id="compId" name="compId" value="${user.compId?default('')}"
+                        <@f.treeselect id="compId" name="compId" value="${user.compId?default('')}"
                         labelValue="${user.compName?default('')}" boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel=true placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -36,7 +36,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>归属部门：</label>
                 <div class="col-sm-8">
-                    <@form.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" value="${user.deptId?default('')}"
+                    <@f.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" value="${user.deptId?default('')}"
                     labelValue="${user.deptName?default('')}" correlationId="compId" isSelectParent=true  placeholder="请选择归属部门"/>
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>手机号码：</label>
                 <div class="col-sm-8">
-                    <@form.input name="mobile" value="${user.mobile?default('')}" placeholder="请输入手机号码" required=true/>
+                    <@f.input name="mobile" value="${user.mobile?default('')}" placeholder="请输入手机号码" required=true/>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>所属角色：</label>
                 <div class="col-sm-8">
-                    <@form.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id" required=true/>
+                    <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id" required=true/>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">邮箱：</label>
                 <div class="col-sm-8">
-                    <@form.input name="email" value="${user.email?default('')}" placeholder="请输入邮箱" class="form-control email"  maxlength="50" />
+                    <@f.input name="email" value="${user.email?default('')}" placeholder="请输入邮箱" class="form-control email"  maxlength="50" />
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">用户状态：</label>
                 <div class="col-sm-8">
-                    <@form.switch name="status" value="${user.status?default('')}"/>
+                    <@f.switch name="status" value="${user.status?default('')}"/>
                 </div>
             </div>
         </div>
@@ -83,12 +83,12 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>所在岗位：</label>
                 <div class="col-sm-8">
-                    <@form.select name="postCodes" multiple = true  value="${selectPosts}" items=posts itemLabel="postName" itemValue="postCode" required=true/>
+                    <@f.select name="postCodes" multiple = true  value="${selectPosts}" items=posts itemLabel="postName" itemValue="postCode" required=true/>
                 </div>
             </div>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script type="text/javascript">

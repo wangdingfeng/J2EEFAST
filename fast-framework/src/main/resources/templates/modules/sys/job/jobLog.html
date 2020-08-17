@@ -4,7 +4,7 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="jobLog-form">
+	<@f.form id="jobLog-form">
 		<div class="select-list">
 			<ul>
 				<li>
@@ -12,11 +12,11 @@
 				</li>
 				<li>
 					任务分组：
-					<@form.select name="jobGroup" blankValue="" blankLabel="所有" dictType="sys_job_group" />
+					<@f.select name="jobGroup" blankValue="" blankLabel="所有" dictType="sys_job_group" />
 				</li>
 				<li>
 					执行状态：
-					<@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
+					<@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
 				</li>
 				<li class="select-time">
 					<label>执行时间： </label>
@@ -30,7 +30,7 @@
 				</li>
 			</ul>
 		</div>
-	</@form.form>
+	</@f.form>
 	</div>
 	<@table id="bootstrap-table">
 		<@shiro.hasPermission name="sys:joblog:del">

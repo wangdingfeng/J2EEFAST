@@ -2,39 +2,39 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="修改字典" bodyClass="white-bg"/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-type-edit" class="form-horizontal">
-	<@form.hidden  id="id" name="id" value="${dictHtml.id}"/>
+<@f.form id="form-type-edit" class="form-horizontal">
+	<@f.hidden  id="id" name="id" value="${dictHtml.id}"/>
 	<div class="form-group">
 		<label class="col-sm-3 control-label ">字典名称：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictName" value="${dictHtml.dictName}"  required=true/>
+			<@f.input name="dictName" value="${dictHtml.dictName}"  required=true/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">字典类型：</label>
 		<div class="col-sm-8">
-			<@form.input name="dictType" value="${dictHtml.dictType}"  required=true helpTip="统一规范 请务必使用小写字母下划线定义 页面获取:dict.getType('sys_yes_no')"/>
+			<@f.input name="dictType" value="${dictHtml.dictType}"  required=true helpTip="统一规范 请务必使用小写字母下划线定义 页面获取:dict.getType('sys_yes_no')"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">系统内置：</label>
 		<div class="col-sm-8">
-			<@form.radio name="isSys" value="${dictHtml.isSys}" dictType="sys_yes_no"/>
+			<@f.radio name="isSys" value="${dictHtml.isSys}" dictType="sys_yes_no"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">状态：</label>
 		<div class="col-sm-8">
-			<@form.radio name="status" value="${dictHtml.status}" dictType="sys_normal_disable"/>
+			<@f.radio name="status" value="${dictHtml.status}" dictType="sys_normal_disable"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label">备注：</label>
 		<div class="col-sm-8">
-			<@form.textarea name="remark" value="${dictHtml.remark?default('')}"/>
+			<@f.textarea name="remark" value="${dictHtml.remark?default('')}"/>
 		</div>
 	</div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script>

@@ -194,7 +194,7 @@ ${pageTheme}
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
                         <@form.treeselect name="${field}" value="${${className}.${field}?default('')}"
-                          labelValue="${${className}.deptName?default('')}"
+                          labelValue="${${className}.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -204,7 +204,7 @@ ${pageTheme}
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
                         <@form.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-                        labelValue="${${className}.compName?default('')}"
+                        labelValue="${${className}.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -382,7 +382,7 @@ ${pageTheme}
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
                         <@form.treeselect name="${field}" value="${${className}.${field}?default('')}"
-                          labelValue="${${className}.deptName?default('')}"
+                          labelValue="${${className}.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -392,7 +392,7 @@ ${pageTheme}
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
                         <@form.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-                        labelValue="${${className}.compName?default('')}"
+                        labelValue="${${className}.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>

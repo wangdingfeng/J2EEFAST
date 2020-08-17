@@ -328,6 +328,7 @@
             return res;
         },
         pagination: false,
+        firstLoad: true,
         onlyInfoPagination: false,
         sidePagination: 'client', // client or server
         totalRows: 0, // server side need to set
@@ -2019,6 +2020,7 @@
     };
 
     BootstrapTable.prototype.initServer = function (silent, query, url) {
+        console.log("9999999999")
         var that = this,
             data = {},
             params = {
@@ -2107,9 +2109,12 @@
                         return;
                     }
                 }
-
+                var temp = res;
                 res = calculateObjectValue(that.options, that.options.responseHandler, [res], res);
-
+                if(res === temp){
+                    res = { rows: res.data.list, total: res.data.totalCount }
+                }
+                console.log("-->>:" + res);
                 that.load(res);
                 that.trigger('load-success', res);
                 if (!silent) that.$tableLoading.hide();
@@ -3114,7 +3119,7 @@
                 data = $this.data('bootstrap.table'),
                 options = $.extend({}, BootstrapTable.DEFAULTS, $this.data(),
                     typeof option === 'object' && option);
-
+            console.log("------"+data);
             if (typeof option === 'string') {
                 if ($.inArray(option, allowedMethods) < 0) {
                     throw new Error("Unknown method: " + option);
@@ -3135,7 +3140,6 @@
                 $this.data('bootstrap.table', (data = new BootstrapTable(this, options)));
             }
         });
-
         return typeof value === 'undefined' ? this : value;
     };
 

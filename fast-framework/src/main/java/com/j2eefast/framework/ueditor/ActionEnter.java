@@ -1,17 +1,19 @@
-package com.j2eefast.common.ueditor;
+package com.j2eefast.framework.ueditor;
 
-import java.util.Map;
+import com.j2eefast.framework.ueditor.define.ActionMap;
+import com.j2eefast.framework.ueditor.define.AppInfo;
+import com.j2eefast.framework.ueditor.define.BaseState;
+import com.j2eefast.framework.ueditor.define.State;
+import com.j2eefast.framework.ueditor.hunter.FileManager;
+import com.j2eefast.framework.ueditor.hunter.ImageHunter;
+import com.j2eefast.framework.ueditor.upload.Uploader;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-import com.j2eefast.common.ueditor.define.ActionMap;
-import com.j2eefast.common.ueditor.define.AppInfo;
-import com.j2eefast.common.ueditor.define.BaseState;
-import com.j2eefast.common.ueditor.define.State;
-import com.j2eefast.common.ueditor.hunter.FileManager;
-import com.j2eefast.common.ueditor.hunter.ImageHunter;
-import com.j2eefast.common.ueditor.upload.Uploader;
-
+/**
+ *  百度富文本控制类
+ */
 public class ActionEnter {
 	
 	private HttpServletRequest request = null;
@@ -70,7 +72,7 @@ public class ActionEnter {
 		
 			case ActionMap.CONFIG:
 				return this.configManager.getAllConfig().toString();
-				
+			/*上传文件接口*/
 			case ActionMap.UPLOAD_IMAGE:
 			case ActionMap.UPLOAD_SCRAWL:
 			case ActionMap.UPLOAD_VIDEO:

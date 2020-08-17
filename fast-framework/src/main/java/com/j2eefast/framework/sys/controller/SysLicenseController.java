@@ -85,6 +85,9 @@ public class SysLicenseController extends BaseController {
                 (ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
         mmap.put("productName",productName);
         mmap.put("authorizationTime",ConfigConstant.AUTHORIZATION_TIME);
+        LicenseVerify licenseVerify = new LicenseVerify();
+        int online = licenseVerify.onlineNumVerify(listener.getVerifyParam());
+        mmap.put("onlineNum",online == -1 ? "无限制" : online);
         return urlPrefix + "/license";
     }
 
@@ -100,7 +103,7 @@ public class SysLicenseController extends BaseController {
     public ResponseData uploadLic(@RequestParam("licfile") MultipartFile file){
         try{
             if (!file.isEmpty() && file.getOriginalFilename().equals("license.lic")){
-                String pathName = FileUploadUtil.uploadFile(Global.getConifgPath(), file);
+                String pathName = FileUploadUtil.uploadFile(Global.getTempPath(), file);
 
                 //先拷贝之前的备份防止出故障 重命名
                 FileUtil.rename(FileUtil.file(licensePath),"licenseReName",true,true);
@@ -202,7 +205,7 @@ public class SysLicenseController extends BaseController {
             ResponseData r = checkverifyNoUnique(sn, verifyNo);
             if(checkverifyNoUnique(sn, verifyNo).get("code").equals("00000")){
                 //生成许可证书路径
-                String folder = ToolUtil.createFolder(Global.getConifgPath());
+                String folder = ToolUtil.createFolder(Global.getTempPath());
                 String name = ToolUtil.encodingFilename("license.lic");
                 LicenseCreatorParam param = new LicenseCreatorParam();
                 param.setSubject(subject);

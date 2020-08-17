@@ -4,7 +4,7 @@
 <div class="container-div">
  <div class="row">
   <div class="col-sm-12 search-collapse">
-    <@form.form id="test-form" class="form-inline">
+    <@f.form id="test-form" class="form-inline">
      <div class="select-list">
       <ul>
            <li>
@@ -29,7 +29,7 @@
        </li>
       </ul>
    </div>
-  </@form.form>
+  </@f.form>
  </div>
   <@table id="bootstrap-table">
     <@shiro.hasPermission name="gen:test:add">
@@ -80,8 +80,8 @@
                             return $.table.selectDictLabels(sexDatas, value); }}
               ,{field : 'age',title : '<@ctx.i18n text = "年龄"/>'}
               ,{field : 'joinDate',title : '<@ctx.i18n text = "入职日期"/>'}
-               ,{field : 'compName',title : '<@ctx.i18n text = "归属公司"/>' }
-              ,{field : 'deptName',title : '<@ctx.i18n text = "归属部门"/>' }
+               ,{field : 'company.name',title : '<@ctx.i18n text = "归属公司"/>' }
+              ,{field : 'organization.name',title : '<@ctx.i18n text = "归属部门"/>' }
                        ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible,formatter: function(value, row, index) {
                         var actions = [];
                           actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="opt.operate.editTab(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');

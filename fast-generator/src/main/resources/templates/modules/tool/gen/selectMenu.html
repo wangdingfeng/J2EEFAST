@@ -2,11 +2,11 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="选择菜单" bodyClass="white-bg" libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-menu-add" class="form-horizontal">
+<@f.form id="form-menu-add" class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-3 control-label "><@ctx.i18n text = "上级菜单"/>：</label>
             <div class="col-sm-8">
-                    <@form.treeselect value="${gen_table.parentId?default('0')}" name="parentId" boxTitle="上级菜单选择" url="sys/menu/menuTreeData"
+                    <@f.treeselect value="${gen_table.parentId?default('0')}" name="parentId" boxTitle="上级菜单选择" url="sys/menu/menuTreeData"
                     labelValue="${gen_table.parentName?default('')}"/>
             </div>
         </div>
@@ -34,7 +34,7 @@
 <#--                        </#if>-->
 <#--                    </#items>-->
 <#--                </#list>-->
-                <@form.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${gen_table.moduleCodes}" itemValue="moduleCode" required=true/>
+                <@f.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${gen_table.moduleCodes}" itemValue="moduleCode" required=true/>
             </div>
         </div>
         <div class="form-group">
@@ -54,7 +54,7 @@
 <#--                        </#items>-->
 <#--                    </#list>-->
 <#--                </select>-->
-                <@form.select name="menuTarget" dictType="sys_menu_target" />
+                <@f.select name="menuTarget" dictType="sys_menu_target" />
             </div>
         </div>
         <div class="form-group">
@@ -76,10 +76,10 @@
 <#--                    <span class="input-group-btn"><a id="menuIconButton" href="javascript:"-->
 <#--                        ><i class="fa fa-fw fa-search"></i></a></span>-->
 <#--                </div>-->
-                <@form.iconselect name="icmenuIconon" placeholder="选择图标" value="${gen_table.menuIcon?default('')}"/>
+                <@f.iconselect name="icmenuIconon" placeholder="选择图标" value="${gen_table.menuIcon?default('')}"/>
             </div>
         </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script type="text/javascript">

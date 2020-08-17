@@ -4,8 +4,8 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="user-form">
-     <@form.hidden name="roleId" value="${roleId}" refresh=false />
+	<@f.form id="user-form">
+     <@f.hidden name="roleId" value="${roleId}" refresh=false />
      <div class="select-list">
              <li>
                  <@ctx.i18n text = "登陆账号"/>:<input type="text" name="username"/>
@@ -19,14 +19,14 @@
              <li>
                  <label><@ctx.i18n text = "机构查询"/></label>：
                  <div class="control-div width-150">
-                     <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                     <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
                      expandLevel=true
                      placeholder="请选择上级机构"/>
                  </div>
              </li>
              <li>
                  <@ctx.i18n text = "用户状态"/>：
-                 <@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_normal_disable" />
+                 <@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_normal_disable" />
              </li>
              <li>
                  <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -34,7 +34,7 @@
              </li>
          </ul>
      </div>
-     </@form.form>
+     </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:user:add">

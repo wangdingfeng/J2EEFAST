@@ -1,10 +1,10 @@
-package com.j2eefast.common.define;
+package com.j2eefast.framework.ueditor.define;
+
+import com.j2eefast.framework.ueditor.Encoder;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.j2eefast.common.ueditor.Encoder;
 
 public class BaseState implements State {
 
@@ -87,6 +87,16 @@ public class BaseState implements State {
 	@Override
 	public void putInfo(String name, long val) {
 		this.putInfo(name, val+"");
+	}
+
+	@Override
+	public String getStr(String name) {
+		return this.infoMap.get(name);
+	}
+
+	@Override
+	public long getLong(String name) {
+		return Long.parseLong(this.infoMap.get(name));
 	}
 
 }

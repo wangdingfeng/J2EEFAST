@@ -58,7 +58,7 @@ public class ImageUtils {
                 }
                 bilder.toFile(imageFile);
 
-                ImgUtil.write(ImgUtil.pressText(bufferedImage,"FASTOS", Color.BLACK,new Font("Courier", Font.PLAIN, (int)20),0,0, (float)1),imageFile);
+                ImgUtil.write(ImgUtil.pressText(bufferedImage,"J2eeFAST", Color.BLACK,new Font("Courier", Font.PLAIN, (int)20),0,0, (float)1),imageFile);
             }
         }catch(IOException e){
             LOG.error("图片压缩失败：" + imageFile.getAbsoluteFile(), e);

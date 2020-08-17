@@ -496,6 +496,7 @@ $(function () {
         }, 50);
     });*/
 
+    //$("#mian-tab-menu").disableSelection();
     //校验修改密码
     $("#form-user-updatePass").validate({
         rules:{

@@ -21,7 +21,7 @@ import com.j2eefast.framework.utils.FileUploadUtils;
  *
  * 代码生成范例Service接口
  * @author: ZhouZhou
- * @date 2020-08-07 11:33
+ * @date 2020-08-17 10:03
  */
 @Service
 public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTestEntity> {
@@ -59,21 +59,24 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      */
 	@Transactional(rollbackFor = Exception.class)
 	public boolean delExampleTestByIds(Long[] ids) {
-		 for (Long id : ids) {
-		 FileUploadUtils.removeFileUpload(id, "example_test_file");
-         FileUploadUtils.removeFileUpload(id, "example_test_img");
-		 }
-         
+
+		for (Long id : ids) {
+			FileUploadUtils.me().removeFileUpload(id,"example_test_file");						
+		    FileUploadUtils.me().removeFileUpload(id,"example_test_img");			
+		}
 		return this.removeByIds(Arrays.asList(ids));
+
 	}
 
 	/**
      * 单个删除
      */
 	public boolean delExampleTestById(Long id) {
-        FileUploadUtils.removeFileUpload(id, "example_test_file");
-        FileUploadUtils.removeFileUpload(id, "example_test_img");
+
+		FileUploadUtils.me().removeFileUpload(id,"example_test_file");		
+		FileUploadUtils.me().removeFileUpload(id,"example_test_img");		
 		return this.removeById(id);
+
 	}
 
 	/**
@@ -83,7 +86,6 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 																				
 		//图片剪切数据转换
 		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
-		
 		if(this.save(exampleTest)){			
 			//更新关联附件信息						
 			Long pkId =  exampleTest.getId();			

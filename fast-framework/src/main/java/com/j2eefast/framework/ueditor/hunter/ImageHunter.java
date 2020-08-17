@@ -1,4 +1,8 @@
-package com.j2eefast.common.hunter;
+package com.j2eefast.framework.ueditor.hunter;
+
+import com.j2eefast.framework.ueditor.PathFormat;
+import com.j2eefast.framework.ueditor.define.*;
+import com.j2eefast.framework.ueditor.upload.StorageManager;
 
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -7,14 +11,6 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import com.j2eefast.common.ueditor.PathFormat;
-import com.j2eefast.common.ueditor.define.AppInfo;
-import com.j2eefast.common.ueditor.define.BaseState;
-import com.j2eefast.common.ueditor.define.MIMEType;
-import com.j2eefast.common.ueditor.define.MultiState;
-import com.j2eefast.common.ueditor.define.State;
-import com.j2eefast.common.ueditor.upload.StorageManager;
 
 /**
  * 图片抓取器
@@ -42,7 +38,7 @@ public class ImageHunter {
 		
 	}
 	
-	public State capture ( String[] list ) {
+	public State capture (String[] list ) {
 		
 		MultiState state = new MultiState( true );
 		
@@ -54,7 +50,7 @@ public class ImageHunter {
 		
 	}
 
-	public State captureRemoteData ( String urlStr ) {
+	public State captureRemoteData (String urlStr ) {
 		
 		HttpURLConnection connection = null;
 		URL url = null;

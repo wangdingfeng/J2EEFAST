@@ -4,7 +4,7 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="role-form">
+	<@f.form id="role-form">
     <div class="select-list">
         <ul>
             <li>
@@ -20,7 +20,7 @@
             </li>
         </ul>
     </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:role:add">

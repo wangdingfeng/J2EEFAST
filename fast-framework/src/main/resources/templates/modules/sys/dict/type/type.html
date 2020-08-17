@@ -4,7 +4,7 @@
 <div class="container-div" id="_app">
     <div class="row">
     <div class="col-sm-12 search-collapse">
-    <@form.form id="type-form">
+    <@f.form id="type-form">
         <div class="select-list">
             <ul>
                 <li>
@@ -15,7 +15,7 @@
                 </li>
                 <li>
                     字典状态：
-                    <@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_normal_disable" />
+                    <@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_normal_disable" />
                 </li>
                 <li>
                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -23,7 +23,7 @@
                 </li>
             </ul>
         </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:dict:add">

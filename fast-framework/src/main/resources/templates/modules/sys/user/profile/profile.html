@@ -223,9 +223,9 @@
                             <!-- 绑定第三方账号登录-->
                             <div class="tab-pane <#if active=="oauth2"> active</#if>  animated fadeInDown" id="third_party_binding">
                                 <#if err != "">
-                                    <@form.tip class="danger" animated="">${err}</@form.tip>
+                                    <@f.tip class="danger" animated="">${err}</@f.tip>
                                 </#if>
-<#--                                <@form.tip class="info" animated="">使用以下任一方式都可以登录到J2eeFAST系统，避免由于某个帐号失效导致无法登录.</@form.tip>-->
+<#--                                <@f.tip class="info" animated="">使用以下任一方式都可以登录到J2eeFAST系统，避免由于某个帐号失效导致无法登录.</@f.tip>-->
                                 <div class="form-horizontal">
                                     <div class="form-group">
                                         <div class="col-sm-12">

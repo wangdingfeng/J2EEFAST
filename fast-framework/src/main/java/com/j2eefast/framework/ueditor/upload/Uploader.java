@@ -1,9 +1,9 @@
-package com.j2eefast.common.ueditor.upload;
+package com.j2eefast.framework.ueditor.upload;
 
-import com.j2eefast.common.ueditor.define.State;
+import com.j2eefast.framework.ueditor.define.State;
 
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public class Uploader {
 	private HttpServletRequest request = null;

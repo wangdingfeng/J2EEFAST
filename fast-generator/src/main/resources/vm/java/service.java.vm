@@ -143,8 +143,23 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##     
 	@Transactional(rollbackFor = Exception.class)
-	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {
-		return this.removeByIds(Arrays.asList(ids));
+	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {####
+
+
+#if($table.rFile || $table.rImg)####
+		for (Long id : ids) {
+			#if($table.rFile)
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file");####
+			#end
+			#if($table.rImg)
+
+		    FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+			#end####
+
+		}
+		#end
+return this.removeByIds(Arrays.asList(ids));
+
 	}
 
 	/**
@@ -154,7 +169,17 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##
 	public boolean del${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
+
+		#if($table.rFile)####
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file");####
+		#end####
+
+		#if($table.rImg)####
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+		#end####
+
 		return this.removeById(${pkColumn.javaField});
+
 	}
 
 	/**

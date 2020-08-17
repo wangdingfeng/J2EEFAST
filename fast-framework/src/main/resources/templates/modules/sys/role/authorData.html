@@ -2,15 +2,15 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
     <@header title="角色分配数据权限" bodyClass="white-bg" libs=["zTree"]/>
     <div class="wrapper wrapper-content ibox-content">
-        <@form.form id="form-user-add" class="form-horizontal">
-            <@form.hidden id="id" name="id" value="${role.id?default('')}"/>
+        <@f.form id="form-user-add" class="form-horizontal">
+            <@f.hidden id="id" name="id" value="${role.id?default('')}"/>
             <h4 class="form-header h4"><i class="fa icon-shield"></i> <@ctx.i18n text = "角色分配数据权限"/></h4>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "角色名称"/>：</label>
                         <div class="col-sm-8">
-                            <@form.input name="roleName" value="${role.roleName?default('')}" readonly=true  required=true/>
+                            <@f.input name="roleName" value="${role.roleName?default('')}" readonly=true  required=true/>
                         </div>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "权限字符"/>：</label>
                         <div class="col-sm-8">
-                            <@form.input name="roleKey" value="${role.roleKey?default('')}" readonly=true  required=true/>
+                            <@f.input name="roleKey" value="${role.roleKey?default('')}" readonly=true  required=true/>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据范围"/>：</label>
                         <div class="col-sm-10">
-                            <@form.radio name="dataScope" value="${role.dataScope?default('0')}" helpTip="控制此角色范围分配菜单数据范围" dictType="sys_role_data_scope" required=true/>
+                            <@f.radio name="dataScope" value="${role.dataScope?default('0')}" helpTip="控制此角色范围分配菜单数据范围" dictType="sys_role_data_scope" required=true/>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-        </@form.form>
+        </@f.form>
         <div class="hr-line-dashed"></div>
         <div class="row" id="_addTab">
             <div class="col-sm-offset-5 col-sm-10">

@@ -91,30 +91,14 @@ public class Global {
     {
         return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_EDITOR_PATH),getRootPath()+"editor");
     }
+
     
     /**
-     * 获取富文本组件上传 文件根路径
-     */
-    public static String getUploadPath()
-    {
-        return getEditorPath() + "/upload";
-    }
-    
-    /**
-     * 获取头像上传路径
+     * 用户头像上传路径
      */
     public static String getAvatarPath()
     {
         return  getRootPath() + "avatar";
-    }
-    
-    
-    /**
-    * config 根目录
-     */
-    public static String getConifgPath()
-    {
-        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_CONFIG_PATH),getRootPath()+"config");
     }
 
     /**

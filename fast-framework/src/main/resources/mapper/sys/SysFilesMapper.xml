@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        <result property="filePath"    column="file_path"    />
        <result property="fileName"    column="file_name"    />
        <result property="fileSize"    column="file_size"    />
+        <result property="classify"    column="classify"    />
      </resultMap>
     
     <!--  实体栏位  --> 
@@ -20,12 +21,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           a.file_md5 as "fileMd5"   ,                 
           a.file_path as "filePath"   ,                 
           a.file_name as "fileName"   ,                 
-          ROUND(a.file_size/1000) as "fileSize"      
+          a.file_size as "fileSize",
+          a.classify as "classify"
           , up.biz_type  as "fileUpload.bizType"
           , up.biz_id  as "fileUpload.bizId"
           , up.create_by as "fileUpload.createBy"
           , up.create_time as "fileUpload.createTime"   
-          , CASE WHEN up.biz_id IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
+          , CASE WHEN up.biz_type IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
       </sql>
     
      <!-- 外联表  --> 

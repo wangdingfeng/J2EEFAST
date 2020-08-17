@@ -49,13 +49,7 @@ spring:
         basename: i18n/i18n
         #默认语言（4.1.3+）
         defaultLocale: zh_CN
-framework:
-    redis:
-        open: true  # 是否开启redis缓存  true开启   false关闭
-        name: stk   #监控中redis中名称
-    shiro:
-        redis: false # true表示shiro session存到redis里，需要开启redis，才会生效【分布式场景】
-# Shiro
+# Shiro 配置
 shiro:
     cookie:
         # 设置Cookie的域名 默认空，即当前访问的域名
@@ -69,7 +63,8 @@ shiro:
         expireTime: 30
         #设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
         validationTime: 5
-#mybatis
+
+#mybatis 配置
 mybatis-plus:
     mapper-locations: classpath*:mapper/**/*.xml
     global-config:
@@ -93,7 +88,8 @@ mybatis-plus:
         map-underscore-to-camel-case: true
         cache-enabled: false
         call-setters-on-nulls: true
-#日志
+
+#日志路径配置
 logging:
     file:
         name: fast

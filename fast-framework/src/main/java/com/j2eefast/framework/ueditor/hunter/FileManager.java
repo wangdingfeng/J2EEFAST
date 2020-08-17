@@ -1,22 +1,23 @@
-package com.j2eefast.common.hunter;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+package com.j2eefast.framework.ueditor.hunter;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
-import com.j2eefast.common.ueditor.define.MultiState;
+import com.j2eefast.common.core.utils.Md5Util;
+import com.j2eefast.common.core.utils.SpringUtil;
+import com.j2eefast.framework.sys.service.SysFileService;
+import com.j2eefast.framework.ueditor.PathFormat;
+import com.j2eefast.framework.ueditor.define.AppInfo;
+import com.j2eefast.framework.ueditor.define.BaseState;
+import com.j2eefast.framework.ueditor.define.MultiState;
+import com.j2eefast.framework.ueditor.define.State;
 import org.apache.commons.io.FileUtils;
 
-import com.j2eefast.common.ueditor.PathFormat;
-import com.j2eefast.common.ueditor.define.AppInfo;
-import com.j2eefast.common.ueditor.define.BaseState;
-import com.j2eefast.common.ueditor.define.State;
-
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 public class FileManager {
 	public static final String FILEUEDITOR_BASE_URL = "/fileUeditor/";
@@ -77,10 +78,12 @@ public class FileManager {
 		if(!StrUtil.containsAny(extName,this.allowFiles)){
 			return new BaseState( false, AppInfo.NOT_ALLOW_FILE_TYPE );
 		}
+		String fileMd5 = Md5Util.hash(FileUtil.getAbsolutePath(filepath));
+		SpringUtil.getBean(SysFileService.class).delSysFielsByMd5(fileMd5);
 		if(!FileUtil.del(filepath)){
 			return new BaseState( false, AppInfo.NOTFOUND_UPLOAD_DATA );
 		}
-		return state = new BaseState( true ,AppInfo.SUCCESS);
+		return state = new BaseState( true , AppInfo.SUCCESS);
 	}
 
 	

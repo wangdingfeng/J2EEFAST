@@ -14,10 +14,10 @@
 <#--全局遮罩-->
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
 <#-- layui-->
-<script src="${ctxStatic}/static/plugins/layer/layer.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/plugins/layui/layui.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/plugins/layer/layer.js"></script>
+<script src="${ctxStatic}/static/plugins/layui/layui.js"></script>
 <script src="${ctxStatic}/static/libs/jquery.i18n.properties.min.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/plugins/iCheck/icheck.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/plugins/iCheck/icheck.min.js"></script>
 <script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js?V=${config.getDvVersion()}"></script>
 <#compress>
 <#if !(Libs?is_string) && Libs?? && (Libs?size > 0) >
@@ -37,16 +37,16 @@
             </#if>
             <#-- zTree 树-->
             <#if x == "zTree">
-                <script src="${ctxStatic}/static/plugins/ztree/3.5/js/jquery.ztree.all.min.js?V=${config.getDvVersion()}"></script>
-                <script src="${ctxStatic}/static/plugins/ztree/3.5/js/jquery.ztree.exhide.min.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/ztree/3.5/js/jquery.ztree.all.min.js"></script>
+                <script src="${ctxStatic}/static/plugins/ztree/3.5/js/jquery.ztree.exhide.min.js"></script>
             </#if>
             <#-- JSON试图脚本-->
             <#if x == "jsonview">
-                <script src="${ctxStatic}/static/plugins/jsonview/jquery.jsonview.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/jsonview/jquery.jsonview.js"></script>
             </#if>
             <#-- 页面下拉框-->
             <#if x == "bootstrapSelect">
-                <script src="${ctxStatic}/static/plugins/bootstrap-select/bootstrap-select.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/bootstrap-select/bootstrap-select.js"></script>
             </#if>
             <#-- 头像裁剪-->
             <#if x == "cropbox">
@@ -57,8 +57,8 @@
             </#if>
             <#-- 页面代码格式化-->
             <#if x == "prism">
-                <script src="${ctxStatic}/static/plugins/prism/prism.js?V=${config.getDvVersion()}"></script>
-                <script src="${ctxStatic}/static/plugins/prism/clipboard.min.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/prism/prism.js"></script>
+                <script src="${ctxStatic}/static/plugins/prism/clipboard.min.js"></script>
             </#if>
             <#-- SelectPage 插件-->
             <#if x == "selectPage">
@@ -86,7 +86,7 @@
             </#if>
             <#-- 左右布局-->
             <#if x == "layout-latest">
-                <script src="${ctxStatic}/static/plugins/jquery-layout/jquery.layout-latest.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/jquery-layout/jquery.layout-latest.js"></script>
             </#if>
             <#-- 文件上传-->
             <#if x == "fileupload">
@@ -103,11 +103,11 @@
         </#list>
 </#if>
 <#-- jquery-validate 表单验证插件 -->
-<script src="${ctxStatic}/static/plugins/validate/jquery.validate.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/plugins/validate/jquery.validate.min.js"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${request.contextPath}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>-->
-<script src="${request.contextPath}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>
+<script src="${request.contextPath}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${request.contextPath}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
 <#--VUE-->
-<script src="${ctxStatic}/static/libs/vue.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/vue.min.js"></script>
 </#compress>
 </#macro>

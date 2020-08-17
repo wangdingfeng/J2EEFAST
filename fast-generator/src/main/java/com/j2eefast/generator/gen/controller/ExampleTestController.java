@@ -19,7 +19,7 @@ import com.j2eefast.generator.gen.service.ExampleTestService;
 /**
  * 代码生成范例页面控制器
  * @author ZhouZhou
- * @date 2020-08-07 11:33
+ * @date 2020-08-17 10:03
  */
 @Controller
 @RequestMapping("/gen/test")

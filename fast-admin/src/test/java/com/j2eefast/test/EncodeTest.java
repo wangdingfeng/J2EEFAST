@@ -2,6 +2,7 @@ package com.j2eefast.test;
 
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
+import com.j2eefast.common.core.utils.AddressUtil;
 import com.j2eefast.common.core.utils.JasyptUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.junit.Test;
@@ -100,6 +101,16 @@ public class EncodeTest {
         String pasw = "123456";
         String cipher = EnctryptTools.SM4Encode(pasw, "123456789");
         System.out.println("SM4密文:" + cipher + "   yml文件写法:SM4{"+cipher+"}");
+    }
+
+    @Test
+    public void testIp(){
+//      System.out.println(AddressUtil.getRealAddressByIP("117.136.29.207"));
+        //urR5V11IElHFgy+t3uywNHROl+RtJMOk
+        //j2eefast@110.com
+
+       String s =  JasyptUtils.decyptPwd("kuhRFs667mFNaZ81ZijWl/MtYt3Ukfuo","j2eefast@110.com");
+       System.out.println(s);
     }
 
 }

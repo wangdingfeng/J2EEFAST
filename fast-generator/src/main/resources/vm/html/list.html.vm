@@ -152,9 +152,9 @@ ${pageTheme}
                             return $.table.selectDictLabels(${c.javaField}Datas, value); }}
 #elseif($c.list && "" != ${c.javaField})## 非dictType
 #if(${c.htmlType} == "comp")## 是否是系统实体业关联字段
-             ,{field : 'compName',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+             ,{field : 'company.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #elseif(${c.htmlType} == "dept")
-             ,{field : 'deptName',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+             ,{field : 'organization.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #else###是否是系统实体业关联字段
              ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end}
 #end##是否是系统实体业关联字段

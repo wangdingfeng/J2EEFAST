@@ -27,6 +27,9 @@ public class SysFilesEntity  {
 
     private String filePath;
 
+    /*文件归档分类 0 上传组件 1 图片剪切 2 百度富文本*/
+    private String classify;
+
     private BigDecimal fileSize;
 
     

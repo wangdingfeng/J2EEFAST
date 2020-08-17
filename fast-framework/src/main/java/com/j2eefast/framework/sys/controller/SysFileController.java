@@ -74,7 +74,7 @@ public class SysFileController extends BaseController {
     @ResponseBody
     public ResponseData del(Long[] ids) {  
     	try {
-			FileUploadUtils.deleteFileRelation(ids);
+			FileUploadUtils.me().deleteFileRelation(ids);
 		} catch (Exception e) {
 			return  error("删除失败!"+ e.getMessage())	;	
 		}
@@ -91,12 +91,12 @@ public class SysFileController extends BaseController {
     @ResponseBody
     public ResponseData uploadFile(@RequestParam("file") MultipartFile file){
         try{
-            String attachPath = Global.getAttachPath() + File.separator ;
+            String attachPath = Global.getAttachPath() ;
             String fileName = super.getPara("name");
             //文件名称
             String fileMd5 = ToolUtil.encodingFilename(fileName);
             //保存
-            String relativePath = DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + fileMd5 +"."+ FileUploadUtil.getExtension(file);
+            String relativePath = File.separator + "file" + File.separator + DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + fileMd5 +"."+ FileUploadUtil.getExtension(file);
             
             attachPath = attachPath + relativePath;
             
@@ -107,6 +107,7 @@ public class SysFileController extends BaseController {
             sysFile.setFileMd5(fileMd5);
             sysFile.setFileName(fileName);
             sysFile.setFilePath(relativePath);
+            sysFile.setClassify("0");
             sysFile.setFileSize(new BigDecimal(FileUtil.size(file0)));
             if(sysFileService.save(sysFile)){
                 return  success("上传成功").put("path",attachPath).put("fileName",fileName)
@@ -143,7 +144,7 @@ public class SysFileController extends BaseController {
             }
             String relativePath = file.getFilePath();
             String  fileName = file.getFileName();
-            String filePath = Global.getAttachPath() + File.separator +relativePath;
+            String filePath = Global.getAttachPath() + relativePath;
             if(FileUtil.exist(filePath)){
                 //浏览器设置
                 String userAgent = request.getHeader("User-Agent");
@@ -196,7 +197,7 @@ public class SysFileController extends BaseController {
                 return;
             }
             String relativePath = file.getFilePath();
-            String filePath = Global.getAttachPath() + File.separator +relativePath;
+            String filePath = (file.getClassify().equals("0") || file.getClassify().equals("1")) ? Global.getAttachPath() : Global.getEditorPath()  + relativePath;
             String  fileName = file.getFileName();
             if(FileUtil.exist(filePath)){
                 //设置文件ContentType类型

@@ -68,6 +68,9 @@ public class SysFileService extends ServiceImpl<SysFileMapper, SysFilesEntity> {
 		return this.removeById(id);
 	}
 
+	public boolean delSysFielsByMd5(String md5){
+		return this.remove(new QueryWrapper<SysFilesEntity>().eq("file_md5",md5));
+	}
 
 	/**
 	

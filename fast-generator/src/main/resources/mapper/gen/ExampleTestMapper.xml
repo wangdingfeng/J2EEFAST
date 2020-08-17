@@ -41,9 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          a.age as "age" ,
          a.join_date as "joinDate" ,
          a.leave_date as "leaveDate" ,
-         comp001.name as "compName",
+         comp001.name as "company.name",
          a.comp_id as "compId" ,
-         dept001.name as "deptName",          
+         dept001.name as "organization.name",          
          a.dept_id as "deptId" ,
          a.addr as "addr" ,
          a.addrinfo as "addrinfo" ,
@@ -149,7 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      <if test="_databaseId == 'mssql'">'%'+#{exampleTest.phone}+'%'</if>
                      <if test="_databaseId == 'mysql'">concat('%',#{exampleTest.phone},'%')</if>
 			</if>
-                              <if test = "exampleTest.sql_filter !=null and exampleTest.sql_filter!=''">
+                              <if test = "sql_filter !=null and sql_filter!=''">
                and ${sql_filter}
              </if>  
 		</where>

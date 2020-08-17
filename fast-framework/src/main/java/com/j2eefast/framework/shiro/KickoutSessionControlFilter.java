@@ -1,7 +1,9 @@
 package com.j2eefast.framework.shiro;
 
+import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.RedisUtil;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.utils.ConfigConstant;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
@@ -98,18 +100,12 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             log.error("error getting system parameter [SYS_IS_LOGIN]",e);
         }
 
-        //不限制同账号登录
-        if(maxSession == -1){
-            return true;
-        }
-
         Subject subject = getSubject(request, response);
         //检查是否已经登录
         if(!subject.isAuthenticated() && !subject.isRemembered()) {
             //如果没有登录，直接进行之后的流程
             return true;
         }
-
         //如果有登录,判断是否访问的为静态资源，如果是游客允许访问的静态资源,直接返回true
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         String path = httpServletRequest.getServletPath();
@@ -122,9 +118,26 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
         Session session = subject.getSession();
         //这里获取的User是实体 因为我在 自定义ShiroRealm中的doGetAuthenticationInfo方法中
         //new SimpleAuthenticationInfo(user, password, getName()); 传的是 User实体 所以这里拿到的也是实体,如果传的是userName 这里拿到的就是userName
-        String username = ((LoginUserEntity) subject.getPrincipal()).getUsername();
-        Serializable sessionId = session.getId();
+        LoginUserEntity loginUserEntity = ((LoginUserEntity) subject.getPrincipal());
 
+        if(ToolUtil.isNotEmpty(loginUserEntity.getLoginStatus()) && loginUserEntity.getLoginStatus() == -9){
+            //会话被踢出了
+            try {
+                subject.logout();
+            } catch (Exception e) {
+            }
+
+            //页面跳转
+            WebUtils.issueRedirect(request, response, kickoutUrl + "2&uuid="+IdUtil.fastSimpleUUID());
+            return false;
+        }
+
+        //不限制同账号登录
+        if(maxSession == -1 ){
+            return true;
+        }
+        String username = loginUserEntity.getUsername();
+        Serializable sessionId = session.getId();
         // 初始化用户的队列放到缓存里
         Deque<Serializable> deque = (Deque<Serializable>) redisUtil.getSession(getRedisKickoutKey(username));
         if(deque == null || deque.size()==0) {
@@ -169,7 +182,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             } catch (Exception e) {
             }
             //页面跳转
-            WebUtils.issueRedirect(request, response, kickoutUrl);
+            WebUtils.issueRedirect(request, response, kickoutUrl + "1&uuid="+IdUtil.fastSimpleUUID());
             return false;
         }
         return true;

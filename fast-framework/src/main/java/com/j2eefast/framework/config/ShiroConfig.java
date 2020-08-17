@@ -284,7 +284,7 @@ public class ShiroConfig {
 		kickoutSessionControlFilter.setKickoutAfter(false);
 
 		//被踢出后重定向到的地址；
-		kickoutSessionControlFilter.setKickoutUrl("/login?kickout=1");
+		kickoutSessionControlFilter.setKickoutUrl("/login?kickout=");
 		return kickoutSessionControlFilter;
 	}
 

@@ -1,18 +1,14 @@
-package com.j2eefast.common.ueditor;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+package com.j2eefast.framework.ueditor;
 
 import cn.hutool.core.io.FileUtil;
-import com.alibaba.fastjson.*;
-import com.j2eefast.common.ueditor.define.ActionMap;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.j2eefast.framework.ueditor.define.ActionMap;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 配置管理器
@@ -60,7 +56,7 @@ public final class ConfigManager {
 	 * @param uri 当前访问的uri
 	 * @return 配置管理器实例或者null
 	 */
-	public static ConfigManager getInstance ( String rootPath, String contextPath,String configPath, String uri ) {
+	public static ConfigManager getInstance (String rootPath, String contextPath, String configPath, String uri ) {
 
 		try {
 			return new ConfigManager(rootPath, contextPath,configPath, uri);

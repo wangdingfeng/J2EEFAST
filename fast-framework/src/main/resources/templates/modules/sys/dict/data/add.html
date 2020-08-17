@@ -2,47 +2,47 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="新增字典" bodyClass="white-bg"  libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-dict-add" class="form-horizontal">
+<@f.form id="form-dict-add" class="form-horizontal">
     <div class="form-group">
         <label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典键值：</label>
         <div class="col-sm-8">
-            <@form.input name="dictValue" required=true/>
+            <@f.input name="dictValue" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label "><span style="color: red; ">*</span>字典标签：</label>
         <div class="col-sm-8">
-            <@form.input name="dictLabel" required=true/>
+            <@f.input name="dictLabel" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">字典类型：</label>
         <div class="col-sm-8">
-            <@form.input name="dictType" value="${dictType}" readonly=true required=true/>
+            <@f.input name="dictType" value="${dictType}" readonly=true required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>系统内置：</label>
         <div class="col-sm-8">
-            <@form.radio name="isSys" dictType="sys_yes_no"/>
+            <@f.radio name="isSys" dictType="sys_yes_no"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">CSS类名：</label>
         <div class="col-sm-8">
-            <@form.input name="cssClass"  helpTip="如:class=\"red\", 请填写:red"/>
+            <@f.input name="cssClass"  helpTip="如:class=\"red\", 请填写:red"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">CSS样式：</label>
         <div class="col-sm-8">
-            <@form.input name="cssStyle" helpTip="如：style=\"color:red\", 请填写：color:red"/>
+            <@f.input name="cssStyle" helpTip="如：style=\"color:red\", 请填写：color:red"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>字典排序：</label>
         <div class="col-sm-8">
-            <@form.input name="dictSort" required=true/>
+            <@f.input name="dictSort" required=true/>
         </div>
     </div>
     <div class="form-group">
@@ -69,22 +69,22 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>系统默认：</label>
         <div class="col-sm-8">
-            <@form.radio name="isDefault" dictType="sys_yes_no"/>
+            <@f.radio name="isDefault" dictType="sys_yes_no"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>状态：</label>
         <div class="col-sm-8">
-            <@form.radio name="status"  dictType="sys_normal_disable"/>
+            <@f.radio name="status"  dictType="sys_normal_disable"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">备注：</label>
         <div class="col-sm-8">
-            <@form.textarea name="remark" rows="3"/>
+            <@f.textarea name="remark" rows="3"/>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script>
