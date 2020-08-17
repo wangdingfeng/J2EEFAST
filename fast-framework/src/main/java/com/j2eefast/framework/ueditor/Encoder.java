@@ -1,4 +1,4 @@
-package com.j2eefast.common.ueditor;
+package com.j2eefast.framework.ueditor;
 
 public class Encoder {
 
