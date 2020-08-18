@@ -20,7 +20,7 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
  */
 @Data
 @TableName("sys_file_upload")
-public class SysFileUploadEntity extends BaseEntity{
+public class SysFileUploadEntity {
 
    private static final long serialVersionUID = 1L;
 	

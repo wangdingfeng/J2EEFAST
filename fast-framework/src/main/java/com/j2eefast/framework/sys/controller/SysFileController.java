@@ -197,7 +197,7 @@ public class SysFileController extends BaseController {
                 return;
             }
             String relativePath = file.getFilePath();
-            String filePath = (file.getClassify().equals("0") || file.getClassify().equals("1")) ? Global.getAttachPath() : Global.getEditorPath()  + relativePath;
+            String filePath = ((file.getClassify().equals("0") || file.getClassify().equals("1")) ? Global.getAttachPath() : Global.getEditorPath() ) + relativePath;
             String  fileName = file.getFileName();
             if(FileUtil.exist(filePath)){
                 //设置文件ContentType类型

@@ -73,8 +73,8 @@
               ,{field : 'fileSize',title : '<@ctx.i18n text = "文件大小"/>',formatter: function(value, row, index) {
                         return opt.common.bytesToSize(value);
               }}
-              ,{field : 'fileUpload.createBy',title : '<@ctx.i18n text = "创建者"/>'}
-              ,{field : 'fileUpload.createTime',title : '<@ctx.i18n text = "创建时间"/>'}
+              ,{field : 'createBy',title : '<@ctx.i18n text = "创建者"/>'}
+              ,{field : 'createTime',title : '<@ctx.i18n text = "创建时间"/>'}
               ,{field: 'status', title: "<@ctx.i18n text = "状态"/>", formatter: function (value, row, index) {
                         return $.table.selectDictLabel(datas, value);
                     }
