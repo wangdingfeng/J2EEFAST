@@ -60,7 +60,7 @@ public class ShiroConfig {
 	/**
 	 * 设置cookie的有效访问路径设置与项目路径一直
 	 */
-	@Value("${server.servlet.contextPath: /fast}")
+	@Value("${server.servlet.context-path: /fast}")
 	private String path;
 
 	/**
