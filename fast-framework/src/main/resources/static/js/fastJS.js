@@ -7,6 +7,8 @@
  *       2020-06-24 修复表格控件 页面多表格 回调函数错乱问题
  *       2020-07-22 修复表格首列多选勾选☑️ 字段名称必须state
  *       2020-08-05 新增常用方法
+ *       2020-08-19 新增表格动态增减行数据
+ *       2020-08-20 新增加载遮罩默认提示语控制
  * @version v1.0.12
  */
 if (typeof jQuery === "undefined") {
@@ -23,6 +25,8 @@ if (typeof jQuery === "undefined") {
             pushMenu:null,
             version:'1.0.12',
             debug:true,
+            /*默认加载提示名人名言 如果不用 false*/
+            loadTip:true,
             //表格类型
             table_type : {
                 bootstrapTable: 0,
@@ -928,6 +932,37 @@ if (typeof jQuery === "undefined") {
                     , o = [that.digit(n.getHours()), that.digit(n.getMinutes()), that.digit(n.getSeconds())];
                 return t = t || "yyyy-MM-dd HH:mm:ss",
                     t.replace(/yyyy/g, a[0]).replace(/MM/g, a[1]).replace(/dd/g, a[2]).replace(/HH/g, o[0]).replace(/mm/g, o[1]).replace(/ss/g, o[2])
+            },
+            formatDat: function(date, format) {
+                var that = this;
+                if(that.isEmpty(date)) return "";
+                if (!date) return;
+                if (!format) format = "yyyy-MM-dd";
+                switch(typeof date) {
+                    case "string":
+                        date = new Date(date.replace(/-/, "/"));
+                        break;
+                    case "number":
+                        date = new Date(date);
+                        break;
+                }
+                if (!date instanceof Date) return;
+                var dict = {
+                    "yyyy": date.getFullYear(),
+                    "M": date.getMonth() + 1,
+                    "d": date.getDate(),
+                    "H": date.getHours(),
+                    "m": date.getMinutes(),
+                    "s": date.getSeconds(),
+                    "MM": ("" + (date.getMonth() + 101)).substr(1),
+                    "dd": ("" + (date.getDate() + 100)).substr(1),
+                    "HH": ("" + (date.getHours() + 100)).substr(1),
+                    "mm": ("" + (date.getMinutes() + 100)).substr(1),
+                    "ss": ("" + (date.getSeconds() + 100)).substr(1)
+                };
+                return format.replace(/(yyyy|MM?|dd?|HH?|ss?|mm?)/g, function() {
+                    return dict[arguments[0]];
+                });
             },
             //HTML转义
             escape: function(html){
@@ -2767,6 +2802,7 @@ if (typeof jQuery === "undefined") {
                 });
                 // 选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
+                    console.log("-<<<<:" + rows);
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
@@ -2873,6 +2909,54 @@ if (typeof jQuery === "undefined") {
                             radioClass:(typeof($(this).data("style")) == "undefined")? 'iradio-blue':("iradio_" +($(this).data("style") || "square-blue"))
                         })
                     })
+                }
+
+                // laydate time-input 时间控件绑定
+                if ($(".time-input").length > 0) {
+                    layui.use('laydate', function () {
+                        var com = layui.laydate;
+                        $(".time-input").each(function (index, item) {
+                            var time = $(item);
+                            // 控制控件外观
+                            var type = time.attr("data-type") || 'date';
+                            // 控制回显格式
+                            var format = time.attr("data-format") || 'yyyy-MM-dd';
+                            // 控制日期控件按钮
+                            var buttons = time.attr("data-btn") || 'clear|now|confirm', newBtnArr = [];
+                            // 日期控件选择完成后回调处理
+                            var callback = time.attr("data-callback") || {};
+                            if (buttons) {
+                                if (buttons.indexOf("|") > 0) {
+                                    var btnArr = buttons.split("|"), btnLen = btnArr.length;
+                                    for (var j = 0; j < btnLen; j++) {
+                                        if ("clear" === btnArr[j] || "now" === btnArr[j] || "confirm" === btnArr[j]) {
+                                            newBtnArr.push(btnArr[j]);
+                                        }
+                                    }
+                                } else {
+                                    if ("clear" === buttons || "now" === buttons || "confirm" === buttons) {
+                                        newBtnArr.push(buttons);
+                                    }
+                                }
+                            } else {
+                                newBtnArr = ['clear', 'now', 'confirm'];
+                            }
+                            com.render({
+                                elem: item,
+                                theme: 'molv',
+                                trigger: 'click',
+                                type: type,
+                                format: format,
+                                btns: newBtnArr,
+                                done: function (value, data) {
+                                    if (typeof window[callback] != 'undefined'
+                                        && window[callback] instanceof Function) {
+                                        window[callback](value, data);
+                                    }
+                                }
+                            });
+                        });
+                    });
                 }
 
                 //select2复选框事件绑定
@@ -3126,6 +3210,7 @@ if (typeof jQuery === "undefined") {
             },
             // 查询表格指定列值
             selectColumns: function(column) {
+                console.log("====>>>")
                 var rows = $.map($("#" + opt.table.options.id).bootstrapTable('getSelections'), function (row) {
                     return row[column];
                 });
@@ -3255,13 +3340,131 @@ if (typeof jQuery === "undefined") {
             },
             // 显示表格指定列
             showColumn: function(column, tableId) {
-                var currentId = opt.common.isEmpty(tableId) ? table.options.id : tableId;
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('showColumn', column);
             },
             // 隐藏表格指定列
             hideColumn: function(column, tableId) {
-                var currentId = opt.common.isEmpty(tableId) ? table.options.id : tableId;
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('hideColumn', column);
+            },
+            // 更新表格数据
+            updataData: function(count,tableId){
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                // 创建一个数组,用来存放表格中所有的数据
+                var params = [];
+                for(var dataIndex=0;dataIndex<=count;dataIndex++) {
+                    // 使用JQuery选择器找到td标签(也就是包含input标签的标签)对象,这种选法选中了很多td标签,因此需要遍历
+                    var columns = $('#'+currentId+' tr[data-index="'+dataIndex+'"] td');
+                    // 创建一个对象.用来存放表格中一行的数据
+                    var obj = {};
+                    for (var i=0; i < columns.length; i++) {
+                        var inputValue = $(columns[i]).find('input');
+                        var selectValue = $(columns[i]).find('select');
+                        var key = opt.table.options.columns[i].field;
+                        if (opt.common.isNotEmpty(inputValue.val())) {
+                            obj[key] = inputValue.val();
+                        } else if (opt.common.isNotEmpty(selectValue.val())) {
+                            obj[key] = selectValue.val();
+                        } else {
+                            obj[key] = "";
+                        }
+                    }
+                    /*
+                    * {index:索引值, row:每行索引对应的数据(是一个对象)}
+                    * 表格中每一行的数据
+                    * {index:0, row:{id: "1", name: "XXX", age: "18", address: "XX"}}
+                    * {index:1, row:{id: "1", name: "XXX", age: "20", address: "XX"}}
+                    * */
+                    params.push({index:dataIndex, row:obj});
+                }
+                // 对表格中的数据进行更新
+                $('#' + currentId).bootstrapTable("updateRow",params);
+            },
+            //删除选中行
+            removeData: function(index,tableId) {
+                var that = this;
+                opt.table.set();
+                index = opt.common.isEmpty(index) ? 'index' : index;
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                var rows = $('#' + currentId).bootstrapTable('getSelections');//获取选中行
+                if (rows.length == 0) {
+                    opt.modal.error($.i18n.prop("请选择要删除的数据"));
+                    return;
+                }
+                var count = $("#" + currentId).bootstrapTable('getData').length;
+                that.updataData(count);
+                var indexs = [];
+                for (var i = 0; i < rows.length; i++) {
+                    indexs[i] = rows[i][index];
+                }
+                $('#' + opt.table.options.id).bootstrapTable('remove', {
+                    field: index,
+                    values: indexs
+                });
+            },
+            //动态插入数据
+            addColumn: function(row,tableId){
+                var that = this;
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                var count = $("#" + currentId).bootstrapTable('getData').length;
+                that.updataData(count);
+                $("#" + currentId).bootstrapTable('insertRow', {
+                    index: count + 1,
+                    row: row
+                });
+
+                // laydate time-input 时间控件绑定
+                if ($(".time-input").length > 0) {
+                    layui.use('laydate', function () {
+                        var com = layui.laydate;
+                        $(".time-input").each(function (index, item) {
+                            var time = $(item);
+                            // 控制控件外观
+                            var type = time.attr("data-type") || 'date';
+                            // 控制回显格式
+                            var format = time.attr("data-format") || 'yyyy-MM-dd';
+                            // 控制日期控件按钮
+                            var buttons = time.attr("data-btn") || 'clear|now|confirm', newBtnArr = [];
+                            // 日期控件选择完成后回调处理
+                            var callback = time.attr("data-callback") || {};
+                            if (buttons) {
+                                if (buttons.indexOf("|") > 0) {
+                                    var btnArr = buttons.split("|"), btnLen = btnArr.length;
+                                    for (var j = 0; j < btnLen; j++) {
+                                        if ("clear" === btnArr[j] || "now" === btnArr[j] || "confirm" === btnArr[j]) {
+                                            newBtnArr.push(btnArr[j]);
+                                        }
+                                    }
+                                } else {
+                                    if ("clear" === buttons || "now" === buttons || "confirm" === buttons) {
+                                        newBtnArr.push(buttons);
+                                    }
+                                }
+                            } else {
+                                newBtnArr = ['clear', 'now', 'confirm'];
+                            }
+                            com.render({
+                                elem: item,
+                                theme: 'molv',
+                                trigger: 'click',
+                                type: type,
+                                format: format,
+                                btns: newBtnArr,
+                                done: function (value, data) {
+                                    if (typeof window[callback] != 'undefined'
+                                        && window[callback] instanceof Function) {
+                                        window[callback](value, data);
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
             }
         }
     })

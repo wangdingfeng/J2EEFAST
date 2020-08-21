@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
  * @version V1.0
  */
 @TableName("gen_table_column")
-public class GenTableColumnEntity extends BaseEntity {
+public class GenTableColumnEntity{
     /** 编号 */
     @TableId
     private Long id;

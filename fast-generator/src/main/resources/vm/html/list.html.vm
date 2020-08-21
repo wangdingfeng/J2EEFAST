@@ -4,7 +4,7 @@ ${pageTheme}
 <div class="container-div">
  <div class="row">
   <div class="col-sm-12 search-collapse">
-    <@form.form id="${businessName}-form" class="form-inline">
+    <@f.form id="${businessName}-form" class="form-inline">
      <div class="select-list">
       <ul>
 #foreach($column in $columns)##
@@ -19,7 +19,7 @@ ${pageTheme}
 #if($column.htmlType == "input")##
            <li>
               <label> <@ctx.i18n text = "${comment}"/>：
-              #if($column.queryType == "BETWEEN")<input type="text"  placeholder="begin" name="begin${AttrName}"/><span>-</span> <input type="text"  placeholder="${comment}" name="end${AttrName}"/> #else <input type="text" placeholder="${comment}" name="${column.javaField}"/>#end </label>
+              #if($column.queryType == "BETWEEN")<input type="text"  placeholder="begin" name="begin${AttrName}"/><span>-</span> <input type="text"  placeholder="${comment}" name="end${AttrName}"/> #else <input type="text" class="form-control" placeholder="${comment}" name="${column.javaField}"/>#end </label>
             </li>
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)##
            <li>
@@ -46,17 +46,17 @@ ${pageTheme}
           <li class="select-time">
              <label> <@ctx.i18n text = "${comment}"/>： </label>
 #if($column.queryType == "BETWEEN")## BETWEEN
-            <input type="text" class="time-input" placeholder="开始时间" name="begin${AttrName}"/>
+            <input type="text" class="form-control time-input" placeholder="开始时间" name="begin${AttrName}"/>
             <span>-</span>
-            <input type="text" class="time-input" placeholder="结束时间" name="end${AttrName}"/>
+            <input type="text" class="form-control time-input" placeholder="结束时间" name="end${AttrName}"/>
 #else#### BETWEEN
-            <input type="text" class="time-input" placeholder="" name="${AttrName}"/>
+            <input type="text" class="form-control time-input" placeholder="" name="${AttrName}"/>
 #end#### BETWEEN
         </li>
 #elseif($column.htmlType == "comp")##
        <li>
          <label> <@ctx.i18n text = "${comment}"/>：</label>
-         <@form.treeselect name = "${column.javaField}"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel=true  placeholder="请选择归属公司"/>
+         <@f.treeselect name = "${column.javaField}"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel=true  placeholder="请选择归属公司"/>
        </li>
                                                     
 #end
@@ -64,14 +64,14 @@ ${pageTheme}
 #end
         <li>
           <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
-          <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+          <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.f.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
        </li>
       </ul>
    </div>
-  </@form.form>
+  </@f.form>
  </div>
   <@table id="bootstrap-table">
-#if($table.crud)####
+#if($table.crud || $table.master)####
     <@shiro.hasPermission name="${permissionPrefix}:add">
         <a class="btn btn-success" onclick="#if($table.target == "tab")opt.operate.addTab()#else opt.operate.add()#end"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
     </@shiro.hasPermission>
@@ -95,7 +95,7 @@ ${pageTheme}
 </div>
 <@footer>
 <script type="text/javascript">
-#if($table.crud)####$table.crud CURD权限
+#if($table.crud || $table.master)####$table.crud CURD权限
     var editFlag = "<$>{permission.hasPermi("${permissionPrefix}:edit")}";
     var listFlag = "<$>{permission.hasPermi("${permissionPrefix}:add")}";
     var delFlag = "<$>{permission.hasPermi("${permissionPrefix}:del")}";
@@ -114,7 +114,7 @@ ${pageTheme}
     $(function() {
         var options = {
             url: prefix + "/list",
-#if($table.crud)
+#if($table.crud || $table.master)
             addUrl: prefix + "/add",
             editUrl: prefix + "/edit/{id}",
             delUrl: prefix + "/del",
@@ -128,11 +128,19 @@ ${pageTheme}
             escape: true,/* 分页设置 */
             showPageGo: true,/* 分页设置 */
             pageSize: 10,/* 分页设置 */
-            pageList: [10, 30, 50],/* 分页设置 */
-            columns: [
+            pageList: [10, 30, 50],/* 分页设置 */#####
+
+            #if($table.master)
+detailView: true,
+            onExpandRow : function(index, row, <$>detail) {
+                initChildTable(index, row, <$>detail);
+            },
+            #end
+columns: [
                 {title: $.i18n.prop("序号"), width: 5, align: "center", formatter: function (value, row, index) {
                             return $.table.serialNumber(index);
                 }}
+#set($masterPk = "")
 #foreach($c in $columns)## foreach columns
 ##set($indexTag = $velocityCount) ##不使用了
 #set($dictType=$c.dictType)
@@ -143,6 +151,7 @@ ${pageTheme}
 #set($com=$c.columnComment)##
 #end#####注释含有括符
 #if($c.pk)##
+ #set($masterPk = $c.javaField)#####
                ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>',visible: false}
 #end##主键否
 #if($c.list)## islist是否列表显示 
@@ -162,7 +171,7 @@ ${pageTheme}
 ##end### end for indexTag
 #end## end for islist
 #end##end foreach
-#if($table.crud)###crud2按钮
+#if($table.crud || $table.master)###crud2按钮
                ,{title:"<@ctx.i18n text = "操作"/>",align: 'center',visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
                         var actions = [];###
 
@@ -201,6 +210,73 @@ ${pageTheme}
             $.table.init(options);
         });
 
+       #if($table.master)####
+
+       function initChildTable(index, row, <$>detail) {
+           <$>detail.html('<table id="child_'+index+'" style="table-layout:fixed"></table>').find('table');
+           var tableId = "child_"+index;
+           $("#" + tableId).bootstrapTable({
+               url: prefix + "/child/list",
+               method: 'post',
+               sidePagination: "server",
+               pagination: true,
+               pageSize: 10,
+               pageList: [10, 15, 20],
+               contentType: "application/x-www-form-urlencoded",
+               queryParams : function(params) {
+                   var curParams = {
+                    // 传递参数查询参数
+                    __limit:       params.limit,
+                    __page:        params.offset / params.limit + 1,
+                    searchValue:    params.search,
+                    ${fKey.javaField}: row.${masterPk},
+                    __sidx:           params.sort,
+                    __order:          params.order
+                };
+                return curParams;
+               },
+               columns: [
+                    {title: $.i18n.prop("序号"), width: 50, align: "center", formatter: function (value, row, index) {
+                            return $.table.serialNumber(index,tableId);
+                    }}###
+                    #foreach($c in $childColumns)
+                    #set($dictType=$c.dictType)
+                    #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
+                    #if($parentheseIndex != -1)
+                     #set($com=$c.columnComment.substring(0, $parentheseIndex))
+                    #else##
+                     #set($com=$c.columnComment)##
+                    #end#####注释含有括符
+                    #if($c.pk)##
+
+                    ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>',visible: false}#####
+                    #end##主键否
+#if($c.list)## islist是否列表显示
+##if($c.sort == $indexTag)## indexTag ##不使用了
+#if($c.list && "" != $c.dictType)## dictType 类型
+
+                    ,{field : '${c.javaField}',align: "center",title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) {
+                        return $.table.selectDictLabels(${c.javaField}Datas, value); }}######
+#elseif($c.list && "" != ${c.javaField})## 非dictType
+#if(${c.htmlType} == "comp")## 是否是系统实体业关联字段
+
+                    ,{field : 'company.name',align: "center",title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }####
+#elseif(${c.htmlType} == "dept")
+
+                     ,{field : 'organization.name',align: "center",title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }#####
+#else###是否是系统实体业关联字段
+
+                     ,{field : '${c.javaField}',align: "center",title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end}#####
+#end##是否是系统实体业关联字段
+#end##dictType
+##end### end for indexTag
+#end## end for islist
+                    #end
+
+               ]
+           });
+       };
+       #end
 </script>
 </@footer>
 </@pageTheme>

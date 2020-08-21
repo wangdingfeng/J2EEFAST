@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+##### 如果是主子表主表
+#if($table.master)
+import ${packageName}.entity.${childTable.className}Entity;
+import java.util.List;
+#end
 #foreach ($column in $columns)##
 #if(!$table.isSuperColumn($column.javaField))####
 #if($column.javaType == 'Date')##
@@ -29,7 +34,7 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
 #else
 #set($EntityFlag="0")
 #foreach ($column in $columns)##
-#if(!$table.isSuperColumn($column.javaField))####
+#if($table.isSuperColumn($column.javaField))####
 #set($EntityFlag="1")#break
 #end
 #end
@@ -187,5 +192,11 @@ public class ${ClassName}Entity ${Entity}{
 #end
 #end
 #end
+#if($table.master)
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
 
+
+    @TableField(exist=false)
+    private List<${childTable.className}Entity> ${classEnty};
+#end
 }

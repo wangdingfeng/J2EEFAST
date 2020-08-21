@@ -8,12 +8,12 @@
 		<div class="select-list">
 			<ul>
 				<li>
-					<label>登录地址：</label><input type="text" name="ipaddr"/>
+					<label>登录地址：</label><input type="text" class="form-control" name="ipaddr"/>
 				</li>
 				<#--用户是否是最大管理员-->
 				<#if permission.isRole("ADMIN")>
 					<li>
-						<label>登录名称：</label><input type="text" name="username"/>
+						<label>登录名称：</label><input type="text" class="form-control" name="username"/>
 					</li>
 				</#if>
 				<li>
@@ -39,9 +39,9 @@
 				</li>
 				<li class="select-time">
 					<label>登录时间： </label>
-					<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+					<input type="text" class="form-control time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
 					<span>-</span>
-					<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+					<input type="text" class="form-control time-input" id="endTime" placeholder="结束时间" name="endTime"/>
 				</li>
 				<li>
 					<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>

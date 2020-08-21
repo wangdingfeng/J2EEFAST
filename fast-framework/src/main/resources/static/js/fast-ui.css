@@ -737,18 +737,15 @@ label {
 }
 
 .select-list li input {
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	background: transparent;
-	outline: none;
-	height: 30px;
+	display: initial;
 	width: 120px;
-	padding-left: 5px;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 
 .select-list li input:focus,.select-list li select:focus{
-	border-color: #3c8dbc !important;
+	/*border-color: #3c8dbc !important;*/
+	border-color: #79b2fc;
+	outline: 0;
+	box-shadow: 0 0 0 .143rem rgba(62,142,247,.25)
 }
 
 .disexe{

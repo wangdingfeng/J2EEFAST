@@ -59,11 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        html_type  as  htmlType ,
        dict_type  as  dictType ,
        is_table_sort as isTableSort,
-       sort  as  sort ,
-       create_by  as createBy  ,
-       create_time  as createTime  ,
-       update_by  as   updateBy,
-       update_time as updateTime
+       sort  as  sort
     </sql>
     
  
@@ -91,11 +87,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             html_type = #{htmlType},
             dict_type = #{dictType},
             is_table_sort = #{isTableSort},
-            sort = #{sort},
             <if test="editInfo != null">edit_info = #{editInfo},</if>
             <if test="circleType != null and circleType != ''">circle_type = #{circleType},</if>
-            update_by = #{updateBy},
-            update_time = sysdate()
+            sort = #{sort}
         </set>
         where id = #{id}
     </update>

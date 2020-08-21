@@ -55,7 +55,6 @@ public class GenUtils
         String columnName = column.getColumnName().toLowerCase();
         column.setColumnName(columnName);  //设置为小写//  数据库中一般栏位名大写不敏感
         column.setTableId(table.getId());
-        column.setCreateBy(table.getCreateBy());
         // 设置java字段名
         column.setJavaField(StrUtil.toCamelCase(columnName));
 

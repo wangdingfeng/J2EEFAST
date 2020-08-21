@@ -1,6 +1,6 @@
 package com.j2eefast.generator.gen.mapper;
 
-import com.j2eefast.generator.gen.entity.ExampleTestEntity;
+import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
 import java.io.Serializable;
 import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -9,25 +9,25 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 /**
  *
- * example_testDAO接口
+ * example_test_childDAO接口
  * @author: ZhouZhou
  * @date 2020-08-21 09:57
  */
-public interface ExampleTestMapper extends BaseMapper<ExampleTestEntity> {
+public interface ExampleTestChildMapper extends BaseMapper<ExampleTestChildEntity> {
 
 	/**
      * 自定义分页查询
      * @param  page 
-     * @param  exampleTestEntity 实体类
+     * @param  exampleTestChildEntity 实体类
      */
-     Page<ExampleTestEntity> findPage(IPage<ExampleTestEntity> page,
-                                       @Param("exampleTest") ExampleTestEntity exampleTestEntity,
+     Page<ExampleTestChildEntity> findPage(IPage<ExampleTestChildEntity> page,
+                                       @Param("exampleTestChild") ExampleTestChildEntity exampleTestChildEntity,
                                        @Param("sql_filter") String sql_filter);
 
-     ExampleTestEntity findExampleTestById(Serializable id);
+     ExampleTestChildEntity findExampleTestChildById(Serializable id);
 
 
-     List<ExampleTestEntity> findList(ExampleTestEntity exampleTestEntity);
+     List<ExampleTestChildEntity> findList(ExampleTestChildEntity exampleTestChildEntity);
 
      /**删除相关方法  使用mybatis-plus集成的 **/
 }

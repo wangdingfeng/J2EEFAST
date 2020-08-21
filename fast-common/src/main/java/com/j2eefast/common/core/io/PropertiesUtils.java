@@ -29,7 +29,9 @@ import org.springframework.core.io.Resource;
 @Slf4j
 public class PropertiesUtils {
 	
-	// 默认加载的文件，可通过继承覆盖（若有相同Key，优先加载后面的）
+	/**
+	 * 系统默认加载文件(可覆盖配置文件参数)
+	 */
 	public static final String[] DEFAULT_CONFIG_FILE = new String[]{
 			"classpath:config/bootstrap.yml", "classpath:bootstrap.yml",
 			"classpath:config/application.yml", "classpath:application.yml"};
@@ -126,6 +128,7 @@ public class PropertiesUtils {
     			log.error("Load " + location + " failure. ", e);
 			}
 		}
+		//赋值系统加密数据
 		properties.put("machineCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
 				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
 		properties.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex

@@ -8,10 +8,10 @@
 	<div class="select-list">
 		<ul>
 			<li>
-				<label>系统模块： </label><input type="text" name="title"/>
+				<label>系统模块： </label><input type="text" class="form-control" name="title"/>
 			</li>
 			<li>
-				<label>操作人员： </label><input type="text" name="operName"/>
+				<label>操作人员： </label><input type="text" class="form-control" name="operName"/>
 			</li>
 			<li class="select-selectpicker">
 				<label>操作类型： </label>
@@ -32,9 +32,9 @@
 			</li>
 			<li class="select-time">
 				<label>操作时间： </label>
-				<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+				<input type="text" class="form-control time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
 				<span>-</span>
-				<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+				<input type="text" class="form-control time-input" id="endTime" placeholder="结束时间" name="endTime"/>
 			</li>
 			<li>
 				<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>

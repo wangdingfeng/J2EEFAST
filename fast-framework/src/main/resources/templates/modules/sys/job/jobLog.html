@@ -8,7 +8,7 @@
 		<div class="select-list">
 			<ul>
 				<li>
-					任务名称：<input type="text" name="jobName"/>
+					任务名称：<input type="text" class="form-control" name="jobName"/>
 				</li>
 				<li>
 					任务分组：
@@ -20,9 +20,9 @@
 				</li>
 				<li class="select-time">
 					<label>执行时间： </label>
-					<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+					<input type="text" class="form-control time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
 					<span>-</span>
-					<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+					<input type="text" class="form-control time-input" id="endTime" placeholder="结束时间" name="endTime"/>
 				</li>
 				<li>
 					<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>

@@ -38,9 +38,10 @@
                         }
                     });
                     /*设置菜单新*/
+                    <#--
                     setTimeout(function(){
                         $('.navbar-nav [data-code="bpm"]').append('<span data-index="_new" class="label label-danger"><@ctx.i18n text = "新"/></span>');
-                    },2000);
+                    },2000); -->
                 })
             </script>
         </div>
@@ -71,7 +72,7 @@
                        title="<@ctx.i18n text = "便签"/>" class="dropdown-toggle">
                         <i class="fa fa-tags"></i>
                         <@ctx.i18n text = "便签"/>
-                        <span data-index="_new" class="label label-danger"><@ctx.i18n text = "新"/></span>
+<#--                        <span data-index="_new" class="label label-danger"><@ctx.i18n text = "新"/></span>-->
                     </a>
                 </li>
                <#-- <li class="dropdown messages-menu">

@@ -1,9 +1,9 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="新增代码生成范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage"]/>
+<@header title="新增单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage","table"]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-test-add"  class="form-horizontal">
-    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa icon-star"></i></h4>                                                                                                                                    
+    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa fa-star"></i></h4>                                                                                                                                        
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
@@ -16,10 +16,10 @@
         </div>
         <div class="col-sm-6">
                 <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "姓名"/>：        
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "姓名"/>：        
                </label>
                 <div class="col-sm-8">
-                    <@f.input name="name"  required=true />
+                    <@f.input name="name"  />
                 </div>
             </div>    
         </div>
@@ -49,10 +49,10 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "电话"/>：                
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "电话"/>：                
                </label>
                 <div class="col-sm-8">
-                    <@f.input name="phone"  required=true />
+                    <@f.input name="phone"  />
                 </div>
             </div>
         </div>
@@ -60,7 +60,10 @@
             <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "性别"/>：</label>
             <div class="col-sm-8">
-                <@f.radio name="sex" dictType="sys_user_sex"  />
+                <select name="sex" class="form-control m-b">
+                    <option value="">所有</option>
+                </select>
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
             </div>
         </div>
 
@@ -69,10 +72,10 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "年龄"/>：                
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "年龄"/>：                
                </label>
                 <div class="col-sm-8">
-                    <@f.input name="age"  required=true />
+                    <@f.input name="age"  />
                 </div>
             </div>
         </div>
@@ -133,15 +136,24 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-        <div class="form-group">
-            <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：</label>
-            <div class="col-sm-8">
-                <textarea name="addrinfo" class="form-control"></textarea>
+            <div class="form-group">
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：                
+               </label>
+                <div class="col-sm-8">
+                    <@f.input name="addrinfo"  />
+                </div>
             </div>
         </div>
+        <div class="col-sm-6">
+                <div class="form-group">
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "备注信息"/>：        
+               </label>
+                <div class="col-sm-8">
+                    <@f.input name="remark"  />
+                </div>
+            </div>    
         </div>
-    </div>
-<h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
+    </div><h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
    <div class="row">
        <div class="col-xs-12">
             <div class="form-group">
@@ -164,6 +176,17 @@
             </div>
         </div>
    </div>
+  <h4 class="form-header h4">子表单信息</h4>
+  <div class="row">
+        <div class="col-xs-12">
+            <@table id="bootstrap-table">
+                <a class="btn btn-success" onclick="addColumn()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+                <a class="btn btn-danger" onclick="$.table.removeData()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@table>
+        </div>
+   </div>
 </@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
@@ -180,11 +203,91 @@
         focusCleanup: true
     });
 
-    function submitHandler() {
+        var options = {
+        pagination: false,
+        showSearch: false,
+        showRefresh: false,
+        showToggle: false,
+        showColumns: false,
+        clickToSelect: false,
+        sidePagination: "client",
+        rememberSelected: false,
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'index',
+                align: 'center',
+                title: "序号",
+                formatter: function (value, row, index) {
+                    var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    return columnIndex + $.table.serialNumber(index);
+                }
+            }
+                                                                                                                                                                           ,{
+                field: 'workCompany',
+                align: 'center',
+                title: '工作公司',
+                formatter: function(value, row, index) {
+                                        var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].workCompany' value='%s'>", index, value);
+                    return html;
+                                                        }
+            }
+                                                                         ,{
+                field: 'startTime',
+                align: 'center',
+                title: '起始时间',
+                formatter: function(value, row, index) {
+                                                            var data = {"index":index,"field":"startTime","value":value};
+                    return opt.template('datetime',data);
+                                    }
+            }
+                                                                         ,{
+                field: 'endTime',
+                align: 'center',
+                title: '辞职时间',
+                formatter: function(value, row, index) {
+                                                            var data = {"index":index,"field":"endTime","value":value};
+                    return opt.template('datetime',data);
+                                    }
+            }
+                                                                         ,{
+                field: 'jobs',
+                align: 'center',
+                title: '在职岗位',
+                formatter: function(value, row, index) {
+                                        var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].jobs' value='%s'>", index, value);
+                    return html;
+                                                        }
+            }
+                                    ]
+    };
+    $.table.init(options);
+
+    function addColumn(){
+        var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
+        var row = {index: count + 1
+                                                                                    ,workCompany:""
+                                                ,startTime:""
+                                                ,endTime:""
+                                                ,jobs:""
+                        };
+        $.table.addColumn(row);
+    }
+        function submitHandler() {
         if (opt.validate.form()) {
             opt.operate.saveTab(prefix + "/add", $('#form-test-add').serialize());
         }
     }
 </script>
 </@footer>
-</@pageTheme>
+
+                                                                                           
+                                                 
+            <script id="datetime" type="text/template">//<!--
+<div>
+    <input class="form-control time-input" name="exampleTestChild[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
+</div>
+//-->
+</script>
+        </@pageTheme>

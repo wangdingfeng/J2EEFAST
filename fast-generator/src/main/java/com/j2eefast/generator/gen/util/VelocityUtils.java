@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.Sequence;
+import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.framework.utils.UserUtils;
 import com.j2eefast.generator.gen.config.GenConfig;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
@@ -15,6 +16,8 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 
+import com.j2eefast.generator.gen.service.GenTableColumnService;
+import com.j2eefast.generator.gen.service.GenTableService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson.JSONObject;
@@ -89,6 +92,13 @@ public class VelocityUtils
         {
             setTreeVelocityContext(velocityContext, genTable);
         }
+
+        if(GenConstants.TPL_MASTER.equals(tplCategory)){
+            velocityContext.put("childTable", SpringUtil.getBean(GenTableService.class).findByTableId(genTable.getChildId()));
+            velocityContext.put("childColumns", SpringUtil.getBean(GenTableColumnService.class).findListByTableId(genTable.getChildId()));
+            velocityContext.put("fKey",SpringUtil.getBean(GenTableColumnService.class).findByById(genTable.getChildFieldId()));
+        }
+
         return velocityContext;
     }
 
@@ -136,7 +146,7 @@ public class VelocityUtils
 ////        templates.add("vm/java/serviceImpl.java.vm");
 //        templates.add("vm/java/controller.java.vm");
 //        templates.add("vm/xml/mapper.xml.vm");
-        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_R) ) {
+        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_R) || isCrud(tplCategory,GenConstants.TPL_MASTER)) {
             templates.add("vm/java/mapper.java.vm");
             templates.add("vm/java/service.java.vm");
             templates.add("vm/java/controller.java.vm");
@@ -151,26 +161,26 @@ public class VelocityUtils
             templates.add("vm/html/tree.html.vm");
             templates.add("vm/html/list-tree.html.vm");
         }
-        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_C) ) {
+        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_C) || isCrud(tplCategory,GenConstants.TPL_MASTER)) {
             if(target.equals(GenConstants.TARGET)){
                 templates.add("vm/html/tabAdd.html.vm");
             }else{
                 templates.add("vm/html/add.html.vm");
             }
         }
-        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_U) ){
+        if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_U) || isCrud(tplCategory,GenConstants.TPL_MASTER)){
             if(target.equals(GenConstants.TARGET)){
                 templates.add("vm/html/tabEdit.html.vm");
             }else{
                 templates.add("vm/html/edit.html.vm");
             }
         }
-        if(isCrud(tplCategory,GenConstants.SERVICE)){
+        if(isCrud(tplCategory,GenConstants.SERVICE) || isCrud(tplCategory,GenConstants.TPL_CHILD)){
             templates.add("vm/java/mapper.java.vm");
             templates.add("vm/java/service.java.vm");
             templates.add("vm/xml/mapper.xml.vm");
         }
-        if(!isCrud(tplCategory,GenConstants.ENTITY)){
+        if(!isCrud(tplCategory,GenConstants.ENTITY) && !isCrud(tplCategory,GenConstants.TPL_CHILD)){
             templates.add("vm/sql/sql.vm");
         }
         return templates;

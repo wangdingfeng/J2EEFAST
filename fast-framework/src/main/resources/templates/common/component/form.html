@@ -786,6 +786,7 @@
             </div>
         </div>
     </div>
+    <@compress single_line=true>
     <script type="text/javascript">
         $(function() {
             $('#<#if id == "">${name}<#else>${id}</#if>_Uploader').webUploadex({
@@ -823,6 +824,7 @@
             });
         })
     </script>
+    </@compress>
 </#macro>
 
 <#macro imageclip
@@ -946,7 +948,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
             </div>
         </#list>
     </div>
-    <@compress single_line=true>
+<#--    <@compress single_line=true>-->
     <script type="text/javascript">
         var<#rt>
         <#list items as x>
@@ -1052,5 +1054,5 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
             </#list>
         })
     </script>
-    </@compress>
+<#--    </@compress>-->
 </#macro>

@@ -7,6 +7,7 @@
  *       2020-04-10 优化国际化参数
  *       2020-05-17 优化菜单显示
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
+ *       2020-08-18 解决小窗口菜单点击出现重叠问题
  * @version 1.0.12
  */
 //菜单添加事件
@@ -783,9 +784,8 @@ $(function () {
 
                 // Add slimscroll
                 $(Selector.sidebar).slimScroll({
-                    height: ($(window).height() - $(Selector.mainHeader).height()) + 'px',
+                     height: ($(window).height() - $(Selector.mainHeader).height()) + 'px',
                     opacity: .4, //滚动条透明度
-
                 });
             }
         }
@@ -1220,6 +1220,8 @@ $(function () {
         }
 
         parent.addClass(ClassName.open);
+        //TODO 解决小窗口菜单点击出现重叠问题
+        tree.removeAttr("style");
         tree.slideDown(this.options.animationSpeed, function () {
             $(this.element).trigger(expandedEvent);
         }.bind(this));

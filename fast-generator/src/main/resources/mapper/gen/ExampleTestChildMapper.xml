@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.generator.gen.mapper.ExampleTestChildMapper">
+
+
+    
+    <resultMap type="ExampleTestChildEntity" id="ExampleTestChildResult">
+  <result property="id"    column="id"    />
+   <result property="testId"    column="test_id"    />
+   <result property="workCompany"    column="work_company"    />
+   <result property="startTime"    column="start_time"    />
+   <result property="endTime"    column="end_time"    />
+   <result property="jobs"    column="jobs"    />
+     </resultMap>
+    
+    <!--  实体栏位  --> 
+    <sql id="exampleTestChildColumns">
+         a.id as "id" ,
+         a.test_id as "testId" ,
+         a.work_company as "workCompany" ,
+         a.start_time as "startTime" ,
+         a.end_time as "endTime" ,
+         a.jobs as "jobs" 
+     </sql>
+                                                                        
+    
+    
+    
+    <!--  根据主键获取实体   -->
+     <select id="findExampleTestChildById"  resultType="com.j2eefast.generator.gen.entity.ExampleTestChildEntity" >
+          SELECT 
+			<include refid="exampleTestChildColumns"/>
+		FROM  example_test_child a
+
+		WHERE a.id = #{id}
+    </select>
+    
+     <!--  根据获取实体List   -->
+     <select id="findList" resultType="com.j2eefast.generator.gen.entity.ExampleTestChildEntity">
+		SELECT 
+			<include refid="exampleTestChildColumns"/>
+		FROM example_test_child a
+
+		<where>
+                                              <if test = "exampleTestChildEntity.sql_filter !=null and exampleTestChildEntity.sql_filter!=''">
+                   and ${sql_filter}
+               </if>    
+		</where>
+	 </select>
+
+	  <!--  根据获取实体 page   -->
+     <select id="findPage" resultType="com.j2eefast.generator.gen.entity.ExampleTestChildEntity">
+		SELECT 
+			<include refid="exampleTestChildColumns"/>
+		FROM example_test_child a
+
+		<where>
+                                            <if test = "sql_filter !=null and sql_filter!=''">
+               and ${sql_filter}
+             </if>  
+		</where>
+	 </select>
+</mapper>

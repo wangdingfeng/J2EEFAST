@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
@@ -17,68 +19,68 @@ import com.j2eefast.framework.sys.entity.SysDeptEntity;
 /**
  * example_test
  * @author: ZhouZhou
- * @date 2020-08-17 10:03
+ * @date 2020-08-21 09:57
  */
 @Data
 @TableName("example_test")
 public class ExampleTestEntity extends BaseEntity{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;  
 
-    /** id */ 
+    /** id */
     @TableId(value = "id",type = IdType.ASSIGN_ID)
-    private Long id;
+    private Long id;  
 
     /** 员工编号 */
     @NotBlank(message = "参数值不能为空")
-    private String code;
+    private String code;  
 
     /** 姓名 */
-    @NotBlank(message = "参数值不能为空")
-    private String name;
+    private String name;  
 
     /** 邮箱 */
-    private String email;
+    private String email;  
 
     /** 头像 */
-    private String avatar;
+    private String avatar;  
 
     /** 电话 */
-    @NotBlank(message = "参数值不能为空")
-    private String phone;
+    private String phone;  
 
     /** 性别 */
-    private String sex;
+    private String sex;  
 
     /** 年龄 */
-    @NotNull(message = "参数值不能为空")
-    private Long age;
+    private Long age;  
 
     /** 入职日期 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
-    private Date joinDate;
+    private Date joinDate;  
 
     /** 离职日期 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
-    private Date leaveDate;
+    private Date leaveDate;  
 
     /** 归属公司 */
     private Long compId;
     @TableField(exist=false)
-    private SysCompEntity company;
+    private SysCompEntity company;  
 
     /** 归属部门 */
     private Long deptId;
     @TableField(exist=false)
-    private SysDeptEntity organization;
+    private SysDeptEntity organization;  
 
     /** 地址 */
-    private String addr;
+    private String addr;  
 
     /** 地址详情 */
-    private String addrinfo;
+    private String addrinfo;  
 
     /** 删除标记（0：正常；1：删除） */
     @TableLogic(value="0",delval="1")
-    private String delFlag;
+    private String delFlag;          
+
+    @TableField(exist=false)
+    private List<ExampleTestChildEntity> exampleTestChild;
 }
