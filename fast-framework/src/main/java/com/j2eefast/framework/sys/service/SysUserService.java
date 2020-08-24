@@ -269,6 +269,10 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		return true;
 	}
 
+	public SysUserEntity findUserByUserName(String username){
+		return sysUserMapper.findUserByUserName(username);
+	}
+
 	public boolean changeStatus(SysUserEntity user) {
 		return sysUserMapper.setStatus(user.getId(),user.getStatus()) > 0;
 	}

@@ -264,7 +264,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     public boolean genCode(Long tableId) {
         // 查询表信息
         GenTableEntity table = findGenTableById(tableId);
-        String path = table.getRunPath().equals("/")? Global.getTempPath(): table.getRunPath();
+        String path = table.getRunPath().equals("/")? Global.getTempPath() + File.separator: table.getRunPath();
         // 查询列信息
         List<GenTableColumnEntity> columns = table.getColumns();
         setPkColumn(table, columns);

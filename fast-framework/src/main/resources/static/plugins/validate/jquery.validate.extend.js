@@ -4,7 +4,9 @@ $(document).ready(function(){
 		  submitHandler: function(form) {    
 		 		form.submit();    
 		}       
-	});  
+	});
+
+
 	//手机号码验证身份证正则合并：(^\d{15}$)|(^\d{17}([0-9]|X)$)
 	jQuery.validator.addMethod("isMobile",function(value,element){
 		var length = value.length;
@@ -12,16 +14,33 @@ $(document).ready(function(){
 		return this.optional(element)||(length == 11 && phone.test(value));
 	},"请填写正确的11位手机号");
 
+	jQuery.validator.addMethod("decimalsValue",function(value, element) {
+		var decimalsValue =/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/ ;
+		return this.optional(element) || (decimalsValue.test(value));
+	}, "金额必须大于0并且只能精确到分");
+
 	jQuery.validator.addMethod("compareDate",function(value, element, param){
 		var target = $( param ).val();;
 		var date1 = new Date(Date.parse(target.replace("-", "/")));
 		var date2 = new Date(Date.parse(value.replace("-", "/")));
 		return (date1 < date2) && (date2 > new Date());
 	});
+
 	//电话号码验证
 	jQuery.validator.addMethod("isTel",function(value,element){
-		var tel = /^(0\d{2,3}-)?\d{7,8}$/g;//区号3,4位,号码7,8位
-		return this.optional(element) || (tel.test(value));
+		// var tel = /^(0\d{2,3}-)?\d{7,8}$/g;//区号3,4位,号码7,8位
+		// return this.optional(element) || (tel.test(value));
+
+		var length = value.length;
+		var mobile =  /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+		var tel = /^\d{3,4}-?\d{7,9}$/;
+
+		if(/-/.test(value)){
+			return this.optional(element) || tel.test(value);
+		}else{
+			return this.optional(element) || (length == 11 && mobile.test(value));
+		}
+
 	},"请填写正确的座机号码");
 	//姓名校验
 	jQuery.validator.addMethod("isName",function(value,element){
