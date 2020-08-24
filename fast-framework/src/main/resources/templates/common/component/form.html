@@ -134,6 +134,114 @@
     </@compress>
 </#macro>
 <#--
+	//多选表组件
+	tableCallback 回调页面函数
+-->
+<#macro tableselect name
+				   id = ""
+				   url = "sys/user/list" <#-- 访问数据URL-->
+                   boxTitle = ""
+                   width="1200"
+                   height=""
+                   value=""
+                   labelValue=""
+                   required=false <#-- 是否必输-->
+                   readonly=true <#-- 是否只读模式-->
+                   class = "form-control" <#-- 输入框样式-->
+                   butClass = "fa fa-fw fa-address-card-o"
+                   isClear = true <#-- 弹出是否出现清除按钮-->
+                   placeholder="请输入值"
+                   checked=true
+                   isorga = true <#-- 是否有机构选择-->
+                   helpTip = ""  <#--帮助提示 -->
+                   separator = "," <#--多选参数分隔符 -->
+                   keyId = "id" <#--表示获取数据id字段名称-->
+                   keyName = "name" <#--表示显示名称 -->
+                   tableInfo = "[{field:'username',title:'账号',query:true},{field:'name',title:'姓名'},{field:'compName',title:'归属公司'},
+                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱',query:true},{field:'mobile',title:'手机号码',query:true},
+                   {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]" <#-- 显示表格信息-->
+				   >
+	<#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
+    <div class="input-group" id="${AssId?replace(".","_")}Div" data-url="${url}">
+        <input id="${AssId?replace(".","_")}Name" type="text" placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
+        <span class="input-group-btn" id="${AssId?replace(".","_")}But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+    </div>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+    <@compress single_line=true>
+    <script type="text/javascript">
+        var ${AssId?replace(".","_")}_data = {};
+        $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
+            var selectId = $("#${AssId?replace(".","_")}").val();
+            var selectName =  $("#${AssId?replace(".","_")}Name").val();
+            var options = {
+                title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
+                width: "${width}",
+                <#if height != "">
+                height: ${height},
+                </#if>
+                url: baseURL + "sys/component/tableselect",
+                <#-- POST提交组件控制类参数-->
+                fromData:{
+                    url: $("#${AssId?replace(".","_")}Div").data("url"),
+                    selectName: selectName,
+                    selectId: selectId,
+                    checked: "${checked?c}",
+                    isorga: "${isorga?c}",
+                    tableInfo: "${(tableInfo?replace('\n',''))?json_string}",
+                    keyId: "${keyId}",
+                    keyName: "${keyName}",
+                    separator: "${separator}"
+                },
+                obj: ${AssId?replace(".","_")}_data,
+                main: true,
+                callBack: func_${AssId?replace(".","_")}doSubmit,
+                cancel:  func_${AssId?replace(".","_")}cancel
+              <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+            };
+            opt.modal.openOptions(options);
+        });
+
+        function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
+            ${AssId?replace(".","_")}_data = layero.find("iframe")[0].contentWindow.tableData;
+            $("#${AssId?replace(".","_")}").val(${AssId?replace(".","_")}_data.keyId);
+            $("#${AssId?replace(".","_")}Name").val(${AssId?replace(".","_")}_data.keyName);
+        	if(typeof tableCallback == 'function'){
+                tableCallback('${Assname?replace(".","_")}', 'ok', index, layero, ${AssId?replace(".","_")}_data);
+            };
+            selfLayer.close(index);
+        };
+        <#if isClear>
+        function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
+            ${AssId?replace(".","_")}_data = {};
+            $("#${AssId?replace(".","_")}").val('');
+            $("#${AssId?replace(".","_")}Name").val('');
+        	if(typeof tableCallback == 'function'){
+                tableCallback('${Assname?replace(".","_")}', 'clear', index, layero, ${AssId?replace(".","_")}_data);
+            };
+            selfLayer.close(index);
+        };
+        </#if>
+
+        function func_${AssId?replace(".","_")}cancel(index, layero) {
+            if(typeof userCallback == 'function'){
+            	userCallback('${Assname?replace(".","_")}', 'cancel', index, layero, ${AssId?replace(".","_")}_data);
+            }
+        }
+    </script>
+    </@compress>
+</#macro>
+
+<#--
     //弹窗树组件
     treeCallback 回调页面函数
 -->
@@ -281,7 +389,8 @@
               required=false <#-- 是否必输-->
               class = "form-control" <#-- 输入框样式-->
               placeholder=""
-              butClass = "" <#-- 是否带提示样式-->
+              butClass = "" <#-- 小按钮class样式-->
+              butStyle = "" <#-- 小按钮style样式-->
               helpTip = ""  <#--帮助提示 -->
               readonly = false <#-- 不可编辑-->
               maxlength = "" <#--输入最大长度 -->
@@ -291,7 +400,7 @@
         <div class="input-group">
         <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
                type="${type}" value="${value}" <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
-        <span class="input-group-addon"><i class="${butClass}"></i></span>
+        <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
         </div>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <#else>
@@ -852,7 +961,7 @@
     </#if>
     <div class="cropperImg">
         <input type="hidden" name="${Assname}" id="<#if id == "">${name}<#else>${AssId}</#if>_inpt" value="" />
-        <p><img id="<#if id == "">${Assname}<#else>${AssId}</#if>_img" style="width: ${width}px; height: ${height};" class="img-circle" src="<#if value == "" || (value?index_of("avatar") == -1)>${imageDefault}<#else><#rt>
+        <p class="cap-head" style="text-align: center;" id="<#if id == "">${Assname}<#else>${AssId}</#if>_head" ><img id="<#if id == "">${Assname}<#else>${AssId}</#if>_img" style="width: ${width}px; height: ${height};" class="img-circle" src="<#if value == "" || (value?index_of("avatar") == -1)>${imageDefault}<#else><#rt>
 <#if value?index_of("avatar") == -1>
 ${value}
 <#else>
@@ -862,7 +971,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
         <p style="width: ${width}px;text-align: center;"><a href="javascript:" id="<#if id == "">${Assname}<#else>${AssId}</#if>_but"><@ctx.i18n text = "${tipHelp}"/></a></p>
     </div>
     <script type="text/javascript">
-        $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_img").click(function(){
+        $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").click(function(){
             var var_${AssId?replace(".","_")}_inpt =  $("#${AssId?replace(".","_")}_img").attr("src");
             var options = {
                 title: "<li class='fa fa-fw fa icon-crop'></li>"+<#if boxTitle =="">"<@ctx.i18n text = "图片剪切"/>" <#else>"${boxTitle}"</#if>,
@@ -1056,3 +1165,4 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
     </script>
 <#--    </@compress>-->
 </#macro>
+

@@ -187,6 +187,9 @@
 	margin:3px 18px;
 	border:2px dashed #e6e6e6
 }
+.wup_container .wup_img .queueList:hover {
+	border:2px dashed rgba(194, 187, 187, 0.69);
+}
 .wup_container .wup_img .queueList.webuploader-dnd-over {
 	border:2px dashed #999
 }

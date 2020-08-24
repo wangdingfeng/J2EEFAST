@@ -13,11 +13,18 @@
 	padding-top: 5px;
 }
 .pr5 {
-	padding-right: 5px;
+	padding-right: 5px !important;
 }
 .pl0 {
 	padding-left: 0px !important;
 }
+.pr0 {
+	padding-right: 0px !important;
+}
+.pl5 {
+	padding-left: 5px !important;
+}
+
 .pb5 {
 	padding-bottom: 5px;
 }
@@ -91,6 +98,30 @@
 	height: 100%;
 	position: absolute;
 }
+/**
+ * 头像
+ */
+.cap-head{
+	position:relative;
+	display:inline-block;
+}
+.cap-head:hover:after{
+	content:'\f030';
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	color:#eee;
+	background:rgba(0,0,0,0.5);
+	font-family:FontAwesome;
+	font-size:24px;
+	font-style:normal;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	cursor:pointer;line-height:110px;
+	border-radius:50%;
+}
 .error-page {
 	width: 700px;
 	margin:80px auto 0 auto
@@ -138,6 +169,53 @@
 	height: 100%;
 	box-shadow: 1px 1px 3px 0px rgba(0,0,0,.2);
 }
+
+.form-control-plaintext{
+	display: block;
+	width: 100%;
+	padding-top: .286rem;
+	padding-bottom: .286rem;
+	margin-bottom: 0;
+	line-height: 1.57142857;
+	color: #212529;
+	background-color: transparent;
+	border: solid transparent;
+	border-width: 1px 0;
+	font-weight: 500;
+	border-bottom: 1px dashed #ccd5db;
+	min-height: 25px;
+}
+
+.layui-right-update{
+	background: #f8f8f8!important;
+	font-weight: bold;
+	height: 42px;
+	line-height: 42px;
+	border-bottom: 1px solid #eee;
+	font-size: 12px;
+	float: right;
+	padding-right: 20px;
+	color: red;
+}
+
+.layui-right-update:hover{
+	cursor: pointer;
+}
+
+.layui-right-update > i:hover{
+	transform: scale(1.2);
+	opacity: 1;
+	opacity: .85;
+	-webkit-transition: all .12s;
+	-o-transition: all .12s;
+	transition: all .12s;
+	vertical-align: middle;
+}
+
+.form-text-dashed{
+	border-bottom: 1px dashed #ccd5db;
+}
+
 
 .list-group-striped > .list-group-item {
 	border-left: 0;
@@ -942,6 +1020,14 @@ label {
 	border-top: 0px!important;
 }
 
+.table>tbody>tr>td>.tb-view{
+	color: #1890ff;
+	font-weight: 400;
+}
+
+.table>tbody>tr>td>.tb-view:hover{
+	border-bottom: 1px dashed #ccd5db;
+}
 
 
 .table-striped .table>thead:first-child>tr:first-child>th {

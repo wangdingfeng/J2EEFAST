@@ -121,6 +121,19 @@ public class SysUserController extends BaseController {
 		return urlPrefix + "/edit";
 	}
 
+	@GetMapping("/view/{userId}")
+	public String view(@PathVariable("userId") Long userId,ModelMap mmap){
+
+		SysUserEntity user = sysUserService.findUserByUserId(userId);
+		mmap.put("roles", sysRoleService.getRolesAll());
+		mmap.put("posts",sysPostService.getPostAll());
+		mmap.put("selectRoles", sysRoleService.getRolesByUserIdToStr(userId));
+		mmap.put("selectPosts",sysPostService.getPostByUserIdToStr(userId));
+		mmap.put("user", user);
+		return urlPrefix + "/view";
+	}
+
+
 	/**
 	 * 授权角色
 	 */

@@ -104,7 +104,9 @@
             addUrl: prefix + "/add",
             editUrl: prefix + "/edit/{id}",
             delUrl: prefix + "/del",
+            viewUrl: prefix + "/view/{id}",
             exportUrl:  prefix + "/export",
+            clickToSelect: false,
             pageSize: 12,
             pageList: [12, 24, 36],
             sortName: "createTime",
@@ -121,7 +123,10 @@
                     }
                 },
                 /* {field: 'id', title: "<@ctx.i18n text = "用户ID"/>", sortable: true}, */
-                {field: 'username', title: "<@ctx.i18n text = "账号"/>"},
+                {field: 'username', title: "<@ctx.i18n text = "账号"/>",formatter: function(value, row, index){
+                        return '<a class="tb-view" onclick="opt.operate.view(\''+row.id+'\',editFlag,opt.operate.edit)">'+value+'</a>';
+                    }
+                },
                 {field: 'name', title:  "<@ctx.i18n text = "姓名"/>"},
                 {field: 'compName', valign: 'middle', title: "<@ctx.i18n text = "归属公司"/>",formatter: function (value, row, index) {
                         return $.table.tooltip(value,5);}
@@ -158,6 +163,10 @@
             ]
         };
         $.table.init(options);
+    }
+
+    function popupRight(id){
+        opt.modal.popupRight("用户信息",prefix + "/view/"+id,delFlag == '',opt.operate.edit,id);
     }
 
 

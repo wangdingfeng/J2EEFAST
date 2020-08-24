@@ -1,0 +1,311 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="true">
+<@header title="表格选择组件" libs=["table","tokenfield"]>
+<style>
+#selectName >span {
+    margin: 0 8px 8px 0;
+    display: inline-block;
+    padding: 5px 5px;
+}
+.label-success {
+    background-color: #5cb85c;
+}
+.close{
+	float: none;
+    height: 100%;
+    padding-right: 0px;
+    margin-left: 4px;
+    font-family: Arial;
+    font-size: 1.2em;
+    line-height: inherit;
+    font-weight: 700;
+    text-shadow: none;
+    opacity: .5;
+}
+.clear{
+color: #dd5a43;
+}
+
+.clear:hover{
+    transform: scale(1.2);
+    opacity: 1;
+    margin: 0 0 2px 3px;
+    display: inline-block;
+    width: 15px;
+    float: none;
+    position: static;
+    text-align: center;
+    opacity: .85;
+    -webkit-transition: all .12s;
+    -o-transition: all .12s;
+    transition: all .12s;
+    vertical-align: middle;
+    cursor: pointer;
+}
+</style>
+</@header>
+<div class="container-div">
+	<div class="row">
+	<#if query>
+	<div class="col-sm-12 search-collapse">
+	<@f.form id="select-form">
+        <div class="select-list">
+			<ul>
+	        	<#list tableInfo as tb>
+	       		<#if tb.query>
+	       		<li>
+	                <@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
+	            </li>
+	       		</#if>
+	        	</#list>
+	            <#if isorga>
+	            <li>
+	                <label><@ctx.i18n text = "机构查询"/></label>：
+	                <div class="control-div width-150">
+	                    <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+	                    expandLevel=true
+	                    placeholder="请选择上级机构"/>
+	                </div>
+	            </li>
+	            </#if>
+	            <li>
+	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+	                <a class="btn btn-warning btn-rounded btn-sm" onclick="reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+	            </li>
+            </ul>
+        </div>
+    </@f.form>
+    </div>
+    </#if>
+    </div>
+    <div class= row>
+    	<div class="col-sm-10 pl0">
+    		<@table id="bootstrap-table">
+    		</@table>
+    	</div>
+    	<div class="col-sm-2 pl0 pr0">
+    		<div class="ibox mt10">
+                <div class="ibox-title">
+                    <h5><i class="fa icon-check"></i>  已选中(<span id="selectNum">0</span>)信息</h5>
+                    <i class="fa fa-trash-o pull-right clear" id="clear" title="清空所有选项"></i>
+                </div>
+                <div class="ibox-content pl5 pr5">
+                    <div id="selectName">
+                    </div>
+                </div>
+            </div>
+    	</div>
+    </div>
+</div>
+<@footer>
+<script type="text/javascript">
+	var tableData = {};
+	var name_data = [];
+	<#list tableInfo as table>
+	<#if table.dict !="">
+	var ${table.field}_dict = ${dict.getDictListJson('${table.dict}')};	
+	</#if>
+	</#list>
+    var prefix = baseURL + '${url}';
+    var id_data = [];
+    <#if selectId != ''>
+	<#list selectId?split('${separator}') as x>
+	id_data.push('${x}');
+	</#list>
+    </#if>
+	<#if selectName != ''>
+	<#list selectName?split('${separator}') as x>
+	name_data.push('${x}');
+	</#list>
+	</#if>
+	var initload = false;
+    function initTable(){
+		/* 初始表格对象 */
+		var options = {
+			url: prefix,
+			uniqueId: "id", /* 唯一ID */
+			showSearch: false,
+			showRefresh: false,
+			showToggle: false,
+			<#if !checked>singleSelect: true,
+			</#if>
+			pageSize: 10,
+			pageList: [10, 20, 30],
+			showColumns: false,
+			onSelectData: onSelectData,
+			responseHandler: responseHandler,
+			columns: [
+				<#if checked>
+				{
+					field: 'state',
+					checkbox: true
+				},
+				<#else>
+				{
+					field: 'state',
+					radio: true
+				},
+				</#if>
+				{
+					title: "<@ctx.i18n text = "序号"/>", width: 10, formatter: function (value, row, index) {
+						return $.table.serialNumber(index);
+					}
+				}
+				<#list tableInfo as table>
+				,{field: '${table.field}', title: "<@ctx.i18n text = "${table.title}"/>"<#if table.dict!="">, formatter: function (value, row, index) {
+						return $.table.selectDictLabel(${table.field}_dict, value);
+					}</#if>}
+				</#list>
+			]
+		};
+
+		$.table.init(options);
+
+		$("#clear").on('click',function(){
+			$('#selectName').children('span').each(function(){
+				$(this).children('a').trigger('click');
+			});
+		});
+	}
+
+    function responseHandler(res){
+    	if(!initload){
+			initload = true;
+    		if(opt.common.isNotEmpty(tableData) && tableData.table && tableData.uniqueId.length > 0){
+				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], tableData.uniqueId,opt.table.options.uniqueId);
+				opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], tableData.table ,opt.table.options.uniqueId);
+				return true;
+			}
+
+    		if(id_data.length > 0){
+				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], id_data,opt.table.options.uniqueId);
+				var temp = "";
+				for(var i=0; i< name_data.length; i++){
+					temp += '<span class="label label-success">' + name_data[i] + '</span>   ';
+				}
+				if(temp.length > 0){
+					$("#selectName").html(temp);
+					$("#selectNum").html(name_data.length);
+				}else{
+					$("#selectName").html("");
+					$("#selectNum").html("0");
+				}
+				return true;
+			}
+		}
+	};
+	function onLoadSuccess(rows,layero, index,_sf){
+		tableData = rows;
+
+		/*初始化表格*/
+		initTable();
+
+		var temp = "";
+		if(opt.common.isNotEmpty(rows) && rows.table){
+			for(var i=0; i<rows.table.length; i++){
+				temp += '<span class="label label-success" id="s_'+rows.table[i].id+'">' + rows.table[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].id+'">×</a></span>';
+			};
+			if(temp.length > 0){
+				$("#selectName").html(temp);
+				$("#selectNum").html(rows.table.length);
+			}else{
+				$("#selectName").html("");
+				$("#selectNum").html("0");
+			};
+			return true;
+		}
+	};
+
+    function reset(){
+    	opt.form.reset();
+		tableData = {};
+		$("#selectName").html("");
+    	$("#selectNum").html("0");
+    };
+    
+    
+    function onSelectData(data){
+		var temp = "";
+		for(var i=0; i<data.length; i++){
+			temp += '<span id="s_'+data[i].id+'" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+data[i].id+'">×</a></span>';
+		};
+		if(temp.length > 0){
+			$("#selectName").html(temp);
+			$("#selectNum").html(data.length);
+		}else{
+			$("#selectName").html("");
+			$("#selectNum").html("0");
+		}
+    };
+    
+    function rm(e){
+    	var id = $(e).attr('tabindex');
+    	var index = '';
+    	$("#" + opt.table.options.id).children('tbody').children('tr').each(function(){
+    		if($(this).data('uniqueid') == id){
+    			index = $(this).data('index');
+    		}
+    	});
+    	if(opt.common.isNotEmpty(index)){
+    		$.table.uncheck(index);
+    	}else{
+    		if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
+
+                var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
+
+                $("#selectNum").html(selectedRows.length - 1);
+
+                var rows;
+                for(var i=0; i<selectedRows.length; i++){
+                	if(selectedRows[i].id == id){
+                		rows = selectedRows[i];
+                	}
+                };
+
+                if(opt.common.isNotEmpty(selectedRows)) {
+                    opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,'id');
+                };
+
+                var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
+                if(opt.common.isNotEmpty(selectedIds)) {
+                	 var rowIds = $.table.affectedRowIds(rows);
+                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,'id');
+                }
+    		}
+    		$('#s_'+id).remove();
+    	}
+    };
+    
+    
+
+    <#if isorga>
+    function treeCallback(id, event, index, layero, nodes) {
+        if(id == "compId"){
+            if(event == "ok"){
+                /* 点击确认按钮直接刷新表格*/
+                $.table.search();
+            }
+        }
+    };
+    </#if>
+
+    /*提交 */
+    function submitHandler() {
+		tableData = {};
+		var keyId = "";
+		var keyName="";
+		var rows = $.table.selectAllColumnRows();
+		for(var i=0; i<rows.length; i++){
+			keyId +=rows[i].${keyId} + '${separator}';
+			keyName += rows[i].${keyName} + '${separator}';
+		};
+		if(keyId.length > 0){
+			keyId = keyId.substr(0,keyId.length -"${separator}".length);
+			keyName = keyName.substr(0,keyName.length -"${separator}".length);
+		}
+		tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
+    	return true;
+    }
+</script>
+</@footer>
+</@pageTheme>

@@ -1644,7 +1644,6 @@
         var that = this,
             html = [],
             data = this.getData();
-        console.log("asdasd");
         this.trigger('pre-body', data);
 
         this.$body = this.$el.find('>tbody');
@@ -2020,7 +2019,6 @@
     };
 
     BootstrapTable.prototype.initServer = function (silent, query, url) {
-        console.log("9999999999")
         var that = this,
             data = {},
             params = {
@@ -3178,9 +3176,19 @@ var isFirstLoad = true;
 var union = function (b, a,k) {
     if ($.isArray(a)) {
         $.each(a, function (c, d) {
-            if ($.inArray(d, b) == -1) {
-                b[b.length] = d
-            }
+        	if(opt.common.isPrimitive(d)){
+        		if ($.inArray(d, b) == -1) {
+                    b[b.length] = d
+                }
+        	}else{
+        		if(b.length === 0){
+                    b[b.length] = d
+                }else{
+                    if(!array_isf(b,d,k)){
+                        b[b.length] = d
+                    }
+                }
+        	}
         })
     } else {
         if(b.length === 0){
@@ -3196,11 +3204,14 @@ var union = function (b, a,k) {
 var difference = function (c, b,k) {
     if ($.isArray(b)) { //是否是数组
         $.each(b, function (e, f) {
-            opt.debug(f);
-            var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
-            if (d != -1) {
-                c.splice(d, 1)
-            }
+        	if(opt.common.isPrimitive(f)){
+        		var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
+                if (d != -1) {
+                    c.splice(d, 1)
+                }
+        	}else{
+        		array_diff(c,f,k);
+        	}
         })
     } else {
         array_diff(c,b,k);

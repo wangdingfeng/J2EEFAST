@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="修改字典数据" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<@header title="修改字典数据" bodyClass="white-bg" libs=["bootstrapSelect","colorpicker"]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-dict-edit" class="form-horizontal">
 	<@f.hidden  name="id"  value="${dictHtml.id}"/>
@@ -37,7 +37,7 @@
 	<div class="form-group">
 		<label class="col-sm-3 control-label">CSS样式：</label>
 		<div class="col-sm-8">
-			<@f.input name="cssStyle" value="${dictHtml.cssStyle?default('')}"  helpTip="如：style=\"color:red\", 请填写：color:red"/>
+			<@f.input name="cssStyle" value="${dictHtml.cssStyle?default('')}" butClass="fa fa-square" butStyle="${dictHtml.cssStyle?default('')}"  helpTip="如：style=\"color:red\", 请填写：color:red"/>
 		</div>
 	</div>
 	<div class="form-group">
@@ -88,7 +88,40 @@
 <@footer>
 <script>
 	var prefix = baseURL + "sys/dict/data";
+	
+	/*
+	 * 颜色拾取
+	 */
+	$('#cssStyle').next('.input-group-addon').colorpicker().on('hidePicker',function(event){
+		var val = $('#cssStyle').val();
+		if(val.indexOf("#") > 0){
+			var css = val.substr(0,val.indexOf("#")) + event.color.toHex() + val.substring(val.indexOf("#") + 7);
+			$('#cssStyle').val(css);
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',css);
+		}else if(val.length > 0){
+			$('#cssStyle').val(val+";color:"+ event.color.toHex());
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',val+";color:"+ event.color.toHex());
+		}else{
+			$('#cssStyle').val("color:"+ event.color.toHex());
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',"color:"+ event.color.toHex());
+		}
+	})
+   .on('changeColor',function(event){
+		var val = $('#cssStyle').val();
+		if(val.indexOf("#") > 0){
+			var css = val.substr(0,val.indexOf("#")) + event.color.toHex() + val.substring(val.indexOf("#") + 7);
+			$('#cssStyle').val(css);
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',css);
+		}else if(val.length > 0){
+			$('#cssStyle').val(val+";color:"+ event.color.toHex());
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',val+";color:"+ event.color.toHex());
+		}else{
+			$('#cssStyle').val("color:"+ event.color.toHex());
+			$('#cssStyle').next('.input-group-addon').children('i').attr('style',"color:"+ event.color.toHex());
+		}
+	});
 
+	
 	$("#form-dict-edit").validate({
 		rules:{
 			dictSort:{

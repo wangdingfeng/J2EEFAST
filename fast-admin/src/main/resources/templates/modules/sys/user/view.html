@@ -1,0 +1,114 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+    <@header title="修改用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+    <div class="wrapper wrapper-content ibox-content">
+        <@f.form id="form-user-edit" class="form-horizontal">
+            <@f.hidden id="id" name="id" value="${user.id?default('')}"/>
+            <h4 class="form-header h4">基本信息</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">登录账号：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.username?default('')}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">归属公司：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.compName?default('')}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">用户姓名：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.name?default("")}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">归属部门：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.deptName?default('')}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">手机号码：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.mobile?default('')}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">所属角色：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">
+                                <#list roles as x>
+                                    <#list selectRoles?split(",") as k>
+                                        <#if k == (x.id?c)>
+                                            ${x.roleName}
+                                        </#if>
+                                    </#list>
+                                </#list>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">邮箱：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${user.email?default('')}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">用户状态：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">${dict.getLabel('sys_user_show_hide',user.status?default(''))}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">所在岗位：</label>
+                        <div class="col-sm-8">
+                            <p class="form-control-plaintext">
+                            <#list posts as x>
+                                <#list selectPosts?split(",") as k>
+                                    <#if k == x.postCode>
+                                        ${x.postName}
+                                    </#if>
+                                </#list>
+                            </#list>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </@f.form>
+        <div class="hr-line-dashed"></div>
+    </div>
+    <@footer>
+        <script type="text/javascript">
+
+        </script>
+    </@footer>
+</@pageTheme>

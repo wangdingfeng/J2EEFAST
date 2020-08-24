@@ -134,7 +134,7 @@
     padding: 0 15px !important;
 }
 
-.btn-circle {
+.btn-notadd {
     width: 40px;
     height: 40px;
     line-height: 33px;
@@ -146,15 +146,16 @@
     color: #fff;
     text-align: center;
     box-shadow: 0 0 8px rgba(0,0,0,.2);
-    cursor: pointer
+    cursor: pointer;
+    padding: 6px 0;
 }
 
-.btn-circle:hover {
+.btn-notadd:hover {
     color: #fff;
     opacity: .8
 }
 
-.btn-circle .layui-icon {
+.btn-notadd .layui-icon {
     font-size: 20px
 }
 

@@ -217,7 +217,6 @@
     BootstrapTable.prototype.resetView = function () {
         _resetView.apply(this, Array.prototype.slice.apply(arguments));
 
-        console.log("------------>>>>>>>>>>>>>>>>>>>")
         if (!this.options.fixedColumns && !this.options.rightFixedColumns) {
             return;
         }

@@ -55,12 +55,20 @@
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/jquery-layout/jquery.layout-latest.css?V=${config.getDvVersion()}"/>
         </#if>
         <#if x == "fileupload">
-          	<link rel="stylesheet" href="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.css?V=${config.getDvVersion()}"/>
+<#--          	<link rel="stylesheet" href="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.css?V=${config.getDvVersion()}"/>-->
+          	<link rel="stylesheet" href="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.css?V=${config.getDvVersion()}"/>
+        </#if>
+        <#if x == "tokenfield">
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/tokenfield/css/tokenfield-typeahead.css"/>
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/tokenfield/css/bootstrap-tokenfield.css"/>
+        </#if>
+        <#if x == "colorpicker">
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css"/>
         </#if>
     </#list>
 </#if>
-<#--<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.css?V=${config.getDvVersion()}">-->
-<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.min.css?V=${config.getDvVersion()}" />
+<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.css?V=${config.getDvVersion()}">
+<#--<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.min.css?V=${config.getDvVersion()}" />-->
 <#-- iCheck -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css" />
 <#--  layui-->

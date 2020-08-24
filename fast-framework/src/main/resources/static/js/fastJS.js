@@ -9,6 +9,7 @@
  *       2020-08-05 新增常用方法
  *       2020-08-19 新增表格动态增减行数据
  *       2020-08-20 新增加载遮罩默认提示语控制
+ *       2020-08-23 优化表格记住我功能、新增右侧滑出窗口
  * @version v1.0.12
  */
 if (typeof jQuery === "undefined") {
@@ -98,13 +99,13 @@ if (typeof jQuery === "undefined") {
                 }
             })
         },
-        
+        /*
         debug: function (message) {
             if (window.console && opt.variable.debug) {
                 console.log(message)
             }
         },
-
+		*/
         toast: function(){
             if ($.toast) {
                 return $.toast
@@ -1176,6 +1177,46 @@ if (typeof jQuery === "undefined") {
                 });
             },
             /**
+             * 右侧弹出窗口 一般用于信息查看用
+             * @param title 标题
+             * @param url 展示地址
+             * @param isEdit 是否显示修改按钮
+             * @param editFun 修改方法
+             */
+            popupRight: function(title, url, isEdit,editFun,id){
+                opt.layer.open({
+                    type: 2,
+                    shade: false,
+                    scrollbar:false,
+                    anim:-1,
+                    closeBtn: 0,
+                    shade: 0.3,
+                    move: false,
+                    title: title,
+                    shadeClose: true,
+                    skin:'layui-anim layui-anim-rl',
+                    offset: [50 +'px', ($(top.window).outerWidth() - (($(window).width()-300))) + 'px'],
+                    area: [($(window).width()-300) + 'px', '100%'],
+                    success: function(layero, index){
+                        if(opt.common.isNotEmpty(isEdit) && isEdit){
+                            var update = $('<div id="'+index+'" class="layui-right-update"><i class="fa fa-mail-reply-all"></i> 修改</div>').on('click',function(){
+                                opt.layer.close($(this).attr('id'));
+                                if( typeof  editFun == "function"){
+                                    window.setTimeout(function(){
+                                        editFun(id);
+                                    },200);
+                                }
+                            });
+                            if(!$(layero).find('.layui-right-update').html()){
+                                $(layero).find('.layui-layer-title').attr("style","font-size:13px;").before(update);
+                            }
+
+                        }
+                    },
+                    content: url
+                });
+            },
+            /**
              * 弹出层指定宽度 此方法弹出窗口会在宽度高度做自动适配
              * 如果 width height 你设置了数值,当你设置的数值大于当前窗口的最大值则会全屏展示
              *
@@ -1288,19 +1329,34 @@ if (typeof jQuery === "undefined") {
                 var _height = opt.common.isEmpty(options.height) ? ($(window).height() - 50) : options.height;
                 var _framData = opt.common.isEmpty(options.fromData) ? {} : options.fromData;
                 var _type = opt.common.isEmpty(options.type) ? 2 : options.type;
-                console.log("type:"+ _type)
                 var _btn = [];
                 if(options.clear){
                     _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
                 }else{
                     _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
                 }
+                var _sf;
+                if(opt.common.isNotEmpty(options.main) && options.main){
+                	_sf = opt.layer;
+                }else{
+                	_sf = opt.selfLayer;
+                }
+                
                 if (opt.common.isEmpty(options.yes)) {
                     options.yes = function(index, layero) {
-                        options.callBack(index, layero,opt.selfLayer);
+                        var iframeWin = layero.find('iframe')[0];
+                        if(typeof iframeWin.contentWindow.submitHandler == 'function'){
+                             if(iframeWin.contentWindow.submitHandler(index, layero)){
+                            	 options.callBack(index, layero,_sf);
+                             }
+                             return;
+                        }else{
+                        	options.callBack(index, layero,_sf);
+                        	return;
+                        }
                     }
                 }
-                opt.selfLayer.open({
+                _sf.open({
                     type: _type,
                     maxmin: true,
                     shade: 0.3,
@@ -1321,21 +1377,22 @@ if (typeof jQuery === "undefined") {
                             if (!opt.common.isEmpty(options.cancel)) {
                                 options.cancel(index,layero);
                             }
-                            opt.selfLayer.close(index);
+                            _sf.close(index);
                         }
                     },
                     btn3: function(index, layero){
                         if (!opt.common.isEmpty(options.cancel)) {
                             options.cancel(index,layero);
                         }
-                        opt.selfLayer.close(index);
+                        _sf.close(index);
                     },
                     success: function(layero, index){
                         if (!opt.common.isEmpty(options.obj)) {
                             var iframeWin = layero.find('iframe')[0];
+                            console.log(iframeWin.contentWindow.onLoadSuccess);
                             //判断页面是否有
                             if(typeof(iframeWin.contentWindow.onLoadSuccess) === "function"){
-                                iframeWin.contentWindow.onLoadSuccess(options.obj,layero, index,opt.selfLayer);
+                                iframeWin.contentWindow.onLoadSuccess(options.obj,layero, index,_sf);
                             }else{
                                 opt.modal.error("页面传参错误!");
                             }
@@ -1807,6 +1864,23 @@ if (typeof jQuery === "undefined") {
                 } else {
                     opt.modal.open("修改" + opt.table.options.modalName, opt.operate.editUrl(id));
                 }
+            },
+            // 查看表详情
+            view: function(id,edit,fun){
+                var _self = this;
+                opt.table.set();
+                if (opt.common.isEmpty( opt.table.options.viewUrl)){
+                    opt.modal.msgError("viewUrl 未传!");
+                    return;
+                }
+                if(opt.common.isEmpty(id)){
+                    opt.modal.error("id必须传!");
+                    return;
+                }
+
+                var url = opt.table.options.viewUrl.replace("{id}", id);
+                opt.modal.popupRight(opt.table.options.modalName + "信息详情",url,
+                    (edit==''),fun,id);
             },
             // 修改信息，以tab页展现
             editTab: function(id) {
@@ -2571,6 +2645,8 @@ if (typeof jQuery === "undefined") {
                     clickToSelect: true,
                     singleSelect: false,
                     paginationLoop: true,
+                    /* 表格选中回调事件*/
+                    onSelectData:undefined,
                     showPage: true,
                     mobileResponsive: true,
                     rememberSelected: true, /**默认记住我*/
@@ -2589,8 +2665,8 @@ if (typeof jQuery === "undefined") {
                 var options = $.extend(defaults, options);
 
                 //兼容自动识别有删除按钮表格有checkbox 选项
-                if(options.outcheckbox && (!opt.common.isEmpty($('#' + options.toolbar + ' .multiple').html())
-                    || !opt.common.isEmpty($('#' + options.toolbar + ' .single').html()))){
+                if(options.outcheckbox && (!opt.common.isEmpty($('#' + options.toolbar+'-'+options.id + ' .multiple').html())
+                    || !opt.common.isEmpty($('#' + options.toolbar +'-'+options.id+ ' .single').html()))){
                     var _flag = false;
                     if(!opt.common.isEmpty(options.columns.length)){
                         for(var i=0; i<options.columns.length; i++ ){
@@ -2664,7 +2740,7 @@ if (typeof jQuery === "undefined") {
                     escape: options.escape,                             // 转义HTML字符串
                     showFooter: options.showFooter,                     // 是否显示表尾
                     iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
-                    toolbar: '#' + options.toolbar,                     // 指定工作栏
+                    toolbar: '#' + options.toolbar + '-'+options.id,    // 指定工作栏
                     sidePagination: options.sidePagination,             // server启用服务端分页client客户端分页
                     search: options.search,                             // 是否显示搜索框功能
                     searchText: options.searchText,                     // 搜索框初始显示的内容，默认为空
@@ -2761,7 +2837,6 @@ if (typeof jQuery === "undefined") {
                         return res.rows;
                     } else {
                         if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-                            console.log("记住数据"+opt.table.rememberSelectedIds);
                             var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
                             $.each(res.data.list, function(i, row) {
                                 if(opt.table.rememberSelectedIds[opt.table.options.id]){
@@ -2771,6 +2846,25 @@ if (typeof jQuery === "undefined") {
                                             _flag = true;
                                         }
                                     }
+                                    if(_flag){
+                                        //同步记住我的数据
+                                        if(opt.common.isEmpty(opt.table.rememberSelecteds[opt.table.options.id])){
+                                            opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], row,column);
+                                        }else{
+                                            var _f = true;
+                                            for(var k=0; k< opt.table.rememberSelecteds[opt.table.options.id].length; k++){
+                                                if(row[column] == opt.common.getJsonValue(opt.table.rememberSelecteds[opt.table.options.id][k],column)){
+                                                    _f = false;
+                                                    break;
+                                                }
+                                            }
+                                            if(_f){
+                                                var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
+                                                opt.table.rememberSelecteds[opt.table.options.id] = _['union'](selectedRows, row,column);
+                                            }
+                                        }
+                                    }
+
                                     row.state = _flag;
                                 }else{
                                     row.state = false;
@@ -2802,40 +2896,50 @@ if (typeof jQuery === "undefined") {
                 });
                 // 选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
-                    console.log("-<<<<:" + rows);
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-
                         var _trows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                             return row;
                         });
                         var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
                         var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-                        if(opt.common.isEmpty(selectedIds) && opt.common.isEmpty(selectedIds) && _trows.length > 1){
+                        if(opt.common.isEmpty(selectedIds) && opt.common.isEmpty(selectedRows) && _trows.length >= 1){
                             opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], _trows,opt.table.options.uniqueId);
                             opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([],  $.table.affectedRowIds(_trows),opt.table.options.uniqueId);
                         }
+                        if(!opt.table.options.singleSelect){
+                            var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
+                            func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
+                            selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
+                            if(opt.common.isNotEmpty(selectedIds)) {
+                                opt.table.rememberSelectedIds[opt.table.options.id] = _[func](selectedIds, rowIds,column);
+                            } else {
+                                opt.table.rememberSelectedIds[opt.table.options.id] = _[func]([], rowIds,column);
+                            }
+                            selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
+                            if(opt.common.isNotEmpty(selectedRows)) {
+                                opt.table.rememberSelecteds[opt.table.options.id] = _[func](selectedRows, rows,column);
+                            } else {
+                                opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], _trows,column);
+                            }
+                        }else{
+                            opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], _trows,opt.table.options.uniqueId);
+                            opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([],  $.table.affectedRowIds(_trows),opt.table.options.uniqueId);
+                        }
+                    }
 
-                        var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
-                        func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
-                        selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
-                        if(opt.common.isNotEmpty(selectedIds)) {
-                            opt.table.rememberSelectedIds[opt.table.options.id] = _[func](selectedIds, rowIds,column);
-                        } else {
-                            opt.table.rememberSelectedIds[opt.table.options.id] = _[func]([], rowIds,column);
-                        }
-                        selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-                        if(opt.common.isNotEmpty(selectedRows)) {
-                            opt.table.rememberSelecteds[opt.table.options.id] = _[func](selectedRows, rows,column);
-                        } else {
-                            opt.table.rememberSelecteds[opt.table.options.id] = _[func]([], rows,column);
-                        }
+                    if (typeof opt.table.get(opt.table.options.id).onSelectData == "function") {
+                    	if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
+                    		opt.table.get(opt.table.options.id).onSelectData(opt.table.rememberSelecteds[opt.table.options.id]);
+                    	}else{
+                    		opt.table.get(opt.table.options.id).onSelectData(rows);
+                    	}
                     }
                 });
                 // 加载成功、选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table load-success.bs.table", function () {
-                    var toolbar = opt.table.options.toolbar;
+                    var toolbar = opt.table.options.toolbar + '-'+ opt.table.options.id ;
                     var uniqueId = opt.table.options.uniqueId;
                     // 工具栏按钮控制
                     var rows = opt.common.isEmpty(uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(uniqueId);
@@ -3078,7 +3182,6 @@ if (typeof jQuery === "undefined") {
              */
             search: function(formId, tableId, data) {
                 opt.table.set(tableId);
-                opt.debug(formId);
                 // var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var currentId;
                 if(opt.common.isEmpty(formId)){
@@ -3210,7 +3313,6 @@ if (typeof jQuery === "undefined") {
             },
             // 查询表格指定列值
             selectColumns: function(column) {
-                console.log("====>>>")
                 var rows = $.map($("#" + opt.table.options.id).bootstrapTable('getSelections'), function (row) {
                     return row[column];
                 });
@@ -3278,6 +3380,29 @@ if (typeof jQuery === "undefined") {
                 }
                 return opt.common.uniqueFn(rows);
             },
+            //获取选中行对象集合
+            selectAllColumnRows: function(){
+            	var rows;
+                if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                    var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
+                    if(opt.common.isNotEmpty(selectedRows)) {
+                        return selectedRows;
+                    }else{
+                        rows = [];
+                    }
+                }
+              //若没有记住我或者记住我内部无值 则获取页面，如果有值则获取记住我,因为记住我里面的值为所有,不单单是当前页还有其他页记住的数据
+                if(opt.common.isEmpty(rows) || rows.length == 0){
+                    rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
+                        return row;
+                    });
+                    if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                        opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
+                        opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
+                    }
+                    return rows;
+                }
+            },
             // 回显数据字典
             selectDictLabel: function(datas, value) {
                 var actions = [];
@@ -3312,6 +3437,7 @@ if (typeof jQuery === "undefined") {
             // 回显数据字典 多个, 约定以逗号分割---用于复选框翻译回显 , values 值 字符串 如： 1,2,3,4  
             selectDictLabels: function(datas, valueStr) {
                 var actions = [];
+                valueStr = valueStr + "";
                 valueStr = valueStr || "";
                 var values = valueStr.split(",");
                 $.each(values ,function(index, value){
@@ -3349,6 +3475,12 @@ if (typeof jQuery === "undefined") {
                 opt.table.set(tableId);
                 var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('hideColumn', column);
+            },
+            //取消选择某一行，索引（index）从0开始
+            uncheck: function(index,tableId){
+            	opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                $("#" + currentId).bootstrapTable('uncheck', index);
             },
             // 更新表格数据
             updataData: function(count,tableId){
@@ -3527,7 +3659,7 @@ if (typeof jQuery === "undefined") {
                     expandColumn: options.expandColumn,                 // 在哪一列上面显示展开按钮
                     striped: options.striped,                           // 是否显示行间隔色
                     bordered: true,                                     // 是否显示边框
-                    toolbar: '#' + options.toolbar,                     // 指定工作栏
+                    toolbar: '#' + options.toolbar + '-' + options.id,  // 指定工作栏
                     showSearch: options.showSearch,                     // 是否显示检索信息
                     showRefresh: options.showRefresh,                   // 是否显示刷新按钮
                     showColumns: options.showColumns,                   // 是否显示隐藏某列下拉框

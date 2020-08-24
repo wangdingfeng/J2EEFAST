@@ -99,14 +99,24 @@
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/reorder/bootstrap-table-reorder.js?V=${config.getDvVersion()}"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/reorder/jquery.tablednd.js?V=${config.getDvVersion()}"></script>
             </#if>
+            <#-- 高级标记/标签输入插件-->
+            <#if x == "tokenfield">
+                <script src="${ctxStatic}/static/plugins/tokenfield/bootstrap-tokenfield.js"></script>
+            </#if>
+            <#if x == "video">
+                <script src="${ctxStatic}/static/plugins/video/video.js"></script>
+            </#if>
+            <#if x == "colorpicker">
+                <script src="${ctxStatic}/static/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+            </#if>
             <#-- 可自行扩展, 如果插件有CSS样式请在 cssLibs 相应添加-->
         </#list>
 </#if>
 <#-- jquery-validate 表单验证插件 -->
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.min.js"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js?V=${config.getDvVersion()}"></script>
-<script src="${request.contextPath}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${request.contextPath}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
+<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
 <#--VUE-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
 </#compress>

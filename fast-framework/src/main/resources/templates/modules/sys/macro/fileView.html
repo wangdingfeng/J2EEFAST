@@ -17,6 +17,7 @@
     <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
     <script src="${ctxStatic}/static/plugins/magnify/jquery.magnify.min.js"></script>
     <script src="${ctxStatic}/static/plugins/pdf/pdfobject.min.js"></script>
+    <script src="${ctxStatic}/static/plugins/video/video.js"></script>
 </head>
 <body style="margin:0;background:#ececec;">
 <script language="javascript">
@@ -57,8 +58,16 @@
                 'zoomIn', 'zoomOut', 'fullscreen', 'actualSize', 'rotateLeft', 'rotateRight' ],
             title: false, initMaximized: true }).click();
     }else if (extName == 'mp3' || extName == 'mp4' || extName == 'wav'){
-        document.write('<video class="box" style="background:#000;" controls autoplay>'
-            + '<source src="'+fileUrl+'"></video>');
+    	document.write('<div id="video" class="box"></div>');
+    	new Player({
+    	    id: 'video',
+    	    url: fileUrl,
+    	    width: 600,
+    	    height: 337.5,
+    	    playbackRate: [0.5, 1, 1.5, 2],
+    	    pip: true,
+    	    lang: 'zh-cn'
+    	});  
     }else{
         document.write('<div class="box" style="display:flex;align-items:center">'
             + '<div style="flex:1;display:flex;justify-content:center">'

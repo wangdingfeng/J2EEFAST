@@ -1,6 +1,8 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage"]/>
+<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage"]>
+
+</@header>
 <div class="wrapper wrapper-content ibox-content">
     <@f.tip class="warning"><strong>重要提示:</strong>J2eeFAST平台 前端模板引擎组件写法类似 HTML 本身控件写法,属性值方式.</@f.tip>
     <@f.code>
@@ -337,6 +339,18 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>大数据表格形式组件：</label>
+                    <div class="col-sm-10">
+                        <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                   {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color: red; ">*</span>百度富文本：</label>
                     <div class="col-sm-10">
                         <@f.ueditor name="noticeContent"/>
@@ -390,7 +404,7 @@
     </div>
 <@footer>
 <script type="text/javascript">
-
+	
     /**
      * 下拉选择框 回调函数案例
      * @param id

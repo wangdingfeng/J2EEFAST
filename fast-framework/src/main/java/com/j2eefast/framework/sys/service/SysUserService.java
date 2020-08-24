@@ -58,6 +58,7 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	@DataFilter(compAlias="c",deptAlias = "d",userAlias = "u")
 	public PageUtil findPage(Map<String, Object> params) {
 		String username = (String) params.get("username");
+		String name = (String) params.get("name");
 		String status = (String) params.get("status");
 		String mobile = (String) params.get("mobile");
 		String email = (String) params.get("email");
@@ -70,6 +71,7 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 															StrUtil.nullToDefault(email,""),
 															StrUtil.nullToDefault(compId,""),
 															StrUtil.nullToDefault(deptId,""),
+															StrUtil.nullToDefault(name,""),
 															(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}
