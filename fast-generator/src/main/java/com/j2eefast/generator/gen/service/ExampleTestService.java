@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Sequence;
+
 import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
@@ -75,7 +77,8 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 
 		for (Long id : ids) {
 			FileUploadUtils.me().removeFileUpload(id,"example_test_file");						
-		    FileUploadUtils.me().removeFileUpload(id,"example_test_img");			
+		    FileUploadUtils.me().removeFileUpload(id,"example_test_img");	
+			FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");	
 		}
 		return this.removeByIds(Arrays.asList(ids));
 
@@ -88,6 +91,7 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 
 		FileUploadUtils.me().removeFileUpload(id,"example_test_file");		
 		FileUploadUtils.me().removeFileUpload(id,"example_test_img");		
+		FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");		
 		return this.removeById(id);
 
 	}
@@ -97,20 +101,23 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      */
 	public boolean addExampleTest(ExampleTestEntity exampleTest){
 																				
-		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
-		if(this.save(exampleTest)){			
-
+		
+		//需先生成ID
+		exampleTest.setId(new Sequence().nextId());
+		//设置avatar url 径路 //图片剪切数据转换
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(), "example_test_avatar", exampleTest.getId()));	
+		if(this.save(exampleTest)){
 			//更新关联附件信息						
 			Long pkId =  exampleTest.getId();			
 			FileUploadUtils.saveFileUpload(pkId,"example_test_file");						
-			FileUploadUtils.saveFileUpload(pkId,"example_test_img");						
+			FileUploadUtils.saveFileUpload(pkId,"example_test_img");	
 			//保存子表信息
-			for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
-				exampleTestChild.setTestId(pkId);
-				exampleTestChildService.addExampleTestChild(exampleTestChild);
-			}
-						
+			if (null != exampleTest.getExampleTestChild() && exampleTest.getExampleTestChild().size() > 0) {
+				for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
+					exampleTestChild.setTestId(pkId);
+					exampleTestChildService.addExampleTestChild(exampleTestChild);
+				}
+			}		
 			return true;
 		}
         return false;
@@ -122,10 +129,10 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	public boolean updateExampleTestById(ExampleTestEntity exampleTest) {
 																				
 		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar", exampleTest.getId()));		
 		if(this.updateById(exampleTest)){			
 			//更新关联附件信息						
-			Long pkId =  exampleTest.getId();			
+			Long pkId =  exampleTest.getId();
 			FileUploadUtils.saveFileUpload(pkId,"example_test_file");						
 			FileUploadUtils.saveFileUpload(pkId,"example_test_img");						
 			//保存子表信息
