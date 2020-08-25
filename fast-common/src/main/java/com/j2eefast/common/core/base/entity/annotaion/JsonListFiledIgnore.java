@@ -14,5 +14,12 @@ public @interface JsonListFiledIgnore {
 
     ConvertType convert() default ConvertType.EMPTY;
 
+
     boolean exist() default true;
+
+    /**
+     * 字段对象需要输出的字段
+     * @return
+     */
+    String[] objectFiled() default {};
 }

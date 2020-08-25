@@ -44,6 +44,7 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                    PageUtil page = (PageUtil) rd.get("data");
                    List<String> rmfields = new ArrayList<>();
                    List<Map<String,ConvertType>> conver = new ArrayList<>();
+                   List<Map<String,String[]>> objList = new ArrayList<>();
                    if(page.getList().size() > 0){
                        //获取List 对象 遍历 是否有禁止输出或者转换的字段
                        Class clazz = page.getList().get(0).getClass();
@@ -59,23 +60,30 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
 
                        for (Object field : fieldsList) {
                            Field f = ((java.lang.reflect.Field)field);
+                           System.out.println("字段:" + f.getName() + " 类型:" + f.getType().getName());
                            if(f.isAnnotationPresent(JsonListFiledIgnore.class)){
                                for (Annotation anno : f.getDeclaredAnnotations()) {
                                    if(anno.annotationType().equals(JsonListFiledIgnore.class) ){
                                        if(((JsonListFiledIgnore)anno).exist()){
                                            rmfields.add(f.getName());
                                        }else{
-                                           ((JsonListFiledIgnore)anno).convert();
-                                           Map<String,ConvertType> map = new HashMap<>();
-                                           map.put(f.getName(),((JsonListFiledIgnore)anno).convert());
-                                           conver.add(map);
+                                           if(!((JsonListFiledIgnore)anno).convert().equals(ConvertType.EMPTY)){
+                                               Map<String,ConvertType> map = new HashMap<>();
+                                               map.put(f.getName(),((JsonListFiledIgnore)anno).convert());
+                                               conver.add(map);
+                                           }
+                                           if(ToolUtil.isNotEmpty(((JsonListFiledIgnore)anno).objectFiled())){
+                                               Map<String,String[]> map = new HashMap<>();
+                                               map.put(f.getName(),((JsonListFiledIgnore)anno).objectFiled());
+                                               objList.add(map);
+                                           }
                                        }
                                    }
                                }
                            }
                        }
                    }
-                   if(ToolUtil.isEmpty(rmfields)){
+                   if(ToolUtil.isEmpty(rmfields) && ToolUtil.isEmpty(conver) && ToolUtil.isEmpty(objList)){
                        return body;
                    }
                    String q = JSON.marshal(rd);
@@ -83,9 +91,15 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                    JSONArray a =  c.getJSONObject("data").getJSONArray("list");
                    for (Iterator iter = a.iterator(); iter.hasNext();) {
                        cn.hutool.json.JSONObject str = (cn.hutool.json.JSONObject)iter.next();
-                       rmfields.forEach(x->{
-                           str.remove(x);
-                       });
+
+                       //剔除不输出前端数据
+                       if(ToolUtil.isNotEmpty(rmfields)){
+                           rmfields.forEach(x->{
+                               str.remove(x);
+                           });
+                       }
+
+                       //需要转换输出前端的数据
                        if(ToolUtil.isNotEmpty(conver)){
                            conver.forEach(x->{
                                for(String key : x.keySet()){
@@ -96,8 +110,35 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                                }
                            });
                        }
+
+                       //字段对象中输出前端的数据
+                       if(ToolUtil.isNotEmpty(objList)){
+                           objList.forEach(x->{
+                               for(String key : x.keySet()){
+                                 String[]  value = x.get(key);
+                                   cn.hutool.json.JSONObject ob =  str.getJSONObject(key);
+                                   List<String> show = new ArrayList<>();
+                                   for(Map.Entry<String, Object> entry :ob.entrySet()){
+                                       boolean mark = true;
+                                       for(String s: value){
+                                          if(entry.getKey().equals(s)){
+                                              mark = false;
+                                              break;
+                                          }
+                                       }
+                                       if(mark){
+                                           show.add(entry.getKey());
+                                       }
+                                   }
+                                   if(ToolUtil.isNotEmpty(show)){
+                                       show.forEach(k->{
+                                           str.getJSONObject(key).remove(k);
+                                       });
+                                   }
+                               }
+                           });
+                       }
                    }
-                   System.out.println("之后:" + c.toString());
                    JSONObject jsonObject = JSONObject.parseObject(c.toString());
                    return  jsonObject;
                }
@@ -105,9 +146,6 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                e.printStackTrace();
             }
         }
-//
-//        Object o = rd.get("data");
-//        System.out.println(o.toString());
         return body;
     }
 }
