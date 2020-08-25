@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 		<where>
                                               <if test = "exampleTestChildEntity.sql_filter !=null and exampleTestChildEntity.sql_filter!=''">
-                   and ${sql_filter}
+                   and ${exampleTestChildEntity.sql_filter}
                </if>    
 		</where>
 	 </select>
@@ -57,8 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM example_test_child a
 
 		<where>
-                                            <if test = "sql_filter !=null and sql_filter!=''">
-               and ${sql_filter}
+              <if test = "exampleTestChildEntity.sql_filter !=null and exampleTestChildEntity.sql_filter!=''">
+               and ${exampleTestChildEntity.sql_filter}
              </if>  
 		</where>
 	 </select>
