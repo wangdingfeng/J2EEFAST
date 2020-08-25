@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
@@ -18,8 +16,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.core.base.entity.annotaion.JsonListFiledIgnore;
+import com.j2eefast.common.core.enums.ConvertType;
 import lombok.Data;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 /**
  * <p>系统用户</p>
@@ -72,6 +71,7 @@ public class SysUserEntity extends BaseEntity {
 	/**
 	 * 盐
 	 */
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String salt;
 
 	/**
@@ -86,6 +86,7 @@ public class SysUserEntity extends BaseEntity {
 	 */
 	@ExcelProperty("手机号码")
 	@ColumnWidth(25)
+	@JsonListFiledIgnore(exist = false, convert = ConvertType.PHONE)
 	private String mobile;
 
 	/**
@@ -95,6 +96,7 @@ public class SysUserEntity extends BaseEntity {
 	private String status;
 
 	@TableLogic
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String delFlag;
 
 	/**
@@ -106,23 +108,27 @@ public class SysUserEntity extends BaseEntity {
 	 * 密码修改时间
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
+	@JsonListFiledIgnore
 	private Date pwdUpdateDate;
 
 	/**
 	 * 用户对应卡号
 	 */
+	@JsonListFiledIgnore
 	private String cardId;
 
 	/**
 	 * 用户是否在线
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private Integer loginStatus;
 
 	/**
 	 * 角色权限字符列表
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private List<String> RoleKeys;
 
 
@@ -130,24 +136,28 @@ public class SysUserEntity extends BaseEntity {
 	 * 第三方登录源
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String source;
 
 	/**
 	 * 角色ID列表
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private List<Long> roleIdList;
 
 	/**
 	 * 地区ID列表
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private List<Long> deptIdList;
 
 	/**
 	 * 岗位ID列表
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private List<String> postCodes;
 
 	/**
@@ -155,24 +165,28 @@ public class SysUserEntity extends BaseEntity {
 	 */
 	@TableField(exist = false)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
+	@JsonListFiledIgnore
 	private Date loginTime;
 	
 	/**
 	 *上次登陆地点
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String loginLocation;
 
 	/**
 	 * 当前登陆时间
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String nowLoginTime;
 
 	/**
 	 * 当前登陆地点
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String nowLoginLocation;
 
 	/**
@@ -225,11 +239,13 @@ public class SysUserEntity extends BaseEntity {
 	 * 用户登录IP
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String ip;
 	
 	/**
 	 * 用户会话ID
 	 */
 	@TableField(exist = false)
+	@JsonListFiledIgnore
 	private String sid;
 }
