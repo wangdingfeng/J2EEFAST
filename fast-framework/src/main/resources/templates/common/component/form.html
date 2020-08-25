@@ -179,64 +179,66 @@
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <@compress single_line=true>
     <script type="text/javascript">
-        var ${AssId?replace(".","_")}_data = {};
-        $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
-            var selectId = $("#${AssId?replace(".","_")}").val();
-            var selectName =  $("#${AssId?replace(".","_")}Name").val();
-            var options = {
-                title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
-                width: "${width}",
-                <#if height != "">
-                height: ${height},
-                </#if>
-                url: baseURL + "sys/component/tableselect",
-                <#-- POST提交组件控制类参数-->
-                fromData:{
-                    url: $("#${AssId?replace(".","_")}Div").data("url"),
-                    selectName: selectName,
-                    selectId: selectId,
-                    checked: "${checked?c}",
-                    isorga: "${isorga?c}",
-                    tableInfo: "${(tableInfo?replace('\n',''))?json_string}",
-                    keyId: "${keyId}",
-                    keyName: "${keyName}",
-                    separator: "${separator}"
-                },
-                obj: ${AssId?replace(".","_")}_data,
-                main: true,
-                callBack: func_${AssId?replace(".","_")}doSubmit,
-                cancel:  func_${AssId?replace(".","_")}cancel
-              <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
-            };
-            opt.modal.openOptions(options);
-        });
+        $(function(){
+            var ${AssId?replace(".","_")}_data = {};
+            $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
+                var selectId = $("#${AssId?replace(".","_")}").val();
+                var selectName =  $("#${AssId?replace(".","_")}Name").val();
+                var options = {
+                    title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
+                    width: "${width}",
+                    <#if height != "">
+                    height: ${height},
+                    </#if>
+                    url: baseURL + "sys/component/tableselect",
+                    <#-- POST提交组件控制类参数-->
+                    fromData:{
+                        url: $("#${AssId?replace(".","_")}Div").data("url"),
+                        selectName: selectName,
+                        selectId: selectId,
+                        checked: "${checked?c}",
+                        isorga: "${isorga?c}",
+                        tableInfo: "${(tableInfo?replace('\n',''))?json_string}",
+                        keyId: "${keyId}",
+                        keyName: "${keyName}",
+                        separator: "${separator}"
+                    },
+                    obj: ${AssId?replace(".","_")}_data,
+                    main: true,
+                    callBack: func_${AssId?replace(".","_")}doSubmit,
+                    cancel:  func_${AssId?replace(".","_")}cancel
+                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                };
+                opt.modal.openOptions(options);
+            });
 
-        function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
-            ${AssId?replace(".","_")}_data = layero.find("iframe")[0].contentWindow.tableData;
-            $("#${AssId?replace(".","_")}").val(${AssId?replace(".","_")}_data.keyId);
-            $("#${AssId?replace(".","_")}Name").val(${AssId?replace(".","_")}_data.keyName);
-        	if(typeof tableCallback == 'function'){
-                tableCallback('${Assname?replace(".","_")}', 'ok', index, layero, ${AssId?replace(".","_")}_data);
+            function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
+                ${AssId?replace(".","_")}_data = layero.find("iframe")[0].contentWindow.tableData;
+                $("#${AssId?replace(".","_")}").val(${AssId?replace(".","_")}_data.keyId);
+                $("#${AssId?replace(".","_")}Name").val(${AssId?replace(".","_")}_data.keyName);
+                if(typeof tableCallback == 'function'){
+                    tableCallback('${Assname?replace(".","_")}', 'ok', index, layero, ${AssId?replace(".","_")}_data);
+                };
+                selfLayer.close(index);
             };
-            selfLayer.close(index);
-        };
-        <#if isClear>
-        function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
-            ${AssId?replace(".","_")}_data = {};
-            $("#${AssId?replace(".","_")}").val('');
-            $("#${AssId?replace(".","_")}Name").val('');
-        	if(typeof tableCallback == 'function'){
-                tableCallback('${Assname?replace(".","_")}', 'clear', index, layero, ${AssId?replace(".","_")}_data);
+            <#if isClear>
+            function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
+                ${AssId?replace(".","_")}_data = {};
+                $("#${AssId?replace(".","_")}").val('');
+                $("#${AssId?replace(".","_")}Name").val('');
+                if(typeof tableCallback == 'function'){
+                    tableCallback('${Assname?replace(".","_")}', 'clear', index, layero, ${AssId?replace(".","_")}_data);
+                };
+                selfLayer.close(index);
             };
-            selfLayer.close(index);
-        };
-        </#if>
+            </#if>
 
-        function func_${AssId?replace(".","_")}cancel(index, layero) {
-            if(typeof userCallback == 'function'){
-            	userCallback('${Assname?replace(".","_")}', 'cancel', index, layero, ${AssId?replace(".","_")}_data);
+            function func_${AssId?replace(".","_")}cancel(index, layero) {
+                if(typeof userCallback == 'function'){
+                    userCallback('${Assname?replace(".","_")}', 'cancel', index, layero, ${AssId?replace(".","_")}_data);
+                }
             }
-        }
+        })
     </script>
     </@compress>
 </#macro>
@@ -292,76 +294,78 @@
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <@compress single_line=true>
     <script type="text/javascript">
-        $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
-            var treeId = $("#${AssId?replace(".","_")}").val();
-            var treeName =  $("#${AssId?replace(".","_")}Name").val();
-            <#if correlationId !="">
-            var correlationId = $("#${correlationId}").val() == "" ? "${correlationValue}": $("#${correlationId}").val();
-            <#else>
-            var correlationId = "";
-            </#if>
-            var options = {
-                title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
-                width: "${width}",
-                <#if height != "">
-                height: ${height},
+        $(function(){
+            $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
+                var treeId = $("#${AssId?replace(".","_")}").val();
+                var treeName =  $("#${AssId?replace(".","_")}Name").val();
+                <#if correlationId !="">
+                var correlationId = $("#${correlationId}").val() == "" ? "${correlationValue}": $("#${correlationId}").val();
+                <#else>
+                var correlationId = "";
                 </#if>
-                url: baseURL + "sys/component/treeselect",
-                <#-- POST提交组件控制类参数-->
-                fromData:{
-                    url: $("#${AssId?replace(".","_")}Div").data("url"),
-                    treeId: treeId,
-                    treeName: treeName,
-                    expandLevel: "${expandLevel?string('true','false')}",
-                    isSelectParent: "${isSelectParent?string('true','false')}",
-                    correlationId: correlationId,
-                    checked: "${checked?c}",
-                    <#if isParentIds>
-                    parentIds: $('input[name="${parenName}"]').val(),
+                var options = {
+                    title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
+                    width: "${width}",
+                    <#if height != "">
+                    height: ${height},
                     </#if>
-                    radioType: "${radioType}"
+                    url: baseURL + "sys/component/treeselect",
+                    <#-- POST提交组件控制类参数-->
+                    fromData:{
+                        url: $("#${AssId?replace(".","_")}Div").data("url"),
+                        treeId: treeId,
+                        treeName: treeName,
+                        expandLevel: "${expandLevel?string('true','false')}",
+                        isSelectParent: "${isSelectParent?string('true','false')}",
+                        correlationId: correlationId,
+                        checked: "${checked?c}",
+                        <#if isParentIds>
+                        parentIds: $('input[name="${parenName}"]').val(),
+                        </#if>
+                        radioType: "${radioType}"
 
-                },
-                callBack: func_${AssId?replace(".","_")}doSubmit,
-                cancel:  func_${AssId?replace(".","_")}cancel
-              <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                    },
+                    callBack: func_${AssId?replace(".","_")}doSubmit,
+                    cancel:  func_${AssId?replace(".","_")}cancel
+                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                };
+                opt.modal.openOptions(options);
+            });
+
+            function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
+                var nodes = $.tree.callBackTree(layero,index);
+                $("#${AssId?replace(".","_")}").val(nodes.id).change(); /* 赋值主页面隐藏ID */
+                $("#${AssId?replace(".","_")}Name").val(nodes.name).change();/* 回显主页面控件 */
+                <#if isParentIds>
+                $('input[name="${parenName}"]').val(nodes.parentIds).change();
+                </#if>
+
+                if(typeof treeCallback == 'function'){
+                    treeCallback('${Assname?replace(".","_")}', 'ok', index, layero, nodes);
+                }
+                selfLayer.close(index);
             };
-            opt.modal.openOptions(options);
-        });
-
-        function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
-            var nodes = $.tree.callBackTree(layero,index);
-            $("#${AssId?replace(".","_")}").val(nodes.id).change(); /* 赋值主页面隐藏ID */
-            $("#${AssId?replace(".","_")}Name").val(nodes.name).change();/* 回显主页面控件 */
-            <#if isParentIds>
-            $('input[name="${parenName}"]').val(nodes.parentIds).change();
+            <#if isClear>
+            function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
+                $("#${AssId?replace(".","_")}").val("").change();
+                $("#${AssId?replace(".","_")}Name").val("").change();
+                <#if isParentIds>
+                $('input[name="${parenName}"]').val("").change();
+                </#if>
+                if(typeof treeCallback == 'function'){
+                    treeCallback('${Assname?replace(".","_")}', 'clear', index, layero, '');
+                }
+                selfLayer.close(index);
+            };
             </#if>
 
-            if(typeof treeCallback == 'function'){
-                treeCallback('${Assname?replace(".","_")}', 'ok', index, layero, nodes);
-            }
-            selfLayer.close(index);
-        };
-        <#if isClear>
-        function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
-            $("#${AssId?replace(".","_")}").val("").change();
-            $("#${AssId?replace(".","_")}Name").val("").change();
-            <#if isParentIds>
-            $('input[name="${parenName}"]').val("").change();
-            </#if>
-            if(typeof treeCallback == 'function'){
-                treeCallback('${Assname?replace(".","_")}', 'clear', index, layero, '');
-            }
-            selfLayer.close(index);
-        };
-        </#if>
 
-
-        function func_${AssId?replace(".","_")}cancel(index, layero) {
-            if(typeof treeCallback == 'function'){
-                treeCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+            function func_${AssId?replace(".","_")}cancel(index, layero) {
+                if(typeof treeCallback == 'function'){
+                    treeCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+                }
             }
-        }
+        })
     </script>
 </@compress>
 </#macro>
@@ -440,12 +444,14 @@
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <@compress single_line=true>
     <script type="text/javascript">
-        $('input[name="<#if id == ''>${name}<#else>${id}</#if>"]').on('ifCreated ifChecked', function(event){
-            /* 选择redio 回调事件*/
-            if(typeof redioCallback == 'function'){
-                redioCallback("<#if id == ''>${name}<#else>${id}</#if>", this, event);
-            }
-        }).change();
+        $(function(){
+            $('input[name="<#if id == ''>${name}<#else>${id}</#if>"]').on('ifCreated ifChecked', function(event){
+                /* 选择redio 回调事件*/
+                if(typeof redioCallback == 'function'){
+                    redioCallback("<#if id == ''>${name}<#else>${id}</#if>", this, event);
+                }
+            }).change();
+        })
     </script>
     </@compress>
 </#macro>
@@ -540,18 +546,20 @@
     </label>
     <@compress single_line=true>
     <script type="text/javascript">
-        $('#__${AssId?replace(".","_")}swh').on('click',function(e){
-            var _value = "0";
-            if($(this).is(':checked') == true){
-                $('#${AssId?replace(".","_")}').val("0");
-            }else{
-                $('#${AssId?replace(".","_")}').val("1");
-                _value = "1";
-            }
-            if(typeof switchCallback == 'function'){
-                switchCallback("<#if name != "">${name}<#else>${AssId}</#if>", this, e,_value);
-            }
-        });
+        $(function(){
+            $('#__${AssId?replace(".","_")}swh').on('click',function(e){
+                var _value = "0";
+                if($(this).is(':checked') == true){
+                    $('#${AssId?replace(".","_")}').val("0");
+                }else{
+                    $('#${AssId?replace(".","_")}').val("1");
+                    _value = "1";
+                }
+                if(typeof switchCallback == 'function'){
+                    switchCallback("<#if name != "">${name}<#else>${AssId}</#if>", this, e,_value);
+                }
+            });
+        })
     </script>
     </@compress>
 </#macro>
@@ -857,6 +865,7 @@
         fileListUrl = "sys/comm/fileList" <#-- 回显查询路径-->
         downloadUrl = "sys/comm/download" <#--文件下载路径 -->
         isLazy = true <#-- -->
+        readonly = false
         preview = ""
         maxUploadNum = "300"
         >
@@ -902,7 +911,7 @@
                 id: '<#if id == "">${name}<#else>${id}</#if>',
                 bizId: '${bizId}',
                 bizType: '${bizType}',
-                readonly: false,
+                readonly: ${readonly?string('true','false')},
                 returnPath: false,
                 filePathInputId: '',
                 fileNameInputId: '',
@@ -971,54 +980,56 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
         <p style="width: ${width}px;text-align: center;"><a href="javascript:" id="<#if id == "">${Assname}<#else>${AssId}</#if>_but"><@ctx.i18n text = "${tipHelp}"/></a></p>
     </div>
     <script type="text/javascript">
-        $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").click(function(){
-            var var_${AssId?replace(".","_")}_inpt =  $("#${AssId?replace(".","_")}_img").attr("src");
-            var options = {
-                title: "<li class='fa fa-fw fa icon-crop'></li>"+<#if boxTitle =="">"<@ctx.i18n text = "图片剪切"/>" <#else>"${boxTitle}"</#if>,
-                url: baseURL + "sys/component/cropperImg",
-                width: $(top.window).width() - 350,
-                height: $(top.window).height() - 160,
-                <#-- POST提交组件控制类参数-->
-                fromData:{
-                    imgValue: var_${AssId?replace(".","_")}_inpt,
-                    imageDefault: "${imageDefault}",
-                    ratio: "${ratio}",
-                    viewMode: "${viewMode}"
-                },
-                callBack: func_${AssId?replace(".","_")}doSubmit,
-                cancel:  func_${AssId?replace(".","_")}cancel
-                <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+        $(function(){
+            $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").click(function(){
+                var var_${AssId?replace(".","_")}_inpt =  $("#${AssId?replace(".","_")}_img").attr("src");
+                var options = {
+                    title: "<li class='fa fa-fw fa icon-crop'></li>"+<#if boxTitle =="">"<@ctx.i18n text = "图片剪切"/>" <#else>"${boxTitle}"</#if>,
+                    url: baseURL + "sys/component/cropperImg",
+                    width: $(top.window).width() - 350,
+                    height: $(top.window).height() - 160,
+                    <#-- POST提交组件控制类参数-->
+                    fromData:{
+                        imgValue: var_${AssId?replace(".","_")}_inpt,
+                        imageDefault: "${imageDefault}",
+                        ratio: "${ratio}",
+                        viewMode: "${viewMode}"
+                    },
+                    callBack: func_${AssId?replace(".","_")}doSubmit,
+                    cancel:  func_${AssId?replace(".","_")}cancel
+                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                };
+                opt.modal.openMainWin(options);
+            });
+
+            function func_${AssId?replace(".","_")}doSubmit(index, layero,_layer) {
+                var body = _layer.getChildFrame('body', index);
+                var imageBase64 = body.find('#imageBase64').val();
+                $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src",imageBase64);
+                $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(imageBase64).change();
+                if(typeof iconCallback == 'function'){
+                    imageclipCallback('${Assname?replace(".","_")}', 'ok', index, layero, icon);
+                }
+                _layer.close(index);
             };
-            opt.modal.openMainWin(options);
-        });
+            <#if isClear>
+            function func_${AssId?replace(".","_")}clear(index, layero,_layer) {
+                $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src","${imageDefault}");
+                var temp = opt.common.nullToStr($("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(),"");
+                $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val("").change();
+                if(typeof iconCallback == 'function'){
+                    imageclipCallback('${Assname?replace(".","_")}', 'clear', index, layero, temp);
+                }
+                _layer.close(index);
+            };
+            </#if>
 
-        function func_${AssId?replace(".","_")}doSubmit(index, layero,_layer) {
-            var body = _layer.getChildFrame('body', index);
-            var imageBase64 = body.find('#imageBase64').val();
-            $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src",imageBase64);
-            $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(imageBase64).change();
-            if(typeof iconCallback == 'function'){
-                imageclipCallback('${Assname?replace(".","_")}', 'ok', index, layero, icon);
+            function func_${AssId?replace(".","_")}cancel(index, layero) {
+                if(typeof iconCallback == 'function'){
+                    imageclipCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+                }
             }
-            _layer.close(index);
-        };
-        <#if isClear>
-        function func_${AssId?replace(".","_")}clear(index, layero,_layer) {
-            $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src","${imageDefault}");
-            var temp = opt.common.nullToStr($("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(),"");
-            $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val("").change();
-            if(typeof iconCallback == 'function'){
-                imageclipCallback('${Assname?replace(".","_")}', 'clear', index, layero, temp);
-            }
-            _layer.close(index);
-        };
-        </#if>
-
-        function func_${AssId?replace(".","_")}cancel(index, layero) {
-            if(typeof iconCallback == 'function'){
-                imageclipCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
-            }
-        }
+        })
     </script>
 </#macro>
 

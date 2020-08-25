@@ -3443,12 +3443,25 @@ if (typeof jQuery === "undefined") {
                 $.each(values ,function(index, value){
 	                $.each(datas, function(index, dict) {
 	                    if (dict.dictValue == ('' + value)) {
-	                        var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
-	                        if(!opt.common.isEmpty(dict.cssClass)){
-	                            listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
-	                        }
-	                        actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
-	                        return false;
+	                        // var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
+	                        // if(!opt.common.isEmpty(dict.cssClass)){
+	                        //     listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
+	                        // }
+	                        // actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
+	                        // return false;
+                            var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
+                            if(!opt.common.isEmpty(dict.cssClass)){
+                                listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
+                            }
+                            if(!opt.common.isEmpty(dict.cssStyle)){
+                                listClass = dict.cssStyle;
+                            }
+                            if(!opt.common.isEmpty(dict.cssStyle)){
+                                actions.push(opt.common.sprintf("<span style='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
+                            }else{
+                                actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
+                            }
+                            return false;
 	                    }
 	                    //兼容客户端数据为空 -- 则匹配字典默认值
 	                    if (opt.common.isEmpty(value) && dict.isDefault === "Y") {

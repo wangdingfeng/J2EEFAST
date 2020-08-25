@@ -7,7 +7,7 @@ ${pageTheme}
 #break
 #end
 #end
-<@header title="新增${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end#if($table.master),"table"#end]/>
+<@header title="新增${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile || $table.rImg),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end#if($table.master),"table"#end]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-${businessName}-add"  class="form-horizontal">
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw ${table.menuIcon}"></i></h4>######
