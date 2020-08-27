@@ -173,6 +173,8 @@ public class FileUploadUtils {
     	if (imgBase64.equals(StrUtil.EMPTY)) {
             return null;
         }
+    	
+    	
 
         String extension = null;
         String type = StrUtil.subBetween(imgBase64, "data:", ";base64,");
@@ -183,12 +185,10 @@ public class FileUploadUtils {
         } else {
             extension = "png";
         }
-        String saveName = String.valueOf(bizId)+ "." + extension; ;
-        if (StringUtils.isNotBlank(fileName)) {
-        	//String saveName = IdUtil.fastSimpleUUID() + "." + extension; 
+        String saveName = IdUtil.fastSimpleUUID() + "." + extension ;
+        if (StringUtils.isNotBlank(fileName)) {     	
         	saveName = fileName + "." + extension; 
-        }
-        
+        }        
 
         String imageUrl = File.separator + "avatar"
                 + File.separator +

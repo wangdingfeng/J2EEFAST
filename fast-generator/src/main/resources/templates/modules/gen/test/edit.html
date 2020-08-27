@@ -139,7 +139,7 @@
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@f.input name="addrinfo" value="${exampleTest.addrinfo?default('')}"   />
+                <@f.input name="addrinfo" value="${exampleTest.addrinfo?default('')}" />
                 </div>
              </div>
         </div>
@@ -150,7 +150,7 @@
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "备注信息"/>：    
                </label>
                 <div class="col-sm-10">
-                 <@f.ueditor name="remark"  value="${exampleTest.remark?default('')}" height=200/>
+                 <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
                 </div>
              </div>
              </div>
