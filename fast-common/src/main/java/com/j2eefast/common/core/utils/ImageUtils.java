@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
 package com.j2eefast.common.core.utils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,19 +9,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
+
 /**
- * <p>图片压缩</p>
- *
- * @author: zhouzhou
- * @date: 2019-03-30 15:43
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
+ * 图片处理工具类
+ * @author ThinkGem
+ * @version 2018年12月31日
+ * J2eeFAST二次修改
  */
 public class ImageUtils {
     private static Logger                   LOG                     = LoggerFactory.getLogger(ImageUtils.class);

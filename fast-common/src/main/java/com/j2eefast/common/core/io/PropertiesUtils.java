@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
 package com.j2eefast.common.core.io;
 
 import java.io.IOException;
@@ -23,8 +26,9 @@ import org.springframework.core.io.Resource;
 /**
  * Properties工具类， 可载入多个properties、yml文件，
  * 相同的属性在最后载入的文件中的值将会覆盖之前的值，
- * @author zhouzhou
- * @version 2018-08-02
+ * @author ThinkGem
+ * @version 2017-12-30
+ * J2eeFAST 二次修改
  */
 @Slf4j
 public class PropertiesUtils {
@@ -115,6 +119,7 @@ public class PropertiesUtils {
 	        			}
         			}
         			else if (location.endsWith(".yml")){
+        				//J2eeFAST 修改适配问题
 						YamlParsing bean = new YamlParsing();
         				bean.setResources(resource);
         				for (Map.Entry<Object,Object> entry : bean.getObject().entrySet()){

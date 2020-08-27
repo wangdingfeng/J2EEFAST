@@ -61,12 +61,6 @@ public class SystemController extends BaseController {
 		return "skin";
 	}
 
-	//便签
-	@GetMapping("/sys/note")
-	public String note(ModelMap mmap){
-		return "note";
-	}
-
 	// 浏览器版本过低
 	@GetMapping("upbw/index")
 	public String upbw(ModelMap mmap){

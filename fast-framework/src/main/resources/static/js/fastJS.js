@@ -1,6 +1,5 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- * fastJS 封装常用方法
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-02-20
  *       2020-05-17 修复导出报表问题
@@ -313,7 +312,8 @@ if (typeof jQuery === "undefined") {
                 $.unblockUI();
             }
         },
-
+        /*****************************************************/
+        //借鉴 jeesite
         //模板引擎调用
         template: function (id, data, callback) {
             var tpl = String($("#" + id).html()).replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g, ""),
@@ -325,20 +325,6 @@ if (typeof jQuery === "undefined") {
                 return null
             }
             return laytpl(tpl).render(data || [])
-        },
-
-        //获取系统cookie
-        getCookie: function(name){
-            if (document.cookie.length>0){
-                var c_start=document.cookie.indexOf(name + "=")
-                if (c_start!=-1){
-                    c_start=c_start + name.length+1
-                    var c_end=document.cookie.indexOf(";",c_start)
-                    if (c_end==-1) c_end=document.cookie.length
-                    return unescape(document.cookie.substring(c_start,c_end))
-                }
-            }
-            return ""
         },
 
         layer: function () {
@@ -358,6 +344,20 @@ if (typeof jQuery === "undefined") {
             }
             return null
         }(),
+        /******************************************************/
+        //获取系统cookie
+        getCookie: function(name){
+            if (document.cookie.length>0){
+                var c_start=document.cookie.indexOf(name + "=")
+                if (c_start!=-1){
+                    c_start=c_start + name.length+1
+                    var c_end=document.cookie.indexOf(";",c_start)
+                    if (c_end==-1) c_end=document.cookie.length
+                    return unescape(document.cookie.substring(c_start,c_end))
+                }
+            }
+            return ""
+        },
 
         selfLayer:function(){
             if (window.layer) {
@@ -1323,7 +1323,6 @@ if (typeof jQuery === "undefined") {
             },
             // 弹出层指定参数选项
             openOptions: function (options) {
-                console.log("--->>>>:"+options.btn);
                 var _btn = opt.common.isEmpty(options.btn) ? [] : options.btn;
                 var _url = opt.common.isEmpty(options.url) ? "/404.html" : options.url;
                 var _title = opt.common.isEmpty(options.title) ? $.i18n.prop("系统窗口") : $.i18n.prop(options.title);
