@@ -1323,17 +1323,22 @@ if (typeof jQuery === "undefined") {
             },
             // 弹出层指定参数选项
             openOptions: function (options) {
+                console.log("--->>>>:"+options.btn);
+                var _btn = opt.common.isEmpty(options.btn) ? [] : options.btn;
                 var _url = opt.common.isEmpty(options.url) ? "/404.html" : options.url;
                 var _title = opt.common.isEmpty(options.title) ? $.i18n.prop("系统窗口") : $.i18n.prop(options.title);
                 var _width = opt.common.isEmpty(options.width) ? "800" : options.width;
                 var _height = opt.common.isEmpty(options.height) ? ($(window).height() - 50) : options.height;
                 var _framData = opt.common.isEmpty(options.fromData) ? {} : options.fromData;
                 var _type = opt.common.isEmpty(options.type) ? 2 : options.type;
-                var _btn = [];
                 if(options.clear){
-                    _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
+                    if(_btn.length == 0){
+                        _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
+                    }
                 }else{
-                    _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
+                    if(_btn.length == 0){
+                        _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
+                    }
                 }
                 var _sf;
                 if(opt.common.isNotEmpty(options.main) && options.main){
@@ -1347,7 +1352,7 @@ if (typeof jQuery === "undefined") {
                     options.yes = function(index, layero) {
                         var iframeWin = layero.find('iframe')[0];
                         if(typeof iframeWin.contentWindow.submitHandler == 'function'){
-                             if(iframeWin.contentWindow.submitHandler(index, layero)){
+                             if(iframeWin.contentWindow.submitHandler(index, layero,_sf)){
                             	 options.callBack(index, layero,_sf);
                              }
                              return;
@@ -1368,7 +1373,7 @@ if (typeof jQuery === "undefined") {
                     fromData: _framData,
                     shadeClose: opt.common.isEmpty(options.shadeClose) ? true : options.shadeClose,
                     skin: options.skin,
-                    btn: opt.common.isEmpty(options.btn) ? _btn : options.btn,
+                    btn: _btn,
                     yes: options.yes,
                     //取消或者清除
                     btn2: function(index, layero){
