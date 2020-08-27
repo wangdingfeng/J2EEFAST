@@ -648,7 +648,7 @@ $.extend( $.validator, {
 			.not( ":submit, :reset, :image, :disabled" )
 			.not( this.settings.ignore )
 			.filter( function() {
-				var name = this.name || $( this ).attr( "name" ); // For contenteditable
+				var name = this.name || $( this ).attr( "name" ) || this.id; // For contenteditable
 				var isContentEditable = typeof $( this ).attr( "contenteditable" ) !== "undefined" && $( this ).attr( "contenteditable" ) !== "false";
 
 				if ( !name && validator.settings.debug && window.console ) {
@@ -667,9 +667,9 @@ $.extend( $.validator, {
 				}
 
 				// Select only the first element for each name, and only those with rules specified
-				if ( name in rulesCache || !validator.objectLength( $( this ).rules() ) ) {
-					return false;
-				}
+				 if ( name in rulesCache || !validator.objectLength( $( this ).rules() ) ) {
+				 	return false;
+				 }
 
 				rulesCache[ name ] = true;
 				return true;

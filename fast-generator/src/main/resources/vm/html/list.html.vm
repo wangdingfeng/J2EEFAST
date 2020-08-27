@@ -164,6 +164,8 @@ columns: [
              ,{field : 'company.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #elseif(${c.htmlType} == "dept")
              ,{field : 'organization.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+#elseif(${c.htmlType} == "user")
+             ,{field : 'sysUser.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #else###是否是系统实体业关联字段
              ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end}
 #end##是否是系统实体业关联字段

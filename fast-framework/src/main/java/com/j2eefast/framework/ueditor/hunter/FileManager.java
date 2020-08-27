@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class FileManager {
-	public static final String FILEUEDITOR_BASE_URL = "/fileUeditor/";
+	public static final String FILEUEDITOR_BASE_URL = "editor";
 	private String dir = null;
 	private String rootPath = null;
 	private String[] allowFiles = null;
@@ -105,7 +105,7 @@ public class FileManager {
 
 			int index = url.indexOf(FILEUEDITOR_BASE_URL);
 			if(index >= 0) {
-				url = url.substring(index);
+				url = url.substring(index-1);
 			}
 			fileState.putInfo( "url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + url );
 			fileState.putInfo("name",  FileUtil.getName(file));
@@ -115,12 +115,13 @@ public class FileManager {
 		return state;
 		
 	}
+
 	
 	private String getPath ( File file ) {
 		
-		String path = file.getAbsolutePath();
+		String path = FileUtil.normalize(file.getAbsolutePath());
 		
-		return path.replace( this.rootPath, "/" );
+		return path.replace(  FileUtil.normalize(this.rootPath), "/" );
 		
 	}
 	

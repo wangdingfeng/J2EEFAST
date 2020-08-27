@@ -52,7 +52,7 @@ import ${import};
 #foreach ($column in $columns)##
 #if($column.htmlType == 'comp')##
 import com.j2eefast.framework.sys.entity.SysCompEntity;
-#elseif($column.htmlType == 'SysUserEntity')##
+#elseif($column.htmlType == 'user')##
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 #elseif($column.htmlType == 'dept')##
 import com.j2eefast.framework.sys.entity.SysDeptEntity;
@@ -128,6 +128,11 @@ public class ${ClassName}Entity ${Entity}{
     @TableField(exist=false)
     private SysDeptEntity organization;####
 #end##
+#if($column.htmlType == "user")####
+
+    @TableField(exist=false)
+    private SysUserEntity sysUser;####
+#end##
 #end
 #end
 #end
@@ -179,6 +184,12 @@ public class ${ClassName}Entity ${Entity}{
 
     @TableField(exist=false)
     private SysCompEntity company;###
+####
+#end####
+#if($column.htmlType == "comp")##
+
+    @TableField(exist=false)
+    private SysUserEntity sysUser;###
 ####
 #end####
 #if($column.htmlType == "dept")##

@@ -1338,6 +1338,7 @@ if (typeof jQuery === "undefined") {
                 var _sf;
                 if(opt.common.isNotEmpty(options.main) && options.main){
                 	_sf = opt.layer;
+                    _height = opt.common.isEmpty(options.height) ? ($(top.window).height() - 220) : options.height;
                 }else{
                 	_sf = opt.selfLayer;
                 }
