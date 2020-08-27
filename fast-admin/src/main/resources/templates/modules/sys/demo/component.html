@@ -417,17 +417,21 @@
                                 //百度富文本组件标签:<@f.ueditor/>
                                 //参数: 1. name 控件name 必输
                                        2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. value 控件值 不是必输 默认""
-                                       4. readonly 控件是否可以编辑 不是必输 默认"false"
-                                       5. maxlength 最大输入长度默认不限 不是必输
-                                       6. height 控件高度 不是必输 默认"300"
-                                       7. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
+                                       3. bizType 用于关联文件数据库
+                                       4. bizId 用于关联文件数据库，管理物理文件
+                                       5. value 控件值 不是必输 默认""
+                                       6. readonly 控件是否可以编辑 不是必输 默认"false"
+                                       7. maxlength 最大输入长度默认不限 不是必输
+                                       8. height 控件高度 不是必输 默认"300"
+                                       9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
                                 //回调函数
                                 //webuploaderRefresh(html);
 
                                 //栗子 🌰
-                                <@f.ueditor name="noticeContent"/>
-
+                                <@f.ueditor name="noticeContent"  value="${noticeContent?html}  />
+                                //bizType和bizId 如果需要富文件上传的文件，被系统数库记录，请使用两个参数与实体类  
+                                //由于新增实体时没有id(bizId) 因此需要在打面新增页面前产生id到端，${exampleTest.id} 提交前产生id
+                                <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
                             </#noparse>
                         </@f.code>
                         </div>

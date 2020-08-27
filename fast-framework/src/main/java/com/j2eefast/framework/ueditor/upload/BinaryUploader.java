@@ -7,8 +7,11 @@ import com.j2eefast.common.core.utils.ImageUtils;
 import com.j2eefast.common.core.utils.Md5Util;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
+import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
 import com.j2eefast.framework.sys.entity.SysFilesEntity;
 import com.j2eefast.framework.sys.service.SysFileService;
+import com.j2eefast.framework.sys.service.SysFileUploadService;
 import com.j2eefast.framework.ueditor.PathFormat;
 import com.j2eefast.framework.ueditor.define.*;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +36,7 @@ import java.util.Map;
 @Slf4j
 public class BinaryUploader {
 	public static final String FILEUEDITOR_BASE_URL = "editor";
-
+	
 	/**
 	 * 保存文件
 	 * @param request
@@ -44,6 +47,7 @@ public class BinaryUploader {
                                    Map<String, Object> conf) {
 		FileItemStream fileStream = null; //原始上传
 		MultipartFile fileStream2 = null; // Spring MVC 上传
+		
 		boolean isAjaxUpload = request.getHeader( "X_Requested_With" ) != null;
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			return new BaseState(false, AppInfo.NOT_MULTIPART_CONTENT);
@@ -135,6 +139,17 @@ public class BinaryUploader {
 				sysFile.setClassify("2");
 				sysFile.setFileSize(new BigDecimal(storageState.getLong("size")));
 				SpringUtil.getBean(SysFileService.class).save(sysFile);
+				
+				String bizId = request.getParameter("bizId");
+				String bizType = request.getParameter("bizType");
+
+                SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
+                sysFileUploadEntity.setBizId(Long.parseLong(bizId));
+                sysFileUploadEntity.setFileName(sysFile.getFileName());
+                sysFileUploadEntity.setFileId(sysFile.getId());
+                sysFileUploadEntity.setBizType(bizType);
+                SpringUtil.getBean(SysFileUploadService.class).saveSysFileUpload(sysFileUploadEntity);
+				
 				//解决返回路径问题 j2eefast
 				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + PathFormat.format(savePath) );
 				storageState.putInfo("type", suffix);

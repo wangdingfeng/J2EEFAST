@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="新增单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage","table"]/>
+<@header title="新增单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","ueditor","selectPage","table"]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-test-add"  class="form-horizontal">
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa fa-star"></i></h4>                                                                                                                                        
@@ -135,25 +135,29 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：                
+                <label class="col-sm-2 control-label"><@ctx.i18n text = "地址详情"/>：                
                </label>
-                <div class="col-sm-8">
+                <div class="col-sm-10">
                     <@f.input name="addrinfo"  />
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+ 
+    </div>
+  <div class="row">
+        <div class="col-sm-12">
                 <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "备注信息"/>：        
+                <label class="col-sm-2 control-label"><@ctx.i18n text = "备注信息"/>：        
                </label>
-                <div class="col-sm-8">
-                    <@f.input name="remark"  />
+                <div class="col-sm-10">
+                     <@f.ueditor name="remark"  height=200 type=content/>
                 </div>
             </div>    
         </div>
-    </div><h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
+    </div>
+    <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
    <div class="row">
        <div class="col-xs-12">
             <div class="form-group">

@@ -566,11 +566,13 @@
 
 <#macro ueditor name
                 id = ""
+                bizType=""
+                bizId=""
                 value = ""
                 readonly = "false" 	<#-- 是否只读模式 -->
                 maxlength =  10000 <#-- 最大输入长度默认不限-->
                 height = 300 <#-- 高度-->
-                type = "html" <#--获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)-->
+                type = "content" <#--获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)-->
 >
     <#local  Assname="${id}"/>
     <#if name != "">
@@ -585,7 +587,11 @@
     <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
     <script id="${AssId?replace(".","_")}ContentUE" type="text/plain" style="width:100%;height:${height}px;"></script>
     <script type="text/javascript">
+    
+  
         $(function() {
+            window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}" ;
+            
             var remarksUE = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
                 maximumWords: ${maxlength},
                 readonly: ${readonly}, initialFrameHeight: ${height},
