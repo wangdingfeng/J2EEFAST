@@ -360,6 +360,7 @@
         config.type == 4 ? that.tips() : that.offset();
         if(config.fixed){
             win.on('resize', function(){
+                //坐标更新
                 that.offset();
                 (/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) && that.auto(times);
                 config.type == 4 && that.tips();
@@ -434,10 +435,14 @@
         var type = typeof config.offset === 'object';
         that.offsetTop = (win.height() - area[1])/2;
         that.offsetLeft = (win.width() - area[0])/2;
-
         if(type){
-            that.offsetTop = config.offset[0];
-            that.offsetLeft = config.offset[1]||that.offsetLeft;
+            if(config.outLeft != null && config.outLeft != undefined && config.outLeft){
+                that.offsetTop = config.offset[0];
+                that.offsetLeft = $(top.window).innerWidth() - layero.innerWidth();
+            }else{
+                that.offsetTop = config.offset[0];
+                that.offsetLeft = config.offset[1]||that.offsetLeft;
+            }
         } else if(config.offset !== 'auto'){
 
             if(config.offset === 't'){ //上

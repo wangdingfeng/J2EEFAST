@@ -1184,6 +1184,10 @@ if (typeof jQuery === "undefined") {
              * @param editFun 修改方法
              */
             popupRight: function(title, url, isEdit,editFun,id){
+                var width = 150;
+                if($(top.window).outerWidth() < 400){
+                    width = 50;
+                }
                 opt.layer.open({
                     type: 2,
                     shade: false,
@@ -1194,9 +1198,10 @@ if (typeof jQuery === "undefined") {
                     move: false,
                     title: title,
                     shadeClose: true,
+                    outLeft: true,
                     skin:'layui-anim layui-anim-rl',
-                    offset: [50 +'px', ($(top.window).outerWidth() - (($(window).width()-300))) + 'px'],
-                    area: [($(window).width()-300) + 'px', '100%'],
+                    offset: [50 +'px', ($(top.window).outerWidth() -($(window).outerWidth()-width))  + 'px'],
+                    area: [($(window).outerWidth()-width) + 'px', '100%'],
                     success: function(layero, index){
                         if(opt.common.isNotEmpty(isEdit) && isEdit){
                             var update = $('<div id="'+index+'" class="layui-right-update"><i class="fa fa-mail-reply-all"></i> 修改</div>').on('click',function(){
@@ -3805,7 +3810,7 @@ if (typeof jQuery === "undefined") {
                         for(var i=0; i<list.length; i++){
                             for(var key  in list[i]){
                                 if(key == "title"){
-                                    list[i][key] = opt.common.hideStr(list[i][key],options.displayLen,0);
+                                    list[i][key] = opt.common.subString(list[i][key],options.displayLen,true);
                                 }
                             }
                         }

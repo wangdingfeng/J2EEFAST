@@ -8,7 +8,7 @@
 		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>上级公司：</label>
 		<div class="col-sm-8">
 			<@f.treeselect id="parentId" name="parentId" boxTitle="选择上级公司" url="sys/comp/treeData?type=0"
-			expandLevel=true value="${comp.id}" labelValue="${comp.name?default('总公司')}" isparentids=true
+			expandLevel=true value="${comp.id}" labelValue="${comp.name?default('总公司')}" isParentIds=true
 			parenIdsValue="${comp.id}${(comp.parentIds == '1')?string('',',${comp.parentIds}')}"
 			placeholder="请选择上级公司" required=true/>
 		</div>

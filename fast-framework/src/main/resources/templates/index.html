@@ -23,8 +23,8 @@
 <!-- animate 样式-->
 <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
 <#-- Theme style -->
-<#--<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.css?V=${config.getDvVersion()}"/>-->
-<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}"/>
+<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.css?V=${config.getDvVersion()}"/>
+<#--<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}"/>-->
 <#-- 皮肤样式 -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.css?V=${config.getDvVersion()}"/>
 <#--<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.min.css?V=${config.getDvVersion()}"/>-->
@@ -86,10 +86,12 @@
 	</div>
 	<!-- 底部-->
 	<footer class="main-footer" style="bottom: 0px;position: fixed;width: 100%;left: 0px;">
-		<div style="position: fixed;right: 10px;">
+		<div style="position: fixed;right: 10px;" class="hidden-xs">
 			<b>Version</b> ${config.getVersion()}
 		</div>
-		<strong>Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()} .</strong> All rights reserved.
+		<div class="pull-left">
+			<strong>Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()} .</strong> All rights reserved.
+		</div>
 	</footer>
 	 <#--右侧工具类-->
 	<#include "/common/index/rightControl.html"/>

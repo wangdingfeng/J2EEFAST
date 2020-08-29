@@ -14,7 +14,7 @@
             <ul class="nav navbar-nav" id="topMenu">
                 <#if modules?? && (modules?size > 0)>
                     <#list modules as c>
-                            <li class="treeview"><a href="javascript:" class="addTabPage" title="${c['moduleName']}" data-code="${c['moduleCode']}"><i class="fa-fw ${c['icon']}"></i> <span><@ctx.i18n text = "${c['moduleName']}"/></span></a></li>
+                            <li class="treeview"><a href="javascript:" class="addTabPage" title="${c['moduleName']}" data-code="${c['moduleCode']}"><i class="fa-fw ${c['icon']}"></i> <span class="hidden-xs"><@ctx.i18n text = "${c['moduleName']}"/></span></a></li>
                     </#list>
                 </#if>
             </ul>
@@ -46,7 +46,7 @@
             </script>
         </div>
         <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" id="top-navbar-menu">
                 <!-- Messages: style can be found in dropdown.less-->
                 <li class="dropdown messages-menu">
                     <a href="#" id="fullScreen" data-toggle="tooltip"
@@ -54,7 +54,7 @@
 <#--                       data-custom-class="tooltip-primary"-->
                        title="<@ctx.i18n text = "全屏显示"/>" class="dropdown-toggle">
                         <i class="fa icon-size-fullscreen"></i>
-                        <@ctx.i18n text = "全屏显示"/>
+                        <span class="hidden-xs"><@ctx.i18n text = "全屏显示"/></span>
                     </a>
                 </li>
                 <li class="dropdown messages-menu">
@@ -63,7 +63,7 @@
 <#--                       data-custom-class="tooltip-primary"-->
                        title="<@ctx.i18n text = "锁屏"/>" class="dropdown-toggle">
                         <i class="fa fa-lock"></i>
-                        <@ctx.i18n text = "锁屏"/>
+                        <span class="hidden-xs"><@ctx.i18n text = "锁屏"/></span>
                     </a>
                 </li>
                 <li class="dropdown messages-menu">
@@ -71,31 +71,10 @@
                        data-placement="bottom"
                        title="<@ctx.i18n text = "便签"/>" class="dropdown-toggle">
                         <i class="fa fa-tags"></i>
-                        <@ctx.i18n text = "便签"/>
+                        <sapn class="hidden-xs"><@ctx.i18n text = "便签"/></sapn>
 <#--                        <span data-index="_new" class="label label-danger"><@ctx.i18n text = "新"/></span>-->
                     </a>
                 </li>
-               <#-- <li class="dropdown messages-menu">
-                    <a href="#" id="switchSkin" class="dropdown-toggle" data-toggle="dropdown" data-original-title="切换主题">
-                        <i class="fa fa-dashboard jump5"></i>
-                    </a>
-                </li>-->
-
-<#--                <li class="dropdown messages-menu">-->
-<#--                    <a href="javascript:;" class="dropdown-toggle" >-->
-<#--                        <i class="fa fa-refresh"></i>-->
-<#--                        <span class="label label-success">4</span>-->
-<#--                    </a>-->
-<#--                    <ul class="dropdown-menu">-->
-<#--                        <li class="mt5"></li>-->
-<#--                        <li><a href="javascript:;" class="refresh" tag="1"><i class="fa fa-refresh text-green" aria-hidden="true"></i>&nbsp;刷新当前</a></li>-->
-<#--                        <li><a href="javascript:;" class="closePageOther"><i class="fa fa-ban text-yellow" aria-hidden="true"></i>&nbsp;关闭其他</a></li>-->
-<#--                        <li><a href="javascript:;" class="closePageAll"><i class="fa fa-times text-red" aria-hidden="true"></i>&nbsp;关闭全部</a></li>-->
-<#--                        <li class="mt10"></li>-->
-<#--                        &lt;#&ndash; <li class="footer"><a href="#">关闭</a></li>&ndash;&gt;-->
-<#--                    </ul>-->
-<#--                </li>-->
-
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li class="dropdown messages-menu">
                     <a href="#" data-toggle="control-sidebar">
@@ -107,7 +86,7 @@
                 <li class="dropdown tasks-menu">
                     <a href="javascript:void(0);" class="dropdown-toggle">
                         <i class="fa fa-language"></i>
-                        <@ctx.i18n text = "中文(简体)"/>
+                        <sapn class="hidden-xs"><@ctx.i18n text = "中文(简体)"/></sapn>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="mt5"></li>
@@ -123,7 +102,8 @@
                 </li>
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
-                    <a href="javascript:void(0);" class="dropdown-toggle">
+<#--                    <a href="javascript:void(0);" class="dropdown-toggle">-->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="${ctxStatic}<#if user.avatar?? && user.avatar!="">${user.avatar}<#else>/static/img/user2-160x160.jpg</#if>"
                            onerror="imgUserError();"  class="user-image" alt="User Image"/>
                         <span class="hidden-xs">${user.name}</span>

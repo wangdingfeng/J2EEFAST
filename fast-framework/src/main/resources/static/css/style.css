@@ -96,7 +96,8 @@ a:focus {
 }
 
 .navbar {
-    border: 0;
+    /*border: 0;*/
+    position: static;
 }
 
 .navbar-default {

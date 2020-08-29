@@ -527,22 +527,30 @@ $(function () {
 
     //主题
     $('#switchSkin').on('click', function () {
+        var area = ['autopx','autopx'];
+        if($(window).width() > 530){
+            area = ["530px", "386px"];
+        }
         opt.layer.open({
             type : 2,
             shadeClose : true,
             title : '<i class="fa glyphicon glyphicon-th"></i> '+$.i18n.prop("切换主题"),
-            area : ["530px", "386px"],
+            area : area,
             content : ["sys/switchSkin", 'no']
         })
     });
 
     //修改密码
     $('#updatePassword').on('click', function () {
+        var area = ['autopx','autopx'];
+        if($(window).width() > 550){
+            area = ["550px", "280px"];
+        }
         opt.layer.open({
             type: 1,
             // skin: 'layui-layer-molv',
             title: '<i class="fa icon-lock-open"></i> '+$.i18n.prop('修改密码'),
-            area: ['550px', '280px'],
+            area: area,
             // 弹层外区域关闭
             shadeClose: true,
             content: jQuery("#passwordLayer"),
@@ -607,15 +615,17 @@ $(function () {
             anim:-1,
             closeBtn: 0,
             shade: 0.1,
+            outLeft: true,
             move: false,
             title: '<i class="fa fa-tags"></i> '+$.i18n.prop('本地便签'),
             shadeClose: true,
             skin:'layui-anim layui-anim-rl layui-layer-adminRight',
             offset: [50 +'px', ($(window).width()-336) + 'px'],
+            area: ['336px', ''],
             content: opt.template('noteTemp'),
             success: function(layero, index){
-               $(layero).css('height','');
-               $(layero).css('width','336');
+               // $(layero).css('height','');
+               // $(layero).css('width','336');
             }
         });
     });
@@ -723,6 +733,28 @@ $(function () {
     };
 
     Layout.prototype.fix = function () {
+
+        //Modify the adapter
+        if($(window).outerWidth() < 400){
+            //hide top navBar menu
+            $('#top-navbar-menu').children('li').each(function () {
+                if(!($(this).hasClass('tasks-menu') || $(this).hasClass('user-menu'))){
+                   if(!$(this).hasClass('hide')){
+                       $(this).addClass('hide');
+                   }
+                }
+            });
+        }else{
+            //show top navBar menu
+            $('#top-navbar-menu li').each(function () {
+                if(!($(this).hasClass('tasks-menu') || $(this).hasClass('user-menu'))){
+                    if($(this).hasClass('hide')){
+                        $(this).removeClass('hide');
+                    }
+                }
+            });
+        }
+
         // Remove overflow from .wrapper if layout-boxed exists
         $(Selector.layoutBoxed + ' > ' + Selector.wrapper).css('overflow', 'hidden');
 
