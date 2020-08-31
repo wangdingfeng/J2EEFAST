@@ -1,14 +1,17 @@
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@pageTheme mark="true">
 <@header  title="主页">
 </@header>
     <div class="row  border-bottom white-bg dashboard-header" xmlns="http://www.w3.org/1999/html">
         <div class="col-sm-8">
             <h2>J2eeFAST 开源平台</h2>
-            <p>
-                J2eeFAST 是一个致力于中小企业 Java EE 企业级快速开发平台，永久免费、真开源。基于经典技术(Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE)，
-                让初学者能够更快的入门并投入到团队开发中去。 在线代码生成功能，包括核心模块如：组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、内容管理、license认证,BPM工作流等。采用松耦合设计；界面无刷新，一键换肤；众多账号安全设置，密码策略；在线定时任务配置；支持多数据源；支持读写分离、分库分表.
+            <p class="pt5">
+            J2eeFAST 是一个 Java EE 企业级快速开发平台，<strong><mark>致力于打造中小企业最好用的开源免费的后台框架平台。</mark></strong>
+                系统基于（Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE）经典技术开发，
+                系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流等)，
+                <mark><strong>让你用最低的成本、最高的效率，开发项目，她也适合新手朋友练手</strong></mark>。同时具备，<mark><strong>面简洁美观、高效、安全、源码可控、版本迭代快、免费技术交流群</strong></mark>界等特点。她适用于所有Web应用，她会成为你快速开发项目的好帮手。
             </p>
+            </br>
             <p>
                 <b>当前版本：</b><span class="label label-warning">v${config.getVersion()}</span>
             </p>
@@ -43,7 +46,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v8" href="#v">v2.0.8<code class="pull-right">2020.08.10</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v8" aria-expanded="true">v2.0.8<code class="pull-right">2020.08.10</code></a>
                                         </h5>
                                     </div>
                                     <div id="v8" class="panel-collapse collapse in">
@@ -77,7 +80,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v7" href="#v">v2.0.7<code class="pull-right">2020.06.23</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v7">v2.0.7<code class="pull-right">2020.06.23</code></a>
                                         </h5>
                                     </div>
                                     <div id="v7" class="panel-collapse collapse">
@@ -117,7 +120,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v6" href="#v41">v2.0.6<code class="pull-right">2020.05.17</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v6">v2.0.6<code class="pull-right">2020.05.17</code></a>
                                         </h5>
                                     </div>
                                     <div id="v6" class="panel-collapse collapse">
@@ -144,7 +147,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v5" href="#v41">v2.0.5<code class="pull-right">2020.05.10</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v5">v2.0.5<code class="pull-right">2020.05.10</code></a>
                                         </h5>
                                     </div>
                                     <div id="v5" class="panel-collapse collapse">
@@ -173,7 +176,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v4" href="#v41">v2.0.4<code class="pull-right">2020.04.11</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v4">v2.0.4<code class="pull-right">2020.04.11</code></a>
                                         </h5>
                                     </div>
                                     <div id="v4" class="panel-collapse collapse">
@@ -203,7 +206,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v3" href="#v41">v2.0.3<code class="pull-right">2020.03.28</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v3">v2.0.3<code class="pull-right">2020.03.28</code></a>
                                         </h5>
                                     </div>
                                     <div id="v3" class="panel-collapse collapse">
@@ -230,7 +233,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v2" href="#v41">v2.0.2<code class="pull-right">2020.03.20</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v2">v2.0.2<code class="pull-right">2020.03.20</code></a>
                                         </h5>
                                     </div>
                                     <div id="v2" class="panel-collapse collapse">
@@ -255,7 +258,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#v0" href="#v00">v2.0.1<code class="pull-right">2020.03.01</code></a>
+                                            <a data-toggle="collapse" data-parent="#version" href="#v0">v2.0.1<code class="pull-right">2020.03.01</code></a>
                                         </h4>
                                     </div>
                                     <div id="v0" class="panel-collapse collapse">
@@ -283,22 +286,22 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你可能在本系统中看到众多优秀开源项目的影子，因为她本身集成了众多优秀的开源项目精华功能，在这种环境中成长的，但是她目前还有很多缺点，
                             希望大神们嘴下留情。如果你也喜欢开源、喜欢本项目,作者欢迎您的加入,J2eeFAST会因为您的加入而变的更加完善与丰富!
                         </p>
-                        <p class="mt10"><i class="fa fa-send-o"></i> ：如果本项目对你有帮助<ins><a href="https://gitee.com/zhouhuanOGP/J2EEFAST" target="_blank">请点击Star收藏</a></ins>(<a href="javascript:show()">点击查看</a>),<strong>本项目会长期维护</strong>,若你在使用中有<u>任何问题或建议</u>欢迎在<del><a href="https://gitee.com/zhouhuanOGP/J2EEFAST/issues" target="_blank">码云issue提交问题</a></del>作者会第一时间处理，让我们一起完善J2eeFAST
+                        <p class="mt10"><i class="fa fa-send-o"></i> ：如果本项目对你有帮助<ins><a href="https://gitee.com/zhouhuanOGP/J2EEFAST" target="_blank">请点击Star收藏</a></ins>(<a href="javascript:show()">点击查看</a>),<strong><mark>本项目会长期维护</mark></strong>,若你在使用中有<u>任何问题或建议</u>欢迎在<del><a href="https://gitee.com/zhouhuanOGP/J2EEFAST/issues" target="_blank">码云issue提交问题</a></del>作者会第一时间处理，让我们一起完善J2eeFAST
                         </p>
                         <p class="mt5"><i class="fa icon-cursor"></i> 官网：<a href="http://www.j2eefast.com" target="_blank">http://www.j2eefast.com</a>
                         </p>
-                        <p class="mt5"><i class="fa fa-book"></i> 关于文档：<a href="https://www.yuque.com/u1174484/j2eefast/tv3kee" target="_blank">语雀 文档</a>
+                        <p class="mt5"><i class="fa fa-book"></i> 项目文档：<a href="https://www.yuque.com/u1174484/j2eefast/tv3kee" target="_blank">语雀 文档</a>
                         </p>
-                        <p class="mt5"><i class="fa fa-cloud-upload"></i> 关于更新：项目现在会放缓更新优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
+                        <p class="mt5"><i class="fa fa-cloud-upload"></i> 关于更新：项目现在会放缓更新、优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
                         </p>
-                        <p class="mt5"><i class="fa fa-qq"></i> QQ群：<a href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank">805468934</a>
+                        <p class="mt5"><i class="fa fa-qq"></i> 官方技术交流QQ群：<a href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank">805468934</a>
                         </p>
                         <p class="mt5"><i class="fa fa-envelope-open-o"></i> <strong>免责声明：</strong>
                         <li style="color: red;"><strong>1. 本项目代码全部开源，无需任何费用。如果有人向你贩卖本系统都是骗子!</strong></li>
-                        <li>2. 不得将 J2eeFAST 于危害国家安全、荣誉和利益的行为，不能以任何形式用于非法为目的的行为,否则后果自负</li>
-                        <li>3. J2eeFAST 前身主要用于银行项目,本身很注重安全因素,可以从项目登陆可以看出.但是您也需了解使用本软件的风险，是软件皆有漏洞，任何人都无法保证100%没有漏洞，所以由软件漏洞造成的损失不予赔偿，也不承担任何因使用本软件而产生相关法律责任。请软件上线使用前进行足够的安全检测，以避免此问题发生。</li>
-                        <li>4. 新版本会增加项目启动证书认证,可以使用你的机器码在本系统中生成证书后启动。若你是大神则略过!</li>
+                        <li>2. 不得将 J2eeFAST于危害国家安全、荣誉和利益的行为，不能以任何形式用于非法为目的的行为,否则后果自负.</li>
+                        <li>3. J2eeFAST前身主要用于银行项目,本身很注重安全因素,可以从项目登陆可以看出。再者本身项目100%开源，但是您任需了解是软件皆有漏洞，任何人都无法保证软件100%没有漏洞。所以由本软件漏洞造成损失不予赔偿，同时也不承担任何因使用本软件而产生的相关法律责任。也请在软件上线前进行必要的安全检测，避免安全问题发生.</li>
                         </p>
+                        <p class="mt10"><i class="fa fa-heartbeat" style="color: red"></i><strong><mark><a href="https://www.yuque.com/u1174484/j2eefast/exlton" target="_blank">捐赠通道</a></mark></strong>
                         <p class="mt20">
                             <a class="btn btn-success btn-outline" href="https://gitee.com/zhouhuanOGP/J2EEFAST" target="_blank">
                                 <i class="fa fa-cloud"> </i> 访问码云
@@ -452,18 +455,6 @@
 <#--    </div>-->
 <@footer>
 <script type="text/javascript">
-
-    $(function() {
-        //更新日志点击事件
-        $('[data-toggle="collapse"]').each(function () {
-            $(this).on('click', function () {
-                var id = $(this).data("parent");
-                $(id).slideToggle();
-            });
-        });
-    });
-
-
     function show() {
         opt.modal.openView("collect.png","${ctxStatic}/static/img/collect.png",800,700);
     }
