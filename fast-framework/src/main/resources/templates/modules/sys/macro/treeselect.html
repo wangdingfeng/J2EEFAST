@@ -73,7 +73,6 @@
 			}
 			</#if>
 			$._tree.checkNode(treeNode, !treeNode.checked, null, true);
-			console.log($.tree.getParentIds(treeNode));
 			$("#parentIds").val($.tree.getParentIds(treeNode));
 			var treeId = treeNode.id;
 			var treeName = treeNode.name;

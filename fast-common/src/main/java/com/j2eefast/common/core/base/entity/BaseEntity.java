@@ -37,8 +37,4 @@ public class BaseEntity implements Serializable {
     /** 备注 */
     private String remark;
 
-    /** 权限字符*/
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @TableField(exist = false)
-    private String sql_filter;
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -38,6 +39,7 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -127,7 +129,10 @@ public class SysLoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("login")
-	public String login(ModelMap mmp) {
+	public String login(ModelMap mmp) throws IOException {
+		if(UserUtils.isLogin()){
+			UserUtils.logout();
+		}
 		String view = super.getPara("view");
 		if(ToolUtil.isEmpty(view)){
 			view = Global.getDbKey("SYS_LOGIN_DEFAULT_VIEW","Admin-LTE");
@@ -147,7 +152,9 @@ public class SysLoginController extends BaseController {
 		mmp.put("loginView",view);
 		return "login-" + view;
 	}
-	
+
+
+
 
 	/**
 	 * 登陆
@@ -186,6 +193,7 @@ public class SysLoginController extends BaseController {
 			}
 			return error(msg);
 		}
+
 		return success("登录成功!");
 	}
 

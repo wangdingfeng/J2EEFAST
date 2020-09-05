@@ -151,12 +151,12 @@
 	function searchPre() {
 		var data = {};
 		data.businessTypes = opt.common.join($('#businessTypes').selectpicker('val'));
-		$.table.search('operlog-form', 'bootstrap-table', data);
+		$.table.search('bootstrap-table','operlog-form', data);
 	}
 
 	function resetPre() {
 		$("#businessTypes").selectpicker('refresh');
-		$.table.search('operlog-form', 'bootstrap-table', {});
+		$.table.search('bootstrap-table','operlog-form', {});
 	}
 </script>
 </@footer>

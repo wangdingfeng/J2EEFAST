@@ -135,7 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end ##queryType
 #end ##isQuery 
 #end ##foreach 	 
-               <if test = "${className}Entity.sql_filter !=null and ${className}Entity.sql_filter!=''">
+               <if test = "sql_filter !=null and sql_filter!=''">
                    and ${sql_filter}
                </if>    
 		</where>

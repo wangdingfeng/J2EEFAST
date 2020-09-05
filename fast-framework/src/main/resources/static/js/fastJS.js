@@ -2190,7 +2190,7 @@ if (typeof jQuery === "undefined") {
         // 表单封装处理
         form: {
             // 表单重置
-            reset: function(formId, tableId,notName) {
+            reset: function(tableId,formId,notName) {
 
                 var notNames = opt.common.isEmpty(notName)?[]:notName.split(",");
                 opt.table.set(tableId);
@@ -3190,7 +3190,7 @@ if (typeof jQuery === "undefined") {
              * @param tableId 表格ID
              * @param data 附加数据
              */
-            search: function(formId, tableId, data) {
+            search: function(tableId, formId,data) {
                 opt.table.set(tableId);
                 // var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var currentId;
@@ -3874,7 +3874,7 @@ if (typeof jQuery === "undefined") {
                     // }
                     //回调方法
                     if(typeof(options.callBack) === "function"){
-                        callBack($._tree);
+                        options.callBack($._tree);
                     }
                 });
             },

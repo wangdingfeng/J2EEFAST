@@ -1074,9 +1074,9 @@ a:hover,a:active,a:focus {
     /*}*/
     .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
         position:absolute;
-        right:5%;
+        /*right:5%;*/
         left:auto;
-        border:1px solid #ddd;
+        /*border:1px solid #ddd;*/
         background:#fff
     }
 }.form-control {

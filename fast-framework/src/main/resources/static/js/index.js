@@ -249,8 +249,34 @@
                 }
             }
         }
-        return true;
+        return false;
     };
+
+    /***
+     * 查询左侧是否有菜单
+     * @param elem
+     * @param id
+     * @returns {boolean}
+     */
+    menu.prototype.queryMenu = function(elem,id){
+        var that = this;
+        //菜单
+        if(elem.find('ul').length > 0){
+            var $li = elem.children('ul').children('li');
+            for(let i=0; i<$li.length; i++){
+                if($($li[i]).hasClass("treeview")){
+                    that.queryMenu($($li[i]), id);
+                }else{
+                    var $a = $($li[i]).children('a');
+                    if( id != 0 && $a.data('id') == id){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
 
     menu.prototype.recursiveMenuCss = function(elem){
         var that = this;
@@ -298,24 +324,20 @@
 
                 //联动左侧菜单
                 $('#leftMenu-' + _module).removeClass('hide');
+                var flag = false;
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
-                    that.recursiveHideMenu($(this));
-                    that.recursiveShowMenu($(this), _id);
-                    // $(this).removeClass("menu-open");
-                    // if($(this).find('ul').length > 0){
-                    //     $(this).find('ul').css("display","none");
-                    //     $(this).find('ul').children('li').each(function () {
-                    //         var $a = $(this).children('a');
-                    //         if( _id != 0 && $a.data('id') == _id){
-                    //             $(this).parent('.treeview-menu').parent(".treeview").addClass("menu-open");
-                    //             $(this).parent('.treeview-menu').css("display","block");
-                    //             $(this).addClass("active");
-                    //         }else{
-                    //             $(this).removeClass("active");
-                    //         }
-                    //     });
-                    // }
+                    if(that.queryMenu($(this), _id)){
+                        flag = true;
+                    }
                 });
+                if(flag){
+                    $('#leftMenu-' + _module).children('.treeview').each(function (i) {
+                        that.recursiveHideMenu($(this));
+                        if(that.queryMenu($(this), _id)){
+                            that.recursiveShowMenu($(this), _id);
+                        }
+                    });
+                }
             }
             /*********************TAB刷新功能***************************/
             if($(this).attr("lay-id") === opt.variable._tabIndex +""){
