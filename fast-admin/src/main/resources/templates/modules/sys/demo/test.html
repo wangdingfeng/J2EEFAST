@@ -60,8 +60,13 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label class="col-sm-4 control-label"><span style="color: red; ">*</span>所属角色：</label>
+                        <label class="col-sm-4 control-label"><span style="color: red; ">*</span>多选用户：</label>
                         <div class="col-sm-8">
+                            <@f.tableselect name="selectuser" boxTitle="多选用户信息" value="1275317360751816706,1275318050307977218,1275318300099751938,1275318721723772930,1275319065379876866,1275319295974322177,1275319483807838210,1286597681510125569"
+                            labelValue = "司马懿,刘备,诸葛亮,孙权,张飞,赵云,关羽,游客用户"
+                            tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                   {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"/>
                         </div>
                     </div>
                 </div>

@@ -186,7 +186,7 @@ public class ${ClassName}Entity ${Entity}{
     private SysCompEntity company;###
 ####
 #end####
-#if($column.htmlType == "comp")##
+#if($column.htmlType == "user")##
 
     @TableField(exist=false)
     private SysUserEntity sysUser;###

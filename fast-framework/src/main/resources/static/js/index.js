@@ -265,7 +265,7 @@
             var $li = elem.children('ul').children('li');
             for(let i=0; i<$li.length; i++){
                 if($($li[i]).hasClass("treeview")){
-                    that.queryMenu($($li[i]), id);
+                    return that.queryMenu($($li[i]), id);
                 }else{
                     var $a = $($li[i]).children('a');
                     if( id != 0 && $a.data('id') == id){
@@ -330,6 +330,7 @@
                         flag = true;
                     }
                 });
+                console.log("flag:"+ flag);
                 if(flag){
                     $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                         that.recursiveHideMenu($(this));

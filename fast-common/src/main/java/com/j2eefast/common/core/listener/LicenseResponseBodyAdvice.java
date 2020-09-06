@@ -60,7 +60,6 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
 
                        for (Object field : fieldsList) {
                            Field f = ((java.lang.reflect.Field)field);
-                           System.out.println("字段:" + f.getName() + " 类型:" + f.getType().getName());
                            if(f.isAnnotationPresent(JsonListFiledIgnore.class)){
                                for (Annotation anno : f.getDeclaredAnnotations()) {
                                    if(anno.annotationType().equals(JsonListFiledIgnore.class) ){

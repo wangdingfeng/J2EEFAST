@@ -34,11 +34,11 @@
 			<artifactId>fast-web</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.j2eefast</groupId>-->
-<!--			<artifactId>fast-flowable</artifactId>-->
-<!--			<version>3.2.0</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.j2eefast</groupId>
+			<artifactId>fast-flowable</artifactId>
+			<version>3.2.0</version>
+		</dependency>
 
 <!--		<dependency>-->
 <!--		  <groupId>p6spy</groupId>-->
@@ -115,7 +115,7 @@
 				</excludes>
 			</configuration>
 		</plugin>
-		<!-- 需要打成完整gz包放开注解
+		<!-- 需要打成完整gz包放开注解-->
 		<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -133,7 +133,7 @@
 						</goals>
 					</execution>
 				</executions>
-		 </plugin>-->
+		 </plugin>
 		</plugins>
     </build>
 </project>

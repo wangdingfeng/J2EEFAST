@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			
               <if test="email != null  and email != ''"> and a.email = #{email} </if>
-                                  <if test = "exampleTestEntity.sql_filter !=null and exampleTestEntity.sql_filter!=''">
+                                  <if test = "sql_filter !=null and sql_filter!=''">
                    and ${sql_filter}
                </if>    
 		</where>

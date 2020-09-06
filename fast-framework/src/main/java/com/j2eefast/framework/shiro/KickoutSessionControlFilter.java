@@ -36,7 +36,7 @@ import java.util.Map;
 public class KickoutSessionControlFilter extends AccessControlFilter {
 
     @Lazy
-    @Resource
+    @Autowired
     private ShiroFilterFactoryBean shiroFilterFactoryBean;
 
     /** 踢出后到的地址 */
@@ -114,7 +114,6 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             return true;
         }
 
-        System.out.println(path);
         Session session = subject.getSession();
         //这里获取的User是实体 因为我在 自定义ShiroRealm中的doGetAuthenticationInfo方法中
         //new SimpleAuthenticationInfo(user, password, getName()); 传的是 User实体 所以这里拿到的也是实体,如果传的是userName 这里拿到的就是userName

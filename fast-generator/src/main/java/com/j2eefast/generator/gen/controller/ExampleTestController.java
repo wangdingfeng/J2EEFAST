@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 单范例页面控制器
  * @author ZhouZhou
- * @date 2020-08-21 09:57
+ * @date 2020-09-06 16:35
  */
 @Controller
 @RequestMapping("/gen/test")

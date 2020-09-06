@@ -2,7 +2,7 @@
 productName: J2eeFast Demo
 
 # 当前版本
-version: V2.0.8
+version: V2.0.9
 
 server:
     tomcat:

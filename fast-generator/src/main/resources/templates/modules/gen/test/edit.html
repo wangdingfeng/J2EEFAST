@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="修改单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","ueditor","selectPage","table"]/>
+<@header title="修改单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage","table"]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-test-edit"  class="form-horizontal">
     <input name="id" value="${exampleTest.id}" type="hidden">
@@ -107,7 +107,7 @@
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "归属公司"/>：</label>
                 <div class="col-sm-8">
                         <@f.treeselect  name="compId" value="${exampleTest.compId?default('')}"
-                        labelValue="${(exampleTest.company.name)?default('')}"
+                        labelValue="${exampleTest.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "归属部门"/>：</label>
                 <div class="col-sm-8">
                         <@f.treeselect name="deptId" value="${exampleTest.deptId?default('')}"
-                          labelValue="${(exampleTest.organization.name)?default('')}"
+                          labelValue="${exampleTest.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="compId" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -139,24 +139,20 @@
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@f.input name="addrinfo" value="${exampleTest.addrinfo?default('')}" />
+                <@f.input name="addrinfo" value="${exampleTest.addrinfo?default('')}"   />
                 </div>
              </div>
         </div>
-    </div>  
-     <div class="row">  
-  <div class="col-xs-12">
+        <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-2 control-label"><@ctx.i18n text = "备注信息"/>：    
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "备注信息"/>：    
                </label>
-                <div class="col-sm-10">
-                 <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
+                <div class="col-sm-8">
+                <@f.input name="remark" value="${exampleTest.remark?default('')}"   />
                 </div>
              </div>
-             </div>
-             </div>
-             
-    </div><h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
+        </div>
+    </div>    <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
    <div class="row">
        <div class="col-xs-12">
             <div class="form-group">
