@@ -132,7 +132,7 @@ if (typeof jQuery === "undefined") {
                         hideAfter:4000,
                         position: {
                             right: 7,
-                            bottom: 36
+                            bottom: 32
                         },
                         showHideTransition: 'slide',
                         afterHidden: function () {
@@ -157,7 +157,7 @@ if (typeof jQuery === "undefined") {
                     hideAfter:4000,
                     position: {
                         right: 7,
-                        bottom: 36
+                        bottom: 32
                     },
                     showHideTransition: 'slide',
                     afterHidden: function () {
@@ -190,7 +190,7 @@ if (typeof jQuery === "undefined") {
                     hideAfter:4000,
                     position: {
                         right: 7,
-                        bottom: 36
+                        bottom: 32
                     },
                     showHideTransition: 'slide',
                     afterHidden: function () {
@@ -1115,32 +1115,9 @@ if (typeof jQuery === "undefined") {
                 });
             },
             error : function(msg,callback){
-                // if(top.location != self.location){
-                //     if(typeof parent.opt.error === "function"){
-                //         parent.opt.error(msg);
-                //         return;
-                //     }else{
-                //         parent.opt.modal.error(msg);
-                //         return;
-                //     }
-                // }else{
-                //     opt.modal.alertError(msg);
-                // }
-
                 opt.error(msg,callback);
             },
             warning :function(msg,callback){
-                // if(top.location != self.location) {
-                //     if(typeof parent.opt.warning === "function"){
-                //         parent.opt.warning(msg);
-                //         return;
-                //     }else{
-                //         parent.opt.modal.warning(msg);
-                //         return;
-                //     }
-                // }else{
-                //     opt.modal.alertWarning(msg);
-                // }
                 opt.warning(msg,callback);
             },
             // 警告提示
@@ -1185,8 +1162,16 @@ if (typeof jQuery === "undefined") {
              */
             popupRight: function(title, url, isEdit,editFun,id){
                 var width = 150;
-                if($(top.window).outerWidth() < 400){
-                    width = 50;
+                var topp = 50;
+                if(top.location !== self.location) {
+                    if($(top.window).outerWidth() < 400){
+                        width = 50;
+                    }
+                }else{
+                    topp = 0;
+                    if($(window).outerWidth() < 400){
+                        width = 50;
+                    }
                 }
                 opt.layer.open({
                     type: 2,
@@ -1200,7 +1185,7 @@ if (typeof jQuery === "undefined") {
                     shadeClose: true,
                     outLeft: true,
                     skin:'layui-anim layui-anim-rl',
-                    offset: [50 +'px', ($(top.window).outerWidth() -($(window).outerWidth()-width))  + 'px'],
+                    offset: [topp +'px', ($(top.window?top.window:window).outerWidth() -($(window).outerWidth()-width))  + 'px'],
                     area: [($(window).outerWidth()-width) + 'px', '100%'],
                     success: function(layero, index){
                         if(opt.common.isNotEmpty(isEdit) && isEdit){
