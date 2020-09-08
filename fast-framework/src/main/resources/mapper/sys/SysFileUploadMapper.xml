@@ -11,14 +11,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <result property="fileId"    column="file_id"    />
    <result property="fileName"    column="file_name"    />
    <result property="fileType"    column="file_type"    />
-   <result property="bizid"    column="bizid"    />
+   <result property="bizId"    column="biz_id"    />
    <result property="bizType"    column="biz_type"    />
-   <result property="remark"    column="remark"    />
    <result property="delFlag"    column="del_flag"    />
-   <result property="createBy"    column="create_by"    />
-   <result property="createTime"    column="create_time"    />
-   <result property="updateTime"    column="update_time"    />
-   <result property="updateBy"    column="update_by"    />
      </resultMap>
     
     <!--  实体栏位  --> 
@@ -27,14 +22,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          a.file_id as "fileId" ,
          a.file_name as "fileName" ,
          a.file_type as "fileType" ,
-         a.bizid as "bizid" ,
+         a.biz_id as "bizId" ,
          a.biz_type as "bizType" ,
-         a.remark as "remark" ,
-         a.del_flag as "delFlag" ,
-         a.create_by as "createBy" ,
-         a.create_time as "createTime" ,
-         a.update_time as "updateTime" ,
-         a.update_by as "updateBy" 
+         a.del_flag as "delFlag"
      </sql>
     
      <!-- 外联表  --> 
@@ -68,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			
               <if test="fileType != null  and fileType != ''"> and a.file_type = #{fileType} </if>
-              <if test="bizid != null "> and a.bizid = #{bizid} </if>
+              <if test="bizId != null "> and a.bizId = #{bizId} </if>
               <if test="bizType != null  and bizType != ''"> and a.biz_type = #{bizType} </if>
                         <if test = "sql_filter !=null and sql_filter!=''">
                    and ${sql_filter}
@@ -84,8 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<include refid="sysFileUploadColumns"/>
 		FROM sys_file_upload a
 		<include refid="sysFileUploadJoins"/>
-		<where>
-        
+		<where>       
               <if test="sysFileUpload.fileId != null "> and a.file_id = #{sysFileUpload.fileId} </if>
                <if test="sysFileUpload.fileName != null  and sysFileUpload.fileName != ''">
                      and a.file_name LIKE
@@ -94,11 +83,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      <if test="_databaseId == 'mysql'">concat('%',#{sysFileUpload.fileName},'%')</if>
 			</if>
                <if test="sysFileUpload.fileType != null  and sysFileUpload.fileType != ''"> and a.file_type = #{sysFileUpload.fileType} </if>
-               <if test="sysFileUpload.bizid != null "> and a.bizid = #{sysFileUpload.bizid} </if>
+               <if test="sysFileUpload.bizId != null "> and a.biz_id = #{sysFileUpload.bizId} </if>
                <if test="sysFileUpload.bizType != null  and sysFileUpload.bizType != ''"> and a.biz_type = #{sysFileUpload.bizType} </if>
                       <if test = "sql_filter !=null and sql_filter!=''">
                and ${sql_filter}
              </if>  
 		</where>
 	 </select>
+	 
+	 
+	 
+	 <select id="selectList"  resultType="com.j2eefast.framework.sys.entity.SysFileUploadEntity"  parameterType="com.j2eefast.framework.sys.entity.SysFileUploadEntity">
+	    SELECT 
+			<include refid="sysFileUploadColumns"/>
+		FROM  sys_file_upload a
+		<include refid="sysFileUploadJoins"/>
+		<where>   
+		 <if test="fileType != null  and fileType != ''"> a.file_type = #{fileType} </if>
+         <if test="bizId != null "> and a.biz_id = #{bizId} </if>
+         <if test="bizType != null  and bizType != ''"> and a.biz_type = #{bizType} </if>	
+         <if test="delFlag != null and delFlag != ''">a.del_flag = #{delFlag} </if> 	
+		</where>
+	 
+	 </select>
+	 
 </mapper>

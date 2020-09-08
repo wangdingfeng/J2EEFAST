@@ -1,7 +1,6 @@
 /*!
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- * 基于webuploader UI页面封装
- * @author J2eeFAST
+ * 参照jeesite平台(https://gitee.com/thinkgem/jeesite4)
+ * J2eeFAST 二次修改
  * @version v1.0.1
  */
 if (typeof jQuery === "undefined") {
@@ -933,7 +932,7 @@ if (typeof jQuery === "undefined") {
         (value = param instanceof Array ? data[options].apply(data, param) : data[option](param))
         return value;
     };
-
+    //基于jeesite基础修改
     $.fn.webUploadex.defaults = {
         id: "",             //上传控件ID
         bizId: "",          //业务主键

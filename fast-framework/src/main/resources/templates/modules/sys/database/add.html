@@ -2,7 +2,7 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="新增模块" bodyClass="white-bg"  libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-database-add" class="form-horizontal">
+<@f.form id="form-database-add" class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据库名称"/>：
                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"
@@ -10,28 +10,28 @@
                     <i class="fa fa-question-circle-o" style="color: orange"></i></a>
             </label>
             <div class="col-sm-8">
-                <@form.input name="dbName" required=true  placeholder="请输入数据库名称" />
+                <@f.input name="dbName" required=true  placeholder="请输入数据库名称" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据库驱动"/>：
             </label>
             <div class="col-sm-8">
-                <@form.select name="jdbcDriver" dictType="sys_db_driver_type"/>
+                <@f.select name="jdbcDriver" dictType="sys_db_driver_type"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "数据库账号"/>：
             </label>
             <div class="col-sm-8">
-                <@form.input name="userName" required=true  placeholder="请输入数据库账号" />
+                <@f.input name="userName" required=true  placeholder="请输入数据库账号" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><@ctx.i18n text = "数据库密码"/>：</label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.input name="password" type="password"  placeholder="请输入数据库密码" />
+                    <@f.input name="password" type="password"  placeholder="请输入数据库密码" />
                     <span class="input-group-addon" title="<@ctx.i18n text = "数据库密码,鼠标按下显示密码"/>"
                           data-toggle="tooltip"
                           data-placement="bottom"
@@ -45,7 +45,7 @@
             <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "URL"/>：
             </label>
             <div class="col-sm-8">
-                <@form.input name="jdbcUrl" required=true  placeholder="请输入URL" helpTip = "例如: jdbc:mysql://192.168.20.110:3306/fastdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false"/>
+                <@f.input name="jdbcUrl" required=true  placeholder="请输入URL" helpTip = "例如: jdbc:mysql://192.168.20.110:3306/fastdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false"/>
             </div>
         </div>
         <div class="form-group">
@@ -64,16 +64,16 @@
 
 <#--                <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i></span>-->
 
-                <@form.select name="encType" dictType="sys_db_encrypt_type" helpTip = "对敏感数据 URL、账号、密码 加密存储"/>
+                <@f.select name="encType" dictType="sys_db_encrypt_type" helpTip = "对敏感数据 URL、账号、密码 加密存储"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><@ctx.i18n text = "备注"/>：</label>
             <div class="col-sm-8">
-                <@form.textarea name="remark"/>
+                <@f.textarea name="remark"/>
             </div>
         </div>
-</@form.form>
+</@f.form>
 <@footer>
 <script type="text/javascript">
     var prefix = baseURL + "sys/database";

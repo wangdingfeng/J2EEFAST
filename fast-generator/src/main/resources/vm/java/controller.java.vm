@@ -15,6 +15,11 @@ import java.util.Date;
 import org.springframework.web.bind.annotation.*;
 import ${packageName}.entity.${ClassName}Entity;
 import ${packageName}.service.${ClassName}Service;
+#if($table.master)
+import ${packageName}.entity.${childTable.className}Entity;
+import ${packageName}.service.${childTable.className}Service;
+import java.util.List;
+#end###
 #if($table.tree)
 import com.j2eefast.common.core.base.entity.Ztree;
 #end
@@ -35,6 +40,15 @@ public class ${ClassName}Controller extends BaseController{##
 
     private ${ClassName}Service ${className}Service;##
 
+    #if($table.master)
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+
+    @Autowired###
+
+    private ${childTable.className}Service ${classEnty}Service;###
+
+
+    #end
 
     @RequiresPermissions("${permissionPrefix}:view")
     @GetMapping()
@@ -42,7 +56,7 @@ public class ${ClassName}Controller extends BaseController{##
         return prefix + "/${businessName}";
     }##
 
-    #if($table.crud || $table.r)##
+    #if($table.crud || $table.r || $table.master)##
     #*有查询列表*#
     @RequestMapping("/list")
     @RequiresPermissions("${permissionPrefix}:list")
@@ -85,7 +99,7 @@ public class ${ClassName}Controller extends BaseController{##
         return ztrees;
     }
     #end
-    #if($table.crud || $table.c)##
+    #if($table.crud || $table.c || $table.master)##
     #*新增*#
     @GetMapping("/add")
     public String add(ModelMap mmap){
@@ -110,7 +124,22 @@ public class ${ClassName}Controller extends BaseController{##
     }##
     #end
 
-    #if($table.crud || $table.u)##
+    #if($table.master)####
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+
+    @RequestMapping("/child/list")
+    @RequiresPermissions("${permissionPrefix}:list")
+    @ResponseBody
+    public ResponseData childList(@RequestParam Map<String, Object> params) {####
+
+        PageUtil page = ${classEnty}Service.findPage(params);#####
+
+        return success(page);
+    }##
+    #end
+
+
+    #if($table.crud || $table.u || $table.master)##
 
     /**
      * 修改
@@ -141,7 +170,7 @@ public class ${ClassName}Controller extends BaseController{##
     #end
 
 
-    #if($table.crud || $table.d || ($table.r && $table.rDel))##
+    #if($table.crud || $table.d || ($table.r && $table.rDel) || $table.master)##
 /**
      * 删除
      */

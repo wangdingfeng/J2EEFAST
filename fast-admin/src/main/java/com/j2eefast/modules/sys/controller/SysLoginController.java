@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -38,6 +39,7 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -121,8 +123,16 @@ public class SysLoginController extends BaseController {
 	}
 
 
+	/**
+	 * 后台登录页面
+	 * @param mmp
+	 * @return
+	 */
 	@RequestMapping("login")
-	public String login(ModelMap mmp) {
+	public String login(ModelMap mmp) throws IOException {
+		if(UserUtils.isLogin()){
+			UserUtils.logout();
+		}
 		String view = super.getPara("view");
 		if(ToolUtil.isEmpty(view)){
 			view = Global.getDbKey("SYS_LOGIN_DEFAULT_VIEW","Admin-LTE");
@@ -142,28 +152,32 @@ public class SysLoginController extends BaseController {
 		mmp.put("loginView",view);
 		return "login-" + view;
 	}
-	
+
+
+
 
 	/**
 	 * 登陆
 	 * @author zhouzhou
 	 * @date 2020-03-07 14:47
 	 */
-	@FastLicense
+	@FastLicense(vertifys = {"online","detection"})
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseData login(String username, String password,Boolean rememberMe) {
 		String secretKey = super.getCookie(ConfigConstant.SECRETKEY);
 		Subject subject = null;
 		try {
+			//前端账号密码解密
 			username =new String(SoftEncryption.decryptBySM4(Base64.decode(username),
 					HexUtil.decodeHex(secretKey)).get("bytes",byte[].class)).trim();
 			password =new String(SoftEncryption.decryptBySM4(Base64.decode(password),
 					HexUtil.decodeHex(secretKey)).get("bytes",byte[].class)).trim();
-//			UsernamePasswordToken token = new UsernamePasswordToken(username, password,rememberMe);
+			//账号密码登录
 			UserToken token = new UserToken(username, password, LoginType.NORMAL.getDesc(),rememberMe);
 			subject = UserUtils.getSubject();
 			subject.login(token);
+			//清除安全key
 			super.deleteCookieByName(ConfigConstant.SECRETKEY);
 		}catch (ServiceException e){
 			return error("50006",ToolUtil.message("sys.login.sm4"));
@@ -179,36 +193,21 @@ public class SysLoginController extends BaseController {
 			}
 			return error(msg);
 		}
+
 		return success("登录成功!");
 	}
 
-	// 遍历同一个账户的session
-	private List<Session> getLoginedSession(Subject currentUser) {
-		Collection<Session> list = ((DefaultSessionManager) ((DefaultSecurityManager) SecurityUtils
-				.getSecurityManager()).getSessionManager()).getSessionDAO().getActiveSessions();
-		List<Session> loginedList = new ArrayList<Session>();
-		SysUserEntity loginUser = (SysUserEntity) currentUser.getPrincipal();
-		for (Session session : list) {
-
-			Subject s = new Subject.Builder().session(session).buildSubject();
-
-			if (s.isAuthenticated()) {
-				SysUserEntity user = (SysUserEntity) s.getPrincipal();
-				if (user.getUsername().equalsIgnoreCase(loginUser.getUsername())) {
-					if (!session.getId().equals(currentUser.getSession().getId())) {
-						loginedList.add(session);
-					}
-				}
-			}
-		}
-		return loginedList;
-	}
-
+	/**
+	 * 锁屏
+	 * @param mmap
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/Account/Lock",method = RequestMethod.GET)
 	public String lock(ModelMap mmap) throws Exception {
 		mmap.put("avatar", UserUtils.getUserInfo().getAvatar());
 		LoginUserEntity loginUser = UserUtils.getUserInfo();
-		loginUser.setLoginStatus(-1); //锁屏
+		loginUser.setLoginStatus(-1);
 		UserUtils.reloadUser(loginUser);
 		return "lock";
 	}

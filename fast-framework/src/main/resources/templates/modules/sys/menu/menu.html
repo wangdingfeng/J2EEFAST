@@ -4,16 +4,16 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="menu-form">
+	<@f.form id="menu-form">
     <div class="select-list">
         <ul>
             <li>
                 <@ctx.i18n text = "菜单名称"/>：
-                <input type="text" name="name"/>
+                <input type="text" class="form-control" name="name"/>
             </li>
             <li>
                 <@ctx.i18n text = "菜单状态"/>：
-                <@form.select name="hide" blankValue="" blankLabel="所有" dictType="sys_show_hide" />
+                <@f.select name="hide" blankValue="" blankLabel="所有" dictType="sys_show_hide" />
             </li>
             <li>
                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -21,7 +21,7 @@
             </li>
         </ul>
     </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-tree-table">
         <@shiro.hasPermission name="sys:menu:add">

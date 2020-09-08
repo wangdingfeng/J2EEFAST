@@ -4,14 +4,14 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="operlog-form">
+	<@f.form id="operlog-form">
 	<div class="select-list">
 		<ul>
 			<li>
-				<label>系统模块： </label><input type="text" name="title"/>
+				<label>系统模块： </label><input type="text" class="form-control" name="title"/>
 			</li>
 			<li>
-				<label>操作人员： </label><input type="text" name="operName"/>
+				<label>操作人员： </label><input type="text" class="form-control" name="operName"/>
 			</li>
 			<li class="select-selectpicker">
 				<label>操作类型： </label>
@@ -24,25 +24,25 @@
 <#--						</#items>-->
 <#--					</#list>-->
 <#--				</select>-->
-				<@form.select name="businessTypes" multiple = true class="selectpicker" dictType="sys_oper_type" required=true/>
+				<@f.select name="businessTypes" multiple = true class="selectpicker" dictType="sys_oper_type" required=true/>
 			</li>
 			<li>
 				<label>操作状态：</label>
-				<@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
+				<@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_common_status" />
 			</li>
 			<li class="select-time">
 				<label>操作时间： </label>
-				<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+				<input type="text" class="form-control time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
 				<span>-</span>
-				<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+				<input type="text" class="form-control time-input" id="endTime" placeholder="结束时间" name="endTime"/>
 			</li>
 			<li>
-				<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+				<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
 				<a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
 			</li>
 		</ul>
 	</div>
-	</@form.form>
+	</@f.form>
 	</div>
 	<@table id="bootstrap-table">
 		<@shiro.hasPermission name="sys:log:del">
@@ -151,12 +151,12 @@
 	function searchPre() {
 		var data = {};
 		data.businessTypes = opt.common.join($('#businessTypes').selectpicker('val'));
-		$.table.search('operlog-form', 'bootstrap-table', data);
+		$.table.search('bootstrap-table','operlog-form', data);
 	}
 
 	function resetPre() {
 		$("#businessTypes").selectpicker('refresh');
-		$.table.search('operlog-form', 'bootstrap-table', {});
+		$.table.search('bootstrap-table','operlog-form', {});
 	}
 </script>
 </@footer>

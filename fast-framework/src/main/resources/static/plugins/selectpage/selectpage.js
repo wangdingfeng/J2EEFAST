@@ -645,7 +645,8 @@
         }
 
         // set outer box width
-		elem.container.width(orgWidth);
+		//TODO J2eeFAST 修改适配宽度
+		elem.container.width("100%");
 
 		elem.button = $('<div>').addClass(css.button);
 		//drop down button

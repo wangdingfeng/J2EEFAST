@@ -4,17 +4,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : J2eeFAST
+ Source Server         : J2eeFAST数据库结构
  Source Server Type    : MySQL
- Source Server Version : 50730
- Source Host           : 192.168.20.110:3306
+ Source Server Version : 50728
+ Source Host           : 
  Source Schema         : fastdb
 
  Target Server Type    : MySQL
- Target Server Version : 50730
+ Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 08/08/2020 21:08:14
+ Date: 07/09/2020 20:39:15
 */
 
 SET NAMES utf8mb4;
@@ -47,6 +47,20 @@ CREATE TABLE `example_test` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='单表范例';
+
+-- ----------------------------
+-- Table structure for example_test_child
+-- ----------------------------
+DROP TABLE IF EXISTS `example_test_child`;
+CREATE TABLE `example_test_child` (
+  `id` bigint(20) NOT NULL COMMENT '注解',
+  `test_id` bigint(20) DEFAULT NULL COMMENT '主表ID',
+  `work_company` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '工作公司',
+  `start_time` datetime DEFAULT NULL COMMENT '起始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '辞职时间',
+  `jobs` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '在职岗位',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='工作经历';
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -87,6 +101,8 @@ CREATE TABLE `gen_table` (
   `is_file` char(1) COLLATE utf8mb4_bin DEFAULT 'N' COMMENT '是否需要上传文件',
   `is_img` char(1) COLLATE utf8mb4_bin DEFAULT 'N' COMMENT '是否需要上传图片',
   `target` varchar(10) COLLATE utf8mb4_bin DEFAULT 'alert' COMMENT '表单打开形式',
+  `child_id` bigint(20) DEFAULT NULL COMMENT '子表ID',
+  `child_field_id` bigint(20) DEFAULT NULL COMMENT '字表外键',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='代码生成业务表';
 
@@ -117,10 +133,6 @@ CREATE TABLE `gen_table_column` (
   `circle_type` char(1) COLLATE utf8mb4_bin DEFAULT 'T' COMMENT '字段说明样式T 普通形 Q 黄色问号弹出型 R红色明显提示',
   `is_table_sort` char(1) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '0' COMMENT '字段是否为表sortable 1是',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
-  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '创建者',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '更新者',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='代码生成业务表字段';
 
@@ -509,6 +521,12 @@ CREATE TABLE `sys_file` (
   `file_path` varchar(1000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '文件在服务器相对路径',
   `file_name` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '文件名称',
   `file_size` decimal(30,0) DEFAULT NULL COMMENT '文件大小(B)',
+  `classify` char(1) COLLATE utf8mb4_bin DEFAULT NULL COMMENT ' 文件归类',
+  `create_by` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `update_by` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+  `remark` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='文件实体表';
 
@@ -523,12 +541,7 @@ CREATE TABLE `sys_file_upload` (
   `file_type` char(1) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '文件类型 0 文件 1图片 2其他',
   `biz_id` bigint(20) DEFAULT NULL COMMENT '业务主键',
   `biz_type` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '业务类型',
-  `remark` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '描述',
   `del_flag` char(1) COLLATE utf8mb4_bin DEFAULT '0' COMMENT '删除标志',
-  `create_by` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `update_by` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='系统上传文件业务关联表';
 
@@ -598,7 +611,7 @@ CREATE TABLE `sys_login_infor` (
   `msg` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '提示消息',
   `login_time` datetime DEFAULT NULL COMMENT '访问时间',
   `comp_id` bigint(20) DEFAULT '-1' COMMENT '公司ID',
-  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门id',
+  `dept_id` bigint(20) DEFAULT NULL,
   `login_type` varchar(25) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '登录类型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='系统访问记录';
@@ -695,9 +708,9 @@ CREATE TABLE `sys_oper_log` (
   `error_msg` varchar(2000) COLLATE utf8mb4_bin DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   `time` bigint(20) DEFAULT '0' COMMENT '操作时长',
-  `comp_id` bigint(20) DEFAULT NULL COMMENT '公司ID',
-  `dept_id` bigint(20) DEFAULT NULL COMMENT '机构ID',
-  PRIMARY KEY (`id`)
+  `comp_id` bigint(20) DEFAULT NULL,
+  `dept_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='操作日志记录';
 
 -- ----------------------------

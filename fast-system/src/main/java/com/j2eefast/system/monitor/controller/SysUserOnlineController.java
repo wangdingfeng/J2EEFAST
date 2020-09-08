@@ -1,6 +1,8 @@
 package com.j2eefast.system.monitor.controller;
 
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
+import com.j2eefast.common.core.shiro.RedisSessionDAO;
+import com.j2eefast.common.core.shiro.ShiroSession;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.RedisUtil;
@@ -18,11 +20,14 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +52,10 @@ public class SysUserOnlineController extends BaseController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Lazy
+    @Resource
+    private RedisSessionDAO redisSessionDAO;
+
     @RequiresPermissions("sys:online:view")
     @GetMapping()
     public String online() {
@@ -60,28 +69,60 @@ public class SysUserOnlineController extends BaseController {
     @RequiresPermissions("sys:online:list")
     @ResponseBody
     public ResponseData monitor(@RequestParam Map<String, Object> params) {
-        Collection<Session> list = ((DefaultSessionManager) ((DefaultSecurityManager) SecurityUtils
-                .getSecurityManager()).getSessionManager()).getSessionDAO().getActiveSessions();
+
+        //当前页
+        int currPage = Integer.parseInt((String) params.get("__page"));
+        //每页条数
+        int limit = Integer.parseInt((String) params.get("__limit"));
+
+        Collection<Session> list = redisSessionDAO.getActiveSessions();
         List<OnlineEntity> userList = new ArrayList<>();
-            for (Session session : list) {
-                Subject s = new Subject.Builder().session(session).buildSubject();
-                if (s.isAuthenticated()) {
-                    OnlineEntity online = new OnlineEntity();
-                    LoginUserEntity user = (LoginUserEntity) s.getPrincipal();
-                    online.setUserId(user.getId());
-                    online.setLoginIp(session.getHost());
-                    online.setName(user.getName());
-                    online.setUsername(user.getUsername());
-                    online.setCompName(user.getCompName());
-                    online.setLoginLocation(user.getLoginLocation());
-                    online.setLoginStatus(ToolUtil.isNotEmpty(user.getLoginStatus())?user.getLoginStatus():1);
-                    online.setSId(session.getId().toString());
-                    online.setLoginTime(session.getStartTimestamp());
-                    userList.add(online);
+        for (Session session : list) {
+            if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
+                break;
+            }
+            if (session instanceof ShiroSession) {
+                // 如果没有主要字段(除lastAccessTime以外其他字段)发生改变
+                ShiroSession ss = (ShiroSession) session;
+                if (!ss.isChanged()) {
+                    break;
                 }
             }
-
-        return success(new PageUtil(userList,userList.size(),50,1));
+            Subject s = new Subject.Builder().session(session).buildSubject();
+            if (s.isAuthenticated()) {
+                OnlineEntity online = new OnlineEntity();
+                LoginUserEntity user = (LoginUserEntity) s.getPrincipal();
+                online.setUserId(user.getId());
+                online.setLoginIp(session.getHost());
+                online.setName(user.getName());
+                online.setUsername(user.getUsername());
+                online.setCompName(user.getCompName());
+                online.setLoginLocation(user.getLoginLocation());
+                online.setLoginStatus(ToolUtil.isNotEmpty(user.getLoginStatus())?user.getLoginStatus():1);
+                online.setSId(session.getId().toString());
+                online.setLoginTime(session.getStartTimestamp());
+                userList.add(online);
+            }
+        }
+        int totalCount = userList.size();
+        if(userList.size() <= limit){
+            return success(new PageUtil(userList,totalCount,limit,1));
+        }else{
+            List<OnlineEntity> viewList = new ArrayList<>();
+            int total = currPage * limit;
+            int qTotal = (currPage -1) * limit;
+            if(total > totalCount){
+                for(int i = qTotal; i < userList.size(); i++){
+                    viewList.add(userList.get(i));
+                }
+            }
+            if(total <= totalCount){
+                for(int i = qTotal; i < (userList.size() - limit); i++){
+                    viewList.add(userList.get(i));
+                }
+            }
+            return success(new PageUtil(viewList,totalCount,limit,currPage));
+        }
     }
 
 
@@ -90,24 +131,21 @@ public class SysUserOnlineController extends BaseController {
     @RequiresPermissions("sys:online:forceLogout")
     @ResponseBody
     public ResponseData monitorOut(String[] ids) {
-
         try{
             for(String sessionId: ids){
                 if (UserUtils.getSession().getId().equals(sessionId)) {
                     return error("自己不能踢自己下线操作!");
                 }
-                Collection<Session> list = ((DefaultSessionManager) ((DefaultSecurityManager) SecurityUtils
-                        .getSecurityManager()).getSessionManager()).getSessionDAO().getActiveSessions();
-                for (Session session : list) {
-                    Subject s = new Subject.Builder().session(session).buildSubject();
-                    if (s.isAuthenticated()) {
-                        LoginUserEntity user = (LoginUserEntity)s.getPrincipal();
-                        if (session.getId().toString().equals(sessionId)) {
-                            redisUtil.set("sys:session:" +  user.getUsername(), "00002", RedisUtil.MINUTE);
-                            session.stop();
-                            s.logout();
-                        }
-                    }
+                Session session = redisSessionDAO.readSession(sessionId);
+                Subject subject = new Subject.Builder().session(session).buildSubject();
+                LoginUserEntity loginUserEntity =  (LoginUserEntity) subject.getPrincipal();
+                if(ToolUtil.isNotEmpty(loginUserEntity.getLoginStatus()) && loginUserEntity.getLoginStatus() != -9){
+                    ((LoginUserEntity) subject.getPrincipal()).setLoginStatus(-9);
+                    redisSessionDAO.update(session);
+                }
+                if(ToolUtil.isEmpty(loginUserEntity.getLoginStatus())){
+                    ((LoginUserEntity) subject.getPrincipal()).setLoginStatus(-9);
+                    redisSessionDAO.update(session);
                 }
             }
             return success();

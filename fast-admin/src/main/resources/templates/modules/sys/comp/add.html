@@ -2,13 +2,13 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="新增公司" bodyClass="white-bg"/>
 <div class="wrapper wrapper-content ibox-content">
-	<@form.form id="form-comp-add" class="form-horizontal">
-	<@form.hidden name="type" value="0"/>
+	<@f.form id="form-comp-add" class="form-horizontal">
+	<@f.hidden name="type" value="0"/>
 	<div class="form-group">
 		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>上级公司：</label>
 		<div class="col-sm-8">
-			<@form.treeselect id="parentId" name="parentId" boxTitle="选择上级公司" url="sys/comp/treeData?type=0"
-			expandLevel=true value="${comp.id}" labelValue="${comp.name?default('总公司')}" isparentids=true
+			<@f.treeselect id="parentId" name="parentId" boxTitle="选择上级公司" url="sys/comp/treeData?type=0"
+			expandLevel=true value="${comp.id}" labelValue="${comp.name?default('总公司')}" isParentIds=true
 			parenIdsValue="${comp.id}${(comp.parentIds == '1')?string('',',${comp.parentIds}')}"
 			placeholder="请选择上级公司" required=true/>
 		</div>
@@ -16,19 +16,19 @@
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span style="color: red; ">*</span>公司名称：</label>
 		<div class="col-sm-8">
-			<@form.input name="name" required=true/>
+			<@f.input name="name" required=true/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span style="color: red; ">*</span>公司全称：</label>
 		<div class="col-sm-8">
-			<@form.input name="fullName" required=true/>
+			<@f.input name="fullName" required=true/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>归属地区：</label>
 		<div class="col-sm-8">
-			<@form.treeselect id="areaId" name="areaIds" boxTitle="请选择管理地区" url="sys/area/treeData"
+			<@f.treeselect id="areaId" name="areaIds" boxTitle="请选择管理地区" url="sys/area/treeData"
 			checked=true correlationId="parentId" placeholder="请选择管理地区"/>
 		</div>
 	</div>
@@ -41,17 +41,17 @@
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "状态"/>：</label>
 		<div class="col-sm-8">
-			<@form.radio name="status" dictType="sys_normal_disable"/>
+			<@f.radio name="status" dictType="sys_normal_disable"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><@ctx.i18n text = "备注"/>：</label>
 		<div class="col-sm-8">
-			<@form.textarea name="remark"/>
+			<@f.textarea name="remark"/>
 		</div>
 	</div>
 </div>
-</@form.form>
+</@f.form>
 <@footer>
 <script type="text/javascript">
 	var prefix = baseURL + "sys/comp";

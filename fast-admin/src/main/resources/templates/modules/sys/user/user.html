@@ -23,29 +23,29 @@
     <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
-                <@form.form id="user-form">
+                <@f.form id="user-form">
                     <div class="select-list">
                         <ul>
                             <li>
-                                <label><@ctx.i18n text = "登陆账号"/></label>：<input type="text" name="username"/>
+                                <label><@ctx.i18n text = "登陆账号"/></label>：<input class="form-control" type="text" name="username"/>
                             </li>
                             <li>
-                                <@ctx.i18n text = "邮箱"/>:<input type="text" name="email"/>
+                                <@ctx.i18n text = "邮箱"/>: <input class="form-control" type="text" name="email"/>
                             </li>
                             <li>
-                                <@ctx.i18n text = "手机号码"/>:<input type="text" name="mobile"/>
+                                <@ctx.i18n text = "手机号码"/>: <input class="form-control"  type="text" name="mobile"/>
                             </li>
                             <li>
                                 <label><@ctx.i18n text = "机构查询"/></label>：
                                 <div class="control-div width-150">
-                                <@form.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                                <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
                                 expandLevel=true
                                 placeholder="请选择上级机构"/>
                                 </div>
                             </li>
                             <li>
                                 <label><@ctx.i18n text = "用户状态"/></label>：
-                                <@form.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
+                                <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -53,7 +53,7 @@
                             </li>
                         </ul>
                     </div>
-                </@form.form>
+                </@f.form>
             </div>
             <@table id="bootstrap-table">
                 <@shiro.hasPermission name="sys:user:add">
@@ -104,7 +104,9 @@
             addUrl: prefix + "/add",
             editUrl: prefix + "/edit/{id}",
             delUrl: prefix + "/del",
+            viewUrl: prefix + "/view/{id}",
             exportUrl:  prefix + "/export",
+            clickToSelect: false,
             pageSize: 12,
             pageList: [12, 24, 36],
             sortName: "createTime",
@@ -121,7 +123,10 @@
                     }
                 },
                 /* {field: 'id', title: "<@ctx.i18n text = "用户ID"/>", sortable: true}, */
-                {field: 'username', title: "<@ctx.i18n text = "账号"/>"},
+                {field: 'username', title: "<@ctx.i18n text = "账号"/>",formatter: function(value, row, index){
+                        return '<a class="tb-view" onclick="opt.operate.view(\''+row.id+'\',editFlag,opt.operate.edit)">'+value+'</a>';
+                    }
+                },
                 {field: 'name', title:  "<@ctx.i18n text = "姓名"/>"},
                 {field: 'compName', valign: 'middle', title: "<@ctx.i18n text = "归属公司"/>",formatter: function (value, row, index) {
                         return $.table.tooltip(value,5);}
@@ -160,12 +165,16 @@
         $.table.init(options);
     }
 
+    function popupRight(id){
+        opt.modal.popupRight("用户信息",prefix + "/view/"+id,delFlag == '',opt.operate.edit,id);
+    }
+
 
     /*初始化左侧树*/
     function initLeftZtree() {
         var options = {
             url: baseURL+"sys/comp/treeData",
-            displayLen: 8,
+            displayLen: 12,
             expandLevel:1,
             onClick : onClick,
             check: {

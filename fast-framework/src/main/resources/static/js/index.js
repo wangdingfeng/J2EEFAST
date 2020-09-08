@@ -7,6 +7,7 @@
  *       2020-04-10 优化国际化参数
  *       2020-05-17 优化菜单显示
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
+ *       2020-08-18 解决小窗口菜单点击出现重叠问题
  * @version 1.0.12
  */
 //菜单添加事件
@@ -248,8 +249,34 @@
                 }
             }
         }
-        return true;
+        return false;
     };
+
+    /***
+     * 查询左侧是否有菜单
+     * @param elem
+     * @param id
+     * @returns {boolean}
+     */
+    menu.prototype.queryMenu = function(elem,id){
+        var that = this;
+        //菜单
+        if(elem.find('ul').length > 0){
+            var $li = elem.children('ul').children('li');
+            for(let i=0; i<$li.length; i++){
+                if($($li[i]).hasClass("treeview")){
+                    return that.queryMenu($($li[i]), id);
+                }else{
+                    var $a = $($li[i]).children('a');
+                    if( id != 0 && $a.data('id') == id){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
 
     menu.prototype.recursiveMenuCss = function(elem){
         var that = this;
@@ -297,24 +324,21 @@
 
                 //联动左侧菜单
                 $('#leftMenu-' + _module).removeClass('hide');
+                var flag = false;
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
-                    that.recursiveHideMenu($(this));
-                    that.recursiveShowMenu($(this), _id);
-                    // $(this).removeClass("menu-open");
-                    // if($(this).find('ul').length > 0){
-                    //     $(this).find('ul').css("display","none");
-                    //     $(this).find('ul').children('li').each(function () {
-                    //         var $a = $(this).children('a');
-                    //         if( _id != 0 && $a.data('id') == _id){
-                    //             $(this).parent('.treeview-menu').parent(".treeview").addClass("menu-open");
-                    //             $(this).parent('.treeview-menu').css("display","block");
-                    //             $(this).addClass("active");
-                    //         }else{
-                    //             $(this).removeClass("active");
-                    //         }
-                    //     });
-                    // }
+                    if(that.queryMenu($(this), _id)){
+                        flag = true;
+                    }
                 });
+                console.log("flag:"+ flag);
+                if(flag){
+                    $('#leftMenu-' + _module).children('.treeview').each(function (i) {
+                        that.recursiveHideMenu($(this));
+                        if(that.queryMenu($(this), _id)){
+                            that.recursiveShowMenu($(this), _id);
+                        }
+                    });
+                }
             }
             /*********************TAB刷新功能***************************/
             if($(this).attr("lay-id") === opt.variable._tabIndex +""){
@@ -496,6 +520,7 @@ $(function () {
         }, 50);
     });*/
 
+    //$("#mian-tab-menu").disableSelection();
     //校验修改密码
     $("#form-user-updatePass").validate({
         rules:{
@@ -525,22 +550,30 @@ $(function () {
 
     //主题
     $('#switchSkin').on('click', function () {
+        var area = ['autopx','autopx'];
+        if($(window).width() > 530){
+            area = ["530px", "386px"];
+        }
         opt.layer.open({
             type : 2,
             shadeClose : true,
             title : '<i class="fa glyphicon glyphicon-th"></i> '+$.i18n.prop("切换主题"),
-            area : ["530px", "386px"],
+            area : area,
             content : ["sys/switchSkin", 'no']
         })
     });
 
     //修改密码
     $('#updatePassword').on('click', function () {
+        var area = ['autopx','autopx'];
+        if($(window).width() > 550){
+            area = ["550px", "280px"];
+        }
         opt.layer.open({
             type: 1,
             // skin: 'layui-layer-molv',
             title: '<i class="fa icon-lock-open"></i> '+$.i18n.prop('修改密码'),
-            area: ['550px', '280px'],
+            area: area,
             // 弹层外区域关闭
             shadeClose: true,
             content: jQuery("#passwordLayer"),
@@ -605,15 +638,17 @@ $(function () {
             anim:-1,
             closeBtn: 0,
             shade: 0.1,
+            outLeft: true,
             move: false,
             title: '<i class="fa fa-tags"></i> '+$.i18n.prop('本地便签'),
             shadeClose: true,
             skin:'layui-anim layui-anim-rl layui-layer-adminRight',
             offset: [50 +'px', ($(window).width()-336) + 'px'],
+            area: ['336px', ''],
             content: opt.template('noteTemp'),
             success: function(layero, index){
-               $(layero).css('height','');
-               $(layero).css('width','336');
+               // $(layero).css('height','');
+               // $(layero).css('width','336');
             }
         });
     });
@@ -721,6 +756,28 @@ $(function () {
     };
 
     Layout.prototype.fix = function () {
+
+        //Modify the adapter
+        if($(window).outerWidth() < 400){
+            //hide top navBar menu
+            $('#top-navbar-menu').children('li').each(function () {
+                if(!($(this).hasClass('tasks-menu') || $(this).hasClass('user-menu'))){
+                   if(!$(this).hasClass('hide')){
+                       $(this).addClass('hide');
+                   }
+                }
+            });
+        }else{
+            //show top navBar menu
+            $('#top-navbar-menu li').each(function () {
+                if(!($(this).hasClass('tasks-menu') || $(this).hasClass('user-menu'))){
+                    if($(this).hasClass('hide')){
+                        $(this).removeClass('hide');
+                    }
+                }
+            });
+        }
+
         // Remove overflow from .wrapper if layout-boxed exists
         $(Selector.layoutBoxed + ' > ' + Selector.wrapper).css('overflow', 'hidden');
 
@@ -782,9 +839,8 @@ $(function () {
 
                 // Add slimscroll
                 $(Selector.sidebar).slimScroll({
-                    height: ($(window).height() - $(Selector.mainHeader).height()) + 'px',
+                     height: ($(window).height() - $(Selector.mainHeader).height()) + 'px',
                     opacity: .4, //滚动条透明度
-
                 });
             }
         }
@@ -1219,6 +1275,8 @@ $(function () {
         }
 
         parent.addClass(ClassName.open);
+        //TODO 解决小窗口菜单点击出现重叠问题
+        tree.removeAttr("style");
         tree.slideDown(this.options.animationSpeed, function () {
             $(this.element).trigger(expandedEvent);
         }.bind(this));

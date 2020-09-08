@@ -33,6 +33,12 @@ public class GenConstants
     /** 树表（增删改查） */
     public static final String TPL_TREE = "tree";
 
+    /**主子表-子表*/
+    public static final String  TPL_MASTER= "master";
+
+    public static final String  TPL_CHILD= "child";
+
+
     public static final String SERVICE = "service";
 
     public static final String ENTITY = "entity";

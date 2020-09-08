@@ -7,9 +7,9 @@ ${pageTheme}
 #break
 #end
 #end
-<@header title="新增${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end]/>
+<@header title="新增${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile || $table.rImg),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end#if($table.master),"table"#end]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-${businessName}-add"  class="form-horizontal">
+<@f.form id="form-${businessName}-add"  class="form-horizontal">
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw ${table.menuIcon}"></i></h4>######
 #####
 #set($indexTag = 0)
@@ -56,7 +56,7 @@ ${pageTheme}
                </label>##
 
                 <div class="col-sm-8">
-                    <@form.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                    <@f.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>###
 #elseif($column.htmlType == "icon")
@@ -68,7 +68,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.iconselect name="${field}" placeholder="选择图标"/>
+                    <@f.iconselect name="${field}" placeholder="选择图标"/>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.imageclip name="${field}"/>
+                    <@f.imageclip name="${field}"/>
                 </div>
             </div>
         </div>###
@@ -87,14 +87,14 @@ ${pageTheme}
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
             </label>
             <div class="col-sm-8">
-                <@form.selectLinkage name="${field}"/>
+                <@f.selectLinkage name="${field}"/>
             </div>
         </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple=true />
+                <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple=true />
             </div>
         </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -111,7 +111,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+                <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
             </div>
         </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -128,7 +128,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
+                <@f.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
             </div>
         </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -150,7 +150,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-               <@form.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+               <@f.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
             </div>
         </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
@@ -190,7 +190,7 @@ ${pageTheme}
          <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                    <@form.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
+                    <@f.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
             </div>
          </div>####
  #elseif($column.htmlType == "comp")
@@ -198,7 +198,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                  <@form.treeselect  name="${field}"
+                  <@f.treeselect  name="${field}"
                     boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
             </div>
         </div>####
@@ -246,7 +246,7 @@ ${pageTheme}
                </label>##
 
                 <div class="col-sm-8">
-                    <@form.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                    <@f.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>###
     #elseif($column.htmlType == "icon")
@@ -258,7 +258,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.iconselect name="${field}" placeholder="选择图标"/>
+                    <@f.iconselect name="${field}" placeholder="选择图标"/>
                 </div>
             </div>
         </div>
@@ -268,7 +268,7 @@ ${pageTheme}
                 </label>
                 <div class="col-sm-8">
                     <div class="input-group">
-                        <@form.imageclip name="${field}"/>
+                        <@f.imageclip name="${field}"/>
                     </div>
                 </div>
             </div>###
@@ -277,14 +277,14 @@ ${pageTheme}
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
                 </label>
                 <div class="col-sm-8">
-                     <@form.selectLinkage name="${field}"/>
+                     <@f.selectLinkage name="${field}"/>
                 </div>
             </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple=true />
+                <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple=true />
             </div>
         </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -301,7 +301,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+                <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
             </div>
         </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -318,7 +318,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                <@form.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
+                <@f.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
             </div>
         </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -340,7 +340,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-               <@form.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+               <@f.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
             </div>
         </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
@@ -381,7 +381,7 @@ ${pageTheme}
          <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                    <@form.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
+                    <@f.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
             </div>
          </div>####
  #elseif($column.htmlType == "comp")
@@ -389,7 +389,7 @@ ${pageTheme}
         <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
             <div class="col-sm-8">
-                  <@form.treeselect  name="${field}"
+                  <@f.treeselect  name="${field}"
                     boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
             </div>
         </div>####
@@ -437,7 +437,7 @@ ${pageTheme}
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "图片附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                    <@form.fileupload name="upload_img" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
+                    <@f.fileupload name="upload_img" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
                 </div>
            </div>
        </div>
@@ -450,13 +450,26 @@ ${pageTheme}
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "文件附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                    <@form.fileupload name="upload_file" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
+                    <@f.fileupload name="upload_file" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
                 </div>
             </div>
         </div>
    </div>
 #end
-</@form.form>
+#if($table.master)
+  <h4 class="form-header h4">子表单信息</h4>
+  <div class="row">
+        <div class="col-xs-12">
+            <@table id="bootstrap-table">
+                <a class="btn btn-success" onclick="addColumn()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+                <a class="btn btn-danger" onclick="$.table.removeData()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@table>
+        </div>
+   </div>
+#end
+</@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-5 col-sm-10">
@@ -477,6 +490,70 @@ ${pageTheme}
         focusCleanup: true
     });
 
+    #if($table.master)
+    var options = {
+        pagination: false,
+        showSearch: false,
+        showRefresh: false,
+        showToggle: false,
+        showColumns: false,
+        clickToSelect: false,
+        sidePagination: "client",
+        rememberSelected: false,
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'index',
+                align: 'center',
+                title: "序号",
+                formatter: function (value, row, index) {
+                    var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    return columnIndex + $.table.serialNumber(index);
+                }
+            }
+            #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+            #foreach($c in $childColumns)## foreach columns
+            #set($dictType=$c.dictType)
+            #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
+            #if($parentheseIndex != -1)
+            #set($com=$c.columnComment.substring(0, $parentheseIndex))
+            #else##
+            #set($com=$c.columnComment)##
+            #end#####注释含有括符
+            #if($c.edit && !$c.pk)
+            ,{
+                field: '${c.javaField}',
+                align: 'center',
+                title: '${com}',
+                formatter: function(value, row, index) {
+                    #if($c.htmlType == "input")
+                    var html = opt.common.sprintf("<input class='form-control' type='text' name='${classEnty}[%s].${c.javaField}' value='%s'>", index, value);
+                    return html;
+                    #end
+                    #if($c.htmlType == "datetime")
+                    var data = {"index":index,"field":"${c.javaField}","value":value};
+                    return opt.template('datetime',data);
+                    #end
+                }
+            }
+            #end
+            #end
+            ]
+    };
+    $.table.init(options);
+
+    function addColumn(){
+        var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
+        var row = {index: count + 1
+            #foreach($c in $childColumns)## foreach columns
+            #if($c.edit && !$c.pk)
+            ,${c.javaField}:""
+            #end
+            #end};
+        $.table.addColumn(row);
+    }
+    #end
     function submitHandler() {
         if (opt.validate.form()) {
             opt.operate.saveTab(prefix + "/add", $('#form-${businessName}-add').serialize());
@@ -515,4 +592,29 @@ ${pageTheme}
 #end#####
 </script>
 </@footer>
+#if($table.master)
+
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+    #foreach($c in $childColumns)## foreach columns
+        #set($dictType=$c.dictType)
+        #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
+        #if($parentheseIndex != -1)
+            #set($com=$c.columnComment.substring(0, $parentheseIndex))
+        #else##
+            #set($com=$c.columnComment)##
+        #end#####注释含有括符
+        #if($c.edit && !$c.pk)
+
+            #if($c.htmlType == "datetime")
+<script id="datetime" type="text/template">//<!--
+<div>
+    <input class="form-control time-input" name="${classEnty}[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
+</div>
+//-->
+</script>
+        #break
+            #end
+        #end
+    #end
+#end
 </@pageTheme>

@@ -2,18 +2,18 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="修改模块" bodyClass="white-bg" libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-sysModule-edit" class="form-horizontal">
-    <@form.hidden id="id" name="id" value="${sysModule.id?default('')}"/>
+<@f.form id="form-sysModule-edit" class="form-horizontal">
+    <@f.hidden id="id" name="id" value="${sysModule.id?default('')}"/>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块名称"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleName" value="${sysModule.moduleName?default('')}" required=true/>
+            <@f.input name="moduleName" value="${sysModule.moduleName?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块编码"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required=true/>
+            <@f.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
@@ -23,35 +23,35 @@
             <i class="fa fa-question-circle-o" style="color: orange"></i></a>
     </label>
     <div class="col-sm-8">
-        <@form.iconselect name="icon" value="${sysModule.icon?default('')}" placeholder="选择图标"/>
+        <@f.iconselect name="icon" value="${sysModule.icon?default('')}" placeholder="选择图标"/>
     </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块描述"/>：</label>
         <div class="col-sm-8">
-            <@form.textarea name="description" value="${sysModule.description?default('')}" required=true/>
+            <@f.textarea name="description" value="${sysModule.description?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "主类全名"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="mainClassName" required=true value="${sysModule.mainClassName?default('')}"
+            <@f.input name="mainClassName" required=true value="${sysModule.mainClassName?default('')}"
             helpTip = "该模块的状态验证类，如果该类检测不存在，则该模块状态提示 \"未安装\",验证原理：Class.forName()"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "版本"/>：</label>
         <div class="col-sm-8">
-            <@form.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required=true/>
+            <@f.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "备注信息"/>：</label>
         <div class="col-sm-8">
-            <@form.textarea name="remark" value="${sysModule.remark?default('')}"/>
+            <@f.textarea name="remark" value="${sysModule.remark?default('')}"/>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
     <script type="text/javascript">

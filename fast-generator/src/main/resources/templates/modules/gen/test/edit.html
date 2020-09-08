@@ -1,26 +1,26 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="修改代码生成范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage"]/>
+<@header title="修改单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage","table"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-test-edit"  class="form-horizontal">
+<@f.form id="form-test-edit"  class="form-horizontal">
     <input name="id" value="${exampleTest.id}" type="hidden">
-    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa icon-star"></i></h4>
+    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa fa-star"></i></h4>
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "员工编号"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@form.input name="code" value="${exampleTest.code?default('')}"   required=true />
+                <@f.input name="code" value="${exampleTest.code?default('')}"   required=true />
                 </div>
              </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "姓名"/>：    
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "姓名"/>：    
                </label>
                 <div class="col-sm-8">
-                <@form.input name="name" value="${exampleTest.name?default('')}"   required=true />
+                <@f.input name="name" value="${exampleTest.name?default('')}"   />
                 </div>
              </div>
         </div>
@@ -31,7 +31,7 @@
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "邮箱"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@form.input name="email" value="${exampleTest.email?default('')}"   />
+                <@f.input name="email" value="${exampleTest.email?default('')}"   />
                 </div>
              </div>
         </div>
@@ -41,7 +41,7 @@
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.imageclip name="avatar" value="${exampleTest.avatar?default('')}"/>
+                    <@f.imageclip name="avatar" value="${exampleTest.avatar?default('')}"/>
                 </div>
             </div>
         </div>        </div>
@@ -49,10 +49,10 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "电话"/>：                        
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "电话"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@form.input name="phone" value="${exampleTest.phone?default('')}"   required=true />
+                <@f.input name="phone" value="${exampleTest.phone?default('')}"   />
                 </div>
              </div>
         </div>
@@ -60,7 +60,10 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "性别"/>：</label>
                 <div class="col-sm-8">
-                   <@form.radio name="sex" dictType="sys_user_sex" value="${exampleTest.sex?default('')}"  />
+                    <select name="sex" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
                 </div>
             </div>
         </div>
@@ -68,10 +71,10 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "年龄"/>：                        
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "年龄"/>：                        
                </label>
                 <div class="col-sm-8">
-                <@form.input name="age" value="${exampleTest.age?default('')}"   required=true />
+                <@f.input name="age" value="${exampleTest.age?default('')}"   />
                 </div>
              </div>
         </div>
@@ -103,8 +106,8 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "归属公司"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect  name="compId" value="${exampleTest.compId?default('')}"
-                        labelValue="${exampleTest.compName?default('')}"
+                        <@f.treeselect  name="compId" value="${exampleTest.compId?default('')}"
+                        labelValue="${exampleTest.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -115,8 +118,8 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "归属部门"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect name="deptId" value="${exampleTest.deptId?default('')}"
-                          labelValue="${exampleTest.deptName?default('')}"
+                        <@f.treeselect name="deptId" value="${exampleTest.deptId?default('')}"
+                          labelValue="${exampleTest.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="compId" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -126,28 +129,37 @@
             <label class="col-sm-4 control-label"><@ctx.i18n text = "地址"/>：
             </label>
             <div class="col-sm-8">
-                 <@form.selectLinkage name="addr" value="${exampleTest.addr?default('')}"/>
+                 <@f.selectLinkage name="addr" value="${exampleTest.addr?default('')}"/>
             </div>
         </div>        </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：</label>
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "地址详情"/>：                        
+               </label>
                 <div class="col-sm-8">
-                    <textarea name="addrinfo" class="form-control">${exampleTest.addrinfo?default('')}</textarea>
+                <@f.input name="addrinfo" value="${exampleTest.addrinfo?default('')}"   />
                 </div>
-            </div>
+             </div>
         </div>
-    </div>
-    <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="col-sm-4 control-label"><@ctx.i18n text = "备注信息"/>：    
+               </label>
+                <div class="col-sm-8">
+                <@f.input name="remark" value="${exampleTest.remark?default('')}"   />
+                </div>
+             </div>
+        </div>
+    </div>    <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
    <div class="row">
        <div class="col-xs-12">
             <div class="form-group">
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "图片附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                    <@form.fileupload name="upload_img" bizId="${exampleTest.id}" bizType="example_test_img" isLazy=true preview="true" uploadType="image"/>
+                    <@f.fileupload name="upload_img" bizId="${exampleTest.id}" bizType="example_test_img" isLazy=true preview="true" uploadType="image"/>
                 </div>
            </div>
        </div>
@@ -158,12 +170,23 @@
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "文件附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                     <@form.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="all"/>
+                     <@f.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="all"/>
                 </div>
             </div>
         </div>
    </div>
-</@form.form>
+  <h4 class="form-header h4">子表单信息</h4>
+  <div class="row">
+        <div class="col-xs-12">
+            <@table id="bootstrap-table">
+                <a class="btn btn-success" onclick="addColumn()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+                <a class="btn btn-danger" onclick="$.table.removeData()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@table>
+        </div>
+   </div>
+</@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-5 col-sm-10">
@@ -184,6 +207,98 @@
             opt.operate.saveTab(prefix + "/edit", $('#form-test-edit').serialize());
         }
     }
-</script>
+
+    var options = {
+        showSearch: false,
+        showRefresh: false,
+        showToggle: false,
+        showColumns: false,
+        clickToSelect: false,
+        url: prefix + "/child/list",
+        rememberSelected: false,
+        queryParams:function(params){
+            var curParams = {
+                // 传递参数查询参数
+                __limit:       params.limit,
+                __page:        params.offset / params.limit + 1,
+                searchValue:    params.search,
+                testId: "${exampleTest.id}",
+                __sidx:           params.sort,
+                __order:          params.order
+            };
+            return curParams;
+        },
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'index',
+                align: 'center',
+                title: "序号",
+                formatter: function (value, row, index) {
+                    var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    return columnIndex + $.table.serialNumber(index);
+                }
+            }
+                                                                                                               ,{
+                field: 'workCompany',
+                align: 'center',
+                title: '工作公司',
+                formatter: function(value, row, index) {
+                                        var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].workCompany' value='%s'>", index, value);
+                    return html;
+                                                }
+            }
+                                                     ,{
+                field: 'startTime',
+                align: 'center',
+                title: '起始时间',
+                formatter: function(value, row, index) {
+                                                    var data = {"index":index,"field":"startTime","value":opt.common.formatDat(value,"yyyy-MM-dd")};
+                    return opt.template('datetime',data);
+                                    }
+            }
+                                                     ,{
+                field: 'endTime',
+                align: 'center',
+                title: '辞职时间',
+                formatter: function(value, row, index) {
+                                                    var data = {"index":index,"field":"endTime","value":opt.common.formatDat(value,"yyyy-MM-dd")};
+                    return opt.template('datetime',data);
+                                    }
+            }
+                                                     ,{
+                field: 'jobs',
+                align: 'center',
+                title: '在职岗位',
+                formatter: function(value, row, index) {
+                                        var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].jobs' value='%s'>", index, value);
+                    return html;
+                                                }
+            }
+                            ]
+    };
+    $.table.init(options);
+
+    function addColumn(){
+        var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
+        var row = {index: count + 1
+                                                        ,workCompany:""
+                                    ,startTime:""
+                                    ,endTime:""
+                                    ,jobs:""
+                };
+        $.table.addColumn(row);
+    }
+    </script>
 </@footer>
-</@pageTheme>
+
+                                                                                           
+                                                 
+            <script id="datetime" type="text/template">//<!--
+<div>
+    <input class="form-control time-input" name="exampleTestChild[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
+</div>
+//-->
+</script>
+        </@pageTheme>

@@ -147,7 +147,6 @@ public class FileUploadUtil {
 
     private static final String getPathFileName(String uploadDir, String fileName) throws IOException
     {
-        //D:/fast/uploadPath
         int dirLastIndex = uploadDir.lastIndexOf("/") + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         String pathFileName =  "/profile/" + currentDir + "/" + fileName;

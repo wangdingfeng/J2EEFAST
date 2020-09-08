@@ -15,11 +15,14 @@ import java.util.Date;
 import org.springframework.web.bind.annotation.*;
 import com.j2eefast.generator.gen.entity.ExampleTestEntity;
 import com.j2eefast.generator.gen.service.ExampleTestService;
+import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
+import com.j2eefast.generator.gen.service.ExampleTestChildService;
+import java.util.List;
 
 /**
- * 代码生成范例页面控制器
+ * 单范例页面控制器
  * @author ZhouZhou
- * @date 2020-08-07 11:33
+ * @date 2020-09-06 16:35
  */
 @Controller
 @RequestMapping("/gen/test")
@@ -28,7 +31,11 @@ public class ExampleTestController extends BaseController{
     private String prefix = "modules/gen/test";
     @Autowired
     private ExampleTestService exampleTestService;
+    
+    @Autowired
+    private ExampleTestChildService exampleTestChildService;
 
+    
     @RequiresPermissions("gen:test:view")
     @GetMapping()
     public String test(){
@@ -53,7 +60,7 @@ public class ExampleTestController extends BaseController{
      */
     @RepeatSubmit
     @RequiresPermissions("gen:test:add")
-    @BussinessLog(title = "代码生成范例", businessType = BusinessType.INSERT)
+    @BussinessLog(title = "单范例", businessType = BusinessType.INSERT)
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData addExampleTest(@Validated ExampleTestEntity exampleTest){
@@ -61,6 +68,15 @@ public class ExampleTestController extends BaseController{
         ValidatorUtil.validateEntity(exampleTest);
         return exampleTestService.addExampleTest(exampleTest)? success(): error("新增失败!");
     }    
+    
+    @RequestMapping("/child/list")
+    @RequiresPermissions("gen:test:list")
+    @ResponseBody
+    public ResponseData childList(@RequestParam Map<String, Object> params) {
+        PageUtil page = exampleTestChildService.findPage(params);
+        return success(page);
+    }    
+
     
     /**
      * 修改
@@ -74,11 +90,11 @@ public class ExampleTestController extends BaseController{
     }
 
     /**
-     * 修改保存代码生成范例
+     * 修改保存单范例
      */
     @RepeatSubmit
     @RequiresPermissions("gen:test:edit")
-    @BussinessLog(title = "代码生成范例", businessType = BusinessType.UPDATE)
+    @BussinessLog(title = "单范例", businessType = BusinessType.UPDATE)
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData editExampleTest(ExampleTestEntity exampleTest){
@@ -90,7 +106,7 @@ public class ExampleTestController extends BaseController{
      * 删除
      */
     @RepeatSubmit
-    @BussinessLog(title = "代码生成范例", businessType = BusinessType.DELETE)
+    @BussinessLog(title = "单范例", businessType = BusinessType.DELETE)
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @RequiresPermissions("gen:test:del")
     @ResponseBody

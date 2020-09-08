@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+##### 如果是主子表主表
+#if($table.master)
+import ${packageName}.entity.${childTable.className}Entity;
+import java.util.List;
+#end
 #foreach ($column in $columns)##
 #if(!$table.isSuperColumn($column.javaField))####
 #if($column.javaType == 'Date')##
@@ -29,7 +34,7 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
 #else
 #set($EntityFlag="0")
 #foreach ($column in $columns)##
-#if(!$table.isSuperColumn($column.javaField))####
+#if($table.isSuperColumn($column.javaField))####
 #set($EntityFlag="1")#break
 #end
 #end
@@ -45,11 +50,11 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
 import ${import};
 #end
 #foreach ($column in $columns)##
-#if($column.javaType == 'SysCompEntity')##
+#if($column.htmlType == 'comp')##
 import com.j2eefast.framework.sys.entity.SysCompEntity;
-#elseif($column.javaType == 'SysUserEntity')##
+#elseif($column.htmlType == 'user')##
 import com.j2eefast.framework.sys.entity.SysUserEntity;
-#elseif($column.javaType == 'SysDeptEntity')##
+#elseif($column.htmlType == 'dept')##
 import com.j2eefast.framework.sys.entity.SysDeptEntity;
 #end
 #end
@@ -116,12 +121,17 @@ public class ${ClassName}Entity ${Entity}{
 #if($column.htmlType == "comp")####
 
     @TableField(exist=false)
-    private String compName;####
+    private SysCompEntity company;####
 #end##
 #if($column.htmlType == "dept")####
 
     @TableField(exist=false)
-    private String deptName;####
+    private SysDeptEntity organization;####
+#end##
+#if($column.htmlType == "user")####
+
+    @TableField(exist=false)
+    private SysUserEntity sysUser;####
 #end##
 #end
 #end
@@ -173,13 +183,19 @@ public class ${ClassName}Entity ${Entity}{
 #if($column.htmlType == "comp")##
 
     @TableField(exist=false)
-    private String compName;###
+    private SysCompEntity company;###
+####
+#end####
+#if($column.htmlType == "user")##
+
+    @TableField(exist=false)
+    private SysUserEntity sysUser;###
 ####
 #end####
 #if($column.htmlType == "dept")##
 
     @TableField(exist=false)
-    private String deptName;####
+    private SysDeptEntity organization;####
 ####
 #end##
 #end
@@ -187,5 +203,11 @@ public class ${ClassName}Entity ${Entity}{
 #end
 #end
 #end
+#if($table.master)
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
 
+
+    @TableField(exist=false)
+    private List<${childTable.className}Entity> ${classEnty};
+#end
 }

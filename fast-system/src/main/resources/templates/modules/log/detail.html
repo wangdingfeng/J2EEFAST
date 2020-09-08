@@ -2,7 +2,7 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="操作日志详细" bodyClass="white-bg" libs=["jsonview"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="signupForm" class="form-horizontal">
+<@f.form id="signupForm" class="form-horizontal">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">操作模块：</label>
 		<div class="form-control-static">
@@ -59,7 +59,7 @@
 			${sysLog.errorMsg}
 		</div>
 	</div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script>

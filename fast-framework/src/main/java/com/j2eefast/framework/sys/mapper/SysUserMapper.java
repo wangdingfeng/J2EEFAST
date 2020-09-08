@@ -27,6 +27,7 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
                                  @Param("email") String email,
                                  @Param("compId") String compId,
                                  @Param("deptId") String deptId,
+                                 @Param("name") String name,
                                  @Param("sql_filter") String sql_filter);
 
 

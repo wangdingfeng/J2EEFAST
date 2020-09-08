@@ -4,20 +4,20 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="module-form">
+	<@f.form id="module-form">
         <div class="select-list">
             <ul>
                 <li>
                     <@ctx.i18n text = "公告标题"/>：
-                    <input type="text" name="noticeTitle"/>
+                    <input type="text" class="form-control" name="noticeTitle"/>
                 </li>
                 <li>
                     <@ctx.i18n text = "类型"/>：
-                    <@form.select name="noticeType" blankValue="" blankLabel="所有" dictType="sys_notice_type" />
+                    <@f.select name="noticeType" blankValue="" blankLabel="所有" dictType="sys_notice_type" />
                 </li>
                 <li>
                     <@ctx.i18n text = "状态"/>：
-                    <@form.select name="sys_notice_status" blankValue="" blankLabel="所有" dictType="sys_notice_type" />
+                    <@f.select name="sys_notice_status" blankValue="" blankLabel="所有" dictType="sys_notice_type" />
                 </li>
                 <li>
                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>  <@ctx.i18n text = "查询"/></a>
@@ -25,7 +25,7 @@
                 </li>
             </ul>
         </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:notice:add">

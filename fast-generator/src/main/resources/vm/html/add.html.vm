@@ -7,7 +7,7 @@ ${pageTheme}
 #end
 #end
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-${businessName}-add"  class="form-horizontal">
+<@f.form id="form-${businessName}-add"  class="form-horizontal">
 #set($compId_="")### 设置公司变量
 #foreach($column in $columns)
 #set($field=$column.javaField)
@@ -50,7 +50,7 @@ ${pageTheme}
        </label>##
 
         <div class="col-sm-8">
-        <@form.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+        <@f.input name="${field}" #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
      </div>##
 
@@ -63,7 +63,7 @@ ${pageTheme}
         </label>
         <div class="col-sm-8">
             <div class="input-group">
-                <@form.iconselect name="${field}" placeholder="选择图标"/>
+                <@f.iconselect name="${field}" placeholder="选择图标"/>
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.imageclip name="${field}"/>
+                    <@f.imageclip name="${field}"/>
                 </div>
             </div>
         </div>###
@@ -81,7 +81,7 @@ ${pageTheme}
     <div class="form-group">
         <label class="col-sm-3 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-            <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple="true" />
+            <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple="true" />
         </div>
     </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -98,7 +98,7 @@ ${pageTheme}
     <div class="form-group">
         <label class="col-sm-3 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-            <@form.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+            <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
         </div>
     </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -115,7 +115,7 @@ ${pageTheme}
     <div class="form-group">
         <label class="col-sm-3 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-            <@form.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
+            <@f.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end />
         </div>
     </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -137,7 +137,7 @@ ${pageTheme}
     <div class="form-group">
         <label class="col-sm-3 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-           <@form.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
+           <@f.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end />
         </div>
     </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
@@ -178,7 +178,7 @@ ${pageTheme}
      <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-                <@form.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
+                <@f.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree" correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
         </div>
      </div>
             
@@ -187,7 +187,7 @@ ${pageTheme}
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "${comment}"/>：</label>
         <div class="col-sm-8">
-              <@form.treeselect  name="${field}"
+              <@f.treeselect  name="${field}"
                 boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
         </div>
     </div>
@@ -223,7 +223,7 @@ ${pageTheme}
         <label class="col-sm-3 control-label">附件上传：
         </label>
         <div class="col-sm-8">
-            <@form.fileupload name="upload_img" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
+            <@f.fileupload name="upload_img" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
         </div>
    </div>
 #end
@@ -232,11 +232,11 @@ ${pageTheme}
         <label class="col-sm-3 control-label">附件上传：
         </label>
         <div class="col-sm-8">
-            <@form.fileupload name="upload_file" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
+            <@f.fileupload name="upload_file" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
         </div>
     </div>
 #end
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 #foreach($column in $columns)

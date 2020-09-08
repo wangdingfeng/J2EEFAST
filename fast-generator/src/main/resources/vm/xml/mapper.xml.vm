@@ -26,14 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="${className}Columns">
 #foreach($c in $columns)##
 #if($c.htmlType == "comp")##
-         comp001.name as "compName",##
+         comp001.name as "company.name",##
 
 #elseif($c.htmlType == "dept")##
-         dept001.name as "deptName",##
+         dept001.name as "organization.name",##
           
-#elseif($c.htmlType == "SysUserEntity" ) ##关联系统实体
-         user001.name as "${c.javaField}.name"
-                
+#elseif($c.htmlType == "user" ) ##关联系统实体
+         user001.name as "sysUser.name",###
+
 #end
          a.$c.columnName as "${c.javaField}" #if($velocityCount != $columns.size()),#end##
 

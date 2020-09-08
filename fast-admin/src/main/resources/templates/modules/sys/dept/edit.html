@@ -2,19 +2,19 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="修改组织机构" bodyClass="white-bg" libs=["bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-dept-edit" class="form-horizontal">
-    <@form.hidden id="id" name="id"  value="${dept.id}"/>
+<@f.form id="form-dept-edit" class="form-horizontal">
+    <@f.hidden id="id" name="id"  value="${dept.id}"/>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构类型：</label>
         <div class="col-sm-8">
-            <@form.select name="type" dictType="sys_comp_type" value="${dept.type}"/>
+            <@f.select name="type" dictType="sys_comp_type" value="${dept.type}"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label "><span style="color: red; ">*</span>上级机构：</label>
         <div class="col-sm-8">
-            <@form.treeselect id="parentId" name="parentId" boxTitle="请选择上级机构" url="sys/comp/treeData"
-            expandLevel=true isparentids=true value="${dept.parentId}" labelValue="${dept.parentName?default('总公司')}" isparentids=true
+            <@f.treeselect id="parentId" name="parentId" boxTitle="请选择上级机构" url="sys/comp/treeData"
+            expandLevel=true value="${dept.parentId}" labelValue="${dept.parentName?default('总公司')}" isParentIds=true
             parenIdsValue="${dept.parentIds}"
             placeholder="请选择上级机构" required=true/>
         </div>
@@ -22,34 +22,34 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构名称：</label>
         <div class="col-sm-8">
-            <@form.input name="name" value="${dept.name}" required=true/>
+            <@f.input name="name" value="${dept.name}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构全称：</label>
         <div class="col-sm-8">
-            <@form.input name="fullName" value="${dept.fullName}" required=true/>
+            <@f.input name="fullName" value="${dept.fullName}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>显示排序：</label>
         <div class="col-sm-8">
-            <@form.input name="orderNum"  value="${dept.orderNum?default(0)}" required=true/>
+            <@f.input name="orderNum"  value="${dept.orderNum?default(0)}" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>状态：</label>
         <div class="col-sm-8">
-            <@form.radio name="status" value="${dept.status}" dictType="sys_normal_disable"/>
+            <@f.radio name="status" value="${dept.status}" dictType="sys_normal_disable"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">备注：</label>
         <div class="col-sm-8">
-            <@form.textarea name="remark" value="${dept.remark?default('')}"/>
+            <@f.textarea name="remark" value="${dept.remark?default('')}"/>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script type="text/javascript">

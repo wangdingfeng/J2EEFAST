@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.controller.BaseController;
@@ -13,7 +15,6 @@ import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
 import com.j2eefast.framework.utils.UserUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,7 +267,7 @@ public class SysMenuController extends BaseController {
 	 * 验证参数是否正确
 	 */
 	private void verifyForm(SysMenuEntity menu) {
-		if (StringUtils.isBlank(menu.getName())) {
+		if (StrUtil.isBlank(menu.getName())) {
 			throw new RxcException("菜单名称不能为空");
 		}
 
@@ -276,7 +277,7 @@ public class SysMenuController extends BaseController {
 
 		// 菜单
 		if (menu.getType() == Constant.MenuType.MENU.getValue()) {
-			if (StringUtils.isBlank(menu.getUrl())) {
+			if (StrUtil.isBlank(menu.getUrl())) {
 				throw new RxcException("菜单URL不能为空");
 			}
 		}

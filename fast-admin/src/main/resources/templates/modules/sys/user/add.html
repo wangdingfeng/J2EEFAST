@@ -2,14 +2,14 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="新增用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
  <div class="wrapper wrapper-content ibox-content">
-    <@form.form id="form-user-add" class="form-horizontal">
+    <@f.form id="form-user-add" class="form-horizontal">
     <h4 class="form-header h4">基本信息</h4>
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>登录账号：</label>
                 <div class="col-sm-8">
-                    <@form.input name="username" placeholder="请输入登录账号" required=true helpTip="登录账号数字加字母组合,至少3位"/>
+                    <@f.input name="username" placeholder="请输入登录账号" required=true helpTip="登录账号数字加字母组合,至少3位"/>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>归属公司：</label>
                 <div class="col-sm-8">
-                    <@form.treeselect name="compId" boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true required=true
+                    <@f.treeselect name="compId" boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true required=true
                     placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -36,7 +36,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>归属部门：</label>
                 <div class="col-sm-8">
-                    <@form.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" required=true
+                    <@f.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" required=true
                     correlationId="compId" isSelectParent=true  placeholder="请选择归属部门"/>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>登录密码：</label>
                 <div class="col-sm-8">
                     <div class="input-group">
-                       <@form.input name="password" placeholder="请输入登录密码" required=true type="password" value="${config.getKey('SYS_USER_INITPASSWORD')}"/>
+                       <@f.input name="password" placeholder="请输入登录密码" required=true type="password" value="${config.getKey('SYS_USER_INITPASSWORD')}"/>
                        <span class="input-group-addon" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
                               data-toggle="tooltip"
                               data-placement="bottom" data-custom-class="tooltip-warning"
@@ -62,7 +62,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>所属角色：</label>
                 <div class="col-sm-8">
-                    <@form.select name="roleIdList" multiple = true  items=roles itemLabel="roleName" itemValue="id" required=true/>
+                    <@f.select name="roleIdList" multiple = true  items=roles itemLabel="roleName" itemValue="id" required=true/>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>手机号码：</label>
                 <div class="col-sm-8">
 <#--                    <div class="input-group">-->
-                        <@form.input name="mobile"  maxlength="11" butClass="fa fa-fw fa-mobile"  placeholder="请输入手机号码" required=true/>
+                        <@f.input name="mobile"  maxlength="11" butClass="fa fa-fw fa-mobile"  placeholder="请输入手机号码" required=true/>
 <#--                    </div>-->
                 </div>
             </div>
@@ -82,7 +82,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>所在岗位：</label>
                 <div class="col-sm-8">
-                    <@form.select name="postCodes" multiple = true  items=posts itemLabel="postName" itemValue="postCode" required=true/>
+                    <@f.select name="postCodes" multiple = true  items=posts itemLabel="postName" itemValue="postCode" required=true/>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">邮箱：</label>
                 <div class="col-sm-8">
-                    <@form.input name="email" class="form-control email" butClass="fa fa-fw fa-envelope" maxlength="50" placeholder="请输入邮箱" />
+                    <@f.input name="email" class="form-control email" butClass="fa fa-fw fa-envelope" maxlength="50" placeholder="请输入邮箱" />
                 </div>
             </div>
         </div>
@@ -100,12 +100,12 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">用户状态：</label>
                 <div class="col-sm-8">
-                    <@form.switch name="status" value="0"/>
+                    <@f.switch name="status" value="0"/>
                 </div>
             </div>
         </div>
     </div>
-    </@form.form>
+    </@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-5 col-sm-10">

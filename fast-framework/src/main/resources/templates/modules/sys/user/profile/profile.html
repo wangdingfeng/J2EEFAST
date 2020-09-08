@@ -57,7 +57,7 @@
                 </div>
                 <div class="ibox-content animated fadeInDown">
                     <div class="text-center">
-                        <p><img onclick="avatar()" class="img-circle img-lg" src="${ctxStatic}${((user.avatar!'')?length>0)?string((user.avatar!''),"/statics/img/user2-160x160.jpg")}" onerror="imgUserError();"/></p>
+                        <p class="cap-head" onclick="avatar()"><img class="img-circle img-lg" src="${ctxStatic}${((user.avatar!'')?length>0)?string((user.avatar!''),"/statics/img/user2-160x160.jpg")}" onerror="imgUserError();"/></p>
                         <p><a href="javascript:avatar()"><@ctx.i18n text = "修改头像"/></a></p>
                     </div>
                     <ul class="list-group list-group-striped">
@@ -223,9 +223,9 @@
                             <!-- 绑定第三方账号登录-->
                             <div class="tab-pane <#if active=="oauth2"> active</#if>  animated fadeInDown" id="third_party_binding">
                                 <#if err != "">
-                                    <@form.tip class="danger" animated="">${err}</@form.tip>
+                                    <@f.tip class="danger" animated="">${err}</@f.tip>
                                 </#if>
-<#--                                <@form.tip class="info" animated="">使用以下任一方式都可以登录到J2eeFAST系统，避免由于某个帐号失效导致无法登录.</@form.tip>-->
+<#--                                <@f.tip class="info" animated="">使用以下任一方式都可以登录到J2eeFAST系统，避免由于某个帐号失效导致无法登录.</@f.tip>-->
                                 <div class="form-horizontal">
                                     <div class="form-group">
                                         <div class="col-sm-12">

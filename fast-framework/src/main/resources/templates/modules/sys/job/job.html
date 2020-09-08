@@ -4,20 +4,20 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="job-form">
+	<@f.form id="job-form">
 		<div class="select-list">
 			<ul>
 				<li>
 					<@ctx.i18n text = "任务名称"/>：
-					<input type="text" name="jobName"/>
+					<input type="text" class="form-control" name="jobName"/>
 				</li>
 				<li>
 					<@ctx.i18n text = "任务分组"/>：
-					<@form.select name="jobGroup" blankValue="" blankLabel="所有" dictType="sys_job_group" />
+					<@f.select name="jobGroup" blankValue="" blankLabel="所有" dictType="sys_job_group" />
 				</li>
 				<li>
 					<@ctx.i18n text = "任务状态"/>：
-					<@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_job_status" />
+					<@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_job_status" />
 				</li>
 				<li>
 					<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -25,7 +25,7 @@
 				</li>
 			</ul>
 		</div>
-	</@form.form>
+	</@f.form>
 	</div>
 	<@table id="bootstrap-table">
 			<@shiro.hasPermission name="sys:job:add">

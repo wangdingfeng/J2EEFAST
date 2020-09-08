@@ -4,12 +4,12 @@
 <div class="container-div" id="_app">
     <div class="row">
     <div class="col-sm-12 search-collapse">
-    <@form.form id="module-form">
+    <@f.form id="module-form">
         <div class="select-list">
             <ul>
                 <li>
                     <@ctx.i18n text = "名称"/>：
-                    <input type="text" name="dbName"/>
+                    <input type="text" class="form-control" name="dbName"/>
                 </li>
                 <li>
                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>  <@ctx.i18n text = "查询"/></a>
@@ -17,7 +17,7 @@
                 </li>
             </ul>
         </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:database:add">

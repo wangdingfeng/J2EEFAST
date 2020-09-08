@@ -1,7 +1,17 @@
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+
+import com.j2eefast.common.core.base.entity.TableEntity;
 import com.j2eefast.common.core.controller.BaseController;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +59,57 @@ public class SysComponentController extends BaseController {
 		//编辑回传此节点所有父节点
 		mmap.put("parentIds",super.getPara("parentIds",""));
 		return urlPrefix + "/treeselect";
+	}
+	
+	/**
+	 * 跳转表格选择页面
+	 * @param mmap
+	 * @return
+	 */
+	@RequestMapping(value = "/tableselect", method = RequestMethod.POST)
+	public String tableselect(ModelMap mmap) {
+		
+		
+		// 结构数据URL
+		mmap.put("url",super.getPara("url"));
+		// 选中ID
+		mmap.put("selectId",super.getPara("selectId"));
+		//节点名称
+		mmap.put("selectName",super.getPara("selectName"));
+		
+		//表格展示信息
+		String talbeInfo = super.getPara("tableInfo");
+		JSONArray json = JSONUtil.parseArray(talbeInfo);
+		List<TableEntity> tablelsit = new ArrayList<TableEntity>(json.size());
+		boolean query = false;
+		for(int i=0; i<json.size(); i++) {
+			JSONObject o =  (JSONObject) json.get(i);
+			TableEntity t = new TableEntity();
+			t.setField(o.getStr("field",""));
+			t.setDict(o.getStr("dict",""));
+			t.setQuery(o.getStr("query","").equals("true"));
+			t.setTitle(o.getStr("title",""));
+			if(t.isQuery()) {
+				query = true;
+			}
+			tablelsit.add(t);
+		}
+		mmap.put("tableInfo",tablelsit);
+		
+		//是否可复选 单选还是多选
+		mmap.put("checked", super.getPara("checked").equals("true"));
+		//是否有机构查询
+		mmap.put("isorga",super.getPara("isorga").equals("true"));
+
+		mmap.put("keyId",super.getPara("keyId"));
+
+		mmap.put("keyName",super.getPara("keyName"));
+
+		mmap.put("separator",super.getPara("separator"));
+		//是否需要查询
+		mmap.put("query", query);
+		
+		return urlPrefix + "/tableselect";
 	}
 
 	/**

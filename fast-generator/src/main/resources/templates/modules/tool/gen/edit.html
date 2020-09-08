@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="修改生成信息" bodyClass="gray-bg animated fadeInRight" isAnimation="false" libs=["table","zTree","tableReorder"]>
+<@header title="修改生成信息" bodyClass="gray-bg animated fadeInRight" isAnimation="false" libs=["table","zTree","tableReorder","selectPage"]>
 <style type="text/css">
 	.select-table table{table-layout:fixed;}.table>thead>tr>th{text-align:center;}
 	.select-table .table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -135,22 +135,19 @@
 					                    <div class="form-group">
 					                        <label class="col-sm-4 control-label"><span style="color: red; ">*</span>生成模板：</label>
 					                        <div class="col-sm-8">
-<#--												<select id="tplCategory" class="selectpicker" data-none-selected-text="请选择" multiple>-->
-<#--													<option value="crud" <#if gen_table.tplCategory == 'crud' >selected = "selected"</#if>>单表（增删改查）</option>-->
-<#--													<option value="tree" <#if gen_table.tplCategory == 'tree' >selected = "selected"</#if>>树表（增删改查）</option>-->
-<#--												</select>-->
-
 					                            <select class='form-control' id="tplCategory" name='tplCategory' style="width: 100%">
 												    <option value="crud" <#if gen_table.tplCategory == 'crud' >selected = "selected"</#if>>单表（增删改查）</option>
 													<option value="r" <#if gen_table.tplCategory == 'r' >selected = "selected"</#if>>单表（查）</option>
 													<option value="service" <#if gen_table.tplCategory == 'service' >selected = "selected"</#if>>业务层和持久层（不含控制器和视图）</option>
 													<option value="entity" <#if gen_table.tplCategory == 'entity' >selected = "selected"</#if>>只有实体类（entity) </option>
 												    <option value="tree" <#if gen_table.tplCategory == 'tree' >selected = "selected"</#if>>树表（增删改查）</option>
+													<option value="master" <#if gen_table.tplCategory == 'master' >selected = "selected"</#if>>主子表（增删改查）[主表]</option>
+													<option value="child" <#if gen_table.tplCategory == 'child' >selected = "selected"</#if>>主子表（增删改查）[子表]</option>
 												</select>
 					                        </div>
 					                    </div>
 					                </div>
-					                <div class="col-sm-6">
+					                <div class="col-sm-6 noChild">
 					                    <div class="form-group">
 					                        <label class="col-sm-4 control-label" title="生成在哪个java包下，例如 com.j2eefast.framework.sys"><span style="color: red; ">*</span>生成包路径：<i class="fa fa-question-circle-o"></i></label>
 					                        <div class="col-sm-8">
@@ -159,7 +156,7 @@
 					                    </div>
 					                </div>
 					            </div>
-					            <div class="row">
+					            <div class="row noChild">
 					                <div class="col-sm-6">
 					                    <div class="form-group">
 					                        <label class="col-sm-4 control-label" title="可理解为子系统名，例如 sys, 公交项目bcs"><span style="color: red; ">*</span>生成模块名：<i class="fa fa-question-circle-o"></i></label>
@@ -177,7 +174,7 @@
 					                    </div>
 					                </div>
 					            </div>
-					            <div class="row">
+					            <div class="row noChild">
 					                <div class="col-sm-6">
 					                    <div class="form-group">
 					                        <label class="col-sm-4 control-label" title="用作类描述，例如 用户"><span style="color: red; ">*</span>生成功能名：<i class="fa fa-question-circle-o"></i></label>
@@ -204,7 +201,7 @@
 										</div>
 									</div>
 					            </div>
-								<div class="row">
+								<div class="row noChild">
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label class="col-sm-4 control-label" title="代码生成本地是否覆盖一样的文件"><span style="color: red; ">*</span>生成文件是否覆盖：<i class="fa fa-question-circle-o"></i></label>
@@ -234,7 +231,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row noChild">
 									<div class="col-xs-12">
 										<div class="form-group">
 											<label class="col-sm-2 control-label"><span style="color: red; ">*</span>生成基础路径：
@@ -260,13 +257,13 @@
 									</div>
 								</div>
 								<div id="setTable">
-									<h4 class="form-header h4">其他选项</h4>
+									<h4 class="form-header h4">附件界面风格选项</h4>
 									<div class="row" id="isTableFile">
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label class="col-sm-4 control-label" title="表单是否有上传图片"><span style="color: red; ">*</span>是否有上传图片：<i class="fa fa-question-circle-o"></i></label>
 												<div class="col-sm-8">
-													<@form.radio name="isImg" dictType="sys_yes_no" value="${gen_table.isImg}"/>
+													<@f.radio name="isImg" dictType="sys_yes_no" value="${gen_table.isImg}"/>
 												</div>
 											</div>
 										</div>
@@ -274,7 +271,7 @@
 											<div class="form-group">
 												<label class="col-sm-4 control-label" title="表单是否有上传文件"><span style="color: red; ">*</span>是否有上传文件：<i class="fa fa-question-circle-o"></i></label>
 												<div class="col-sm-8">
-													<@form.radio name="isFile" dictType="sys_yes_no" value="${gen_table.isFile}"/>
+													<@f.radio name="isFile" dictType="sys_yes_no" value="${gen_table.isFile}"/>
 												</div>
 											</div>
 										</div>
@@ -308,8 +305,8 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
-										<div id="isTableDel" class="col-sm-6 hide">
+									<div id="isTableDel" class="row hide">
+										<div  class="col-sm-6">
 											<div class="form-group">
 												<label class="col-sm-4 control-label" title="单查询页面是否需要删除按钮"><span style="color: red; ">*</span>是否有删除功能：<i class="fa fa-question-circle-o"></i></label>
 												<div class="col-sm-8">
@@ -328,8 +325,8 @@
 										</div>
 									</div>
 								</div>
-					            <div class="hidden" id="otherInfo">
-					            <h4 class="form-header h4">其他信息</h4>
+					            <div class="hide" id="otherInfo">
+					            <h4 class="form-header h4">树表信息</h4>
 					            <div class="row">
 					                <div class="col-sm-6">
 					                    <div class="form-group">
@@ -380,6 +377,29 @@
 					                </div>
 					            </div>
 					            </div>
+								<div class="hide" id="masterInfo">
+									<h4 class="form-header h4">主子表关联选项</h4>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label is-required" title="关联子表的表名， 如：sys_user">关联子表的表名：<i class="fa fa-question-circle-o"></i></label>
+												<div class="col-sm-8">
+													<input type="hidden" name="childId" value="${gen_table.childId?default("")}">
+													<input id="childId" class="form-control" type="text" value="${gen_table.childId?default("")}" placeholder="选择字表信息" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label is-required" title="子表关联的外键名， 如：user_id">子表关联的外键名：<i class="fa fa-question-circle-o"></i></label>
+												<div class="col-sm-8">
+													<input type="hidden" name="childFieldId" value="${gen_table.childFieldId?default("")}">
+													<input id="childFieldId" class="form-control" type="text" value="${gen_table.childFieldId?default("")}" placeholder="选择字表信息" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
                             </div>
                         </div>
                         </form>
@@ -715,6 +735,79 @@
 		    };
 		    $.table.init(options);
 
+		    var childId  = "",childFieldId="";
+
+			$('#childId').selectPage({
+				showField: 'name',
+				keyField: 'id',
+				dbTable: 'gen_table',
+				data: prefix+"/edit/childLoad",
+				params:  function(){
+					return { '__seletPage':'true'}
+				},
+				eAjaxSuccess: function (res) {
+					var result = "";
+					if (res.code == opt.variable.web_status.SUCCESS) {
+						result =  {"pageNumber": res.data.currPage,"pageSize":res.data.pageSize,
+							"totalRow":res.data.totalCount,"totalPage":res.data.totalPage,"list":res.data.list};
+					}else{
+						result =  {"pageNumber": 0,"pageSize":0,
+							"totalRow":0,"totalPage":0,"list":[]};
+					}
+					return  result;
+				},
+				eSelect: function (data) {/*选择时*/
+					if (data){
+						childId = data.id;
+						$('input[name="childId"]').val(childId);
+						$('#childFieldId').selectPageClear();
+						childFieldId = "";
+						$('input[name="childFieldId"]').val("");
+					}
+				},
+				eClear: function () {/*清空时*/
+					childFieldId = '';
+					childId="";
+					$('#childFieldId').selectPageClear();
+					$('input[name="childId"]').val("");
+					$('input[name="childFieldId"]').val("");
+				}
+			});
+
+			$('#childFieldId').selectPage({
+				showField: 'name',
+				keyField: 'id',
+				dbTable: 'table_column',
+				data: prefix+"/edit/childLoad",
+				params:  function(){
+					if (childId != ''){
+						return {'__seletPage':'true','pId':childId}
+					}else{
+						return {'__seletPage':'true','type':'-1'}
+					}
+				},
+				eAjaxSuccess: function (res) {
+					var result = "";
+					if (res.code == opt.variable.web_status.SUCCESS) {
+						result =  {"pageNumber": res.data.currPage,"pageSize":res.data.pageSize,
+							"totalRow":res.data.totalCount,"totalPage":res.data.totalPage,"list":res.data.list};
+					}else{
+						result =  {"pageNumber": 0,"pageSize":0,
+							"totalRow":0,"totalPage":0,"list":[]};
+					}
+					return  result;
+				},
+				eSelect: function (data) {/*选择时*/
+					if (data){
+						childFieldId = data.id;
+						$('input[name="childFieldId"]').val(childFieldId);
+					}
+				},
+				eClear: function () {/*清空时*/
+					childFieldId = '';
+					$('input[name="childFieldId"]').val("");
+				}
+			});
 		});
 		
 		/*当拖拽结束后处理函数*/
@@ -726,6 +819,7 @@
 		
 		$(function() {
             var tplCategory = $("#tplCategory option:selected").val();
+            console.log("--->>>>tplCategory:" + tplCategory);
             tplCategoryVisible(tplCategory);
         });
 		
@@ -733,47 +827,72 @@
 			var tplCategory = $(event.target).val();
 			tplCategoryVisible(tplCategory);
 		});
-		
+
 		function tplCategoryVisible(tplCategory) {
 			if("crud" == tplCategory){
 				$("#treeCode").select2("val", [""]);
 				$("#treeParentCode").select2("val", [""]);
 				$("#treeName").select2("val", [""]);
-				$("#otherInfo").addClass("hidden");
+				$("#otherInfo").addClass("hide");
 				$("#isTabOpen").removeClass("hide");
 				$("#isTableDel").addClass("hide");
 				$("#isTabOpen").removeClass("hide");
 				$("#isTableBut").removeClass("hide");
 				$("#isTableFile").removeClass("hide");
 				$("#setTable").removeClass("hide");
+				$(".noChild").removeClass("hide");
 			} else if("tree" == tplCategory){
 				$("#isTableDel").addClass("hide");
-				$("#otherInfo").removeClass("hidden");
+				$("#otherInfo").removeClass("hide");
 				$("#treeCode").attr("required", "true");
 				$("#treeParentCode").attr("required", "true");
 				$("#treeName").attr("required", "true");
 				$("#isTabOpen").addClass("hide");
+				$("#setTable").addClass("hide");
+				$(".noChild").removeClass("hide");
 			} else if("r" == tplCategory){
 				$("#isTabOpen").addClass("hide");
 				$("#treeCode").select2("val", [""]);
 				$("#treeParentCode").select2("val", [""]);
 				$("#treeName").select2("val", [""]);
-				$("#otherInfo").addClass("hidden");
+				$("#otherInfo").addClass("hide");
 				$("#isTableDel").removeClass("hide");
 				$("#isTabOpen").addClass("hide");
 				$("#isTableBut").addClass("hide");
 				$("#isTableFile").addClass("hide");
 				$("#setTable").removeClass("hide");
+				$(".noChild").removeClass("hide");
 			} else if("service" == tplCategory || "entity" == tplCategory){
 				$("#isTabOpen").addClass("hide");
 				$("#treeCode").select2("val", [""]);
 				$("#treeParentCode").select2("val", [""]);
 				$("#treeName").select2("val", [""]);
-				$("#otherInfo").addClass("hidden");
+				$("#otherInfo").addClass("hide");
 				$("#isTableDel").addClass("hide");
 				$("#isTabOpen").addClass("hide");
 				$("#isTableBut").addClass("hide");
 				$("#isTableFile").addClass("hide");
+				$("#setTable").addClass("hide");
+				$(".noChild").removeClass("hide");
+			} else if("master" == tplCategory){
+				$("#treeCode").select2("val", [""]);
+				$("#treeParentCode").select2("val", [""]);
+				$("#treeName").select2("val", [""]);
+				$("#otherInfo").addClass("hide");
+				$("#isTabOpen").removeClass("hide");
+				$("#isTableDel").addClass("hide");
+				$("#isTabOpen").removeClass("hide");
+				$("#isTableBut").removeClass("hide");
+				$("#isTableFile").removeClass("hide");
+				$("#setTable").removeClass("hide");
+				$("#masterInfo").removeClass("hide");
+				$(".noChild").removeClass("hide");
+			} else if("child" == tplCategory){
+				$("#treeCode").select2("val", [""]);
+				$("#treeParentCode").select2("val", [""]);
+				$("#treeName").select2("val", [""]);
+				$(".noChild").addClass("hide");
+				$("#masterInfo").addClass("hide");
 				$("#setTable").addClass("hide");
 			}
         };

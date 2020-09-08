@@ -23,6 +23,8 @@ import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysRoleMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
+import com.j2eefast.framework.sys.service.SysFileService;
+import com.j2eefast.framework.sys.service.SysFileUploadService;
 import com.j2eefast.framework.sys.service.SysMenuService;
 import com.j2eefast.framework.utils.Constant;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,9 +51,15 @@ public class ConstantFactory implements IConstantFactory {
 	private SysMenuService sysMenuService = SpringUtil.getBean(SysMenuService.class);
 	private SysLoginInfoMapper sysLoginInfoMapper = SpringUtil.getBean(SysLoginInfoMapper.class);
 
+	private  SysFileUploadService sysFileUploadService = SpringUtil.getBean(SysFileUploadService.class);
+
+	private  SysFileService sysFileService = SpringUtil.getBean(SysFileService.class);
+
 	public static IConstantFactory me() {
 		return SpringUtil.getBean("constantFactory");
 	}
+
+
 
 
 	@Override
@@ -233,5 +241,15 @@ public class ConstantFactory implements IConstantFactory {
 			loginInfo.setLoginTime(DateUtil.date());
 		}
 		return loginInfo;
+	}
+
+	@Override
+	public SysFileUploadService getSysFileUploadService() {
+		return this.sysFileUploadService;
+	}
+
+	@Override
+	public SysFileService getSysFileService() {
+		return this.sysFileService;
 	}
 }

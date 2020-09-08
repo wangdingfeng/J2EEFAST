@@ -1,6 +1,6 @@
 package com.j2eefast.common.core.xss;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.j2eefast.common.core.exception.RxcException;
 
 

@@ -28,18 +28,19 @@
             <scope>test</scope>
         </dependency>
 
-		<!-- 无引用 核心项目-->
+		<!--核心项目-->
 		<dependency>
 			<groupId>com.j2eefast</groupId>
 			<artifactId>fast-web</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.j2eefast</groupId>-->
-<!--			<artifactId>fast-flowable</artifactId>-->
-<!--			<version>3.2.0</version>-->
-<!--		</dependency>-->
-
+		<!-- 启动工作流放开
+		<dependency>
+			<groupId>com.j2eefast</groupId>
+			<artifactId>fast-flowable</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+		-->
 <!--		<dependency>-->
 <!--		  <groupId>p6spy</groupId>-->
 <!--		  <artifactId>p6spy</artifactId>-->
@@ -133,7 +134,8 @@
 						</goals>
 					</execution>
 				</executions>
-		 </plugin>-->
+		 </plugin>
+		 -->
 		</plugins>
     </build>
 </project>

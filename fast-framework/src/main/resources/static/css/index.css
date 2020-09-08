@@ -134,7 +134,7 @@
     padding: 0 15px !important;
 }
 
-.btn-circle {
+.btn-notadd {
     width: 40px;
     height: 40px;
     line-height: 33px;
@@ -146,15 +146,16 @@
     color: #fff;
     text-align: center;
     box-shadow: 0 0 8px rgba(0,0,0,.2);
-    cursor: pointer
+    cursor: pointer;
+    padding: 6px 0;
 }
 
-.btn-circle:hover {
+.btn-notadd:hover {
     color: #fff;
     opacity: .8
 }
 
-.btn-circle .layui-icon {
+.btn-notadd .layui-icon {
     font-size: 20px
 }
 
@@ -376,8 +377,9 @@
 }
 .layui-form-item .layui-input-inline {
     float: left;
-    width: 350px;
+    width: 60%;
     margin-right: 10px;
+    margin-left: 0px;
 }
 .laber-account{
     padding:3px 6px;margin-top:8px;width:auto;border-radius:5px;text-align: left;background-color:#009688; color: #fff;
@@ -390,7 +392,7 @@
     float: left;
     display: block;
     padding: 9px 15px;
-    width: 130px;
+    width: 20%;
     font-weight: 400;
     line-height: 20px;
     text-align: right;

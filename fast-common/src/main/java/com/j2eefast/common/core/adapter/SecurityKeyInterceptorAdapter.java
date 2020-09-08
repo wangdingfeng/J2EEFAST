@@ -49,6 +49,9 @@ public class SecurityKeyInterceptorAdapter extends HandlerInterceptorAdapter{
         int port = request.getServerPort();
         String path = request.getContextPath();
         String basePath = scheme + "://" + serverName + ":" + port + path;
+        //修改绝对地址
+//      request.setAttribute(ConfigConstant.BASE_PATH, path);
+//		request.setAttribute(ConfigConstant.CTX_STATIC, basePath);
         request.setAttribute(ConfigConstant.CTX_STATIC, path);
 		request.setAttribute(ConfigConstant.BASE_PATH, basePath);
         return super.preHandle(request,response,handler);

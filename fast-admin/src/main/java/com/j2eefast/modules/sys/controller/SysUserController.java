@@ -16,8 +16,6 @@ import com.j2eefast.framework.log.service.SysLoginInfoSerice;
 import com.j2eefast.framework.sys.entity.*;
 import com.j2eefast.framework.sys.service.*;
 import com.j2eefast.framework.utils.Global;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +94,7 @@ public class SysUserController extends BaseController {
 	public ResponseData export(@RequestParam Map<String, Object> params) throws Exception {
 		String fileName =  "测试";
 		fileName = ToolUtil.encodingExcelFilename(fileName);
-		String folder = Global.getConifgFile() + File.separator + "pio" + File.separator;
+		String folder = Global.getTempPath() + File.separator + "pio" + File.separator;
 		FileUtil.touch(folder + fileName);
 		List<SysUserEntity> listData = sysUserService.findList(params);
 		EasyExcel.write(folder + fileName, SysUserEntity.class).sheet("模板").doWrite(listData);
@@ -120,6 +118,19 @@ public class SysUserController extends BaseController {
 		mmap.put("user", user);
 		return urlPrefix + "/edit";
 	}
+
+	@GetMapping("/view/{userId}")
+	public String view(@PathVariable("userId") Long userId,ModelMap mmap){
+
+		SysUserEntity user = sysUserService.findUserByUserId(userId);
+		mmap.put("roles", sysRoleService.getRolesAll());
+		mmap.put("posts",sysPostService.getPostAll());
+		mmap.put("selectRoles", sysRoleService.getRolesByUserIdToStr(userId));
+		mmap.put("selectPosts",sysPostService.getPostByUserIdToStr(userId));
+		mmap.put("user", user);
+		return urlPrefix + "/view";
+	}
+
 
 	/**
 	 * 授权角色
@@ -281,7 +292,7 @@ public class SysUserController extends BaseController {
 	@RequiresPermissions("sys:user:add")
 	@ResponseBody
 	public ResponseData add(@Validated SysUserEntity user) {
-		if (StringUtils.isBlank(user.getPassword())) {
+		if (ToolUtil.isEmpty(user.getPassword())) {
 			return error("密码不能为空");
 		}
 		ValidatorUtil.validateEntity(user);

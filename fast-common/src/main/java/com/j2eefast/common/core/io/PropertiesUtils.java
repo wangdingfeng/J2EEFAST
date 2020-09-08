@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
 package com.j2eefast.common.core.io;
 
 import java.io.IOException;
@@ -23,13 +26,16 @@ import org.springframework.core.io.Resource;
 /**
  * Properties工具类， 可载入多个properties、yml文件，
  * 相同的属性在最后载入的文件中的值将会覆盖之前的值，
- * @author zhouzhou
- * @version 2018-08-02
+ * @author ThinkGem
+ * @version 2017-12-30
+ * J2eeFAST 二次修改
  */
 @Slf4j
 public class PropertiesUtils {
 	
-	// 默认加载的文件，可通过继承覆盖（若有相同Key，优先加载后面的）
+	/**
+	 * 系统默认加载文件(可覆盖配置文件参数)
+	 */
 	public static final String[] DEFAULT_CONFIG_FILE = new String[]{
 			"classpath:config/bootstrap.yml", "classpath:bootstrap.yml",
 			"classpath:config/application.yml", "classpath:application.yml"};
@@ -113,6 +119,7 @@ public class PropertiesUtils {
 	        			}
         			}
         			else if (location.endsWith(".yml")){
+        				//J2eeFAST 修改适配问题
 						YamlParsing bean = new YamlParsing();
         				bean.setResources(resource);
         				for (Map.Entry<Object,Object> entry : bean.getObject().entrySet()){
@@ -126,6 +133,7 @@ public class PropertiesUtils {
     			log.error("Load " + location + " failure. ", e);
 			}
 		}
+		//赋值系统加密数据
 		properties.put("machineCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
 				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
 		properties.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex

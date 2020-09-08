@@ -328,6 +328,7 @@
             return res;
         },
         pagination: false,
+        firstLoad: true,
         onlyInfoPagination: false,
         sidePagination: 'client', // client or server
         totalRows: 0, // server side need to set
@@ -495,6 +496,9 @@
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             return sprintf('Showing %s to %s of %s rows', pageFrom, pageTo, totalRows);
+        },
+        formatPageGo: function () {
+            return 'Jump';
         },
         formatDetailPagination: function (totalRows) {
             return sprintf('Showing %s rows', totalRows);
@@ -1552,6 +1556,21 @@
             $last.off('click').on('click', $.proxy(this.onPageLast, this));
             $number.off('click').on('click', $.proxy(this.onPageNumber, this));
         }
+        //TODO 修复跳转指定页
+        if (this.options.showPageGo) {
+            var pagination = that.$pagination.find("ul.pagination"),
+                pagego = pagination.find("li.pageGo");
+            if (!pagego.length) {
+                pagego = $(['<li class="pageGo">', sprintf('<input type="text" class="form-control" value="%s">', this.options.pageNumber), '<button class="btn' + sprintf(" btn-%s", this.options.buttonsClass) + sprintf(" btn-%s", this.options.iconSize) + '" title="' + this.options.formatPageGo() + '" ' + ' type="button">' + this.options.formatPageGo(), "</button>", "</li>"].join("")).appendTo(pagination);
+                pagego.find("button").click(function() {
+                    var flag = parseInt(pagego.find("input").val()) || 1;
+                    if (flag < 1 || flag > that.options.totalPages) {
+                        flag = 1
+                    }
+                    that.selectPage(flag)
+                })
+            }
+        }
     };
 
     BootstrapTable.prototype.updatePagination = function (event) {
@@ -1625,7 +1644,6 @@
         var that = this,
             html = [],
             data = this.getData();
-
         this.trigger('pre-body', data);
 
         this.$body = this.$el.find('>tbody');
@@ -2082,16 +2100,26 @@
             success: function (res) {
 
                 /**TODO:2020-03-09 新加的代码,处理页码错误问题开始*/
-                if(res.data.totalCount){
+                if(opt.common.isNotEmpty(res.data) && opt.common.isNotEmpty(res.data.totalCount)){
                     if(that.options.pagination &&(res.code==='00000') && (res.data.totalCount>0) && (res.data.list.length === 0)){//总记录数大于0,但当前页记录数为0,则此时页码超过了最大页码误
                         that.options.pageNumber = Math.ceil(res.page.totalCount/that.options.pageSize);//最后一页(总页数)
                         that.initServer();
                         return;
                     }
                 }
-
+                var temp = res;
                 res = calculateObjectValue(that.options, that.options.responseHandler, [res], res);
-
+                if(res === temp){
+                    if(opt.common.isNotEmpty(res.data)){
+                        if(opt.common.isNotEmpty(res.data.totalCount)){
+                            res = { rows: res.data.list, total: res.data.totalCount };
+                        }else{
+                            res = { rows: res.data, total: res.data.length };
+                        }
+                    }else{
+                        res = {rows:[],total:0};
+                    }
+                }
                 that.load(res);
                 that.trigger('load-success', res);
                 if (!silent) that.$tableLoading.hide();
@@ -2518,7 +2546,7 @@
         if (len === this.options.data.length) {
             return;
         }
-
+        console.log("-->>>>>>")
         this.initSearch();
         this.initPagination();
         this.initSort();
@@ -3096,7 +3124,6 @@
                 data = $this.data('bootstrap.table'),
                 options = $.extend({}, BootstrapTable.DEFAULTS, $this.data(),
                     typeof option === 'object' && option);
-
             if (typeof option === 'string') {
                 if ($.inArray(option, allowedMethods) < 0) {
                     throw new Error("Unknown method: " + option);
@@ -3117,7 +3144,6 @@
                 $this.data('bootstrap.table', (data = new BootstrapTable(this, options)));
             }
         });
-
         return typeof value === 'undefined' ? this : value;
     };
 
@@ -3150,9 +3176,19 @@ var isFirstLoad = true;
 var union = function (b, a,k) {
     if ($.isArray(a)) {
         $.each(a, function (c, d) {
-            if ($.inArray(d, b) == -1) {
-                b[b.length] = d
-            }
+        	if(opt.common.isPrimitive(d)){
+        		if ($.inArray(d, b) == -1) {
+                    b[b.length] = d
+                }
+        	}else{
+        		if(b.length === 0){
+                    b[b.length] = d
+                }else{
+                    if(!array_isf(b,d,k)){
+                        b[b.length] = d
+                    }
+                }
+        	}
         })
     } else {
         if(b.length === 0){
@@ -3168,11 +3204,14 @@ var union = function (b, a,k) {
 var difference = function (c, b,k) {
     if ($.isArray(b)) { //是否是数组
         $.each(b, function (e, f) {
-            opt.debug(f);
-            var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
-            if (d != -1) {
-                c.splice(d, 1)
-            }
+        	if(opt.common.isPrimitive(f)){
+        		var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
+                if (d != -1) {
+                    c.splice(d, 1)
+                }
+        	}else{
+        		array_diff(c,f,k);
+        	}
         })
     } else {
         array_diff(c,b,k);

@@ -34,6 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="menuTarget"     column="menu_target"     />
 		<result property="remark"         column="remark"          />
 		<result property="target"         column="target"          />
+		<result property="childId"         column="child_id"          />
+		<result property="childFieldId"         column="child_field_id"          />
 	<!-- 	<collection  property="columns"  javaType="java.util.List"  resultMap="GenTableColumnResult" /> -->
 	</resultMap>
 	
@@ -97,6 +99,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		,t.is_file as isFile
 		,t.remark  as remark
 		,t.target  as target
+		,t.child_id  as childId
+		,t.child_field_id  as childFieldId
 	</sql>
 
 <!-- 
@@ -177,6 +181,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="menuTarget != null and menuTarget != ''">menu_target = #{menuTarget},</if>
 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
 			<if test="remark != null">remark = #{remark},</if>
+			<if test="childId != null">child_id = #{childId},</if>
+			<if test="childFieldId != null">child_field_id = #{childFieldId},</if>
 			update_time = sysdate()
 		</set>
 		where id = #{id}

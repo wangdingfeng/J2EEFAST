@@ -5,6 +5,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -14,8 +15,6 @@ import lombok.Data;
  */
 @Data
 public class BaseEntity implements Serializable {
-
-    private static final long 					serialVersionUID 					= 1L;
 
     /** 创建者 */
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -38,7 +37,4 @@ public class BaseEntity implements Serializable {
     /** 备注 */
     private String remark;
 
-    /** 权限字符*/
-    @TableField(exist = false)
-    private String sql_filter;
 }

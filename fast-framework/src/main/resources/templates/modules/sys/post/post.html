@@ -4,24 +4,24 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="post-form">
+	<@f.form id="post-form">
     <div class="select-list">
     <ul>
         <li>
             <@ctx.i18n text = "岗位编码"/>：
-            <input type="text" name="postCode"/>
+            <input type="text" class="form-control" name="postCode"/>
         </li>
         <li>
             <@ctx.i18n text = "岗位名称"/>：
-            <input type="text" name="postName"/>
+            <input type="text" class="form-control" name="postName"/>
         </li>
         <li>
             <@ctx.i18n text = "岗位分类"/>：
-            <@form.select name="postType" blankValue="" blankLabel="所有" dictType="sys_post_type" />
+            <@f.select name="postType" blankValue="" blankLabel="所有" dictType="sys_post_type" />
         </li>
         <li>
             <@ctx.i18n text = "状态"/>：
-            <@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_status" />
+            <@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_status" />
         </li>
         <li>
             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -29,7 +29,7 @@
         </li>
     </ul>
     </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:post:add">

@@ -303,7 +303,7 @@
 			var css, themedCSS;
 			var full = (el == window);
 			//修改默认显示方案
-			var msg = (opts && opts.message !== undefined ? opts.message : '<div class="loaderbox"><div class="loading-activity"></div> '+str[Math.floor((Math.random() * str.length) + 0)]+'</div>');
+			var msg = (opts && opts.message !== undefined ? opts.message : '<div class="loaderbox"><div class="loading-activity"></div> '+(opt && opt.variable.loadTip ? str[Math.floor((Math.random() * str.length) + 0)] : "数据正在加载,请稍后...")+'</div>');
 			opts = $.extend({}, $.blockUI.defaults, opts || {});
 
 			if (opts.ignoreIfBlocked && $(el).data('blockUI.isBlocked'))

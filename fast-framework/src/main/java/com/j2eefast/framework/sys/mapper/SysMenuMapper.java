@@ -50,10 +50,10 @@ public interface SysMenuMapper extends BaseMapper<SysMenuEntity> {
 	/**
 	 * 根据用户ID 及用户选择模块 查询菜单
 	 *
-	 * @param userdId 用户ID
+	 * @param userId 用户ID
 	 * @return 菜单列表
 	 */
-	List<SysMenuEntity> findMenuAllByUserIdModelId(@Param("userdId") Long userdId,
+	List<SysMenuEntity> findMenuAllByUserIdModelId(@Param("userId") Long userId,
 													 @Param("moduleCodes") String moduleCodes);
 
 	/**

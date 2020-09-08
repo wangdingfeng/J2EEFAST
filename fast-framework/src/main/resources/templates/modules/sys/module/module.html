@@ -4,16 +4,16 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="module-form">
+	<@f.form id="module-form">
         <div class="select-list">
             <ul>
                 <li>
                     <@ctx.i18n text = "模块名称"/>：
-                    <input type="text" name="moduleName"/>
+                    <input type="text" class="form-control" name="moduleName"/>
                 </li>
                 <li>
                     <@ctx.i18n text = "状态"/>：
-                    <@form.select name="status" blankValue="" blankLabel="所有" dictType="sys_module_status" />
+                    <@f.select name="status" blankValue="" blankLabel="所有" dictType="sys_module_status" />
                 </li>
                 <li>
                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>  <@ctx.i18n text = "查询"/></a>
@@ -21,7 +21,7 @@
                 </li>
             </ul>
         </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:module:add">

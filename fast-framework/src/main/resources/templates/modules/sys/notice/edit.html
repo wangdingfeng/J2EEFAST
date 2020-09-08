@@ -2,9 +2,9 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="修改公告" bodyClass="white-bg" libs=["ueditor","bootstrapSelect"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-notice-edit" class="form-horizontal">
-    <@form.hidden id="id" name="id"  value="${notice.id}"/>
-    <@form.hidden id="htmlNo"  name="htmlNo" value="${notice.htmlNo}"/>
+<@f.form id="form-notice-edit" class="form-horizontal">
+    <@f.hidden id="id" name="id"  value="${notice.id}"/>
+    <@f.hidden id="htmlNo"  name="htmlNo" value="${notice.htmlNo}"/>
     <div class="alert alert-dismissible callout callout-info animated bounceInDown">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <p><i class="icon fa fa-info"></i><strong>重要提示:</strong>如果选择发布公告,等级是<u>严重</u>才会在登陆页面Top提示,等级是<u>紧急</u>只在登陆之后Top提示,等级是<u>普通</u>则在Top提醒栏提示!</p>
@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>公告标题：</label>
                 <div class="col-sm-8">
-                    <@form.input name="noticeTitle" value="${notice.noticeTitle}" placeholder="请输入公告标题" required=true/>
+                    <@f.input name="noticeTitle" value="${notice.noticeTitle}" placeholder="请输入公告标题" required=true/>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>公告类型：</label>
                 <div class="col-sm-8">
-                    <@form.select name="noticeType" value="${notice.noticeType}" dictType="sys_notice_type" required=true/>
+                    <@f.select name="noticeType" value="${notice.noticeType}" dictType="sys_notice_type" required=true/>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">提示标题：</label>
                 <div class="col-sm-8">
-                    <@form.input name="noticeTipTitle" value="${notice.noticeTipTitle}" maxlength="100" placeholder="提示标题" required=true/>
+                    <@f.input name="noticeTipTitle" value="${notice.noticeTipTitle}" maxlength="100" placeholder="提示标题" required=true/>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span>等级：</label>
                 <div class="col-sm-8">
-                    <@form.select name="noticeLevel" value="${notice.noticeLevel}" dictType="sys_notice_level" required=true/>
+                    <@f.select name="noticeLevel" value="${notice.noticeLevel}" dictType="sys_notice_level" required=true/>
                 </div>
             </div>
         </div>
@@ -65,12 +65,12 @@
         <div class="col-sm-12">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <@form.ueditor name="noticeContent" value="${notice.noticeContent?html}"/>
+                    <@f.ueditor name="noticeContent" value="${notice.noticeContent?html}"/>
                 </div>
             </div>
         </div>
     </div>
-</@form.form>
+</@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-5 col-sm-10">

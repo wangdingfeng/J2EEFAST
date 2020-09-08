@@ -75,6 +75,7 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
 
                 //安装证书
                 licenseVerify.install(param);
+
                 //验证证书唯一码是否有效
                 LOG.info("++++++++ 证书安装结束 ++++++++");
 

@@ -1,13 +1,3 @@
-/**
- *
- * @Name:           AdminLTE.css
- * @Package:        statics
- * @Description:    基于AdminLTE样式修改定制
- * @author: ZhouHuan Emall:18774995071@163.com
- * @time 2020/1/3 16:11
- * @version V1.0
- *
- */
 /*!
  *   AdminLTE v2.3.8
  *   Author:Almsaeed Studio
@@ -15,6 +5,15 @@
  *   License:Open source - MIT
  *   Please visit http://opensource.org/licenses/MIT for more information
 !*/
+/**
+ *
+ * @Name:           AdminLTE.css
+ * @Description:    基于AdminLTE样式修改定制
+ * @author: ZhouHuan Emall:18774995071@163.com
+ * @time 2020/1/3 16:11
+ * @version V1.0
+ *
+ */
 html,body {
     height:100%
 }
@@ -71,10 +70,10 @@ body {
     }
 }@media (max-width:767px) {
     .sidebar-open .content-wrapper,.sidebar-open .right-side,.sidebar-open .main-footer {
-        -webkit-transform:translate(230px,0);
-        -ms-transform:translate(230px,0);
-        -o-transform:translate(230px,0);
-        transform:translate(230px,0)
+        -webkit-transform:translate(205px,0);
+        -ms-transform:translate(205px,0);
+        -o-transform:translate(205px,0);
+        transform:translate(205px,0)
     }
 }.content-wrapper,.right-side {
      min-height:100%;
@@ -636,7 +635,7 @@ a:hover,a:active,a:focus {
 }
 @media (min-width:768px) {
     .control-sidebar-open .content-wrapper,.control-sidebar-open .right-side,.control-sidebar-open .main-footer {
-        margin-right:230px
+        margin-right:205px
     }
 }.nav-tabs.control-sidebar-tabs>li:first-of-type>a,.nav-tabs.control-sidebar-tabs>li:first-of-type>a:hover,.nav-tabs.control-sidebar-tabs>li:first-of-type>a:focus {
      border-left-width:0
@@ -1070,14 +1069,14 @@ a:hover,a:active,a:focus {
     .navbar-custom-menu>.navbar-nav {
         float:right
     }
-    .navbar-custom-menu>.navbar-nav>li {
-        position:static
-    }
+    /*.navbar-custom-menu>.navbar-nav>li {*/
+    /*    position:static*/
+    /*}*/
     .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
         position:absolute;
-        right:5%;
+        /*right:5%;*/
         left:auto;
-        border:1px solid #ddd;
+        /*border:1px solid #ddd;*/
         background:#fff
     }
 }.form-control {

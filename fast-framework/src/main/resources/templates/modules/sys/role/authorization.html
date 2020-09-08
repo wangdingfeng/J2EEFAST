@@ -3,15 +3,15 @@
 <@header title="角色授权" libs=["zTree"]/>
 <div class="container-div">
 <div class="col-sm-12 search-collapse">
-<@form.form id="form-role-authorization">
-    <@form.hidden name="id" value="${role.id?default('')}"/>
+<@f.form id="form-role-authorization">
+    <@f.hidden name="id" value="${role.id?default('')}"/>
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/></h4>
     <div class="row">
         <div class="col-sm-5">
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "角色名称"/>：</label>
                 <div class="col-sm-8">
-                    <@form.input name="roleName" value="${role.roleName?default('')}" readonly=true  required=true/>
+                    <@f.input name="roleName" value="${role.roleName?default('')}" readonly=true  required=true/>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "角色编码"/>：</label>
                 <div class="col-sm-7">
-                    <@form.input name="roleKey" value="${role.roleKey?default('')}" readonly=true  required=true/>
+                    <@f.input name="roleKey" value="${role.roleKey?default('')}" readonly=true  required=true/>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "管理模块"/>：</label>
                 <div class="col-sm-8">
-                    <@form.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${selectModules}" itemValue="moduleCode" required=true/>
+                    <@f.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${selectModules}" itemValue="moduleCode" required=true/>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 </div>
     <@footer>

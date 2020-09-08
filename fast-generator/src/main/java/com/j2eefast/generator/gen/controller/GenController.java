@@ -10,6 +10,7 @@ import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.mutidatasource.annotaion.mybatis.MybatisMapperRefresh;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.context.SqlSessionFactoryContext;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
@@ -30,7 +31,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.HashUtil;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,9 +186,6 @@ public class GenController extends BaseController {
         return error("生成失败!");
     }
 
-
-
-
     /**
      * 预览代码
      */
@@ -212,16 +210,16 @@ public class GenController extends BaseController {
         return urlPrefix + "/codeView";
     }
 
+    /**
+     *
+     */
+    @RequestMapping("/edit/childLoad")
+    @ResponseBody
+    public ResponseData load(@RequestParam Map<String, Object> params) {
+        PageUtil page =  genTableService.findChildPage(params);
+        return ToolUtil.isEmpty(page)?error("数据异常"):success(page);
+    }
 
-
-
-//    @RequiresPermissions("tool:gen:edit")
-//    @GetMapping("/selectDict")
-//    @ResponseBody
-//    public List<Ztree> preview() throws IOException
-//    {
-//        return  sysDictTypeSerive.dictTypeTreeData();
-//    }
 
     /**
      * 修改代码生成业务
@@ -325,7 +323,7 @@ public class GenController extends BaseController {
             if (genTableColumnName.contains(column.getColumnName())) {
                 continue;
             }
-            genTableColumnService.removeById(column);
+            genTableColumnService.removeById(column.getId());
         }
 
         return success();

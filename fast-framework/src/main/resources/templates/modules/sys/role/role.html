@@ -4,15 +4,15 @@
 <div class="container-div">
 	<div class="row">
 	<div class="col-sm-12 search-collapse">
-	<@form.form id="role-form">
+	<@f.form id="role-form">
     <div class="select-list">
         <ul>
             <li>
-                <@ctx.i18n text = "角色名称"/>：<input type="text" name="roleName"/>
+                <@ctx.i18n text = "角色名称"/>：<input type="text"  class="form-control" name="roleName"/>
             </li>
 
             <li>
-                <@ctx.i18n text = "权限字符"/>：<input type="text" name="roleKey"/>
+                <@ctx.i18n text = "权限字符"/>：<input type="text" class="form-control" name="roleKey"/>
             </li>
             <li>
                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
@@ -20,7 +20,7 @@
             </li>
         </ul>
     </div>
-    </@form.form>
+    </@f.form>
     </div>
     <@table id="bootstrap-table">
         <@shiro.hasPermission name="sys:role:add">

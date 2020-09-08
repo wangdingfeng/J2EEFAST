@@ -14,6 +14,7 @@ import com.j2eefast.framework.utils.RedisKeys;
  */
 @Component
 public class RedisShiroSessionDAO extends EnterpriseCacheSessionDAO {
+
 	@Autowired
 	private RedisTemplate redisTemplate;
 

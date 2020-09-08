@@ -12,6 +12,11 @@ import com.j2eefast.framework.utils.FileUploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.mutidatasource.annotaion.DataSource;
 #end##
+#if($table.master)
+import ${packageName}.entity.${childTable.className}Entity;
+import ${packageName}.service.${childTable.className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+#end###
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -23,8 +28,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
+import java.util.List;
 import java.util.Arrays;
-import org.springframework.transaction.annotation.Transactional;
 #set($isImg = "0")#####
 #foreach ($column in $columns)####
 #if($column.htmlType == "imgcup")####
@@ -64,6 +69,15 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	private SysCompService sysCompService;###
 
 	#end
+	#if($table.master)
+	#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+
+	@Autowired###
+
+	private ${childTable.className}Service ${classEnty}Service;###
+
+
+	#end
 	/**
 	 * mybaitis-plus   单表页面分页查询
      */
@@ -72,6 +86,7 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end##
 	public PageUtil findPage(Map<String, Object> params) {
         QueryWrapper<${ClassName}Entity> queryWrapper = new QueryWrapper<${ClassName}Entity>();
+#set($pkc="0")
 #foreach($column in $columns)##
 #set($queryType=$column.queryType)## 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围）
 #set($javaField=$column.javaField)## JAVA字段名
@@ -79,6 +94,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #set($columnName=$column.columnName) ## 列名称
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #if($column.query)##
+#if($javaField == $fKey.javaField)
+#set($pkc="1")
+#end
 #if($javaType == 'SysCompEntity' or $javaType == 'SysDeptEntity' or $javaType == 'SysUserEntity')##关联实体对像不参查询
 #else##
       String $javaField = (String) params.get("$javaField");
@@ -100,6 +118,10 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end##
 #end ##query
 #end##foreach
+#if($table.child && $pkc=="0")
+		String ${fKey.javaField} = (String) params.get("${fKey.javaField}");
+		queryWrapper.eq(ToolUtil.isNotEmpty(${fKey.javaField}), "${fKey.columnName}", ${fKey.javaField});
+#end
 		Page<${ClassName}Entity> page = ${className}Mapper.selectPage(new Query<${ClassName}Entity>(params).getPage(), queryWrapper);
 		#if($table.dbName !='MASTER' && ($iscompId_ != '' || $iscompId_ != ''))
 		for(${ClassName}Entity ${className}: page.getRecords()){
@@ -136,6 +158,28 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 																(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}
+
+	/**
+	* 查列表
+	*/
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
+	@DataSource(name="$table.dbName")
+#end##
+	public List<${ClassName}Entity> findList(${ClassName}Entity ${className}Entity){
+		return ${className}Mapper.findList(${className}Entity);
+	}
+
+	###if($table.child)
+	####public	List<${ClassName}Entity> findPageByPkId(Map<String, Object> params){
+	####	return this.list(new QueryWrapper<${ClassName}Entity>().eq("${fKey.columnName}",${fKey.javaField}));
+	###}
+	####end
+	#if($table.child)
+	@Transactional(rollbackFor = Exception.class)
+	public boolean del${ClassName}ByPkId(${fKey.javaType} ${fKey.javaField}){
+		return this.remove(new QueryWrapper<${ClassName}Entity>().eq("${fKey.columnName}", ${fKey.javaField}));
+	}
+	#end
 	/**
      * 批量删除
      */
@@ -143,8 +187,23 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##     
 	@Transactional(rollbackFor = Exception.class)
-	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {
-		return this.removeByIds(Arrays.asList(ids));
+	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {####
+
+
+#if($table.rFile || $table.rImg)####
+		for (Long id : ids) {
+			#if($table.rFile)
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file");####
+			#end
+			#if($table.rImg)
+
+		    FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+			#end####
+
+		}
+		#end
+return this.removeByIds(Arrays.asList(ids));
+
 	}
 
 	/**
@@ -154,7 +213,17 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##
 	public boolean del${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
+
+		#if($table.rFile)####
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file");####
+		#end####
+
+		#if($table.rImg)####
+FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+		#end####
+
 		return this.removeById(${pkColumn.javaField});
+
 	}
 
 	/**
@@ -176,7 +245,8 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 		#end###
 
 		if(this.save(${className})){###
-			#if($table.rFile || $table.rImg)####
+			#if($table.rFile || $table.rImg || $table.master)####
+
 
 			//更新关联附件信息####
 			#foreach ($column in $columns)
@@ -193,6 +263,19 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 			#if($table.rImg)
 
 			FileUploadUtils.saveFileUpload(pkId,"${tableName}_img");####
+			#end####
+			#if($table.master)
+
+			//保存子表信息#####
+			#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+			#set($fkeyX = $fKey.javaField.substring(0,1).toUpperCase() + $fKey.javaField.substring(1))
+
+			for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
+
+				${classEnty}.set${fkeyX}(pkId);
+				${classEnty}Service.add${childTable.className}(${classEnty});####
+
+			}
 			#end####
 			#end####
 
@@ -220,7 +303,7 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 		#end###
 
 		if(this.updateById(${className})){####
-			#if($table.rFile || $table.rImg)####
+			#if($table.rFile || $table.rImg || $table.master)####
 
 			//更新关联附件信息#####
 			#foreach ($column in $columns)
@@ -237,6 +320,21 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 			#if($table.rImg)
 
 			FileUploadUtils.saveFileUpload(pkId,"${tableName}_img");####
+			#end####
+			#if($table.master)
+
+			//保存子表信息#####
+			#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+			#set($fkeyX = $fKey.javaField.substring(0,1).toUpperCase() + $fKey.javaField.substring(1))
+
+			if(${classEnty}Service.del${childTable.className}ByPkId(pkId)){
+				for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
+
+					${classEnty}.set${fkeyX}(pkId);
+					${classEnty}Service.add${childTable.className}(${classEnty});####
+
+				}
+			}
 			#end####
 			#end####
 

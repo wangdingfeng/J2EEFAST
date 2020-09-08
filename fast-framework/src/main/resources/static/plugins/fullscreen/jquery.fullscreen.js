@@ -3,6 +3,9 @@
  * 新增支持IE全屏显示
  * Copyright (c) 2019 ruoyi
  */
+/**
+ * J2eeFAST 修改增强
+ */
 (function(jQuery) {
 
 	/**

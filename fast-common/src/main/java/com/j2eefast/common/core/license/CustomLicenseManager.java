@@ -36,6 +36,7 @@ public class CustomLicenseManager  extends LicenseManager {
     }
 
 
+
     /**
      * <p>
      *     校验当前服务器的IP地址是否在可被允许的IP范围内<br/>
@@ -166,6 +167,24 @@ public class CustomLicenseManager  extends LicenseManager {
             }
         }
         return null;
+    }
 
+    /**
+     * 最大在线人数校验
+     * @return
+     * @throws Exception
+     */
+    public synchronized int onlieVerify() throws Exception {
+        final byte[] key = getLicenseKey();
+        if (null == key){
+            throw new NoLicenseInstalledException(getLicenseParam().getSubject());
+        }
+        GenericCertificate certificate = getPrivacyGuard().key2cert(key);
+        LicenseContent content = (LicenseContent)this.load(certificate.getEncoded());
+        LicenseCheck expectedCheck = (LicenseCheck) content.getExtra();
+        if(expectedCheck.isIpCheck()){
+            return expectedCheck.getOnlineNum();
+        }
+        return -1;
     }
 }

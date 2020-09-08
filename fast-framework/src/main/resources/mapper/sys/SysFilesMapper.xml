@@ -12,6 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        <result property="filePath"    column="file_path"    />
        <result property="fileName"    column="file_name"    />
        <result property="fileSize"    column="file_size"    />
+        <result property="classify"    column="classify"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
      </resultMap>
     
     <!--  实体栏位  --> 
@@ -20,7 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           a.file_md5 as "fileMd5"   ,                 
           a.file_path as "filePath"   ,                 
           a.file_name as "fileName"   ,                 
-          a.file_size as "fileSize"                   
+          a.file_size as "fileSize",
+          a.classify as "classify",
+          a.update_by as "updateBy",
+          a.create_time as "createTime",
+          a.create_by as "createBy"
+          , up.biz_type  as "fileUpload.bizType"
+          , up.biz_id  as "fileUpload.bizId"
+          , CASE WHEN up.biz_type IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
       </sql>
     
      <!-- 外联表  --> 
@@ -33,8 +46,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      <select id="selectSysFilesList" resultType="com.j2eefast.framework.sys.entity.SysFilesEntity">
 		SELECT 
 			<include refid="sysFilesColumns"/>
-         , up.create_by as "createBy"
-         , up.create_time as "createTime"
          FROM sys_file a
         <include refid="sysFilesJoins"/>
 		<where>
@@ -47,5 +58,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
 	 </select>
+	 
+	 
+	  <!--  根据获取实体 page   -->
+     <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysFilesEntity">
+		SELECT 
+			<include refid="sysFilesColumns"/>
+		FROM sys_file a
+         <include refid="sysFilesJoins"/>
+		<where>
+               <if test="sysFiles.fileName != null  and sysFiles.fileName != ''">
+                     and a.file_name LIKE
+                     <if test="_databaseId == 'oracle'"> '%'||#{sysFiles.fileName}||'%'</if>
+                     <if test="_databaseId == 'mssql'">'%'+#{sysFiles.fileName}+'%'</if>
+                     <if test="_databaseId == 'mysql'">concat('%',#{sysFiles.fileName},'%')</if>
+			    </if>
+			      <if test="sysFiles.fileSize != null  and sysFiles.fileSize != ''">
+                     and a.file_size > #{sysFiles.fileSize}
+                    
+			    </if>
+			    
+			   <if test="sysFiles.fileUpload !=null and sysFiles.fileUpload.delFlag != null  and sysFiles.fileUpload.delFlag != ''">   
+                 up.del_flag = '0'
+                 </if>
+            <if test="sysFiles.fileUpload !=null and  sysFiles.fileUpload.bizId != null  and sysFiles.fileUpload.bizId != ''">
+                     and up.biz_id = #{sysFiles.fileUpload.bizId}
+			</if>
+            <if test="sysFiles.fileUpload !=null and sysFiles.fileUpload.bizType != null  and sysFiles.fileUpload.bizType != ''">
+                and up.biz_type = #{sysFiles.fileUpload.bizType}
+            </if>
+               
+		</where>
+	 </select>
+	 
+	 
 
 </mapper>

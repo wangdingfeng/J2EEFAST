@@ -1,6 +1,7 @@
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.config.LicenseCheckListener;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -84,6 +85,9 @@ public class SysLicenseController extends BaseController {
                 (ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
         mmap.put("productName",productName);
         mmap.put("authorizationTime",ConfigConstant.AUTHORIZATION_TIME);
+        LicenseVerify licenseVerify = new LicenseVerify();
+        int online = licenseVerify.onlineNumVerify(listener.getVerifyParam());
+        mmap.put("onlineNum",online == -1 ? "无限制" : online);
         return urlPrefix + "/license";
     }
 
@@ -99,7 +103,7 @@ public class SysLicenseController extends BaseController {
     public ResponseData uploadLic(@RequestParam("licfile") MultipartFile file){
         try{
             if (!file.isEmpty() && file.getOriginalFilename().equals("license.lic")){
-                String pathName = FileUploadUtil.uploadFile(Global.getConifgFile(), file);
+                String pathName = FileUploadUtil.uploadFile(Global.getTempPath(), file);
 
                 //先拷贝之前的备份防止出故障 重命名
                 FileUtil.rename(FileUtil.file(licensePath),"licenseReName",true,true);
@@ -159,13 +163,21 @@ public class SysLicenseController extends BaseController {
         }
     }
 
+    /**
+     *  生成许可证书
+     * @param sn 机器码
+     * @param verifyNo 校验码
+     * @param ip IP
+     * @param maxNum 最大在线人数
+     * @return
+     */
     @RequestMapping(value = "/creatLicense", method = RequestMethod.POST)
     @BussinessLog(title = "生成许可证书", businessType = BusinessType.INSERT)
     @RequiresPermissions("sys:license:creatLicense")
     @RequiresRoles(Constant.SU_ADMIN)
     @RepeatSubmit
     @ResponseBody
-    public ResponseData creatLicense(String sn, String verifyNo, String ip){
+    public ResponseData creatLicense(String sn, String verifyNo, String ip,String maxNum){
 
         try{
             List<String> ipList = null;
@@ -181,10 +193,19 @@ public class SysLicenseController extends BaseController {
                     }
                 }
             }
+            //默认 -1 不限制
+            int onlineaxNum = -1;
+            //最大现在人数
+            if(ToolUtil.isNotEmpty(maxNum)){
+                if(!NumberUtil.isInteger(maxNum)){
+                    return error("输入的最大在线人数不合法!");
+                }
+                onlineaxNum = Integer.parseInt(maxNum);
+            }
             ResponseData r = checkverifyNoUnique(sn, verifyNo);
             if(checkverifyNoUnique(sn, verifyNo).get("code").equals("00000")){
                 //生成许可证书路径
-                String folder = ToolUtil.createFolder(Global.getConifgFile());
+                String folder = ToolUtil.createFolder(Global.getTempPath());
                 String name = ToolUtil.encodingFilename("license.lic");
                 LicenseCreatorParam param = new LicenseCreatorParam();
                 param.setSubject(subject);
@@ -211,6 +232,14 @@ public class SysLicenseController extends BaseController {
                     licenseCheck.setIpAddress(ipList);
                 }else{
                     licenseCheck.setIpCheck(false);
+                }
+                //新增最大在线人数控制
+                if(onlineaxNum == -1){
+                    licenseCheck.setIpCheck(false);
+                    licenseCheck.setOnlineNum(-1);
+                }else{
+                    licenseCheck.setIpCheck(true);
+                    licenseCheck.setOnlineNum(onlineaxNum);
                 }
                 param.setLicenseCheck(licenseCheck);
                 LicenseCreator licenseCreator = new LicenseCreator(param);

@@ -2,8 +2,8 @@
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="角色修改" bodyClass="white-bg" libs=["zTree"]/>
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-role-edit" class="form-horizontal">
-    <@form.hidden id="id" name="id" value="${role.id?default('')}"/>
+<@f.form id="form-role-edit" class="form-horizontal">
+    <@f.hidden id="id" name="id" value="${role.id?default('')}"/>
     <div class="form-group">
         <label class="col-sm-3 control-label "><span style="color: red; ">*</span>角色名称：</label>
         <div class="col-sm-8">
@@ -19,7 +19,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "管理模块"/>：</label>
         <div class="col-sm-8">
-            <@form.checkbox name="moduleCodes" value="${selectModules}" items=modules itemLabel="moduleName" itemValue="moduleCode" required=true/>
+            <@f.checkbox name="moduleCodes" value="${selectModules}" items=modules itemLabel="moduleName" itemValue="moduleCode" required=true/>
 <#--            <#list modules>-->
 <#--                <#items as d>-->
 <#--                    <#if d.status =='0' >-->
@@ -52,19 +52,19 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>显示顺序：</label>
         <div class="col-sm-8">
-            <@form.input name="roleSort" value="${role.roleSort?default('')}"  required=true/>
+            <@f.input name="roleSort" value="${role.roleSort?default('')}"  required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>状态：</label>
         <div class="col-sm-8">
-            <@form.switch name="status" value="${role.status}"/>
+            <@f.switch name="status" value="${role.status}"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">备注：</label>
         <div class="col-sm-8">
-            <@form.textarea name="remark" value="${role.remark?default('')}"/>
+            <@f.textarea name="remark" value="${role.remark?default('')}"/>
         </div>
     </div>
     <div class="form-group">
@@ -89,7 +89,7 @@
             </div>
         </div>
     </div>
-</@form.form>
+</@f.form>
 </div>
 <@footer>
 <script type="text/javascript">

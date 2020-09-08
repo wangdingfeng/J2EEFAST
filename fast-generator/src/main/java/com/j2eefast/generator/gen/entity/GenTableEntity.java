@@ -46,19 +46,19 @@ public class GenTableEntity extends BaseEntity {
     private String tplCategory;
 
     /** 生成包路径 */
-    @NotBlank(message = "生成包路径不能为空")
+//    @NotBlank(message = "生成包路径不能为空")
     private String packageName;
 
     /** 生成模块名 */
-    @NotBlank(message = "生成模块名不能为空")
+//    @NotBlank(message = "生成模块名不能为空")
     private String moduleName;
 
     /** 生成业务名 */
-    @NotBlank(message = "生成业务名不能为空")
+//    @NotBlank(message = "生成业务名不能为空")
     private String businessName;
 
     /** 生成功能名 */
-    @NotBlank(message = "生成功能名不能为空")
+//    @NotBlank(message = "生成功能名不能为空")
     private String functionName;
 
     /** 生成作者 */
@@ -106,6 +106,16 @@ public class GenTableEntity extends BaseEntity {
 
     /**生成代码是否覆盖替换**/
     private String isCover;
+
+    /**
+     * 子表ID
+     */
+    private Long  childId;
+
+    /**
+     * 子表外键
+     */
+    private Long childFieldId;
 
     /** 其它生成选项 */
     private String options;
@@ -384,6 +394,14 @@ public class GenTableEntity extends BaseEntity {
         return isCrud(this.tplCategory,GenConstants.TPL_TREE);
     }
 
+    public boolean isMaster(){
+        return isCrud(this.tplCategory,GenConstants.TPL_MASTER);
+    }
+
+    public boolean isChild(){
+        return isCrud(this.tplCategory,GenConstants.TPL_CHILD);
+    }
+
     public static boolean isTree(String tplCategory)
     {
         return tplCategory != null && StringUtils.equals(GenConstants.TPL_TREE, tplCategory);
@@ -441,5 +459,20 @@ public class GenTableEntity extends BaseEntity {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public Long getChildId() {
+        return childId;
+    }
+    public void setChildId(Long childId) {
+        this.childId = childId;
+    }
+
+    public Long getChildFieldId() {
+        return childFieldId;
+    }
+
+    public void setChildFieldId(Long childFieldId) {
+        this.childFieldId = childFieldId;
     }
 }

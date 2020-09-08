@@ -7,14 +7,14 @@ ${pageTheme}
 #break
 #end
 #end
-<@header title="修改${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end]/>
+<@header title="修改${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end#if($table.master),"table"#end]/>
 #foreach($column in $columns)
 #if($column.edit && !$column.superColumn && !$column.pk && $column.htmlType == "datetime")
 #break
 #end
 #end
 <div class="wrapper wrapper-content ibox-content">
-<@form.form id="form-${businessName}-edit"  class="form-horizontal">
+<@f.form id="form-${businessName}-edit"  class="form-horizontal">
     <input name="${pkColumn.javaField}" value="${${className}.${pkColumn.javaField}}" type="hidden">
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw ${table.menuIcon}"></i></h4>######
 #####
@@ -74,7 +74,7 @@ ${pageTheme}
                </label>##
 
                 <div class="col-sm-8">
-                <@form.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
              </div>
 #elseif($column.htmlType == "icon")
@@ -85,7 +85,7 @@ ${pageTheme}
                         <i class="fa fa-question-circle-o" style="color: orange"></i></a>
                 </label>
                 <div class="col-sm-8">
-                    <@form.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
+                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
                 </div>
             </div>
 #elseif($column.htmlType == "imgcup")
@@ -94,7 +94,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+                    <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
                 </div>
             </div>
         </div>###
@@ -103,14 +103,14 @@ ${pageTheme}
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
             </label>
             <div class="col-sm-8">
-                 <@form.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+                 <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
             </div>
         </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                     <@form.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
                 </div>
             </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -127,7 +127,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                     <@form.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -144,7 +144,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                   <@form.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
+                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
                 </div>
             </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -160,7 +160,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                    <@form.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
+                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
                 </div>
             </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
@@ -193,8 +193,8 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect name="${field}" value="${${className}.${field}?default('')}"
-                          labelValue="${${className}.deptName?default('')}"
+                        <@f.treeselect name="${field}" value="${${className}.${field}?default('')}"
+                          labelValue="${${className}.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -203,8 +203,8 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-                        labelValue="${${className}.compName?default('')}"
+                        <@f.treeselect  name="${field}" value="${${className}.${field}?default('')}"
+                        labelValue="${${className}.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -262,7 +262,7 @@ ${pageTheme}
                </label>##
 
                 <div class="col-sm-8">
-                <@form.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
              </div>
 #elseif($column.htmlType == "icon")
@@ -273,7 +273,7 @@ ${pageTheme}
                         <i class="fa fa-question-circle-o" style="color: orange"></i></a>
                 </label>
                 <div class="col-sm-8">
-                    <@form.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
+                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
                 </div>
             </div>
 #elseif($column.htmlType == "imgcup")
@@ -282,7 +282,7 @@ ${pageTheme}
             </label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <@form.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+                    <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
                 </div>
             </div>
         </div>###
@@ -291,14 +291,14 @@ ${pageTheme}
             <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
             </label>
             <div class="col-sm-8">
-                 <@form.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+                 <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
             </div>
         </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                     <@form.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
                 </div>
             </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -315,7 +315,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                     <@form.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -332,7 +332,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                   <@form.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
+                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
                 </div>
             </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -348,7 +348,7 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                    <@form.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
+                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
                 </div>
             </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
@@ -381,8 +381,8 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect name="${field}" value="${${className}.${field}?default('')}"
-                          labelValue="${${className}.deptName?default('')}"
+                        <@f.treeselect name="${field}" value="${${className}.${field}?default('')}"
+                          labelValue="${${className}.organization.name?default('')}"
                           boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
                 </div>
             </div>
@@ -391,8 +391,8 @@ ${pageTheme}
             <div class="form-group">
                 <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
                 <div class="col-sm-8">
-                        <@form.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-                        labelValue="${${className}.compName?default('')}"
+                        <@f.treeselect  name="${field}" value="${${className}.${field}?default('')}"
+                        labelValue="${${className}.company.name?default('')}"
                         boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
                 </div>
             </div>
@@ -438,7 +438,7 @@ ${pageTheme}
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "图片附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                    <@form.fileupload name="upload_img" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
+                    <@f.fileupload name="upload_img" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
                 </div>
            </div>
        </div>
@@ -451,13 +451,26 @@ ${pageTheme}
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "文件附件上传"/>：
                 </label>
                 <div class="col-sm-10">
-                     <@form.fileupload name="upload_file" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
+                     <@f.fileupload name="upload_file" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
                 </div>
             </div>
         </div>
    </div>
 #end
-</@form.form>
+#if($table.master)
+  <h4 class="form-header h4">子表单信息</h4>
+  <div class="row">
+        <div class="col-xs-12">
+            <@table id="bootstrap-table">
+                <a class="btn btn-success" onclick="addColumn()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+                <a class="btn btn-danger" onclick="$.table.removeData()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@table>
+        </div>
+   </div>
+#end
+</@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-5 col-sm-10">
@@ -483,11 +496,82 @@ ${pageTheme}
             opt.operate.saveTab(prefix + "/edit", $('#form-${businessName}-edit').serialize());
         }
     }
-#foreach($column in $columns)
-#if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "icon")
+#if($table.master)
 
-#end
-#end
+    var options = {
+        showSearch: false,
+        showRefresh: false,
+        showToggle: false,
+        showColumns: false,
+        clickToSelect: false,
+        url: prefix + "/child/list",
+        rememberSelected: false,
+        queryParams:function(params){
+            var curParams = {
+                // 传递参数查询参数
+                __limit:       params.limit,
+                __page:        params.offset / params.limit + 1,
+                searchValue:    params.search,
+                ${fKey.javaField}: "${${className}.${pkColumn.javaField}}",
+                __sidx:           params.sort,
+                __order:          params.order
+            };
+            return curParams;
+        },
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'index',
+                align: 'center',
+                title: "序号",
+                formatter: function (value, row, index) {
+                    var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    return columnIndex + $.table.serialNumber(index);
+                }
+            }
+            #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+    #foreach($c in $childColumns)## foreach columns
+        #set($dictType=$c.dictType)
+        #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
+        #if($parentheseIndex != -1)
+            #set($com=$c.columnComment.substring(0, $parentheseIndex))
+        #else##
+            #set($com=$c.columnComment)##
+        #end#####注释含有括符
+        #if($c.edit && !$c.pk)
+            ,{
+                field: '${c.javaField}',
+                align: 'center',
+                title: '${com}',
+                formatter: function(value, row, index) {
+                    #if($c.htmlType == "input")
+                    var html = opt.common.sprintf("<input class='form-control' type='text' name='${classEnty}[%s].${c.javaField}' value='%s'>", index, value);
+                    return html;
+                    #end
+            #if($c.htmlType == "datetime")
+                    var data = {"index":index,"field":"${c.javaField}","value":opt.common.formatDat(value,"yyyy-MM-dd")};
+                    return opt.template('datetime',data);
+                    #end
+                }
+            }
+            #end
+    #end
+            ]
+    };
+    $.table.init(options);
+
+    function addColumn(){
+        var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
+        var row = {index: count + 1
+            #foreach($c in $childColumns)## foreach columns
+        #if($c.edit && !$c.pk)
+            ,${c.javaField}:""
+            #end
+    #end};
+        $.table.addColumn(row);
+    }
+    #end
 #if($table.tree)
     /*${functionName}-新增-选择父部门树*/
     function select${BusinessName}Tree() {
@@ -508,4 +592,29 @@ ${pageTheme}
 #end
 </script>
 </@footer>
+#if($table.master)
+
+    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+    #foreach($c in $childColumns)## foreach columns
+        #set($dictType=$c.dictType)
+        #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
+        #if($parentheseIndex != -1)
+            #set($com=$c.columnComment.substring(0, $parentheseIndex))
+        #else##
+            #set($com=$c.columnComment)##
+        #end#####注释含有括符
+        #if($c.edit && !$c.pk)
+
+            #if($c.htmlType == "datetime")
+<script id="datetime" type="text/template">//<!--
+<div>
+    <input class="form-control time-input" name="${classEnty}[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
+</div>
+//-->
+</script>
+        #break
+            #end
+        #end
+    #end
+#end
 </@pageTheme>

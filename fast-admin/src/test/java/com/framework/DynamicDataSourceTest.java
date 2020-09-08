@@ -4,7 +4,6 @@ package com.framework;
 import com.framework.service.DataSourceTestService;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +21,15 @@ public class DynamicDataSourceTest {
     public void test(){
         //数据源1
         SysUserEntity user1 = dataSourceTestService.queryUser(1L);
-        System.out.println(ToStringBuilder.reflectionToString(user1));
+        System.out.println(user1.toString());
 
         //数据源2
         SysUserEntity user2 = dataSourceTestService.queryUser2(1L);
-        System.out.println(ToStringBuilder.reflectionToString(user2));
+        System.out.println(user2.toString());
 
         //数据源1
         SysUserEntity user3 = dataSourceTestService.queryUser(1L);
-        System.out.println(ToStringBuilder.reflectionToString(user3));
+        System.out.println(user3.toString());
     }
 
 }

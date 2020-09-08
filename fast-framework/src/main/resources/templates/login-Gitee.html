@@ -1,7 +1,7 @@
 <#include "/common/defaultEngine.html">
 <@pageTheme mark="true">
 <!DOCTYPE html>
-<html lang="zh-CN" class="" xmlns="http://www.w3.org/1999/html">
+<html lang="zh-CN" class="" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
 <#import "/common/springctx.ftl" as ctx>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,23 +11,23 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="authenticity_token" name="csrf-param">
     <#-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css?V=${config.getDvVersion()}">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
     <#-- Font Awesome -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css?V=${config.getDvVersion()}">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
     <#-- Ionicons -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css?V=${config.getDvVersion()}">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css">
     <#-- Theme style -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
     <#--animate 样式-->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css?V=${config.getDvVersion()}"/>
+    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
     <#-- jQuery toast 提示框  -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css?V=${config.getDvVersion()}">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
     <link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
     <link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}">
     <link href="${ctxStatic}/static/css/gitee/gitee.css" media="screen" rel="stylesheet">
     <link href="${ctxStatic}/static/css/gitee/semantic.css" rel="stylesheet">
     <#-- iCheck -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
     <style>[v-cloak]{display:none !important;} .checkbox label{ padding-left: 0px}
         .ui.error.message, .ui.attached.error.message {
             -webkit-box-shadow: 0px 0px 0px 1px #e0b4b4 inset, 0px 0px 0px 0px rgba(0,0,0,0);
@@ -72,7 +72,10 @@
                                     <span class="session-sidebox-comments__position">V${config.getVersion()}</span>
                                 </div>
                                 <div class="session-sidebox-comments__content">
-                                    J2eeFAST 是一个致力于中小企业 Java EE 企业级快速开发平台，永久免费、真开源。基于经典技术(Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE)， 让初学者能够更快的入门并投入到团队开发中去。 在线代码生成功能，包括核心模块如：组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、内容管理、license认证,BPM工作流等。采用松耦合设计；界面无刷新，一键换肤；众多账号安全设置，密码策略；在线定时任务配置；支持多数据源；支持读写分离、分库分表.
+                                    J2eeFAST是一个Java EE企业级快速开发平台，<strong>致力于打造中小企业最好用的开源免费的后台框架平台</strong>。
+                                    系统基于(Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE)经典技术开发，
+                                    系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流等)，
+                                    <strong>让你用最低的成本、最高的效率，开发项目，她也适合新手朋友练手</strong>。同时具备，<strong>界面简洁美观、高效、安全、源码可控、版本迭代快、免费技术交流群</strong>等特点。她适用于所有Web应用，她会成为你快速开发项目的好帮手。
                                 </div>
                             </div>
                         </div>
@@ -235,23 +238,24 @@
     </div>
 </div>
 <#--jQuery 3 -->
-<script src="${ctxStatic}/static/libs/jquery.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/jquery.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
-<script src="${ctxStatic}/static/libs/bootstrap.min.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
+<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
-<script src="${ctxStatic}/static/libs/icheck.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/icheck.min.js"></script>
 <#-- 全局遮罩-->
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
 <#-- jQuery toast 提示框  -->
-<script src="${ctxStatic}/static/libs/jquery.toast.min.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/libs/jquery.slimscroll.min.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/libs/fastclick.min.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${ctxStatic}/statics/libs/app.js?V=${config.getDvVersion()}"></script>-->
-<script src="${ctxStatic}/static/libs/vue.min.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
+<script src="${ctxStatic}/static/libs/jquery.slimscroll.min.js"></script>
+<script src="${ctxStatic}/static/libs/fastclick.min.js"></script>
+<#--<script src="${ctxStatic}/statics/libs/app.js"></script>-->
+<script src="${ctxStatic}/static/libs/vue.min.js"></script>
 <script>var ctx = "${ctxStatic}/", _secretKey = "${_secretKey}";</script>
 <script>
+    var loginStatus = "${loginStatus?default("")}";
     var vm = new Vue({
         el:'#app',
         data:{
@@ -394,6 +398,7 @@
                         }
                     }
                 });
+
             });
 
             /*设置tooltip*/
@@ -403,6 +408,14 @@
 
             /*获取页面键盘事件*/
             window.document.onkeydown = that._onkeydown;
+
+            var href= location.href;
+            if(href.indexOf("kickout=2")>0){
+                that.errrInfo("您被提下线,请重新登陆!");
+            }
+            if(href.indexOf("kickout=1")>0){
+                that.errrInfo("您的账号在另一台设备上登录,如非本人操作，请立即修改密码！");
+            }
         }
     });
 </script>

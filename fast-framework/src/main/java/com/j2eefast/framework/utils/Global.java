@@ -73,26 +73,48 @@ public class Global {
         return StrUtil.blankToDefault(getConfig(key),default0);
     }
 
-
     /**
-     * 获取文件上传路径
+    * @Title: getRootPath 
+    * @Description:项目文件根路径
+    * @author mfksn001@163.com
+    * @Date: 2020年8月13日
      */
-    public static String getProfile()
-    {
-        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_PROFILE),"D:/fast/uploadPath");
+    public static String getRootPath() {
+    	
+    	return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_ROOT_PATH),"D:/fast/");
     }
 
     /**
-     * 获取上传路径
+     * 获取富文本组件上传根路径 editor
      */
-    public static String getUploadPath()
+    public static String getEditorPath()
     {
-        return getProfile() + "/upload";
+        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_EDITOR_PATH),getRootPath()+"editor");
     }
 
-    public static String getConifgFile()
+    
+    /**
+     * 用户头像上传路径
+     */
+    public static String getAvatarPath()
     {
-        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_FILE),"D:/fast/file");
+        return  getRootPath() + "avatar";
+    }
+
+    /**
+     * temp 临时根目录
+      */
+    public static String getTempPath()
+    {
+        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_TEMP_PATH),getRootPath()+"temp");
+    }
+
+    /**
+     * attach 上传组件根目录
+      */
+    public static String getAttachPath()
+    {
+        return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_ATTACH_PATH),getRootPath()+"attach");
     }
 
     public static boolean optimize(){
@@ -144,14 +166,7 @@ public class Global {
     	return array.getInt("lock_time",30);
     }
 
-    /**
-     * 获取头像上传路径
-     */
-    public static String getAvatarPath()
-    {
-        return getProfile() + "/avatar";
-    }
-    
+
     /**
      * 所属公司
      *
