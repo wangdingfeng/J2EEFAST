@@ -1,5 +1,6 @@
 package com.j2eefast.modules.sys.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.j2eefast.common.core.enums.BusinessType;
 import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
+import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.utils.ResponseData;
-import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.sys.entity.SysMenuEntity;
 import com.j2eefast.framework.sys.service.SysMenuService;
@@ -177,6 +178,19 @@ public class SysMenuController extends BaseController {
 	public List<Ztree> menuTreeData(){
 		List<Ztree> ztrees = sysMenuService.menuTreeData(UserUtils.getUserInfo());
 		return ztrees;
+	}
+	
+	
+	@GetMapping("/menuUserTreeData")
+	@RequiresPermissions("sys:menu:view")
+	@ResponseBody
+	public List<Ztree> menuUserTreeData(Long userId){
+		if (null != userId && userId != 0 ) {
+			return  sysMenuService.menuTreeData(userId);
+		}else {
+			return new  ArrayList<Ztree>();
+		}
+	
 	}
 
 	/**
