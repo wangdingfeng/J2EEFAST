@@ -1,5 +1,5 @@
 
-> #### ***Star上1000，修改协议成MIT, 欢迎 Star!!!***
+#### ***Star上1000，修改协议成MIT, 欢迎 Star!!!***
 
 
  * [J2eeFast技术交流群[805468934]](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
