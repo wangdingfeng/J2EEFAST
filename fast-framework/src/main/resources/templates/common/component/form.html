@@ -651,6 +651,7 @@
                 blankValue =  "false" <#-- 是否默认有个空白选择项目 -->
 	            blankLabel =  "" <#-- 空白选择默认值 -->
                 placeholder="请选择值"
+                readonly = false <#-- 是否只读-->
 >
     <#local  Assname="${id}"/>
     <#if name != "">
@@ -663,7 +664,7 @@
         <#local AssId="${id}"/>
     </#if>
     <#if !multiple>
-        <select id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class}" <#if required> required</#if>>
+        <select id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class}" <#if required> required</#if><#if readonly> disabled="disabled"</#if>>
         <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
         <#if dictType !="">
             <#list dict.getType('${dictType}')>
@@ -748,7 +749,7 @@
 
     <#if multiple>
         <input id="${AssId?replace(".","_")}" type="hidden" name="<#if id == "">${name}<#else>${AssId}</#if>"/>
-        <select id="__${AssId?replace(".","_")}slt" class="${class}" multiple="true" <#if class= "selectpicker">data-none-selected-text="请选择"</#if> <#if required> required</#if>>
+        <select id="__${AssId?replace(".","_")}slt" class="${class}" multiple="true" <#if class= "selectpicker">data-none-selected-text="请选择"</#if> <#if required> required</#if> <#if readonly> disabled="disabled"</#if>>
             <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
             <#if dictType !="">
                 <#list dict.getType('${dictType}')>
