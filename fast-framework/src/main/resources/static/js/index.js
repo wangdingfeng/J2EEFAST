@@ -48,6 +48,8 @@
             title: $.i18n.prop('首页'),
             id: '0'
         };
+        
+        //var data =  opt.getLeftFirstMenuConig();
         opt.navTabAdd(data);
     };
 

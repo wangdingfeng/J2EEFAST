@@ -221,9 +221,10 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		return ztrees;
 	}
 
-	public List<Ztree> menuTreeData(Long userId) {
+
+	public List<Ztree> menuUserTreeData(Long userId) {
 		List<SysMenuEntity> menuList = this.sysMenuMapper.findMenuAllByUserId(userId);
-		List<Ztree> ztrees = initZtree(menuList, null, true);
+		List<Ztree> ztrees = initZtree(menuList);
 		return ztrees;
 	}
 	/**

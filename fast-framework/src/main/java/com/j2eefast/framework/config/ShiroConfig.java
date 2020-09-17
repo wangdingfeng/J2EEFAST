@@ -75,6 +75,9 @@ public class ShiroConfig {
 	@Value("${shiro.cookie.maxAge: 30}")
 	private int maxAge;
 
+	 @Value("#{${shiro.filterMap}}")
+	 private LinkedHashMap<String, String> filterMap ;
+	 
 	/**
 	 * 设置session cookie属性
 	 * @return
@@ -248,25 +251,9 @@ public class ShiroConfig {
 		// 权限认证失败，则跳转到指定页面
 		shiroFilter.setUnauthorizedUrl("/");
 		//授权认证配置
-		Map<String, String> filterMap = new LinkedHashMap<>();
-		filterMap.put("/swagger/**", "anon");
-		filterMap.put("/api/trade.receive/**", "anon");
-		filterMap.put("/v2/api-docs", "anon");
-		filterMap.put("/swagger-ui.html", "anon");
-		filterMap.put("/webjars/**", "anon");
-		filterMap.put("/swagger-resources/**", "anon");
-		filterMap.put("/profile/fileUeditor/upload/image/**","anon");
-		filterMap.put("/sys/comm/download/**","anon");
-		filterMap.put("/static/**", "anon");
-		filterMap.put("/login", "anon");
-		filterMap.put("/auth/**", "anon");
-		filterMap.put("/404.html", "anon");
-		filterMap.put("/upbw/**", "anon");
-		filterMap.put("/sys/login", "anon");
-		filterMap.put("/favicon.ico", "anon");
-		filterMap.put("/captcha.gif", "anon");
-		filterMap.put("/**", "kickout,user");
-		shiroFilter.setFilterChainDefinitionMap(filterMap);
+		if (null !=filterMap && filterMap.size() != 0) {			
+			  shiroFilter.setFilterChainDefinitionMap(filterMap);
+			}
 		return shiroFilter;
 	}
 

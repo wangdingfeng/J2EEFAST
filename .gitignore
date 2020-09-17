@@ -16,6 +16,8 @@ target/
 /fast-admin/src/test/java/**
 /fast-admin/src/main/resources/application-Test.yml
 /fast-admin/src/main/resources/license/**
+/fast-admin/src/main/resources/application-Test.yml
+/fast-admin/src/main/resources/application-Dev.yml
 dbmysqlgen
 *.erm
 *.lck

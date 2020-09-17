@@ -146,33 +146,7 @@
         };
         $.tree.init(options);
     }
-   <!--
-    /* 点击左侧数节点 回调事件 刷新表格*/
-    function onClick(event, treeId, treeNode) {
-        /* 设置属性值*/
-        $("#compId").val(treeNode.id);
-        $("#compIdName").val(treeNode.name);
-        $.table.search();
-    }
-    
-    
-    /* 点击树组件 回调事件案例 回调方法名固定 刷新表格*/
-    /**
-     *  id 为组件id
-     *  event 为组件点击按钮名称 ok 确定 clear 清除 cancel 取消
-     *  index 弹出窗口index
-     *  layero
-     *  nodes 确认事件传的参数
-     **/
-    function treeCallback(id, event, index, layero, nodes) {
-        if(id == "compId"){
-            if(event == "ok"){
-                /* 点击确认按钮直接刷新表格*/
-                $.table.search();
-            }
-        }
-    }
-    -->
+ 
 
     /* 左侧数刷新事件*/
     $('#btnRefresh').click(function() {

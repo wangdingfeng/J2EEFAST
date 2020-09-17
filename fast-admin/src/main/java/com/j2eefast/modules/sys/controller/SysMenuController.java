@@ -180,17 +180,18 @@ public class SysMenuController extends BaseController {
 		return ztrees;
 	}
 	
-	
+	/**
+	 * 管理员查看用户已获取的菜单权限
+	 */
 	@GetMapping("/menuUserTreeData")
 	@RequiresPermissions("sys:menu:view")
 	@ResponseBody
-	public List<Ztree> menuUserTreeData(Long userId){
-		if (null != userId && userId != 0 ) {
-			return  sysMenuService.menuTreeData(userId);
-		}else {
-			return new  ArrayList<Ztree>();
+	public List<Ztree> menuUserTreeData(Long userId) {
+		List<Ztree> ztrees = new ArrayList<Ztree>();
+		if (null != userId && userId != 0) {
+			ztrees = sysMenuService.menuUserTreeData(userId);
 		}
-	
+		return ztrees;
 	}
 
 	/**
