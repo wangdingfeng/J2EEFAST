@@ -65,9 +65,8 @@ shiro:
         validationTime: 5
           #custome url filter Map    
     filterMap: " { 
-           '${adminPath}/login': 'anon',
+           '/login': 'anon',
            '/static/**': 'anon',
-           '${frontPath}/**': 'anon',
            '/swagger/**': 'anon',
            '/api/trade.receive/**': 'anon',
            '/v2/api-docs': 'anon',
@@ -75,13 +74,13 @@ shiro:
            '/swagger-resources/**': 'anon',
            '/webjars/**': 'anon',
            '/profile/fileUeditor/upload/image/**': 'anon',
-           '${adminPath}/sys/comm/download/**': 'anon',
-           '${adminPath}/auth/**': 'anon',
+           '/sys/comm/download/**': 'anon',
+           '/auth/**': 'anon',
            '/404.html': 'anon',
-           '${adminPath}/upbw/**': 'anon',
-           '${adminPath}/sys/login': 'anon',
+           '/upbw/**': 'anon',
+           '/sys/login': 'anon',
            '/favicon.ico': 'anon',
-           '${adminPath}/captcha.gif': 'anon',
+           '/captcha.gif': 'anon',
            '/**': 'kickout,user'     
             }"
 
