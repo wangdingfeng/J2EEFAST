@@ -13,8 +13,9 @@ target/
 .sts4-cache
 .vscode
 /doc/v.txt
-/fast-admin/src/test/java/com/framework/CSTest.java
+/fast-admin/src/test/java/**
 /fast-admin/src/main/resources/application-Test.yml
+/fast-admin/src/main/resources/license/**
 dbmysqlgen
 *.erm
 *.lck
