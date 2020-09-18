@@ -652,6 +652,9 @@
 	            blankLabel =  "" <#-- 空白选择默认值 -->
                 placeholder="请选择值"
                 readonly = false <#-- 是否只读-->
+                viewMode =false
+                viewClass="label label-default"
+
 >
     <#local  Assname="${id}"/>
     <#if name != "">
@@ -663,6 +666,27 @@
     <#else>
         <#local AssId="${id}"/>
     </#if>
+    
+  <#if viewMode>    <#-- view 用法 <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id" required=true view=true />    -->
+       <#if dictType !="">    <#-- dictType !=""  -->
+         <#list dict.getType('${dictType}') as d>                           
+                    <#list value?split(",") as k>
+	                  <#if k == (d['${dictValue}']?c)>    
+	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${dictLabel}']}"/></span> 
+	                 </#if>                     
+                </#list>
+           </#list>
+       <#else>  <#-- else <#-- dictType !=""   -->
+	       <#list items as d>
+	            <#list value?split(",") as k>
+	                  <#if k?string == d['${itemValue}']?string>    
+	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${itemLabel}']}"/></span>
+	                </#if>
+	            </#list>
+	        </#list>
+       </#if>   <#-- end dictType !=""  -->
+  <#else>  <#-- view else -->   
+    
     <#if !multiple>
         <select id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class}" <#if required> required</#if><#if readonly> disabled="disabled"</#if>>
         <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
@@ -835,6 +859,7 @@
         </script>
         </@compress>
     </#if>
+   </#if>  <#-- view end if -->
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
 </#macro>
 

@@ -63,6 +63,26 @@ shiro:
         expireTime: 30
         #设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
         validationTime: 5
+          #custome url filter Map    
+    filterMap: " { 
+           '/login': 'anon',
+           '/static/**': 'anon',
+           '/swagger/**': 'anon',
+           '/api/trade.receive/**': 'anon',
+           '/v2/api-docs': 'anon',
+           '/swagger-ui.html': 'anon',
+           '/swagger-resources/**': 'anon',
+           '/webjars/**': 'anon',
+           '/profile/fileUeditor/upload/image/**': 'anon',
+           '/sys/comm/download/**': 'anon',
+           '/auth/**': 'anon',
+           '/404.html': 'anon',
+           '/upbw/**': 'anon',
+           '/sys/login': 'anon',
+           '/favicon.ico': 'anon',
+           '/captcha.gif': 'anon',
+           '/**': 'kickout,user'     
+            }"
 
 #mybatis 配置
 mybatis-plus:
