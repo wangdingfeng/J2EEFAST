@@ -1322,6 +1322,7 @@ button.dim:active:before {
     color: inherit;
     cursor: default;
     z-index: 2;
+    font-weight: 700;
 }
 
 .pagination>li>a, .pagination>li>span {
