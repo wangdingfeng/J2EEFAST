@@ -139,6 +139,12 @@ public class PropertiesUtils {
 		properties.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
 				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_VERIFY_KEY)).substring(0,6));
 		properties.put("pCIp",StrUtil.cleanBlank(StrUtil.join(StrUtil.COMMA,ConfigConstant.FAST_IPS)));
+
+		try{
+			if(properties.getProperty("fast.flowable.enabled").equals("false")){
+				properties.put("management.health.rabbit.enabled","false");
+			}
+		}catch (Exception e){}
 	}
 	
 	/**

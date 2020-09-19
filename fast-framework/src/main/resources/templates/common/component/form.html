@@ -732,7 +732,7 @@
                             <#else>
                                 <#assign a=0 />
                                 <#list value?split(",") as x>
-                                    <#if x == d['${itemValue}']>
+                                    <#if x == "${d['${itemValue}']}">
                                         <#assign a=1 />
                                     </#if>
                                 </#list>
@@ -745,7 +745,7 @@
                         <#else>
                             <#assign a=0 />
                             <#list value?split(",") as x>
-                                <#if x == d['${itemValue}']>
+                                <#if x == "${d['${itemValue}']}">
                                     <#assign a=1 />
                                 </#if>
                             </#list>

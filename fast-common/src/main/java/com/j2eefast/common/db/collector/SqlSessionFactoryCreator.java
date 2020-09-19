@@ -191,7 +191,7 @@ public class SqlSessionFactoryCreator {
 			try {
 				properties.load(this.getClass().getClassLoader().getResourceAsStream("org/flowable/db/properties/" + databaseType + ".properties"));
 			} catch (Exception e) {
-				log.error("获取数据异常!",e);
+				log.error("获取数据异常!系统为加载到工作流模块,请检查模块是否放开",e);
 			}
 			factory.setConfigurationProperties(properties);
 		}else{
