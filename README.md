@@ -2,11 +2,20 @@
 ## ***Star上1000，修改协议成MIT, 欢迎 Star!!!***
 
 
- * [J2eeFast技术交流群[805468934]](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
-
 # J2eeFAST
 
+![输入图片说明](https://img.shields.io/badge/%E9%AB%98%E6%95%88-%E5%BF%AB%E9%80%9F-brightgreen "在这里输入图片标题")
+![输入图片说明](https://img.shields.io/badge/%E5%AE%89%E5%85%A8-%E6%BA%90%E7%A0%81%E5%8F%AF%E6%8E%A7-blueviolet "在这里输入图片标题")
+[![技术交流群](https://img.shields.io/badge/QQ%E6%8A%80%E6%9C%AF%E7%BE%A4-805468934-orange "J2eeFAST技术交流群") 
+](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
+
+
+---
+
+
+
 J2eeFAST 是一个 Java EE 企业级快速开发平台， **致力于打造中小企业最好用的开源免费的后台框架平台** 。 系统基于（Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE）经典技术开发， 系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流等)，  **让你用最低的成本、最高的效率，开发项目，她也适合新手朋友练手** 。同时具备， **界面简洁美观、高效、安全、源码可控、版本迭代快、免费技术交流群** 等特点。她适用于所有Web应用，她会成为你快速开发项目的好帮手。
+
 
 #### 软件架构 
 
