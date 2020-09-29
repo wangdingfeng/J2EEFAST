@@ -2,6 +2,8 @@ package com.j2eefast.framework.shiro.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.auth.AuthService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.*;
@@ -110,6 +112,11 @@ public class SysLoginService implements AuthService {
 		if(ToolUtil.isEmpty(user)){
 			AsyncManager.me().execute(AsyncFactory.recordLogininfor(username,-1L,-1L, "50001","账号或密码错误,请重试."));
 			throw new RxcException(ToolUtil.message("sys.login.failure"),"50001");
+		}
+		
+		//user status : 1 disable
+		if ("1".equals(user.getStatus())) {
+			throw new RxcException(ToolUtil.message("sys.login.accountDisabled"),"50001");
 		}
 
 		//判断密码是否正确

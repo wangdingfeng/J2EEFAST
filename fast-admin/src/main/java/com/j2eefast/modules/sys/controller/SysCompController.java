@@ -104,6 +104,7 @@ public class SysCompController extends BaseController {
 	 */
 	@GetMapping("/add/{compId}")
 	public String add(@PathVariable("compId") Long compId, ModelMap mmap){
+		
 		mmap.put("comp",  sysCompService.findCompById(compId));
 		return urlPrefix + "/add";
 	}
@@ -153,6 +154,7 @@ public class SysCompController extends BaseController {
 	@RequiresPermissions("sys:comp:add")
 	@ResponseBody
 	public ResponseData save(@Validated SysCompEntity comp) {
+		sysCompService.checkDataScope(comp.getParentId());
 		ValidatorUtil.validateEntity(comp);
 		if (!sysCompService.checkCompNameUnique(comp)){
 			return error("新增公司'" + comp.getName() + "'失败,名称已存在");
@@ -169,7 +171,9 @@ public class SysCompController extends BaseController {
 	@RequiresPermissions("sys:comp:edit")
 	@ResponseBody
 	public ResponseData update(@Validated SysCompEntity comp) {
-
+        //check data scope
+		sysCompService.checkDataScope(comp.getId());
+		
 		ValidatorUtil.validateEntity(comp);
 		if (!sysCompService.checkCompNameUnique(comp)) {
 			return error("修改公司'" + comp.getName() + "'失败,名称已存在");
@@ -190,6 +194,8 @@ public class SysCompController extends BaseController {
 	@ResponseBody
 	public ResponseData delete(@PathVariable("compId") Long compId) {
 
+		sysCompService.checkDataScope(compId);
+		
 		if(UserUtils.getUserId().equals(Constant.SUPER_ADMIN) ||
 				UserUtils.hasRole(Constant.SU_ADMIN)){
 			// 先判断是否有子公司

@@ -37,6 +37,7 @@ public interface SysCompMapper extends BaseMapper<SysCompEntity> {
 	 * @param parentId
 	 * @param name
 	 * @param status
+	 * @param ids 
 	 * @param sql_filter
 	 * @return
 	 */
@@ -45,6 +46,6 @@ public interface SysCompMapper extends BaseMapper<SysCompEntity> {
 									@Param("name") String name,
 									@Param("status") String status,
 									@Param("type") String type,
-									@Param("sql_filter") String sql_filter);
+									@Param("ids") Long[] ids, @Param("sql_filter") String sql_filter);
 
 }

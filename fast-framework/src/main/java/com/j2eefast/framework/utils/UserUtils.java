@@ -3,7 +3,9 @@ package com.j2eefast.framework.utils;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.framework.shiro.realm.UserRealm;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.session.Session;
@@ -114,6 +116,40 @@ public class UserUtils {
 		return  getSubject().hasRole(roleKey);
 	}
 
+	/** 
+	* @Title: hasAnyRoleKeys 
+	* @return  boolean 
+	* @Date: 2020年9月29日
+	*/
+	public static boolean hasAnyRoleKeys(String... keys) {
+		for (String key : keys) {
+			if (hasRole(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	* @Title: hasAnyRoleKey 
+	* @Description: None of them will thow exception
+	* @param keys  role key 
+	* @Date: 2020年9月24日
+	 */
+	public static void hasAnyRoles(String... keys) {
+		boolean flag = false;
+		if (null!= keys && keys.length > 0 ) {
+			for (String key : keys) {
+				if (hasRole(key)) {
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (!flag) {
+			throw new AuthorizationException("No permission ---> it does not have role "+ StringUtils.join(keys, ","));
+		}
+	}
 
 	public static void setSessionAttribute(Object key, Object value) {
 		getSession().setAttribute(key, value);
@@ -151,5 +187,6 @@ public class UserUtils {
 	{
 		return RandomStringUtils.randomAlphanumeric(20);
 	}
+
 
 }

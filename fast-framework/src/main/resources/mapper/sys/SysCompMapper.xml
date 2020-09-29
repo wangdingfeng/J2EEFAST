@@ -39,6 +39,13 @@
         <if test="type != null and type != ''">
             AND c.type = #{type}
         </if>
+        <if test="ids != null and ids.length > 0">
+            AND c.id in
+            <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
+              #{id}
+           </foreach>
+        </if>
+        
         <!-- 数据范围过滤 -->
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
