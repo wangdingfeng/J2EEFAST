@@ -145,6 +145,7 @@
                    height=""
                    value=""
                    labelValue=""
+                   labelName="" <#--标签名称 -->
                    required=false <#-- 是否必输-->
                    readonly=true <#-- 是否只读模式-->
                    disabled="" <#--控件是否可用 -->
@@ -158,6 +159,7 @@
                    separator = "," <#--多选参数分隔符 -->
                    keyId = "id" <#--表示获取数据id字段名称-->
                    keyName = "name" <#--表示显示名称 -->
+                   template = false <#-- 控件是否做template用-->
                    tableInfo = "[{field:'username',title:'账号',query:true},{field:'name',title:'姓名'},{field:'compName',title:'归属公司'},
                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱',query:true},{field:'mobile',title:'手机号码',query:true},
                    {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]" <#-- 显示表格信息-->
@@ -172,22 +174,22 @@
     <#else>
         <#local AssId="${id}"/>
     </#if>
-    <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
-    <div class="input-group" id="${AssId?replace(".","_")}Div" data-url="${url}">
-        <input id="${AssId?replace(".","_")}Name" type="text" <#if disabled !="">disabled="${disabled}"</#if> placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
-        <span class="input-group-btn" <#if disabled !="">disabled="${disabled}"</#if>  id="${AssId?replace(".","_")}But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+    <div class="input-group" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div" data-url="${url}">
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" <#if disabled !="">disabled="${disabled}"</#if> placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
+        <span class="input-group-btn" <#if disabled !="">disabled="${disabled}"</#if>  id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
     </div>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
-            var ${AssId?replace(".","_")}_data = {};
-            $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
+            var <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
+            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").click(function(){
                 if($(this).attr("disabled") && $(this).attr("disabled")!=''){
                     return;
                 }
-                var selectId = $("#${AssId?replace(".","_")}").val();
-                var selectName =  $("#${AssId?replace(".","_")}Name").val();
+                var selectId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val();
+                var selectName =  $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val();
                 var options = {
                     title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
                     width: "${width}",
@@ -197,7 +199,7 @@
                     url: baseURL + "sys/component/tableselect",
                     <#-- POST提交组件控制类参数-->
                     fromData:{
-                        url: $("#${AssId?replace(".","_")}Div").data("url"),
+                        url: $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div").data("url"),
                         selectName: selectName,
                         selectId: selectId,
                         checked: "${checked?c}",
@@ -207,39 +209,39 @@
                         keyName: "${keyName}",
                         separator: "${separator}"
                     },
-                    obj: ${AssId?replace(".","_")}_data,
+                    obj: <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data,
                     main: true,
-                    callBack: func_${AssId?replace(".","_")}doSubmit,
-                    cancel:  func_${AssId?replace(".","_")}cancel
-                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                    callBack: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit,
+                    cancel:  func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel
+                    <#if isClear>, clear: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear</#if>
                 };
                 opt.modal.openOptions(options);
             });
 
-            function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
-                ${AssId?replace(".","_")}_data = layero.find("iframe")[0].contentWindow.tableData;
-                $("#${AssId?replace(".","_")}").val(${AssId?replace(".","_")}_data.keyId);
-                $("#${AssId?replace(".","_")}Name").val(${AssId?replace(".","_")}_data.keyName);
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit(index, layero,selfLayer) {
+                <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = layero.find("iframe")[0].contentWindow.tableData;
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data.keyId);
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val(<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data.keyName);
                 if(typeof tableCallback == 'function'){
-                    tableCallback('${Assname?replace(".","_")}', 'ok', index, layero, ${AssId?replace(".","_")}_data);
+                    tableCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'ok', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
                 };
                 selfLayer.close(index);
             };
             <#if isClear>
-            function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
-                ${AssId?replace(".","_")}_data = {};
-                $("#${AssId?replace(".","_")}").val('');
-                $("#${AssId?replace(".","_")}Name").val('');
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear(index, layero,selfLayer) {
+                <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val('');
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val('');
                 if(typeof tableCallback == 'function'){
-                    tableCallback('${Assname?replace(".","_")}', 'clear', index, layero, ${AssId?replace(".","_")}_data);
+                    tableCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'clear', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
                 };
                 selfLayer.close(index);
             };
             </#if>
 
-            function func_${AssId?replace(".","_")}cancel(index, layero) {
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
                 if(typeof userCallback == 'function'){
-                    userCallback('${Assname?replace(".","_")}', 'cancel', index, layero, ${AssId?replace(".","_")}_data);
+                    userCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
                 }
             }
         })
@@ -259,6 +261,7 @@
                    height=""
                    value=""
                    labelValue=""
+                   labelName="" <#--标签名称 -->
                    checked=false
                    radioType="all" <#-- 当checked=false 单选时 控制同级单选互斥还是整个树互斥 all 整个树互斥 level, checked=true 多选此值无效-->
                    required=false <#-- 是否必输-->
@@ -274,6 +277,7 @@
                    isSelectParent = false <#-- 是否只能选中叶子节点-->
                    isInput = false <#-- 是否允许手动label框输入 -->
                    isClear = true <#-- 弹出是否出现清除按钮-->
+                   template = false <#-- 控件是否做template用-->
                    placeholder="请输入值"
                    helpTip = ""  <#--帮助提示 -->
                    ext...>
@@ -287,21 +291,21 @@
     <#else>
         <#local AssId="${id}"/>
     </#if>
-    <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
-    <#if isParentIds>
+    <div class="input-group" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div" data-url="${url}">
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
+        <#if isParentIds>
         <input name="${parenName}" <#if parenIdsValue!="">value="${parenIdsValue}"</#if> type="hidden"/>
-    </#if>
-    <div class="input-group" id="${AssId?replace(".","_")}Div" data-url="${url}">
-        <input id="${AssId?replace(".","_")}Name" type="text" placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
-        <span class="input-group-btn" id="${AssId?replace(".","_")}But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+        </#if>
+        <span class="input-group-btn" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
     </div>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
-            $("#${AssId?replace(".","_")}But, #${AssId?replace(".","_")}Name").click(function(){
-                var treeId = $("#${AssId?replace(".","_")}").val();
-                var treeName =  $("#${AssId?replace(".","_")}Name").val();
+            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").click(function(){
+                var treeId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val();
+                var treeName =  $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val();
                 <#if correlationId !="">
                 var correlationId = $("#${correlationId}").val() == "" ? "${correlationValue}": $("#${correlationId}").val();
                 <#else>
@@ -316,7 +320,7 @@
                     url: baseURL + "sys/component/treeselect",
                     <#-- POST提交组件控制类参数-->
                     fromData:{
-                        url: $("#${AssId?replace(".","_")}Div").data("url"),
+                        url: $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div").data("url"),
                         treeId: treeId,
                         treeName: treeName,
                         expandLevel: "${expandLevel?string('true','false')}",
@@ -329,44 +333,44 @@
                         radioType: "${radioType}"
 
                     },
-                    callBack: func_${AssId?replace(".","_")}doSubmit,
-                    cancel:  func_${AssId?replace(".","_")}cancel
-                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                    callBack: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit,
+                    cancel:  func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel
+                    <#if isClear>, clear: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear</#if>
                 };
                 opt.modal.openOptions(options);
             });
 
-            function func_${AssId?replace(".","_")}doSubmit(index, layero,selfLayer) {
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit(index, layero,selfLayer) {
                 var nodes = $.tree.callBackTree(layero,index);
-                $("#${AssId?replace(".","_")}").val(nodes.id).change(); /* 赋值主页面隐藏ID */
-                $("#${AssId?replace(".","_")}Name").val(nodes.name).change();/* 回显主页面控件 */
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(nodes.id).change(); /* 赋值主页面隐藏ID */
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val(nodes.name).change();/* 回显主页面控件 */
                 <#if isParentIds>
                 $('input[name="${parenName}"]').val(nodes.parentIds).change();
                 </#if>
 
                 if(typeof treeCallback == 'function'){
-                    treeCallback('${Assname?replace(".","_")}', 'ok', index, layero, nodes);
+                    treeCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'ok', index, layero, nodes);
                 }
                 selfLayer.close(index);
             };
             <#if isClear>
-            function func_${AssId?replace(".","_")}clear(index, layero,selfLayer) {
-                $("#${AssId?replace(".","_")}").val("").change();
-                $("#${AssId?replace(".","_")}Name").val("").change();
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear(index, layero,selfLayer) {
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val("").change();
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val("").change();
                 <#if isParentIds>
                 $('input[name="${parenName}"]').val("").change();
                 </#if>
                 if(typeof treeCallback == 'function'){
-                    treeCallback('${Assname?replace(".","_")}', 'clear', index, layero, '');
+                    treeCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'clear', index, layero, '');
                 }
                 selfLayer.close(index);
             };
             </#if>
 
 
-            function func_${AssId?replace(".","_")}cancel(index, layero) {
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
                 if(typeof treeCallback == 'function'){
-                    treeCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+                    treeCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, '');
                 }
             }
         })
@@ -482,10 +486,30 @@
             <#items as d>
                 <#if status == "status">
                     <#if d.status =='0' >
-                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                        <#if value == "">
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                        <#else>
+                            <#assign a=0 />
+                            <#list value?split(",") as x>
+                                <#if x == d.dictValue>
+                                    <#assign a=1 />
+                                </#if>
+                            </#list>
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if a== 1>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                        </#if>
                     </#if>
                 <#else>
+                    <#if value == "">
                         <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    <#else>
+                        <#assign a=0 />
+                        <#list value?split(",") as x>
+                            <#if x == d.dictValue>
+                                <#assign a=1 />
+                            </#if>
+                        </#list>
+                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if a== 1>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    </#if>
                 </#if>
             </#items>
         </#list>
@@ -674,7 +698,7 @@
 	                  <#if k == (d['${dictValue}']?c)>    
 	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${dictLabel}']}"/></span> 
 	                 </#if>                     
-                </#list>
+                    </#list>
            </#list>
        <#else>  <#-- else <#-- dictType !=""   -->
 	       <#list items as d>
