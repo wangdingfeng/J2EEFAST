@@ -9,10 +9,12 @@ server:
         uri-encoding: UTF-8
         max-threads: 1000
         min-spare-threads: 30
-    #如果使用Nginx反向代理, 获取真实IP 需要开启
+        #如果使用Nginx反向代理, 获取真实IP 需要开启
         remote-ip-header: X-FORWARDED-FOR
         protocol-header: X-Forwarded-Proto
         port-header: X-Forwarded-Port
+        #设置表单提交数据最大大小,解决头像base64太大问题
+        max-http-form-post-size: 20MB
     use-forward-headers: true
     #########################################
     servlet:
