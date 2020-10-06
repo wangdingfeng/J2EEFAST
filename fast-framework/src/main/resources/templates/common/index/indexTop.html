@@ -238,7 +238,7 @@
                 area: 'auto',
                 scrollbar: false,
                 shadeClose: true,
-                content: '<textarea id="stikyText" placeholder="记笔记...">'+content+'</textarea>',
+                content: '<div class="el-context"><div class="el-textarea"><textarea id="stikyText" placeholder="记笔记...">'+content+'</textarea></div></div>',
                 success: function (layero, index) {
                 	/*重写关闭图标*/
                		$(layero).find('.layui-layer-setwin').html('<i class="layui-icon layui-layer-close layui-layer-close1" close="">ဆ</i>');

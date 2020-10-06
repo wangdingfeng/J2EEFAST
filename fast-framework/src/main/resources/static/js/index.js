@@ -8,10 +8,20 @@
  *       2020-05-17 优化菜单显示
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
  *       2020-08-18 解决小窗口菜单点击出现重叠问题
+ *       2020-09-29 新增主页加载动画
  * @version 1.0.12
  */
 //菜单添加事件
 +function ($) {
+
+    //主页加载动画
+    window.document.onreadystatechange = function(){
+        if(window.document.readyState == 'complete'){
+            setTimeout(function(){
+                $('.mini-loader').css('display','none').remove();
+            },1000);
+        }
+    };
 
     //初始化i18n插件
     $.i18n.properties({
@@ -679,8 +689,6 @@ $(function () {
         var url = hash.substring(1, hash.length);
         $('em[data-url$="' + url + '"]').click();
     };
-
-
     //////////////////////////////////////////////////////////////////
 
 });
