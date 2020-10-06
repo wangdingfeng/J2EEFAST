@@ -1,37 +1,34 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="行政区域列表">
-</@header>
-<@search fromId="area-form">
-<div class="select-list">
-    <ul>
-           <li>
-              <label> <@ctx.i18n text = "名称"/>：
-               <input type="text" class="form-control" name="name"/> </label>
-            </li>
-           <li>
-              <label> <@ctx.i18n text = "区域等级"/>：
-               <input type="text" class="form-control" name="level"/> </label>
-            </li>
-           <li>
-              <label> <@ctx.i18n text = "邮政编码"/>：
-               <input type="text" class="form-control" name="zipCode"/> </label>
-            </li>
-           <li>
-              <label> <@ctx.i18n text = "行政区划代码"/>：
-               <input type="text" class="form-control" name="areaCode"/> </label>
-            </li>
-        <li>
-          <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
-          <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
-       </li>
-    </ul>
-</div>
-</@search>
-<@table tableId="bootstrap-tree-table">
-</@table>
+<@header title="行政区域查询" libs=["table"]/>
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <@f.form name="area-form">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label> <@ctx.i18n text = "名称"/>：
+                                    <input type="text" class="form-control" name="name"/> </label>
+                            </li>
+                            <li>
+                                <label> <@ctx.i18n text = "行政区划代码"/>：
+                                    <input type="text" class="form-control" name="areaCode"/> </label>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                </@f.form>
+            </div>
+            <@table id="bootstrap-tree-table">
+            </@table>
+        </div>
+    </div>
 <@footer>
-<script>
+<script type="text/javascript">
     var prefix = baseURL + "sys/area";
     var datas_type = ${dict.getDictListJson('sys_area_type')};
     $(function() {
@@ -40,22 +37,29 @@
             code: "id",
             expandAll: false,
             expandFirst: false,
-            parentCode: "parentId",
-            uniqueId: "id",
-            // ajaxParams:{"level":1},
-            async: true,
+            parentCode: "parentId",      // 父节点标签
+            uniqueId: "id",              // 唯一ID
+            sortName: "id",              // 排序
+            //pageSize: 12,              // 一页条数 默认
+            //pageList: [12, 24, 32],    // 分页数据库 默认
+            async: true,                 // 开启异步
+            asynUrl: prefix + "/listChild", // 点击异步请求
             columns: [
-                {field: 'selectItem', checkbox: true}
-               ,{field : 'name',title : '<@ctx.i18n text = "名称"/>', align: 'center',halign:"left"}
+                //{field: 'selectItem', radio: true}, //是否需要点击选择
+                {field : 'name',title : '<@ctx.i18n text = "(行政代码)名称"/>',width:'250px', align: 'left',halign:"center",formatter: function(value, row, index) {
+                    return "（"+row.areaCode+"）"+value;
+                    }
+                }
+               ,{field : 'wholeName',title : '<@ctx.i18n text = "区域全称"/>',width:'350px', align: 'left', formatter: function(value, row, index) {return $.table.tooltip(value,30);}}
                ,{field : 'level',title : '<@ctx.i18n text = "区域等级"/>', align: 'center', formatter: function(value, row, index) {return $.table.selectDictLabel(datas_type, value);}}
                ,{field : 'cityCode',title : '<@ctx.i18n text = "电话区号"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
                ,{field : 'zipCode',title : '<@ctx.i18n text = "邮政编码"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
-               ,{field : 'areaCode',title : '<@ctx.i18n text = "行政区划代码"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+               ,{field : 'lon',title : '<@ctx.i18n text = "本区域经度"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+               ,{field : 'lat',title : '<@ctx.i18n text = "本区域纬度"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
                 ]
             };
             $.treeTable.init(options);
-        });
-
+    });
 </script>
 </@footer>
 </@pageTheme>

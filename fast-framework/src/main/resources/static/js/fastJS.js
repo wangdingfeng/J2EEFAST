@@ -220,13 +220,13 @@ if (typeof jQuery === "undefined") {
 	       	var dataIcon = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] i").attr("data-icon") || "";
 	       	var title = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] span").html() || ""      	
 	       	var data = {
-	               href: href,
-	               icon:  dataIcon,  //'fa fa-address-card',
-	               title: $.i18n.prop(title),
-	               id:   dataId, // $("#leftMenu .treeview-menu [data-url='sys/comp'],[data-module='core']").attr("data-id"), //'Y29yZTQx',
-	               module:module
-	           };
-	       	 return data
+               href: href,
+               icon:  dataIcon,  //'fa fa-address-card',
+               title: $.i18n.prop(title),
+               id:   dataId, // $("#leftMenu .treeview-menu [data-url='sys/comp'],[data-module='core']").attr("data-id"), //'Y29yZTQx',
+               module:module
+            };
+	       	return data
         },
         //get the frist menu config for layer open
         getLeftFirstMenuConig:function(){
@@ -1247,7 +1247,7 @@ if (typeof jQuery === "undefined") {
              * @param callback 弹出窗口点击确定按钮回调 弹出本页函数 [非必输] 如果不输入 则回调弹出的页面submitHandler 方法
              * @param yes [非必输] 只有在传 true 则先回调弹出层submitHandler 方法如果此submitHandler方法返回true,则再回调 callback 方法
              */
-            open: function (title, url,width, height,callback,yes,type) {
+            open: function (title, url,width, height,callback,type) {
                 //如果是移动端，就使用自适应大小弹窗
                 if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                     width = 'auto';
@@ -1276,28 +1276,30 @@ if (typeof jQuery === "undefined") {
                     }
                 }
                 var submit;
-                if(!opt.common.isEmpty(yes) && yes && !opt.common.isEmpty(callback)){
+
+                // 查看是否传回调函数
+                if(!opt.common.isEmpty(callback) && typeof callback == 'function'){
                     submit = function(index, layero) {
                         var iframeWin = layero.find('iframe')[0];
                         if(typeof iframeWin.contentWindow.submitHandler == 'function'){
                             if(iframeWin.contentWindow.submitHandler(index, layero)){
                                 callback(index,layero,opt.selfLayer);
+                                return;
                             }
+                        }else{
+                            callback(index,layero,opt.selfLayer);
+                            return;
                         }
                     }
                 }else{
-                    if (opt.common.isEmpty(callback)) {
-                        submit = function(index, layero) {
-                            var iframeWin = layero.find('iframe')[0];
-                            if(typeof iframeWin.contentWindow.submitHandler == 'function'){
-                                 iframeWin.contentWindow.submitHandler(index, layero);
-                            }else{
-                                opt.selfLayer.close(index);
-                            }
-                        }
-                    }else{
-                        submit = function(index, layero) {
-                            callback(index,layero);
+                    submit = function(index, layero) {
+                        var iframeWin = layero.find('iframe')[0];
+                        if(typeof iframeWin.contentWindow.submitHandler == 'function'){
+                            iframeWin.contentWindow.submitHandler(index, layero)
+                            return;
+                        }else{
+                            opt.selfLayer.close(index);
+                            return;
                         }
                     }
                 }
@@ -1372,15 +1374,20 @@ if (typeof jQuery === "undefined") {
                         var iframeWin = layero.find('iframe')[0];
                         if(typeof iframeWin.contentWindow.submitHandler == 'function'){
                              if(iframeWin.contentWindow.submitHandler(index, layero,_sf)){
-                            	 options.callBack(index, layero,_sf);
+                                 if(typeof  options.callBack == 'function'){
+                                     options.callBack(index, layero,_sf);
+                                 }
                              }
                              return;
                         }else{
-                        	options.callBack(index, layero,_sf);
-                        	return;
+                            if(typeof  options.callBack == 'function'){
+                                options.callBack(index, layero,_sf);
+                                return;
+                            }
                         }
                     }
                 }
+
                 _sf.open({
                     type: _type,
                     maxmin: true,
@@ -1414,7 +1421,6 @@ if (typeof jQuery === "undefined") {
                     success: function(layero, index){
                         if (!opt.common.isEmpty(options.obj)) {
                             var iframeWin = layero.find('iframe')[0];
-                            console.log(iframeWin.contentWindow.onLoadSuccess);
                             //判断页面是否有
                             if(typeof(iframeWin.contentWindow.onLoadSuccess) === "function"){
                                 iframeWin.contentWindow.onLoadSuccess(options.obj,layero, index,_sf);
@@ -2277,9 +2283,9 @@ if (typeof jQuery === "undefined") {
                     }
                 } else if (opt.table.options.type == opt.variable.table_type.bootstrapTreeTable) {
                     if(opt.common.isEmpty(tableId)){
-                        $("#" + opt.table.options.id).bootstrapTreeTable('refresh', []);
+                        $("#" + opt.table.options.id).bootstrapTreeTable('refresh', {'__refre':true});
                     } else{
-                        $("#" + tableId).bootstrapTreeTable('refresh', []);
+                        $("#" + tableId).bootstrapTreeTable('refresh', {'__refre':true});
                     }
                 }
             },
@@ -2380,9 +2386,10 @@ if (typeof jQuery === "undefined") {
         if ($.fn.select2 !== undefined) {
             $.fn.select2.defaults.set( "theme", "bootstrap" );
             $("select.form-control:not(.noselect2)").each(function () {
-                $(this).select2().on("change", function () {
-                    $(this).valid();
-                })
+                $(this).select2();
+                //     .on("change", function () {
+                //     $(this).valid();
+                // })
             })
         }
 
@@ -3092,9 +3099,7 @@ if (typeof jQuery === "undefined") {
                 if ($.fn.select2 !== undefined) {
                     $.fn.select2.defaults.set( "theme", "bootstrap" );
                     $("select.form-control:not(.noselect2)").each(function () {
-                        $(this).select2().on("change", function () {
-                            $(this).valid();
-                        })
+                        $(this).select2();
                     })
                 }
 
@@ -3117,9 +3122,7 @@ if (typeof jQuery === "undefined") {
                     if ($.fn.select2 !== undefined) {
                         $.fn.select2.defaults.set( "theme", "bootstrap" );
                         $("select.form-control:not(.noselect2)").each(function () {
-                            $(this).select2().on("change", function () {
-                                $(this).valid();
-                            })
+                            $(this).select2();
                         })
                     }
 
@@ -3533,15 +3536,46 @@ if (typeof jQuery === "undefined") {
                     var obj = {};
                     for (var i=0; i < columns.length; i++) {
                         var inputValue = $(columns[i]).find('input');
-                        var selectValue = $(columns[i]).find('select');
-                        var key = opt.table.options.columns[i].field;
-                        if (opt.common.isNotEmpty(inputValue.val())) {
-                            obj[key] = inputValue.val();
-                        } else if (opt.common.isNotEmpty(selectValue.val())) {
-                            obj[key] = selectValue.val();
-                        } else {
-                            obj[key] = "";
+                        if(inputValue.length == 1){
+                            var selectValue = $(columns[i]).find('select');
+                            var key = opt.table.options.columns[i].field;
+                            if (opt.common.isNotEmpty(inputValue.val())) {
+                                obj[key] = inputValue.val();
+                            } else if (opt.common.isNotEmpty(selectValue.val())) {
+                                obj[key] = selectValue.val();
+                            } else {
+                                obj[key] = "";
+                            }
+                        }else{
+                            var selectValue = $(columns[i]).find('select');
+                            var key = opt.table.options.columns[i].field;//use.id
+                            if (opt.common.isNotEmpty($(inputValue[0]).val())) {
+                                var names = $(inputValue[1]).attr('name').split('.');
+                                if (names.length > 1) {
+                                    obj[key] = $(inputValue[0]).val();
+                                    var str = names;
+                                    var obj0 = {},idx = str.length -1;
+                                    while(idx>-1){
+                                        var temp = {};
+                                        temp[str[idx]] = obj0;
+                                        obj0 = temp;
+                                        if(idx == (str.length -1)){
+                                            obj0[str[idx]] = $(inputValue[1]).val();
+                                        }
+                                        idx--;
+                                    }
+                                    obj = opt.common.extend(obj0,obj);
+                                }else{
+                                    obj[key] = $(inputValue[0]).val();
+                                    obj[$(inputValue[1]).attr('name')] = $(inputValue[1]).val();
+                                }
+                            } else if (opt.common.isNotEmpty(selectValue.val())) {
+                                obj[key] = selectValue.val();
+                            } else {
+                                obj[key] = "";
+                            }
                         }
+
                     }
                     /*
                     * {index:索引值, row:每行索引对应的数据(是一个对象)}
@@ -3652,23 +3686,28 @@ if (typeof jQuery === "undefined") {
                     id: "bootstrap-tree-table",
                     type: 1, // 0 代表bootstrapTable 1代表bootstrapTreeTable
                     height: 0,
-                    rootIdValue: null,
+                    rootIdValue: '0',       //树根节点 id
                     ajaxParams: {},
                     sortName: "",           //排序字段
                     sortOrder: "asc",       //默认升序
                     async: false,
                     toolbar: "toolbar",
                     striped: false,
+                    pageSize: 12,              // 一页条数
+                    pageList: [12, 24, 32],    // 分页数据库
                     expandColumn: 1,
                     showSearch: true,
                     showRefresh: true,
                     showColumns: true,
                     expandAll: true,
-                    expandFirst: true
+                    expandFirst: true,
+                    asynUrl: null
                 };
                 var options = $.extend(defaults, options);
 
                 //
+                var flag = false;
+
                 if(!opt.common.isEmpty(options.columns.length)){
                     for(var i=0; i<options.columns.length; i++ ){
                         if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"align"))){
@@ -3677,23 +3716,34 @@ if (typeof jQuery === "undefined") {
                         if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"halign"))){
                             options.columns[i].halign = 'center';
                         }
+                        if(opt.common.getJsonValue(options.columns[i],"field") === 'selectItem'){
+                            flag = true;
+                        }
                     }
+                }
+
+                if(!flag){
+                    options.expandColumn = 0;
                 }
 
                 opt.table.options = options;
                 opt.table.config[options.id] = options;
                 $.bttTable = $('#' + options.id).bootstrapTreeTable({
+                    id:  options.id,
                     code: options.code,                                 // 用于设置父子关系
                     parentCode: options.parentCode,                     // 用于设置父子关系
                     type: 'post',                                       // 请求方式（*）
                     url: options.url,                                   // 请求后台的URL（*）
                     async: options.async,                               // 是否异步加载数据
+                    asynUrl: options.asynUrl,                           // 异步加载子数据请求URL
                     data: options.data,                                 // 无url时用于渲染的数据
                     ajaxParams: options.ajaxParams,                     // 请求数据的ajax的data属性
                     sortName: options.sortName,                         // 排序字段
                     sortOrder: options.sortOrder,                       // 默认升序
                     rootIdValue: options.rootIdValue,                   // 设置指定根节点id值
                     height: options.height,                             // 表格树的高度
+                    pageSize: options.pageSize,                         // 一页条数
+                    pageList: options.pageList,                         // 页面列表
                     expandColumn: options.expandColumn,                 // 在哪一列上面显示展开按钮
                     striped: options.striped,                           // 是否显示行间隔色
                     bordered: true,                                     // 是否显示边框
@@ -3711,6 +3761,8 @@ if (typeof jQuery === "undefined") {
             search: function(formId) {
                 var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var params = opt.common.formToJSON(currentId);
+                // 添加异步请求参数
+                params['__refre'] = true;
                 $.bttTable.bootstrapTreeTable('refresh', params);
             },
             // 刷新
@@ -3730,8 +3782,8 @@ if (typeof jQuery === "undefined") {
                     opt.modal.error(data.msg);
                     return [];
                 } else {
-                    if (typeof opt.table.options.responseHandler == "function") {
-                        opt.table.options.responseHandler(data);
+                    if (typeof opt.table.get(this.id).responseHandler == "function") {
+                        return opt.table.get(this.id).responseHandler(data);
                     }
                     return data;
                 }

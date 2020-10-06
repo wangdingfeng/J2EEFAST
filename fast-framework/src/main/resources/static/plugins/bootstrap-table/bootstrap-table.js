@@ -17,6 +17,7 @@
  * 6.修复压缩源码增加源码可读性
  * 7.新增表格行title提示
  * 8.新增id 对象标识,修复页面多表格 回调函数问题
+ * 9.修复表格行title提示列转义显示问题
  * --------------------------------------------------
  */
 (function ($) {
@@ -640,7 +641,6 @@
             '</div>',
             '</div>'
         ].join(''));
-
         this.$container.insertAfter(this.$el);
         this.$tableContainer = this.$container.find('.fixed-table-container');
         this.$tableHeader = this.$container.find('.fixed-table-header');
@@ -656,6 +656,9 @@
         this.$el.addClass(this.options.classes);
         if (this.options.striped) {
             this.$el.addClass('table-striped');
+        }
+        if(this.options.height){
+            this.$container.css('height',this.options.height + 'px');
         }
         if ($.inArray('table-no-bordered', this.options.classes.split(' ')) !== -1) {
             this.$tableContainer.addClass('table-no-bordered');
@@ -959,7 +962,7 @@
         this.initSort();
     };
 
-    BootstrapTable.prototype.initSort = function () {
+     BootstrapTable.prototype.initSort = function () {
         var that = this,
             name = this.options.sortName,
             order = this.options.sortOrder === 'desc' ? -1 : 1,
@@ -1759,10 +1762,7 @@
                 if (item['_' + field + '_title']) {
                     title_ = sprintf(' title="%s"', item['_' + field + '_title']);
                 }
-                //TODO 扩增表格行titel提示
-                if(title_ === ""){
-                    title_ = sprintf(' title="%s"', value);
-                }
+
                 cellStyle = calculateObjectValue(that.header,
                     that.header.cellStyles[j], [value, item, i, field], cellStyle);
                 if (cellStyle.classes) {
@@ -1778,6 +1778,22 @@
 
                 value = calculateObjectValue(column,
                     that.header.formatters[j], [value, item, i], value);
+
+                //TODO 扩增表格行titel提示 修复转义问题
+                if(title_ === ""){
+                    var tp = getItemField(item, field, that.options.escape);
+                    if(field && tp && tp.length > 0){
+                        var reg = /<\/\w.*?>/g;
+                        if(reg.test(value)){
+                            if( $(value).is('span')){
+                                var txt = $(value).html();
+                                title_ = sprintf(' title="%s"', txt);
+                            }
+                        }else{
+                            title_ = sprintf(' title="%s"', value);
+                        }
+                    }
+                }
 
                 if (item['_' + field + '_data'] && !$.isEmptyObject(item['_' + field + '_data'])) {
                     $.each(item['_' + field + '_data'], function (k, v) {
@@ -2448,6 +2464,10 @@
                 height = this.options.height - toolbarHeight - paginationHeight;
 
             this.$tableContainer.css('height', height + 'px');
+            // console.log("--->>>>this.options.height:" + this.options.height);
+            // console.log("--->>>>height:" + height);
+            // this.$el.css('height',this.options.height + 'px');
+                //.css('overflow-y', 'hidden');
         }
 
         if (this.options.cardView) {

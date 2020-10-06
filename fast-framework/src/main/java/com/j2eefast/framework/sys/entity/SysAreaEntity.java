@@ -67,5 +67,6 @@ public class SysAreaEntity implements Serializable{
 
   /**是否有节点*/
   @TableField(exist = false)
-  private Integer nodes;
+  private Integer isTreeLeaf;
+
 }
