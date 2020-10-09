@@ -8038,7 +8038,6 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
 
             if(serverUrl) {
                 serverUrl = serverUrl + (serverUrl.indexOf('?') == -1 ? '?':'&') + 'action=' + (actionName || '');
-                console.log(utils.formatUrl(serverUrl));
                 return utils.formatUrl(serverUrl);
             } else {
                 return '';

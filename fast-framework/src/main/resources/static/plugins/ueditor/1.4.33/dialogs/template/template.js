@@ -14,7 +14,11 @@
     var initPre = function () {
         var str = "";
         for ( var i = 0, tmp; tmp = tmps[i++]; ) {
-            str += '<div class="preitem" onclick="pre(' + i + ')"><img src="' + "images/" + tmp.pre + '" ' + (tmp.title ? "alt=" + tmp.title + " title=" + tmp.title + "" : "") + '></div>';
+            if(tmp.pre  == 'xxx'){
+                str += '<div class="preitem" onclick="pre(' + i + ')">' +tmp.preHtml +'</div>';
+            }else {
+                str += '<div class="preitem" onclick="pre(' + i + ')"><img src="' + "images/" + tmp.pre + '" ' + (tmp.title ? "alt=" + tmp.title + " title=" + tmp.title + "" : "") + '></div>';
+            }
         }
         preitem.innerHTML = str;
     };
@@ -44,6 +48,7 @@
         var obj = {
             html:currentTmp && currentTmp.html
         };
+        console.log("-->>:"+obj);
         me.execCommand( "template", obj );
     };
     initPre();
