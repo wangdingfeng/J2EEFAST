@@ -1,18 +1,22 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.crypto;
 
 import com.j2eefast.common.core.exception.ServiceException;
 import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Random;
 
+/**
+ * SM4 加密工具类
+ * @author ZhouZhou
+ */
 public class SoftEncryption {
     private static final Logger LOG = LoggerFactory.getLogger(SoftEncryption.class);
     public boolean connectDevice()

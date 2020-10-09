@@ -118,6 +118,9 @@
 <script type="text/javascript">
     var prefix = baseURL + "sys/user";
 
+    /**
+     * 表单前端校验
+     **/
     $("#form-user-add").validate({
         onkeyup: false,
         rules:{
@@ -177,43 +180,14 @@
         focusCleanup: true
     });
 
+    /**
+     * Tab 页面点击确认按钮执行事件
+     **/
     function submitHandler() {
         if (opt.validate.form()) {
-            // var options = {
-            //     id:'form-user-add',
-            //     delete:['compName','deptName'], /*需要删除提交表单数据*/
-            //     conversion:[ /*需要转数据*/
-            //         {
-            //             name:'deptIdList',
-            //             value:'arr'
-            //         }
-            //     ]
-            // };
-            // var data = opt.form.dataUp(options);
-            // var postIds = opt.form.selectSelects("_role");
-            // var status = $("input[id='status']").is(':checked') == true ? 0 :1;
-            // // data.push({"name": "status", "value": status});
-            // data.push({"name": "roleIdList", "value": postIds});
             opt.operate.saveTab(prefix + "/add", $('#form-user-add').serialize());
         }
     }
-    //
-    //  $(function() {
-    // $("#__roleIdListslt").select2({
-    //     placeholder:"请选择值",
-    //     allowClear: true
-    // });
-    // //     $("#_role").on("change",function(e){
-    //         // e 的话就是一个对象 然后需要什么就 “e.参数” 形式 进行获取
-    //         console.log(opt.form.selectSelects("_role"));
-    //     })
-    //
-    //
-    //     $('#_posts').select2({
-    //         placeholder:"请选择所在岗位",
-    //         allowClear: true
-    //     });
-    //})
 
     /**
      * select 回调事件

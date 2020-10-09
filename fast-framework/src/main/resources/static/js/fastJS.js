@@ -10,6 +10,7 @@
  *       2020-08-20 新增加载遮罩默认提示语控制
  *       2020-08-23 优化表格记住我功能、新增右侧滑出窗口
  * @version v1.0.12
+ * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
     throw new Error("fastJS JavaScript requires jQuery")
@@ -25,14 +26,14 @@ if (typeof jQuery === "undefined") {
             pushMenu:null,
             version:'1.0.12',
             debug:true,
-            /*默认加载提示名人名言 如果不用 false*/
+            // 默认加载提示名人名言 如果不用 false
             loadTip:true,
-            //表格类型
+            // 表格类型
             table_type : {
                 bootstrapTable: 0,
                 bootstrapTreeTable: 1
             },
-            //弹窗状态码
+            // 弹窗状态码
             modal_status : {
                 SUCCESS: "success",
                 FAIL: "error",
@@ -60,7 +61,85 @@ if (typeof jQuery === "undefined") {
                 'skin-green-light'
             ]
         },
-        //设置菜单栏收缩
+
+        /**
+         * 在dom树ready之后执行给定的回调函数
+         * @method domReady
+         * @remind 如果在执行该方法的时候， dom树已经ready， 那么回调函数将立刻执行
+         * @param { Function } fn dom树ready之后的回调函数
+         * @example
+         * ```javascript
+         *
+         * opt.domReady( function () {
+         *
+         *     console.log('123');
+         *
+         * } );
+         *
+         * ```
+         */
+        domReady:function () {
+
+            var fnArr = [];
+
+            function doReady(doc) {
+                //确保onready只执行一次
+                doc.isReady = true;
+                for (var ci; ci = fnArr.pop(); ci()) {
+                }
+            }
+
+            return function (onready, win) {
+                win = win || window;
+                var doc = win.document;
+                onready && fnArr.push(onready);
+                if (doc.readyState === "complete") {
+                    doReady(doc);
+                } else {
+                    doc.isReady && doReady(doc);
+                    var agent = navigator.userAgent.toLowerCase();
+                    var ie = /(msie\s|trident.*rv:)([\w.]+)/.test(agent);
+                    var version;
+                    var v1 =  agent.match(/(?:msie\s([\w.]+))/);
+                    var v2 = agent.match(/(?:trident.*rv:([\w.]+))/);
+                    if(v1 && v2 && v1[1] && v2[1]){
+                        version = Math.max(v1[1]*1,v2[1]*1);
+                    }else if(v1 && v1[1]){
+                        version = v1[1]*1;
+                    }else if(v2 && v2[1]){
+                        version = v2[1]*1;
+                    }else{
+                        version = 0;
+                    }
+                    if (ie && version != 11) {
+                        (function () {
+                            if (doc.isReady) return;
+                            try {
+                                doc.documentElement.doScroll("left");
+                            } catch (error) {
+                                setTimeout(arguments.callee, 0);
+                                return;
+                            }
+                            doReady(doc);
+                        })();
+                        win.attachEvent('onload', function () {
+                            doReady(doc)
+                        });
+                    } else {
+                        doc.addEventListener("DOMContentLoaded", function () {
+                            doc.removeEventListener("DOMContentLoaded", arguments.callee, false);
+                            doReady(doc);
+                        }, false);
+                        win.addEventListener('load', function () {
+                            doReady(doc)
+                        }, false);
+                    }
+                }
+
+            }
+        }(),
+
+        // 设置菜单栏收缩
         sidebarCollapse: function(){
             opt.variable.pushMenu.expandOnHover();
             if (!$('body').hasClass('sidebar-collapse')){
@@ -71,32 +150,13 @@ if (typeof jQuery === "undefined") {
         pushMenuInit: function(){
             $('.main-sidebar').unbind('mouseenter').unbind('mouseleave');
         },
-        ////////////////
+        // --
         wclearInterval: function(){
             window.clearInterval(opt.variable.tindex);
         },
         getMessage:function(){
             $.getJSON("sys/user/info?_" + $.now(), function (r) {
             });
-        },
-        //退出登陆
-        outLogin: function(msg,comm){
-            opt.layer.open({
-                type: 1
-                ,title: false //不显示标题栏
-                ,closeBtn: false
-                ,area: '300px;'
-                ,shade: 0.8
-                ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                ,btn: [$.i18n.prop('确定')]
-                ,btnAlign: 'c'
-                ,moveType: 1 //拖拽模式，0或者1
-                ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: red; font-weight: bold;"><span style="color:Yellow">'+msg+'</span></br>'+comm+'</div>'
-                ,btn1: function (index) {
-                    opt.layer.close(index);
-                    window.location.href= "logout";
-                }
-            })
         },
         /*
         debug: function (message) {
@@ -430,110 +490,6 @@ if (typeof jQuery === "undefined") {
         },
         //========================TAB================================//
 
-        //计算集合宽度
-        calSumWidth: function(elements) {
-            var width = 0;
-            $(elements).each(function() {
-                width += $(this).outerWidth(true);
-            });
-            return width;
-        },
-
-        //滚动到指定选项卡
-        scrollToTab: function(element) {
-            var $tabTitle = $('#larry-tab .layui-tab-title'),
-                marginLeft = Math.abs(parseInt($tabTitle.css('margin-left'))),
-                marginLeftVal = opt.calSumWidth($(element).prevAll()),//当前元素 左边 长度
-                marginRightVal = Math.abs(parseInt(opt.calSumWidth($(element).nextAll())));//当前元素 右边 长度
-            var tab_bar = Math.abs(parseInt($tabTitle.children('.layui-tab-bar').outerWidth(true)));
-            marginRightVal = marginRightVal - tab_bar;
-            //可视区域tab宽度
-            var visibleWidth = $tabTitle.outerWidth(true) - 70;
-
-            var tabwidth = 0;
-            //实际滚动宽度
-            var scrollVal = 0;
-            var DISPLACEMENT = 210;
-            $tabTitle.children('li').each(function(){
-                tabwidth+= $(this).outerWidth(true);
-            });
-
-            if(tabwidth < visibleWidth){ //当前tab 总长度 小于 可视长度则不需要位移
-                $tabTitle.css("margin-left",'0px');
-                return false;
-            }
-            if(marginRightVal == 0){
-                scrollVal = tabwidth - visibleWidth;
-            }
-            if(marginLeftVal > visibleWidth){
-                scrollVal =  parseInt((marginLeftVal / DISPLACEMENT)) * DISPLACEMENT;
-                if((scrollVal + visibleWidth) > tabwidth){
-                    scrollVal = tabwidth - visibleWidth;
-                }
-            }
-            $tabTitle.css("margin-left",0 - scrollVal + 'px');
-            return;
-        },
-
-        //查看左侧隐藏的选项卡
-        scrollTabLeft: function(){
-            var $tabTitle = $('#larry-tab .layui-tab-title');
-            var marginLeftVal = Math.abs(parseInt($tabTitle.css('margin-left')));
-
-            //可视区域tab宽度
-            var visibleWidth = $tabTitle.outerWidth(true) - 70;
-
-            //当前tab 总长度
-            var tabwidth = 0;
-            $tabTitle.children('li').each(function(){
-                tabwidth+= $(this).outerWidth(true);
-            });
-
-            //实际滚动宽度
-            var scrollVal = 0;
-            var DISPLACEMENT = 210;
-            if (tabwidth < visibleWidth || marginLeftVal == 0) {//当前tab 总长度 小于 可视长度则不需要位移
-                $tabTitle.css("margin-left",'0px');
-                return false;
-            } else {
-                if(marginLeftVal > DISPLACEMENT){
-                    scrollVal = marginLeftVal - DISPLACEMENT;
-                }else{
-                    scrollVal = 0;
-                }
-            }
-            $tabTitle.css("margin-left",0 - scrollVal + 'px');
-        },
-
-        /* 查看右侧隐藏的选项卡*/
-        scrollTabRight: function(){
-            var $tabTitle = $('#larry-tab .layui-tab-title');
-            //当前TBA位移长度
-            var marginLeftVal = Math.abs(parseInt($tabTitle.css('margin-left')));
-            //可视区域tab宽度
-            var visibleWidth = $tabTitle.outerWidth(true) - 70;
-
-            //当前tab 总长度
-            var tabwidth = 0;
-            $tabTitle.children('li').each(function(){
-                tabwidth+= $(this).outerWidth(true);
-            });
-            //实际滚动宽度
-            var scrollVal = 0;
-            var DISPLACEMENT = 210;
-            if(tabwidth < visibleWidth){ //当前tab 总长度 小于 可视长度则不需要位移
-                $tabTitle.css("margin-left",'0px');
-                return false;
-            }else{
-                if((tabwidth - marginLeftVal - DISPLACEMENT) > visibleWidth){
-                    scrollVal = marginLeftVal + DISPLACEMENT;
-                }else {
-                    scrollVal = tabwidth - visibleWidth;
-                }
-                $tabTitle.css("margin-left",0 - scrollVal + 'px');
-            }
-        },
-
         //本地缓存处理
         storage:{
             set: function(key, value) {
@@ -575,12 +531,46 @@ if (typeof jQuery === "undefined") {
         },
         // 通用方法封装处理
         common: {
-            // 判断字符串是否为空
-            isEmpty: function (value) {
-                if (value === null || this.trim(value) === "" || typeof(value) == "undefined") {
-                    return true;
-                }
-                return false;
+            /**
+             * 判断对象是否为空
+             * @param obj 需要判断的对象
+             * @remind 如果判断的对象是NULL， 将直接返回true， 如果是数组且为空， 返回true， 如果是字符串， 且字符串为空，
+             *          返回true， 如果是普通对象， 且该对象没有任何实例属性， 返回true
+             * @returns {boolean} 对象是否为空
+             * @example
+             * ```javascript
+             *
+             * //output: true
+             * console.log( opt.common.isEmpty( {} ) );
+             *
+             * //output: true
+             * console.log( opt.common.isEmpty( [] ) );
+             *
+             * //output: true
+             * console.log( opt.common.isEmpty( "" ) );
+             *
+             * //output: false
+             * console.log( opt.common.isEmpty( { key: 1 } ) );
+             *
+             * //output: false
+             * console.log( opt.common.isEmpty( [1] ) );
+             *
+             * //output: false
+             * console.log( opt.common.isEmpty( "1" ) );
+             *
+             * //output: false
+             * console.log( opt.common.isEmpty( 1 ) );
+             *
+             * ```
+             */
+            isEmpty: function (obj) {
+                if (obj == null) return true;
+                if (this.isArray(obj) || this.isString(obj)) return obj.length === 0;
+                if (this.isNumber(obj)) return false;
+                if (this.isFunction(obj)) return false;
+                if (typeof obj === 'boolean') return false;
+                for (var key in obj) if (obj.hasOwnProperty(key)) return false;
+                return true;
             },
             /**
              * 检测值是否为 基本类型
@@ -612,15 +602,30 @@ if (typeof jQuery === "undefined") {
                 }
                 return false;
             },
-            // 空格截取
+            /**
+             * 删除字符串str的首尾空格
+             * @param value 必须是字符串
+             * @returns {string} 删除首尾空格字符
+             * @example
+             * var str = ' j2eefast ';
+             *
+             * //output: 10
+             * console.log( str.length );
+             *
+             * //output: 8
+             * console.log( opt.common.trim( ' j2eefast ').length );
+             *
+             * //output: 10
+             * console.log( str.length );
+             */
             trim: function (value) {
                 if (value == null) {
                     return "";
                 }
                 if(typeof value === 'string'){
-                    return value.toString().replace(/(^\s*)|(\s*$)|\r|\n/g, "");
+                    return value.toString().replace(/(^[ \t\n\r]+)|([ \t\n\r]+$)/g, '');
                 }else{
-                    return "-";
+                    return "";
                 }
             },
             hideStr:function(value,len, tag){
@@ -756,7 +761,11 @@ if (typeof jQuery === "undefined") {
                 }
                 return obj;
             },
-            // 获取obj对象长度
+            /**
+             * 获取对象长度
+             * @param obj
+             * @returns {number}
+             */
             getLength: function(obj) {
                 var count = 0;
                 for (var i in obj) {
@@ -832,17 +841,91 @@ if (typeof jQuery === "undefined") {
                 return ret
             },
             /**
-             * 相当于 $.extend(a,b); 方法
-             * 将_from 对象元素 合并到 to 中
-             * @param to
-             * @param _from
-             * @returns {*}
+             * 将source对象中的属性扩展到target对象上
+             * @method extend
+             * @remind 该方法将强制把source对象上的属性复制到target对象上
+             * @see opt.common.extend(Object,Object,Boolean)
+             * @param { Object } target 目标对象， 新的属性将附加到该对象上
+             * @param { Object } source 源对象， 该对象的属性会被附加到target对象上
+             * @return { Object } 返回target对象
+             * @example
+             * ```javascript
+             *
+             * var target = { name: 'target', sex: 1 },
+             *      source = { name: 'source', age: 17 };
+             *
+             * opt.common.extend( target, source );
+             *
+             * //output: { name: 'source', sex: 1, age: 17 }
+             * console.log( target );
+             *
+             * ```
              */
-            extend: function (to, _from) {
-                for (var key in _from) {
-                    to[key] = _from[key];
+
+            /**
+             * 将source对象中的属性扩展到target对象上， 根据指定的isKeepTarget值决定是否保留目标对象中与
+             * 源对象属性名相同的属性值。
+             * @method extend
+             * @param { Object } target 目标对象， 新的属性将附加到该对象上
+             * @param { Object } source 源对象， 该对象的属性会被附加到target对象上
+             * @param { Boolean } isKeepTarget 是否保留目标对象中与源对象中属性名相同的属性
+             * @return { Object } 返回target对象
+             * @example
+             * ```javascript
+             *
+             * var target = { name: 'target', sex: 1 },
+             *      source = { name: 'source', age: 17 };
+             *
+             * opt.common.extend( target, source, true );
+             *
+             * //output: { name: 'target', sex: 1, age: 17 }
+             * console.log( target );
+             *
+             * ```
+             */
+            extend:function (target, source, isKeepTarget) {
+                if (source) {
+                    for (var k in source) {
+                        if (!isKeepTarget || !target.hasOwnProperty(k)) {
+                            target[k] = source[k];
+                        }
+                    }
                 }
-                return to
+                return target;
+            },
+
+            /**
+             * 用给定的迭代器遍历数组或类数组对象
+             * @method each
+             * @param { Array } array 需要遍历的数组或者类数组
+             * @param { Function } iterator 迭代器， 该方法接受两个参数， 第一个参数是当前所处理的value， 第二个参数是当前遍历对象的key
+             * @example
+             * ```javascript
+             * var divs = document.getElmentByTagNames( "div" );
+             *
+             * //output: 0: DIV, 1: DIV ...
+             * opt.common.each( divs, funciton ( value, key ) {
+             *
+             *     console.log( key + ":" + value.tagName );
+             *
+             * } );
+             * ```
+             */
+            each : function(obj, iterator, context) {
+                if (obj == null) return;
+                if (obj.length === +obj.length) {
+                    for (var i = 0, l = obj.length; i < l; i++) {
+                        if(iterator.call(context, obj[i], i, obj) === false)
+                            return false;
+                    }
+                } else {
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            if(iterator.call(context, obj[key], key, obj) === false)
+                                return false;
+                        }
+                    }
+                }
             },
             /**
              * 将一个对象数组合并到一个对象中。
@@ -1042,6 +1125,9 @@ if (typeof jQuery === "undefined") {
                 }
                 return newStr;
             },
+            /**
+             * 字节转换
+             */
             bytesToSize : function (bytes) {
                 if (bytes === 0) return '0 B';
                 var k = 1024;
@@ -1051,6 +1137,22 @@ if (typeof jQuery === "undefined") {
                 return num.toPrecision(3) + ' ' + sizes[i];
                 //return (bytes / Math.pow(k, i)) + ' ' + sizes[i];
                 //toPrecision(3) 后面保留一位小数，如1.0GB //return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+            },
+            /**
+             * Get file name from path
+             * @param {String} file path to file
+             * @return filename
+             */
+            fileFromPath: function(file){
+                    return file.replace(/.*(\/|\\)/, "");
+            },
+            /**
+             * Get file extension lowercase
+             * @param {String} file name
+             * @return file extenstion
+             */
+            getExt: function(file){
+                return (-1 !== file.indexOf('.')) ? file.replace(/.*[.]/, '') : '';
             }
         },
         // 弹出层封装处理
@@ -1419,15 +1521,13 @@ if (typeof jQuery === "undefined") {
                         _sf.close(index);
                     },
                     success: function(layero, index){
-                        if (!opt.common.isEmpty(options.obj)) {
-                            var iframeWin = layero.find('iframe')[0];
-                            //判断页面是否有
-                            if(typeof(iframeWin.contentWindow.onLoadSuccess) === "function"){
-                                iframeWin.contentWindow.onLoadSuccess(options.obj,layero, index,_sf);
-                            }else{
-                                opt.modal.error("页面传参错误!");
-                            }
+                        // if (!opt.common.isEmpty(options.obj)) {
+                        var iframeWin = layero.find('iframe')[0];
+                        //判断页面是否有初始方法有就执行
+                        if(typeof(iframeWin.contentWindow.onLoadSuccess) === "function"){
+                            iframeWin.contentWindow.onLoadSuccess(options.obj,layero, index,_sf);
                         }
+                        // }
                     },
                     cancel: function(index, layero){
                         if (!opt.common.isEmpty(options.cancel)) {
@@ -2290,12 +2390,12 @@ if (typeof jQuery === "undefined") {
                 }
             },
             submit: function(){
-                if(typeof  submitHandler == "function"){
+                if(typeof submitHandler == "function"){
                     opt.modal.disable();
                     submitHandler();
                     opt.modal.enable();
                 }else{
-                    opt.modal.error($.i18n.prop('页面方法错误[submitHandler]'));
+                    opt.modal.error($.i18n.prop('页面必须存在[submitHandler]方法'));
                 }
             },
             // 获取选中复选框项
@@ -2367,6 +2467,53 @@ if (typeof jQuery === "undefined") {
             }
         },
     };
+
+    /**
+     * 判断给定的对象是否是字符串
+     * @method opt.common.isString
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是字符串
+     */
+
+    /**
+     * 判断给定的对象是否是数组
+     * @method opt.common.isArray
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是数组
+     */
+
+    /**
+     * 判断给定的对象是否是一个Function
+     * @method opt.common.isFunction
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是Function
+     */
+
+    /**
+     * 判断给定的对象是否是Number
+     * @method opt.common.isNumber
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是Number
+     */
+
+    /**
+     * 判断给定的对象是否是一个正则表达式
+     * @method opt.common.isRegExp
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是正则表达式
+     */
+
+    /**
+     * 判断给定的对象是否是一个普通对象
+     * @method opt.common.isObject
+     * @param { * } object 需要判断的对象
+     * @return { Boolean } 给定的对象是否是普通对象
+     */
+    opt.common.each(['String', 'Function', 'Array', 'Number', 'RegExp', 'Object', 'Date'], function (v) {
+        opt.common['is' + v] = function (obj) {
+            return Object.prototype.toString.apply(obj) == '[object ' + v + ']';
+        }
+    });
 
     $(function () {
 
@@ -2527,29 +2674,6 @@ if (typeof jQuery === "undefined") {
             }).bind("input propertychange", $.tree.searchNode);
         };
 
-        //配置通用的默认提示语
-        var icon = "<i class='fa fa-times-circle'></i>  ";
-        if(opt.common.isNotEmpty($.validator.messages)){
-            opt.common.extend($.validator.messages,{
-                required: icon + $.i18n.prop("必填"),
-                remote: icon + $.i18n.prop("sys.msg.remote"),
-                email: icon + $.i18n.prop("sys.msg.email"),
-                url: icon + $.i18n.prop("sys.msg.url"),
-                date: icon + $.i18n.prop("sys.msg.date"),
-                dateISO: icon + $.i18n.prop("sys.msg.dateISO"),
-                number: icon + $.i18n.prop("sys.msg.number"),
-                digits: icon + $.i18n.prop("sys.msg.digits"),
-                creditcard: icon +$.i18n.prop("sys.msg.creditcard"),
-                equalTo: icon + $.i18n.prop("sys.msg.equalTo"),
-                extension: icon + $.i18n.prop("sys.msg.extension"),
-                maxlength: $.validator.format(icon + $.i18n.prop("sys.msg.maxlength")),
-                minlength: $.validator.format(icon + $.i18n.prop("sys.msg.minlength")),
-                rangelength: $.validator.format(icon +$.i18n.prop("sys.msg.rangelength")),
-                range: $.validator.format(icon + $.i18n.prop("sys.msg.range")),
-                max: $.validator.format(icon + $.i18n.prop("sys.msg.max")),
-                min: $.validator.format(icon + $.i18n.prop("sys.msg.min"))
-            });
-        }
         // $.extend($.validator.messages, {
         //     required: icon + $.i18n.prop("必填"),
         //     remote: icon + $.i18n.prop("sys.msg.remote"),
@@ -3165,7 +3289,7 @@ if (typeof jQuery === "undefined") {
                     _value = _value.replace(/\'/g,"&apos;");
                     _value = _value.replace(/\"/g,"&quot;");
                     var actions = [];
-                    actions.push(opt.common.sprintf('<input id="tooltip-show" style="opacity: 0;position: absolute;z-index:-1" type="text" value="%s"/>', _value));
+                    actions.push(opt.common.sprintf('<input style="opacity: 0;position: absolute;z-index:-1" type="text" value="%s"/>', _value));
                     actions.push(opt.common.sprintf('<a href="###" class="tooltip-show" data-toggle="tooltip" data-target="%s" title="%s">%s</a>', _target, _value, _text));
                     return actions.join('');
                 } else {
@@ -3707,7 +3831,6 @@ if (typeof jQuery === "undefined") {
 
                 //
                 var flag = false;
-
                 if(!opt.common.isEmpty(options.columns.length)){
                     for(var i=0; i<options.columns.length; i++ ){
                         if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"align"))){
@@ -3783,7 +3906,7 @@ if (typeof jQuery === "undefined") {
                     return [];
                 } else {
                     if (typeof opt.table.get(this.id).responseHandler == "function") {
-                        return opt.table.get(this.id).responseHandler(data);
+                        opt.table.get(this.id).responseHandler(data);
                     }
                     return data;
                 }
@@ -4149,7 +4272,7 @@ if (typeof jQuery === "undefined") {
         opt.changeSkin(tmp);
     }
 
-    ////项目全局监听事件
+    //设置所有弹出框样式
     if(window.layer !== undefined){
         layer.config({
             extend: 'moon/style.css',

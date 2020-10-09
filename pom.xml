@@ -53,6 +53,7 @@
         <lombok.versin>1.18.4</lombok.versin>
         <oracle.version>11.2.0.3</oracle.version>
         <oauth.version>1.15.6</oauth.version>
+        <bcprov.version>1.46</bcprov.version>
     </properties>
     <!-- 依赖声明 -->
     <dependencyManagement>
@@ -89,7 +90,13 @@
                 <artifactId>JustAuth</artifactId>
                 <version>${oauth.version}</version>
             </dependency>
-            
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+
             <!-- Java图形验证码-->
             <dependency>
                 <groupId>com.github.whvcse</groupId>

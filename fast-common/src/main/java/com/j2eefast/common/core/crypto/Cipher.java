@@ -1,13 +1,18 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.crypto;
+
 import java.math.BigInteger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
-
 import com.j2eefast.common.core.utils.HexUtil;
 
-
+/**
+ * @author ZhouZhou
+ */
 public class Cipher {
     private int ct;
     private ECPoint p2;
@@ -28,11 +33,11 @@ public class Cipher {
         this.sm3keybase = new SM3Digest();
         this.sm3c3 = new SM3Digest();
 
-        byte p[] = HexUtil.byteConvert32Bytes(p2.getXCoord().toBigInteger());
+        byte p[] = HexUtil.byteConvert32Bytes(p2.getX().toBigInteger());
         this.sm3keybase.update(p, 0, p.length);
         this.sm3c3.update(p, 0, p.length);
 
-        p = HexUtil.byteConvert32Bytes(p2.getYCoord().toBigInteger());
+        p = HexUtil.byteConvert32Bytes(p2.getY().toBigInteger());
         this.sm3keybase.update(p, 0, p.length);
         this.ct = 1;
         NextKey();
@@ -97,7 +102,7 @@ public class Cipher {
 
     public void Dofinal(byte c3[])
     {
-        byte p[] = HexUtil.byteConvert32Bytes(p2.getYCoord().toBigInteger());
+        byte p[] = HexUtil.byteConvert32Bytes(p2.getY().toBigInteger());
         this.sm3c3.update(p, 0, p.length);
         this.sm3c3.doFinal(c3, 0);
         Reset();

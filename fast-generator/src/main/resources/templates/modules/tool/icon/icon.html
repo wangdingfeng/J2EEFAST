@@ -1,5 +1,5 @@
 <#include "/common/defaultEngine.html"/>
-<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@pageTheme mark="true">
 <@header title="图标选择" bodyClass="hold-transition box box-main">
 <#-- Theme style -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.css?V=${config.getDvVersion()}">
@@ -111,7 +111,7 @@
             }
         }).bind("input propertychange", function f(){
             search("1");
-        })
+        });
 
         $('input[name="search3"]').bind("blur", function blurKey(e) {
             if($(this).val() === ""){
@@ -119,7 +119,7 @@
             }
         }).bind("input propertychange", function f(){
             search("3");
-        })
+        });
 
         $('input[name="search4"]').bind("blur", function blurKey(e) {
             if($(this).val() === ""){
@@ -132,7 +132,7 @@
         function search(index){
             var $search = $('input[name="search'+index+'"]');
             var $tab = $("#tab_fa_"+index);
-            var  $results = $("#search-results"+index)
+            var  $results = $("#search-results"+index);
             if($search.val() === ""){
                 $tab.removeClass('hide');
                 $results.html("");
@@ -146,48 +146,47 @@
                     var _s;
                     if(index == "2"){
                         _s = $(this).find('i').attr('class').replace('fa fa-','');
-                    }
+                    };
                     if(index == "1" || index == "3"){
                         _s = $(this).find('i').attr('class').replace('fa','');
-                    }
+                    };
                     if(index == "4"){
                         _s = $(this).find('i').attr('class').replace('fa icon-size ','');
-                    }
+                    };
                     var flag = false;
                     for(var i=0; i<arrt.length; i++){
                         if(arrt[i] == _s){
                             flag = true;
                         }
-                    }
+                    };
                     if(!flag){
                         arrt.push(_s);
                     }
-                })
+                });
                 for(var i=0; i<arrt.length;i++){
                     if(arrt[i].indexOf(text) != -1){
                         html+="<div class=\"fa-hover col-md-3 col-sm-4\"><i class=\"fa "+(index == "2"? "fa-":"")+arrt[i]+"\" aria-hidden=\"true\"></i>"+arrt[i]+"</div>";
                     }
-                }
+                };
 
                 if(!opt.common.isEmpty(html)){
                     html+="</div>";
                     $results.html("");
                     $results.html(html);
                     $results.removeClass('hide');
-
                     $results.find('.fa-hover').dblclick(function() {
                         $("#icon").val($(this).find('i').attr('class'));
                         selectIcon()
                     });
                 }
             }
-        }
+        };
 
         function close(index){
             var $search = $('input[name="search'+index+'"]');
             $search.val("");
             var $tab = $("#tab_fa_"+index);
-            var  $results = $("#search-results"+index)
+            var  $results = $("#search-results"+index);
             $tab.removeClass('hide');
             $results.html("");
             $results.addClass('hide');

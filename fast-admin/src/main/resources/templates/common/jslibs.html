@@ -18,7 +18,7 @@
 <script src="${ctxStatic}/static/plugins/layui/layui.js"></script>
 <script src="${ctxStatic}/static/libs/jquery.i18n.properties.min.js?V=${config.getDvVersion()}"></script>
 <script src="${ctxStatic}/static/plugins/iCheck/icheck.min.js"></script>
-<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js?V=${config.getDvVersion()}"></script>-->
 <#compress>
 <#if !(Libs?is_string) && Libs?? && (Libs?size > 0) >
         <#list Libs as x>
@@ -91,8 +91,8 @@
             <#-- 文件上传-->
             <#if x == "fileupload">
             	<script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.js?V=${config.getDvVersion()}"></script>
-                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.js?V=${config.getDvVersion()}"></script>
-<#--                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.js?V=${config.getDvVersion()}"></script>-->
+<#--                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.js?V=${config.getDvVersion()}"></script>-->
+                <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.js?V=${config.getDvVersion()}"></script>
             </#if>
             <#-- 表格拖拽-->
             <#if x == "tableReorder">
@@ -109,14 +109,17 @@
             <#if x == "colorpicker">
                 <script src="${ctxStatic}/static/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
             </#if>
+            <#if x == "wizard">
+                <script src="${ctxStatic}/static/plugins/wizard/jquery.smartWizard.js"></script>
+            </#if>
             <#-- 可自行扩展, 如果插件有CSS样式请在 cssLibs 相应添加-->
         </#list>
 </#if>
+<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
 <#-- jquery-validate 表单验证插件 -->
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.js"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js?V=${config.getDvVersion()}"></script>
-<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
 <#--VUE-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
 </#compress>

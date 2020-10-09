@@ -30,10 +30,15 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/style.css?V=${config.getDvVersion()}">
 <link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}">
 <link type="text/css" rel="stylesheet" href="${ctxStatic}/static/css/oschina/oschina.css">
+<#if verification>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
+</#if>
 <style>[v-cloak]{display:none !important;} .checkbox label{padding-left: 0px;}</style>
 <body class="sc animated fadeInLeft" style="min-height: 660px;">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
+<div id="verfyImg">
+</div>
 <header class="home-header">
     <a href="#"><span class="logo">${config.getTitle()}</span> <span style="font-size: 12px;color: white">V${config.getVersion()}</span></a>
 </header>
@@ -59,7 +64,7 @@
                                 </div>
                                 <div class="form-item">
                                     <div class="form-ctrl">
-                                        <input type="password" id="password" v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
+                                        <input  autocomplete="off" type="password" id="password" v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
                                     </div>
                                     <div class="form-tips" style="display: none;"></div>
                                 </div>
@@ -82,7 +87,7 @@
 <#--                                                记住密码-->
 <#--                                            </label>-->
                                             <div class="checkbox">
-                                                <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
+                                                <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" copyright="J2eeFAST" data-toggle="tooltip" data-placement="bottom">
                                                     <input type="checkbox" name="rememberUserCode" data-style="minimal-grey" />&nbsp;<@ctx.i18n text = "记住账号"/>
                                                 </label>
                                             </div>
@@ -183,9 +188,9 @@
 </body>
 <#--jQuery 3 -->
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
+<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
-<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
 <script src="${ctxStatic}/static/libs/icheck.min.js"></script>
@@ -193,10 +198,12 @@
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
 <#-- jQuery toast 提示框  -->
 <script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery.slimscroll.min.js"></script>
-<script src="${ctxStatic}/static/libs/fastclick.min.js"></script>
-<#--<script src="${ctxStatic}/statics/libs/app.js"></script>-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
+<#if verification>
+<script src="${ctxStatic}/static/plugins/captcha/crypto-js.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/ase.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/verify.min.js"></script>
+</#if>
 <script>var ctx = "${ctxStatic}/", _secretKey = "${_secretKey}";</script>
 <script>
     var vm = new Vue({
@@ -226,52 +233,27 @@
                 }
             },
             login: function (event) {
+                var that = this;
                 if(this.getCookie("_secretKey") == ""){
                     location.reload();
                     return;
                 }
-                var s4=new SM4Util(this.getCookie("_secretKey"));
+                if(vm.username.length < 3 ||  vm.password.length < 3){
+                    return that.errrInfo('<@ctx.i18n text = "账号或者密码输入有误"/>');
+                }
+                <#if verification>
+                $("#verfyImg").find(".mask").css("display","block");
+                <#else>
                 $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
-                $.ajax({
-                    type: "POST",
-                    url: ctx+"login",
-                    data: {"username":s4.encryptData_ECB(vm.username),
-                        "password":s4.encryptData_ECB(vm.password),
-                        "captcha":vm.captcha,
-                        "rememberMe":vm.rememberme},
-                    dataType: "json",
-                    success: function(result){
-                        /*登录成功*/
-                        if(result.code == 0){
-                            /*获取登陆前用户是否勾选记住账号*/
-                            if($("input[name='rememberUserCode']").is(':checked')){
-                                window.localStorage.setItem('rememberUserCode',vm.username);
-                            }else{
-                                window.localStorage.setItem('rememberUserCode',"");
-                            };
-                            setTimeout(
-                                function () {
-                                    location.href ='index';
-                                }
-                                , 100);
-                        }else if(result.code == '50004' || result.code == '50006'){
-                            $(window).unblock();
-                            vm.loadcode = true;
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                        else{
-                            $(window).unblock();
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                    }
-                });
+                var s4=new SM4Util(that.getCookie("_secretKey"));
+                var data = {"username":s4.encryptData_ECB(vm.username),
+                    "password":s4.encryptData_ECB(vm.password),
+                    "captcha":vm.captcha,
+                    "rememberMe":vm.rememberme};
+                that.postLogin(data,true);
+                </#if>
+                return;
             },
             errrInfo : function(text){
                 $.toast({
@@ -303,6 +285,42 @@
                     }
                 };
                 return _secretKey;
+            },
+            postLogin: function(data,flag){
+                $.ajax({
+                    type: "POST",
+                    url: ctx+"login",
+                    data: data,
+                    dataType: "json",
+                    success: function(result){
+                        if(result.code == 0){
+                            if($("input[name='rememberUserCode']").is(':checked')){
+                                window.localStorage.setItem('rememberUserCode',vm.username);
+                            }else{
+                                window.localStorage.setItem('rememberUserCode',"");
+                            };
+                            setTimeout(
+                                function () {
+                                    location.href ='index';
+                                }
+                                , 100);
+                        }else if(result.code == '50004' || result.code == '50006'){
+                            if(flag){$(window).unblock()};
+                            vm.loadcode = true;
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                        else{
+                            if(flag){$(window).unblock()};
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                    }
+                });
             }
         },
         mounted :function(){
@@ -330,6 +348,24 @@
                     }
                 });
             });
+
+            <#if verification>
+            /** 初始化验证码  弹出式 */
+            $('#verfyImg').slideVerify({
+                baseUrl:'${ctxStatic}',
+                mode:'pop',
+                success : function(params) {
+                    var s4=new SM4Util(that.getCookie("_secretKey"));
+                    var data = {"username":s4.encryptData_ECB(vm.username),
+                        "password":s4.encryptData_ECB(vm.password),
+                        "captcha":vm.captcha,
+                        "rememberMe":vm.rememberme};
+                    data = $.extend(data, params);
+                    that.postLogin(data,false);
+                },
+                error : function() {}
+            });
+            </#if>
 
             /*设置tooltip*/
             $('[data-toggle="tooltip"]').each(function () {
