@@ -788,6 +788,7 @@ $.extend( $.validator, {
 			for ( method in rules ) {
 				rule = { method: method, parameters: rules[ method ] };
 				try {
+
 					result = $.validator.methods[ method ].call( this, val, element, rule.parameters );
 
 					// If a method indicates that the field is optional and therefore valid,
@@ -1582,7 +1583,6 @@ $.extend( $.validator, {
 				data: data,
 				context: validator.currentForm,
 				success: function( response ) {
-					console.log(typeof data);
 					var valid = response === true || response === "true",
 						errors, message, submitted;
 
