@@ -1,3 +1,8 @@
+/*!
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * @author J2eeFAST
+ * @version 2020-01-21
+ */
 /**
  * base64js
  */
