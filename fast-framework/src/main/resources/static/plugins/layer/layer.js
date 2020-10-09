@@ -248,7 +248,7 @@
                 var button = '';
                 typeof config.btn === 'string' && (config.btn = [config.btn]);
                 for(var i = 0, len = config.btn.length; i < len; i++){
-                    button += '<a class="'+ doms[6] +''+ i +'">'+ config.btn[i] +'</a>'
+                    button += '<a class="layui-layer-but-css '+ doms[6] +''+ i +'">'+ config.btn[i] +'</a>'
                 }
                 return '<div class="'+ doms[6] +' layui-layer-btn-'+ (config.btnAlign||'') +'">'+ button +'</div>'
             }() : '')
@@ -816,9 +816,9 @@
         var layero = $('#'+ doms[0] + index)
             ,contElem = layero.find('.layui-layer-content')
             ,type = layero.attr('type')
-            ,titHeight = layero.find(doms[1]).outerHeight() || 0
-            ,btnHeight = layero.find('.'+doms[6]).outerHeight() || 0
-            ,minLeft = layero.attr('minLeft');
+            ,titHeight = layero.find(doms[1]).outerHeight() || 0 //标题高度
+            ,btnHeight = layero.find('.'+doms[6]).outerHeight() || 0 //按钮高度
+            ,minLeft = layero.attr('titHeight');
 
         if(type === ready.type[3] || type === ready.type[4]){
             return;
@@ -836,7 +836,7 @@
 
         layero.css(options);
         btnHeight = layero.find('.'+doms[6]).outerHeight();
-
+        console.log("contElem.css('padding-top'):"+contElem.css('padding-top') + "  contElem.css('padding-bottom')：" + contElem.css('padding-bottom'));
         if(type === ready.type[2]){
             layero.find('iframe').css({
                 height: parseFloat(options.height) - titHeight - btnHeight
@@ -844,8 +844,8 @@
         } else {
             contElem.css({
                 height: parseFloat(options.height) - titHeight - btnHeight
-                    - parseFloat(contElem.css('padding-top'))
-                    - parseFloat(contElem.css('padding-bottom'))
+                    //- parseFloat(contElem.css('padding-top'))
+                    //- parseFloat(contElem.css('padding-bottom'))
             })
         }
     };

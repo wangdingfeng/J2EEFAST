@@ -42,6 +42,9 @@
     background-color: #eaedf1;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
 }
+.larry-tab-box>.layui-tab-title .layui-this .layui-tab-close {
+    color: #23508e;
+}
 /*TAB默认*/
 .larry-tab-box>.layui-tab-title .layui-this.layui-this:after {
     width: 100%;
@@ -53,8 +56,9 @@
 .layui-tab-title li .layui-tab-close:hover {
     transform: scale(1.2);
     background-color:transparent;
-    color: #FF5722;
+    color: #FF5722 !important;
 }
+
 .layui-tab-card>.layui-tab-title {
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
     background-color: #fff;
