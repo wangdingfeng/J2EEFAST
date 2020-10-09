@@ -147,8 +147,7 @@
                    labelValue=""
                    labelName="" <#--标签名称 -->
                    required=false <#-- 是否必输-->
-                   readonly=true <#-- 是否只读模式-->
-                   disabled="" <#--控件是否可用 -->
+                   readonly=false <#-- 是否只读模式-->
                    class = "form-control" <#-- 输入框样式-->
                    butClass = "fa fa-fw fa-address-card-o"
                    isClear = true <#-- 弹出是否出现清除按钮-->
@@ -176,11 +175,11 @@
     </#if>
     <div class="input-group" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div" data-url="${url}">
         <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
-        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" <#if disabled !="">disabled="${disabled}"</#if> placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
-        <span class="input-group-btn" <#if disabled !="">disabled="${disabled}"</#if>  id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" <#if readonly>disabled="disabled"</#if> placeholder="${placeholder}" class="${class}" value="${labelValue}" <#if readonly> readonly=true</#if> <#if required> required</#if>/>
+        <span class="input-group-btn" <#if readonly>disabled="disabled"</#if>  id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
     </div>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
-    <@compress single_line=true>
+<#--    <@compress single_line=true>-->
     <script type="text/javascript">
         $(function(){
             var <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
@@ -246,7 +245,7 @@
             }
         })
     </script>
-    </@compress>
+<#--    </@compress>-->
 </#macro>
 
 <#--
@@ -411,13 +410,13 @@
     <#if butClass!="">
         <div class="input-group">
         <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" value="${value}" <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+               type="${type}" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
         </div>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <#else>
         <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" value="${value}" <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+               type="${type}" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     </#if>
     </#compress>
@@ -618,8 +617,11 @@
     
   
         $(function() {
+            if (window.UEDITOR_CONFIG === undefined) {
+                opt.error("ueditor 插件未引入,请模板引擎header Lis中引入!!");
+                return;
+            }
             window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}" ;
-            
             var remarksUE = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
                 maximumWords: ${maxlength},
                 readonly: ${readonly}, initialFrameHeight: ${height},
@@ -1068,7 +1070,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
                 $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src",imageBase64);
                 $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(imageBase64).change();
                 if(typeof iconCallback == 'function'){
-                    imageclipCallback('${Assname?replace(".","_")}', 'ok', index, layero, icon);
+                    imageclipCallback('${Assname?replace(".","_")}', 'ok', index, layero, imageBase64);
                 }
                 _layer.close(index);
             };
@@ -1092,7 +1094,6 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
         })
     </script>
 </#macro>
-
 
 <#macro selectLinkage
         name <#-- 表单控件Name-->
@@ -1237,3 +1238,104 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
 <#--    </@compress>-->
 </#macro>
 
+<#macro wizard
+        id
+        selected = 0 <#--初始导向 -->
+        theme = "arrows" <#--导向样式 default, arrows, dots, progress -->
+        animation = "slide-horizontal" <#--导向切换样式 , none,fade,slide-vertical,slide-swing,slide-horizontal -->
+        toolbarButtonPosition = "center" <#-- 导向工具按钮显示位置 left, right, center-->
+        refresh = "" <#--重置名称默认空 没有, 例如转账 完成之后可以再转一笔 -->
+        complete = "完成" <#--完成按钮字 -->
+        isPrev = true <#--是否需要上一步 -->
+        >
+<div id="${id}">
+    <#nested>
+</div>
+<script type="text/javascript">
+    $(function() {
+        if ($.fn.smartWizard === undefined) {
+            opt.error("wizard 插件未引入,请模板引擎header Lis中引入!!");
+            return;
+        }
+        var refresh = $('<button type="button" class="btn btn-sm btn-primary hide"' +
+            ' id="${id}_refresh"><i class="fa fa-refresh"></i> <@ctx.i18n text = "${refresh}"/></button>')
+            .on('click', function(){
+                $('#${id}').smartWizard("reset");
+                return true;
+            });
+        var prev = $('<button type="button" class="btn btn-sm btn-danger hide"' +
+            ' id="${id}_prev"><i class="fa fa-mail-reply"></i> <@ctx.i18n text = "上一步"/></button>')
+            .on('click',function(){
+                $('#${id}').smartWizard("prev");
+                return true;
+            });
+        var next = $('<button type="button" class="btn btn-sm btn-warning"' +
+            ' id="${id}_next"><i class="fa fa-share"></i> <@ctx.i18n text = "下一步"/></button>')
+            .on('click',function(){
+                $('#${id}').smartWizard("next");
+                return true;
+            });
+
+        var complete = $('<button type="button" class="btn btn-sm btn-success hide" ' +
+            'id="${id}_complete"><i class="fa fa-check"></i> <@ctx.i18n text = "${complete}"/></button>').on('click',function(){
+                if(typeof wizardCallback == 'function' ){
+                    wizardCallback('${id}', 'ok');
+                }
+            });
+        /* 初始化*/
+        $('#${id}').smartWizard({
+            selected: ${selected},
+            theme: '${theme}',
+            /* darkMode: true, */
+            transition: {
+                animation: '${animation}'
+            },
+            toolbarSettings: {
+                toolbarButtonPosition: '${toolbarButtonPosition}',
+                showNextButton: false,
+                showPreviousButton: false,
+                toolbarExtraButtons: [refresh, prev,next,complete]
+            }
+        });
+
+        /* 显示步骤时将触发事件 */
+        $('#${id}').on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+            if(typeof wizardCallback == 'function' ){
+                wizardCallback('${id}', 'showStep',e, anchorObject, stepNumber, stepDirection, stepPosition);
+            }
+            if(stepPosition === 'first') {
+                $("#${id}_next").removeClass('hide');
+            }
+            <#if isPrev>
+            if(stepPosition === 'first') {
+                $("#${id}_prev").addClass('hide');
+            }else{
+                $("#${id}_prev").removeClass('hide');
+            }
+            </#if>
+            if(stepPosition === 'last'){
+                $("#${id}_prev").addClass('hide');
+                $("#${id}_next").addClass('hide');
+                $("#${id}_complete").removeClass('hide');
+            <#if refresh != "">
+                $("#${id}_refresh").removeClass('hide');
+            </#if>
+            }else{
+                $("#${id}_refresh").addClass('hide');
+                $("#${id}_complete").addClass('hide');
+            }
+        });
+
+        /* 该事件在离开某个步骤之前触发 */
+        $('#${id}').on("leaveStep", function(e, anchorObject, currentStepNumber, nextStepNumber, stepDirection) {
+            if(stepDirection == 'forward'){
+                if(typeof wizardCallback == 'function' ){
+                    return wizardCallback('${id}', 'leaveStep',e, anchorObject, currentStepNumber, nextStepNumber, stepDirection);
+                }
+                return true;
+            }
+            return true;
+        });
+    })
+</script>
+</#macro>
