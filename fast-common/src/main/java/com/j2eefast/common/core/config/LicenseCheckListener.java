@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.config;
 
 import cn.hutool.core.util.StrUtil;
@@ -5,7 +8,6 @@ import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.license.LicenseVerify;
 import com.j2eefast.common.core.license.LicenseVerifyParam;
 import com.j2eefast.common.core.utils.HexUtil;
-import com.j2eefast.common.core.crypto.SM4;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

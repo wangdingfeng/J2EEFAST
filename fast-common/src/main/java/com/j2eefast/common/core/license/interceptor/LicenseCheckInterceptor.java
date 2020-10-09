@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.license.interceptor;
 
 import cn.hutool.json.JSONUtil;

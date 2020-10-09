@@ -3,6 +3,8 @@ package com.j2eefast.common.core.listener;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.core.base.entity.annotaion.JsonListBaselgonre;
 import com.j2eefast.common.core.base.entity.annotaion.JsonListFiledIgnore;
 import com.j2eefast.common.core.enums.ConvertType;
 import com.j2eefast.common.core.utils.JSON;
@@ -48,6 +50,34 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                    if(page.getList().size() > 0){
                        //获取List 对象 遍历 是否有禁止输出或者转换的字段
                        Class clazz = page.getList().get(0).getClass();
+                       //获取类上所有注解
+                       Annotation[] annotations = clazz.getAnnotations();
+                       for(Annotation annotation: annotations){
+                           //类上有基类输出注解
+                           if(annotation.annotationType().equals(JsonListBaselgonre.class)){
+                                if(ToolUtil.isEmpty(((JsonListBaselgonre)annotation).fileds())){
+                                    Field[] fields = BaseEntity.class.getDeclaredFields();
+                                    for(Field f: fields){
+                                        rmfields.add(f.getName());
+                                    }
+                                }else{
+                                    //剔除没有标注的字段
+                                    Field[] fields = BaseEntity.class.getDeclaredFields();
+                                    String[] fs = ((JsonListBaselgonre)annotation).fileds();
+                                    for(Field f: fields){
+                                        for(String ft: fs){
+                                            boolean temp = false;
+                                            if(f.getName().equals(ft)){
+                                                temp = true;
+                                            }
+                                            if(!temp){
+                                                rmfields.add(f.getName());
+                                            }
+                                        }
+                                    }
+                                }
+                           }
+                       }
                        List fieldsList = new ArrayList<Field>();
                        while (clazz != null) {
                            // 遍历所有父类字节码对象
@@ -103,8 +133,13 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                            conver.forEach(x->{
                                for(String key : x.keySet()){
                                    ConvertType value = x.get(key);
+                                   // 手机号码隐藏转换
                                    if(value.equals(ConvertType.PHONE)){
                                        str.put(key,str.getStr(key).replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2"));
+                                   }
+                                   // 邮箱隐藏转换
+                                   if(value.equals(ConvertType.EMAIL)){
+                                       str.put(key,str.getStr(key).replaceAll("(\\w?)(\\w+)(\\w)(@\\w+\\.[a-z]+(\\.[a-z]+)?)", "$1****$3$4"));
                                    }
                                }
                            });

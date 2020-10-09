@@ -16,7 +16,6 @@ public class UserModularRealmAuthenticator extends ModularRealmAuthenticator {
     @Override
     protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken)
             throws AuthenticationException {
-        System.out.println("UserModularRealmAuthenticator:method doAuthenticate() execute ");
         // 判断getRealms()是否返回为空
         assertRealmsConfigured();
         // 强制转换回自定义的CustomizedToken
@@ -35,11 +34,9 @@ public class UserModularRealmAuthenticator extends ModularRealmAuthenticator {
         }
         // 判断是单Realm还是多Realm
         if (typeRealms.size() == 1){
-            System.out.println("doSingleRealmAuthentication() execute ");
             return doSingleRealmAuthentication(typeRealms.get(0), userToken);
         }
         else{
-            System.out.println("doMultiRealmAuthentication() execute ");
             return doMultiRealmAuthentication(typeRealms, userToken);
         }
     }

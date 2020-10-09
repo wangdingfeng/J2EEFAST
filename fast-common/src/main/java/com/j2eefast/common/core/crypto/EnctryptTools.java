@@ -1,12 +1,11 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.crypto;
 import cn.hutool.core.codec.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.j2eefast.common.core.utils.HexUtil;
-
-
-
-
 
 /**
  * @name EnctryptTools 加密方法封装
