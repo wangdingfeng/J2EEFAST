@@ -291,8 +291,31 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		return true;
 	}
 
+	/**
+	 * 根据用户名称查询
+	 * @param username
+	 * @return
+	 */
 	public SysUserEntity findUserByUserName(String username){
 		return sysUserMapper.findUserByUserName(username);
+	}
+
+	/**
+	 * 手机号码查询
+	 * @param mobile
+	 * @return
+	 */
+	public SysUserEntity findUserByMobile(String mobile){
+		return sysUserMapper.findUserByMobile(mobile);
+	}
+
+	/**
+	 * 电子邮件查询
+	 * @param email
+	 * @return
+	 */
+	public SysUserEntity findUserByEmail(String email){
+		return sysUserMapper.findUserByEmail(email);
 	}
 
 	public boolean changeStatus(SysUserEntity user) {

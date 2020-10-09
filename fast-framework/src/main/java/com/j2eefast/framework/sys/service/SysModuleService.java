@@ -62,4 +62,12 @@ public class SysModuleService  extends ServiceImpl<SysModuleMapper,SysModuleEnti
         return this.baseMapper.setStatus(id, status);
     }
 
+    public List<SysModuleEntity> findModuleByRoleIds(List<Long> roleList){
+    	return this.baseMapper.findModuleByRoleIds(roleList);
+	}
+
+	public List<SysModuleEntity> findModules(){
+		return this.baseMapper.findModules();
+	}
+
 }

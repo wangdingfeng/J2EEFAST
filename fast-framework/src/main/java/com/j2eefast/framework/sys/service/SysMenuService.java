@@ -85,6 +85,11 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		return findAllModelMenuList(menuIdList,modules);
 	}
 
+	public  List<String> findPermsByRoleId(Long roleId){
+		return this.sysMenuMapper.findPermsByRoleId(roleId);
+	}
+
+
 	/**
 	 * 获取所有菜单列表
 	 */

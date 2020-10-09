@@ -15,6 +15,9 @@ import com.j2eefast.framework.sys.factory.UserFactory;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
+import com.j2eefast.framework.sys.service.SysMenuService;
+import com.j2eefast.framework.sys.service.SysModuleService;
+import com.j2eefast.framework.sys.service.SysUserService;
 import com.j2eefast.framework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +30,8 @@ import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import com.j2eefast.framework.utils.RedisKeys;
+
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -43,13 +48,13 @@ public class SysLoginService implements AuthService {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	@Autowired
+	@Resource
 	private SysUserMapper sysUserMapper;
 
-	@Autowired
+	@Resource
 	private SysModuleMapper sysModuleMapper;
 
-	@Autowired
+	@Resource
 	private SysMenuMapper sysMenuMapper;
 
 

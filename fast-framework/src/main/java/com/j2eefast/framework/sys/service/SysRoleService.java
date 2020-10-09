@@ -40,15 +40,14 @@ import javax.annotation.Resource;
 @Service
 public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 
-	@Resource
-	private SysRoleMapper sysRoleMapper;
+
 	@Resource
 	private SysRoleMenuService sysRoleMenuService;
 	@Resource
 	private SysRoleModuleService sysRoleModuleService;
-	@Autowired
+	@Resource
 	private RabbitmqProducer rabbitmqProducer;
-	@Autowired
+	@Resource
 	private SysRoleDeptService sysRoleDeptService;
 	/**
 	 * 页面展示查询翻页
@@ -148,7 +147,7 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 	public boolean deleteBatchByIds(Long[] ids) {
 
 		// 检查用户与角色关联
-		List<SysRoleEntity> list = sysRoleMapper.findRoleByIds(ids);
+		List<SysRoleEntity> list = this.baseMapper.findRoleByIds(ids);
 
 		if(ToolUtil.isNotEmpty(list)){
 			throw new RxcException(String.format("%1$s已分配,不能删除", list.get(0).getRoleName()));
@@ -177,7 +176,7 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 
 	public boolean checkRoleNameUnique(SysRoleEntity role) {
 		Long roleId = ToolUtil.isEmpty(role.getId())?-1L:role.getId();
-		SysRoleEntity info = sysRoleMapper.checkRoleNameUnique(role.getRoleName());
+		SysRoleEntity info = this.baseMapper.checkRoleNameUnique(role.getRoleName());
 		if(!ToolUtil.isEmpty(info) && !info.getId().equals(roleId)){
 			return  false;
 		}
@@ -186,7 +185,7 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 
 	public boolean checkRoleKeyUnique(SysRoleEntity role) {
 		Long roleId = ToolUtil.isEmpty(role.getId())?-1L:role.getId();
-		SysRoleEntity info = sysRoleMapper.checkRoleKeyUnique(role.getRoleKey());
+		SysRoleEntity info = this.baseMapper.checkRoleKeyUnique(role.getRoleKey());
 		if(!ToolUtil.isEmpty(info) && !info.getId().equals(roleId)){
 			return  false;
 		}
@@ -194,7 +193,7 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 	}
 
 	public List<SysRoleEntity> selectRolesByUserId(Long userId) {
-		return sysRoleMapper.getRolesByUserId(userId);
+		return this.baseMapper.getRolesByUserId(userId);
 	}
 
 	/**
