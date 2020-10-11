@@ -26,10 +26,10 @@
         </#if>
     </#list>
 </#macro>
-<div id="leftMenu">
+<div id="leftMenu" class="tab-content">
  <#if menuList?? && (menuList?size > 0) >
     <#list menuList?keys as key>
-    <ul class="sidebar-menu hide" data-widget="tree" id="leftMenu-${key}">
+    <ul class="tab-pane sidebar-menu" data-widget="tree" id="leftMenu-${key}">
         <li class="header"></li>
         <#if menuList[key]?? && (menuList[key]?size > 0) >
             <#list menuList[key] as menu>
