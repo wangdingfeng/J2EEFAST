@@ -5,8 +5,9 @@
  @License：MIT
 
  @author J2eeFAST 二次封装 增强type=2 iframe 层POST可以POST 提交
- @date 2020-02-20
- @version v1.0.1
+                  防CSRF攻击
+ @date 2020-10-12
+ @version v1.0.2
  */
 
 ;!function(window, undefined){
@@ -347,6 +348,12 @@
                 for (var v in o || {}) {
                     m.append('<input type="hidden" name="' + v + '" value="' + o[v] + '"/>')
                 }
+
+                //J2eeFAST 防CSRF攻击
+                if($('meta[name="csrf-token"]').attr("content")){
+                    m.append('<input type="hidden" name="X-CSRF-Token" value="' + $('meta[name="csrf-token"]').attr("content") + '"/>')
+                }
+
                 //POST 提交表单
                 m.submit();
                 //去除加载动画

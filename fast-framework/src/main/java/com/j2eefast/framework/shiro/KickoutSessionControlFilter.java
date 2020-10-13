@@ -16,11 +16,10 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-
-import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +45,8 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     private boolean kickoutAfter = false;
 
     private SessionManager sessionManager;
+    @Value("${fast.csrf.enabled: false}")
+    private boolean csrfEnabled;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -129,6 +130,10 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             //页面跳转
             WebUtils.issueRedirect(request, response, kickoutUrl + "2&uuid="+IdUtil.fastSimpleUUID());
             return false;
+        }
+
+        if(csrfEnabled){
+            request.setAttribute("sys_csrfToken", redisUtil.getSession("sys_csrfToken:shiro:session:"+session.getId()));
         }
 
         //不限制同账号登录

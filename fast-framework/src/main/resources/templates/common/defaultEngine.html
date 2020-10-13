@@ -50,6 +50,9 @@
 <#-------------------------------------------------------------------------------------------------->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<#if sys_csrfToken??>
+<meta content="${sys_csrfToken}" name="csrf-token" />
+</#if>
 <title>${title}</title>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico"/>
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>

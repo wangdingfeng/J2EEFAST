@@ -12,6 +12,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <#-- Tell the browser to be responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<#if sys_csrfToken??>
+<meta content="${sys_csrfToken}" name="csrf-token" />
+</#if>
 <#-- jQuery 3 -->
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
 <script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
@@ -38,7 +41,7 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}"/>
 <#--<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}"/>-->
 <!-- jQuery toast 提示框  -->
-<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.css"/>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico">
 <#-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <#-- WARNING: Respond.js doesn't work if you view the page via file:// -->

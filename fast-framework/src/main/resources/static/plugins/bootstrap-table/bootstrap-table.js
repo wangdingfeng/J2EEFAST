@@ -2145,7 +2145,11 @@
                 if (!silent) that.$tableLoading.hide();
             }
         });
-
+        if($('meta[name="csrf-token"]').attr("content")){
+            request = $.extend(request,{headers: {
+                    "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") || ''
+                }});
+        }
         if (this.options.ajax) {
             calculateObjectValue(this, this.options.ajax, [request], null);
         } else {

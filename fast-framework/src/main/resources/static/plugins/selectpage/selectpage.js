@@ -8,6 +8,9 @@
  * @license     MIT License
  *
  */
+/**
+ * J2eeFAST 二次修改增加请求,防CSRF攻击
+ */
 ;(function($){
 	"use strict";
 	/**
@@ -768,9 +771,9 @@
 				if(!p.multiple && data.length > 1) data = [data[0]];
 				self.afterInit(self, data);
 			} else {//ajax data source mode to init selected item
-				$.ajax({
+				var config = {
 					dataType: 'json',
-                    type: 'POST',
+					type: 'POST',
 					url: p.data,
 					data: {
 						searchTable: p.dbTable,
@@ -778,14 +781,21 @@
 						searchValue: key
 					},
 					success: function(json) {
-                        var d = null;
-                        if(p.eAjaxSuccess && $.isFunction(p.eAjaxSuccess)) d = p.eAjaxSuccess(json);
-                        self.afterInit(self, d.list);
+						var d = null;
+						if(p.eAjaxSuccess && $.isFunction(p.eAjaxSuccess)) d = p.eAjaxSuccess(json);
+						self.afterInit(self, d.list);
 					},
 					error: function() {
 						self.ajaxErrorNotify(self);
 					}
-				});
+				};
+				console.log('-------->>>>>>>>');
+				if($('meta[name="csrf-token"]').attr("content")){
+					config = $.extend(config,{headers: {
+							"X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+						}});
+				}
+				$.ajax(config);
 			}
 		}
 	};
@@ -1306,7 +1316,7 @@
 				_params = $.extend({}, _orgParams, result);
 			} else _params = _orgParams;
 		} else _params = _orgParams;
-		self.prop.xhr = $.ajax({
+		var config = {
 			dataType: 'json',
 			url: p.data,
 			type: 'POST',
@@ -1319,13 +1329,13 @@
 				}
 				var data = {}, json = {};
 				try{
-                    data = p.eAjaxSuccess(returnData);
-                    json.originalResult = data.list;
-                    json.cnt_whole = data.totalRow;
-                }catch(e){
-                    self.showMessage(self, self.message.ajax_error);
-                    return;
-                }
+					data = p.eAjaxSuccess(returnData);
+					json.originalResult = data.list;
+					json.cnt_whole = data.totalRow;
+				}catch(e){
+					self.showMessage(self, self.message.ajax_error);
+					return;
+				}
 
 				json.candidate = [];
 				json.keyField = [];
@@ -1356,7 +1366,13 @@
 			complete: function() {
 				self.prop.xhr = null;
 			}
-		});
+		};
+		if($('meta[name="csrf-token"]').attr("content")){
+			config = $.extend(config,{headers: {
+					"X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+				}});
+		}
+		self.prop.xhr = $.ajax(config);
 	};
 
 	/**

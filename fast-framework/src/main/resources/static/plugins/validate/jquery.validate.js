@@ -1576,7 +1576,7 @@ $.extend( $.validator, {
 			this.startRequest( element );
 			data = {};
 			data[ element.name ] = value;
-			$.ajax( $.extend( true, {
+			var config = {
 				mode: "abort",
 				port: "validate" + element.name,
 				dataType: "json",
@@ -1605,7 +1605,13 @@ $.extend( $.validator, {
 					previous.valid = valid;
 					validator.stopRequest( element, valid );
 				}
-			}, param ) );
+			};
+			if($('meta[name="csrf-token"]').attr("content")){
+				config = $.extend(config,{headers: {
+						"X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+					}});
+			}
+			$.ajax( $.extend( true, config, param ));
 			return "pending";
 		}
 	}

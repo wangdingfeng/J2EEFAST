@@ -24,6 +24,7 @@ import com.j2eefast.framework.quartz.service.SysJobService;
 
 /**
  * 定时任务
+ * @author huanzhou
  */
 @Controller
 @RequestMapping("/sys/schedule")

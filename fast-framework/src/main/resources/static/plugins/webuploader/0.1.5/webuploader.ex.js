@@ -126,7 +126,6 @@ if (typeof jQuery === "undefined") {
                 $.each(options.extendParams,function(index,data){
                     option.formData["extend[" + index + "]"] = data;
                 });
-
                 //设置控件上传文件类型
                 options.readonly || (option = $.extend(true, {},
                     {
@@ -186,6 +185,13 @@ if (typeof jQuery === "undefined") {
                 if(options.isLazy){
                     $uploadBtn.hide();
                 }
+
+                //添加CSRF攻击
+                upload.on('uploadBeforeSend', function (file, data, header) {
+                    if($('meta[name="csrf-token"]').attr("content")){
+                        header['X-CSRF-Token'] = $('meta[name="csrf-token"]').attr("content");
+                    }
+                });
 
                 //上传过程中触发，携带上传进度。
                 upload.on("uploadProgress",function(file,percentage){

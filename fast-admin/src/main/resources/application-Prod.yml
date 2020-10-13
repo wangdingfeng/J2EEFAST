@@ -30,6 +30,10 @@ fast:
         excludes: /sys/notice/*,/sys/database/add
         # 匹配链接
         urlPatterns: /sys/*,/tool/*
+    csrf:
+        enabled: true
+        #防盗链允许的网站来源地址配置多个URL , 分割
+        #urlReferer: 'http:127.0.0.1, http:loclhost'
 ########################License认证相关#####################
 #License相关配置
 license:

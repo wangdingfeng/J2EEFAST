@@ -225,20 +225,27 @@
             var $loading = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;">正在努力地加载数据中，请稍候……</div></td></tr>'
             $tbody.html($loading);
             if (options.url) {
-                $.ajax({
+                var config = {
                     type: options.type,
                     url: options.url,
                     data: parms ? parms : options.ajaxParams,
                     dataType: "JSON",
                     success: function(data, textStatus, jqXHR) {
-                    	data = calculateObjectValue(options, options.responseHandler, [data], data);
+                        data = calculateObjectValue(options, options.responseHandler, [data], data);
                         renderTable(data);
                     },
                     error: function(xhr, textStatus) {
-                        var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;">' + xhr.responseText + '</div></td></tr>'
+                        var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;font-weight: bold;color: red;">' + JSON.parse(xhr.responseText).msg || xhr.responseText + '</div></td></tr>'
                         $tbody.html(_errorMsg);
                     },
-                });
+                };
+                //J2eeFAST 新增CSRF 防护
+                if(String(options.type).toUpperCase() === String('POST').toUpperCase() && $('meta[name="csrf-token"]').attr("content")){
+                    config = $.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") || ''
+                        }});
+                }
+                $.ajax(config);
             } else {
                 renderTable(options.data);
             }
@@ -892,7 +899,7 @@
                                 var parms = {};
                                 parms[options.parentCode] = _id;
                                 if (options.asynUrl) {
-                                    $.ajax({
+                                    var config = {
                                         type: options.type,
                                         url: options.asynUrl,
                                         data: parms,
@@ -910,31 +917,26 @@
                                                 list = data;
                                             }else{
                                                 if(data.code == '00000'){
-                                                    // for(var key  in data){
-                                                    //     if(Array==data[key].constructor){
-                                                    //         list = data[key];
-                                                    //     }
-                                                    // }
                                                     if(Array==data.list.constructor){
                                                         list = data.list;
                                                     }
-                                                    //兼容IE11 以下
-                                                    // for(var i=0; i<data.length; i++){
-                                                    //     if(Array.prototype==data[i].__proto__){
-                                                    //         list = data[i];
-                                                    //         break;
-                                                    //     }
-                                                    // }
                                                 }
                                             }
                                             data = list;
                                             target.appendData(data)
                                         },
                                         error: function(xhr, textStatus) {
-                                            var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;">' + xhr.responseText + '</div></td></tr>'
+                                            var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;font-weight: bold;color: red;">' + JSON.parse(xhr.responseText).msg || xhr.responseText + '</div></td></tr>'
                                             $("#" + row_id).after(_errorMsg);
-                                        },
-                                    });
+                                        }
+                                    };
+                                    //J2eeFAST 新增CSRF 防护
+                                    if(String(options.type).toUpperCase() === String('POST').toUpperCase() && $('meta[name="csrf-token"]').attr("content")){
+                                        config = $.extend(config,{headers: {
+                                                "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") || ''
+                                            }});
+                                    }
+                                    $.ajax(config);
                                 }
                             }
                         }

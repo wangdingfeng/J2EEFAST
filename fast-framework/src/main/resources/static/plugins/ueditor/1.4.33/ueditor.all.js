@@ -24508,11 +24508,16 @@ UE.plugin.register('simpleupload', function (){
             btnIframeDoc = (btnIframe.contentDocument || btnIframe.contentWindow.document);
             btnIframeBody = btnIframeDoc.body;
             wrapper = btnIframeDoc.createElement('div');
-
+            console.log('--->>>>>>::');
+            var inputCSRFToken = '';
+            if($('meta[name="csrf-token"]').attr("content")){
+                inputCSRFToken = '<input type="hidden" name="X-CSRF-Token" value="'+$('meta[name="csrf-token"]').attr("content")+'"/>';
+            }
             wrapper.innerHTML = '<form id="edui_form_' + timestrap + '" target="edui_iframe_' + timestrap + '" method="POST" enctype="multipart/form-data" action="' + me.getOpt('serverUrl') + '" ' +
             'style="' + btnStyle + '">' +
             '<input id="edui_input_' + timestrap + '" type="file" accept="image/*" name="' + me.options.imageFieldName + '" ' +
             'style="' + btnStyle + '">' +
+             (inputCSRFToken !=''?inputCSRFToken:'')+
             '</form>' +
             '<iframe id="edui_iframe_' + timestrap + '" name="edui_iframe_' + timestrap + '" style="display:none;width:0;height:0;border:0;margin:0;padding:0;position:absolute;"></iframe>';
 

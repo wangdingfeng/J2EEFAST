@@ -143,13 +143,15 @@ public class BinaryUploader {
 				String bizId = request.getParameter("bizId");
 				String bizType = request.getParameter("bizType");
 
-                SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
-                sysFileUploadEntity.setBizId(Long.parseLong(bizId));
-                sysFileUploadEntity.setFileName(sysFile.getFileName());
-                sysFileUploadEntity.setFileId(sysFile.getId());
-                sysFileUploadEntity.setBizType(bizType);
-                SpringUtil.getBean(SysFileUploadService.class).saveSysFileUpload(sysFileUploadEntity);
-				
+				if(ToolUtil.isNotEmpty(bizId) && ToolUtil.isNotEmpty(bizType)){
+					SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
+					sysFileUploadEntity.setBizId(Long.parseLong(bizId));
+					sysFileUploadEntity.setFileName(sysFile.getFileName());
+					sysFileUploadEntity.setFileId(sysFile.getId());
+					sysFileUploadEntity.setBizType(bizType);
+					SpringUtil.getBean(SysFileUploadService.class).saveSysFileUpload(sysFileUploadEntity);
+				}
+
 				//解决返回路径问题 j2eefast
 				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + PathFormat.format(savePath) );
 				storageState.putInfo("type", suffix);

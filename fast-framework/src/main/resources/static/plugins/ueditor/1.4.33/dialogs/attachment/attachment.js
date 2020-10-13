@@ -30,7 +30,6 @@
 
     /* 初始化tabbody */
     function setTabFocus(id) {
-        console.log("--->>>>"+id)
         if(!id) return;
         var i, bodyId, tabs = $G('tabhead').children;
         for (i = 0; i < tabs.length; i++) {
@@ -488,6 +487,9 @@
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
                 header['X_Requested_With'] = 'XMLHttpRequest';
+                if($('meta[name="csrf-token"]',window.parent.document).attr("content")){
+                    header['X-CSRF-Token'] = $('meta[name="csrf-token"]',window.parent.document).attr("content");
+                }
             });
 
             uploader.on('uploadProgress', function (file, percentage) {

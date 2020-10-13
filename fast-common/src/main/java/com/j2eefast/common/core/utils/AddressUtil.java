@@ -34,8 +34,7 @@ public class AddressUtil {
         try
         {
             HttpResponse body = HttpRequest.get(StrUtil.format(IP_BAIDU_URL, ip)).charset("GBK").execute();
-            if (StrUtil.isBlank(body.body()))
-            {
+            if (StrUtil.isBlank(body.body())){
                 LOG.error("获取地理位置异常 {}", ip);
                 return address;
             }

@@ -1038,6 +1038,21 @@ if (typeof jQuery === "undefined") {
                     audio.play();
                 }
             },
+
+            /**
+             * 发送AJax数据 Jq Ajax 原生方法添加防CSRF攻击
+             * @param request
+             */
+            sendAjax :function(config){
+                //防CSRF攻击
+                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
+                $.ajax(config);
+            },
+
             /**
              * 通过下载地址 静默下载
              * @param url

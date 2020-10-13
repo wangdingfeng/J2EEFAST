@@ -17,6 +17,7 @@ public final class ConfigConstant {
 
 	public static final String 					TIPS_END 							= "，若想忽略此提示，请在系统工具->参数管理，设置相关参数！";
 	public static final String 					DEOM_MODE_PROMPT 					= "演示模式,禁止操作!";
+	public static final String 					REQUEST_PROMPT 						= "客户端请求异常拦截!";
 	public static final String					DEOM_MODE_SHOW						= "*** 演示模式，不展示数据 ***";
 	public static String 						FAST_OS_SN							= "";
 	public static Boolean						FAST_IPIS							= true;
@@ -29,6 +30,7 @@ public final class ConfigConstant {
 	public static final String 					CONSTANT 							= "CONSTANT";
 	public static final String 					CTX_STATIC							= "ctxStatic";
 	public static final String 					BASE_PATH							= "basePath";
+	public static final String 					FAST_SESSION_ID						= "fast.session.id";
 	/**
 	 * 登录安全key
 	 */
