@@ -20,9 +20,9 @@
 }
 
 .jq-toast-wrap.bottom-left { bottom: 20px; left: 20px; }
-.jq-toast-wrap.bottom-right { bottom: 20px; right: 70px; }
+.jq-toast-wrap.bottom-right { bottom: 20px; right: 20px; }
 .jq-toast-wrap.top-left { top: 20px; left: 20px; }
-.jq-toast-wrap.top-right { top: 20px; right: 70px; }
+.jq-toast-wrap.top-right { top: 20px; right: 20px; }
 
 .jq-toast-single { display: block; width: 100%; padding: 10px; margin: 0px 0px 5px; border-radius: 4px; font-size: 12px; font-family: arial, sans-serif; line-height: 17px; position: relative;  pointer-events: all !important; background-color: #444444; color: white; }
 

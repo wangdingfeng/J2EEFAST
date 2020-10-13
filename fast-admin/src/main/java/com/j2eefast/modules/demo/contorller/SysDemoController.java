@@ -61,6 +61,19 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/addfrom";
     }
 
+
+    /**
+     * 消息组件
+     * @return
+     */
+    @RequiresPermissions("sys:demo:msg")
+    @GetMapping("/msg")
+    public String msg() {
+        return urlPrefix + "/msg";
+    }
+
+
+
     /**
      * 表单导向案例
      * @return
