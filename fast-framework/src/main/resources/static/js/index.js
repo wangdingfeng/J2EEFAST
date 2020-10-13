@@ -322,7 +322,15 @@
             var _id = $(this).attr('lay-id');
             var _module =$(this).children('em').data('module');
             if(_id !== '0' && _module !== '_sysInfo'){
-                $("#leftMenu > ul").addClass('hide');
+                // $("#leftMenu > ul").addClass('hide');
+                // $("#leftMenu > ul").css('display','none');
+                //隐藏无关左侧栏
+                $("#leftMenu > ul").each(function () {
+                    if($(this).attr('id') != 'leftMenu-'+ _module){
+                        $(this).removeClass('active').css('display','none');
+                    }
+                });
+
                 //联动Top菜单
                 $('#topMenu li').each(function () {
                     if($(this).children('a').data('code') === _module){
@@ -333,7 +341,11 @@
                 });
 
                 //联动左侧菜单
-                $('#leftMenu-' + _module).removeClass('hide');
+                // $('#leftMenu-' + _module).removeClass('hide');
+                //判断是否已经展示
+                if(!$("#leftMenu-" + _module).hasClass('active')){
+                    $("#leftMenu-" + _module).fadeIn(500).addClass('active');
+                }
                 var flag = false;
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                     if(that.queryMenu($(this), _id)){

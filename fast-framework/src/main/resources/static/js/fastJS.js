@@ -165,6 +165,10 @@ if (typeof jQuery === "undefined") {
             }
         },
 		*/
+
+        /**
+         * 系统提示通知
+         */
         toast: function(){
             if ($.toast) {
                 return $.toast
@@ -207,6 +211,32 @@ if (typeof jQuery === "undefined") {
                     opt.modal.alertError(msg);
                 }
 
+        },
+
+        info: function(msg,callback){
+            if(opt.toast){
+                opt.toast({
+                    heading: $.i18n.prop('提示'),
+                    text: msg,
+                    hideAfter:4000,
+                    position: {
+                        right: 7,
+                        bottom: 32
+                    },
+                    showHideTransition: 'slide',
+                    afterHidden: function () {
+                        if(typeof(callback) === "function"){
+                            callback("ok");
+                        }
+                    },
+                    icon: 'info'
+                })
+            }else{
+                opt.modal.alertInfo(msg);
+                if(typeof(callback) === "function"){
+                    callback("ok");
+                }
+            }
         },
 
         success: function (msg,callback) {
@@ -1237,7 +1267,7 @@ if (typeof jQuery === "undefined") {
                     closeBtn: 0,
                     title: $.i18n.prop("系统提示"),
                     anim: 1,
-                    skin: 'layui-layer-molv',
+                    // skin: 'layui-layer-molv',
                     yes:function(index){
                         if(typeof(callback) === "function"){
                             callback("ok");
@@ -1820,6 +1850,12 @@ if (typeof jQuery === "undefined") {
                         opt.operate.ajaxSuccess(result);
                     }
                 };
+                //防CSRF攻击
+                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
                 $.ajax(config)
             },
             //删除单独调用post删除
@@ -2086,6 +2122,12 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
+                //防CSRF攻击
+                if(opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
                 $.ajax(config)
             },
             // 保存信息 弹出提示框
@@ -2113,6 +2155,12 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
+                //防CSRF攻击
+                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
                 $.ajax(config)
             },
             // 保存选项卡信息
@@ -2137,6 +2185,12 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
+                //防CSRF攻击
+                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
                 $.ajax(config)
             },
             // 保存结果弹出msg刷新table表格
@@ -3901,6 +3955,7 @@ if (typeof jQuery === "undefined") {
             },
             // 请求获取数据后处理回调函数，校验异常状态提醒
             responseHandler: function(data) {
+
                 if (data.code != undefined && data.code != 0) {
                     opt.modal.error(data.msg);
                     return [];
@@ -3925,6 +3980,8 @@ if (typeof jQuery === "undefined") {
             // 初始化树结构
             init: function(options) {
                 var defaults = {
+                    ajxType: "GET",
+                    ajaxParams:{},
                     id: "tree",                    // 属性ID
                     expandLevel: 0,                // 展开等级节点 0-默认 1-展开根节点(不包含子节点) 2-展开所有节点
                     view: {
@@ -3964,109 +4021,122 @@ if (typeof jQuery === "undefined") {
                     view: options.view,
                     data: options.data
                 };
-                $.get(options.url, function(data) {
 
-                    // if(data.code != web_status.SUCCESS){
-                    //     $.modal.error(data.msg);
-                    //     return;
-                    // }
 
-                    //兼容返回数据
-                    var list;
+                var config = {
+                    url: options.url,
+                    type: options.ajxType,
+                    dataType: "JSON",
+                    data: options.ajaxParams,
+                    success: function(data) {
 
-                    if(data.__proto__.constructor==Array){
-                        list = data;
-                    }else{
-                        if(data.code == opt.variable.web_status.SUCCESS){
-                            for(var key  in data){
-                                if(Array.prototype==data[key].__proto__){
-                                    list = data[key];
+                        //兼容返回数据
+                        var list;
+
+                        if(data.__proto__.constructor==Array){
+                            list = data;
+                        }else{
+                            if(data.code == opt.variable.web_status.SUCCESS){
+                                for(var key  in data){
+                                    if(Array.prototype==data[key].__proto__){
+                                        list = data[key];
+                                    }
                                 }
+                                for(var i=0; i<list.length; i++){
+                                    for(var key  in list[i]){
+                                        if(key == "url"){
+                                            delete list[i][key];
+                                        }
+                                    }
+                                }
+                            }else{
+                                opt.modal.error(data.msg);
+                                return;
                             }
+                        }
+
+                        if(options.displayLen != 0){
                             for(var i=0; i<list.length; i++){
                                 for(var key  in list[i]){
-                                    if(key == "url"){
-                                        delete list[i][key];
+                                    if(key == "title"){
+                                        list[i][key] = opt.common.subString(list[i][key],options.displayLen,true);
                                     }
                                 }
                             }
-                        }else{
-                            opt.modal.error(data.msg);
-                            return;
                         }
-                    }
 
-                    if(options.displayLen != 0){
-                        for(var i=0; i<list.length; i++){
-                            for(var key  in list[i]){
-                                if(key == "title"){
-                                    list[i][key] = opt.common.subString(list[i][key],options.displayLen,true);
+                        var treeId = $("#treeId").val();
+                        tree = $.fn.zTree.init($("#" + options.id), setting, list);
+                        $._tree = tree;
+                        // var nodes = tree.getNodesByParam("level", options.expandLevel - 1);
+                        //
+                        // for (var i = 0; i < nodes.length; i++) {
+                        //     tree.expandNode(nodes[i], true, false, false);
+                        // }
+                        //展开根节点 不包含子节点
+                        if(options.expandLevel == 1){
+                            var node = tree.getNodesByFilter(function (node) { return node.level == 0 }, true);
+                            tree.expandNode(node, true, null, null);
+                        }
+                        //展开所有节点
+                        if(options.expandLevel == 2){
+                            tree.expandAll(true);
+                        }
+                        //
+                        if(options.check.enable){
+                            if(!opt.common.isEmpty(options._list)){
+                                var _l = options._list.split(",");
+                                for(var i=0; i<_l.length; i++){
+                                    var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
+                                        "id":options.data.simpleData.idKey, _l[i]);
+                                    if(node !=null){
+                                        tree.checkNode(node,true);
+                                        tree.selectNode(node);
+                                    }
                                 }
                             }
-                        }
-                    }
-
-                    var treeId = $("#treeId").val();
-                    tree = $.fn.zTree.init($("#" + options.id), setting, list);
-                    $._tree = tree;
-                    // var nodes = tree.getNodesByParam("level", options.expandLevel - 1);
-                    //
-                    // for (var i = 0; i < nodes.length; i++) {
-                    //     tree.expandNode(nodes[i], true, false, false);
-                    // }
-                    //展开根节点 不包含子节点
-                    if(options.expandLevel == 1){
-                        var node = tree.getNodesByFilter(function (node) { return node.level == 0 }, true);
-                        tree.expandNode(node, true, null, null);
-                    }
-                    //展开所有节点
-                    if(options.expandLevel == 2){
-                        tree.expandAll(true);
-                    }
-                    //
-                    if(options.check.enable){
-                        if(!opt.common.isEmpty(options._list)){
-                            var _l = options._list.split(",");
-                            for(var i=0; i<_l.length; i++){
-                                var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
-                                    "id":options.data.simpleData.idKey, _l[i]);
-                                if(node !=null){
-                                    tree.checkNode(node,true);
-                                    tree.selectNode(node);
+                            if(!opt.common.isEmpty(treeId)){
+                                var _l = treeId.split(",");
+                                for(var i=0; i<_l.length; i++){
+                                    var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
+                                        "id":options.data.simpleData.idKey, _l[i]);
+                                    if(node !=null){
+                                        tree.checkNode(node,true);
+                                        tree.selectNode(node);
+                                    }
                                 }
+                                // var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
+                                //     "id":options.data.simpleData.idKey, treeId);
+                                // if(!opt.common.isEmpty(node)){
+                                //     tree.checkNode(node,true);
+                                //     if($.tree._option.check.chkStyle == 'radio') tree.selectNode(node);
+                                // }
                             }
                         }
-                        if(!opt.common.isEmpty(treeId)){
-                            var _l = treeId.split(",");
-                            for(var i=0; i<_l.length; i++){
-                                var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
-                                    "id":options.data.simpleData.idKey, _l[i]);
-                                if(node !=null){
-                                    tree.checkNode(node,true);
-                                    tree.selectNode(node);
-                                }
-                            }
-                            // var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
-                            //     "id":options.data.simpleData.idKey, treeId);
-                            // if(!opt.common.isEmpty(node)){
-                            //     tree.checkNode(node,true);
-                            //     if($.tree._option.check.chkStyle == 'radio') tree.selectNode(node);
-                            // }
+
+                        // if(!opt.common.isEmpty(treeId) && !options.check.enable){
+                        //     var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
+                        //         "id":options.data.simpleData.idKey, treeId);
+                        //     if(!opt.common.isEmpty(node)){
+                        //         tree.selectNode(node);
+                        //     }
+                        // }
+                        //回调方法
+                        if(typeof(options.callBack) === "function"){
+                            options.callBack($._tree);
                         }
                     }
-
-                    // if(!opt.common.isEmpty(treeId) && !options.check.enable){
-                    //     var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
-                    //         "id":options.data.simpleData.idKey, treeId);
-                    //     if(!opt.common.isEmpty(node)){
-                    //         tree.selectNode(node);
-                    //     }
-                    // }
-                    //回调方法
-                    if(typeof(options.callBack) === "function"){
-                        options.callBack($._tree);
-                    }
-                });
+                };
+                //防CSRF攻击
+                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                    config = opt.common.extend(config,{headers: {
+                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                        }});
+                }
+                $.ajax(config);
+                // $.get(options.url, function(data) {
+                //
+                // });
             },
             expandAll: function(){
                 $._tree.expandAll(true);
