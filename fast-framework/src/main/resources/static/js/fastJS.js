@@ -2602,10 +2602,14 @@ if (typeof jQuery === "undefined") {
         if ($.fn.select2 !== undefined) {
             $.fn.select2.defaults.set( "theme", "bootstrap" );
             $("select.form-control:not(.noselect2)").each(function () {
-                $(this).select2();
                 //     .on("change", function () {
                 //     $(this).valid();
                 // })
+                if(typeof($(this).attr("multiple"))=="undefined"){
+                    $(this).select2();
+                }else{
+                    $(this).select2({allowClear: true, placeholder: ""});
+                }
             })
         }
 
@@ -3292,7 +3296,11 @@ if (typeof jQuery === "undefined") {
                 if ($.fn.select2 !== undefined) {
                     $.fn.select2.defaults.set( "theme", "bootstrap" );
                     $("select.form-control:not(.noselect2)").each(function () {
-                        $(this).select2();
+                        if(typeof($(this).attr("multiple"))=="undefined"){
+                            $(this).select2();
+                        }else{
+                            $(this).select2({allowClear: true, placeholder: ""});
+                        }
                     })
                 }
 
@@ -3315,7 +3323,11 @@ if (typeof jQuery === "undefined") {
                     if ($.fn.select2 !== undefined) {
                         $.fn.select2.defaults.set( "theme", "bootstrap" );
                         $("select.form-control:not(.noselect2)").each(function () {
-                            $(this).select2();
+                            if(typeof($(this).attr("multiple"))=="undefined"){
+                                $(this).select2();
+                            }else{
+                                $(this).select2({allowClear: true, placeholder: ""});
+                            }
                         })
                     }
 

@@ -2118,7 +2118,7 @@
                 /**TODO:2020-03-09 新加的代码,处理页码错误问题开始*/
                 if(opt.common.isNotEmpty(res.data) && opt.common.isNotEmpty(res.data.totalCount)){
                     if(that.options.pagination &&(res.code==='00000') && (res.data.totalCount>0) && (res.data.list.length === 0)){//总记录数大于0,但当前页记录数为0,则此时页码超过了最大页码误
-                        that.options.pageNumber = Math.ceil(res.page.totalCount/that.options.pageSize);//最后一页(总页数)
+                        that.options.pageNumber = Math.ceil(res.data.totalCount/that.options.pageSize);//最后一页(总页数)
                         that.initServer();
                         return;
                     }
