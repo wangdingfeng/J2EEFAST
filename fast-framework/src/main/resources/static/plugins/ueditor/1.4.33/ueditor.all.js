@@ -24508,7 +24508,6 @@ UE.plugin.register('simpleupload', function (){
             btnIframeDoc = (btnIframe.contentDocument || btnIframe.contentWindow.document);
             btnIframeBody = btnIframeDoc.body;
             wrapper = btnIframeDoc.createElement('div');
-            console.log('--->>>>>>::');
             var inputCSRFToken = '';
             if($('meta[name="csrf-token"]').attr("content")){
                 inputCSRFToken = '<input type="hidden" name="X-CSRF-Token" value="'+$('meta[name="csrf-token"]').attr("content")+'"/>';

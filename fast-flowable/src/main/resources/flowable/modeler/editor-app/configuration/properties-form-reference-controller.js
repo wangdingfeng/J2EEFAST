@@ -107,12 +107,22 @@ angular.module('flowableModeler').controller('FlowableFormReferencePopupCtrl',
                 lastUpdated: modelMetaData.lastUpdated
             };
 
+            var headers = {};
+            if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+                window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+                headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content
+                    ,'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'};
+            }else{
+                headers = {'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'};
+            }
+
             // Update
             $http({ method: 'POST',
                 data: params,
                 ignoreErrors: true,
-                headers: {'Accept': 'application/json',
-                          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                headers: headers,
                 transformRequest: function (obj) {
                     var str = [];
                     for (var p in obj) {
@@ -191,13 +201,21 @@ angular.module('flowableModeler').controller('FlowableFormReferencePopupCtrl',
                     newversion: false,
                     lastUpdated: modelMetaData.lastUpdated
                 };
-
+                var headers = {};
+                if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+                    window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+                    headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content
+                        ,'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'};
+                }else{
+                    headers = {'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'};
+                }
                 // Update
                 $http({ method: 'POST',
                     data: params,
                     ignoreErrors: true,
-                    headers: {'Accept': 'application/json',
-                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                    headers: headers,
                     transformRequest: function (obj) {
                         var str = [];
                         for (var p in obj) {
