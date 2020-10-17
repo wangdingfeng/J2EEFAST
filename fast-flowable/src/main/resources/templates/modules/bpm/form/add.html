@@ -1,11 +1,11 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="新增OA请假单">
-</@header>
-<@addorEdit fromId="form-form-add">
+<@header title="新增OA请假单" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-form-add" class="form-horizontal">
     <input  type="hidden" name="userId" value="${user.id}">
     <input  type="hidden" name="userName" value="${user.name}">
-     <input  type="hidden" name="modelKey" value="${bpmTaskFrom.modelKey}">
+    <input  type="hidden" name="modelKey" value="${bpmTaskFrom.modelKey}">
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "表单名称"/>：</label>
         <div class="col-sm-8">
@@ -40,15 +40,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "请假类型"/>：</label>
         <div class="col-sm-8">
-            <select id="leaveType" name="leaveType" class="form-control">
-                <#list dict.getType('sys_leave_type')>
-                    <#items as d>
-                        <#if d.status =='0' >
-                           <option  value="${d.dictValue}" text="${d.dictLabel}">${d.dictLabel}</option>
-                        </#if>
-                    </#items>
-                 </#list>
-            </select>
+            <@f.select name="leaveType" dictType="sys_leave_type" />
         </div>
     </div>
     <div class="form-group">
@@ -64,19 +56,20 @@
             <input name="remark" class="form-control" type="text">
                             </div>
     </div>
-</@addorEdit>
+</@f.form>
+</div>
 <@footer>
-    <script type="text/javascript">
-        var prefix = baseURL + "bpm/form"
-        $("#form-form-add").validate({
-            focusCleanup: true
-        });
+<script type="text/javascript">
+    var prefix = baseURL + "bpm/form"
+    $("#form-form-add").validate({
+        focusCleanup: true
+    });
 
-        function submitHandler() {
-            if (opt.validate.form()) {
-                opt.operate.save(prefix + "/add", $('#form-form-add').serialize());
-            }
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/add", $('#form-form-add').serialize());
         }
+    }
 </script>
 </@footer>
 </@pageTheme>

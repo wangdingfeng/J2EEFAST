@@ -1,8 +1,8 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="关联任务表单">
-</@header>
-<@addorEdit fromId="task-form-add">
+<@header title="关联任务表单" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+    <@f.form id="task-form-add" class="form-horizontal">
     <input name="processDefinitionKey" value="${bpmProcess.id}" type="hidden">
     <input name="version" value="v${bpmProcess.version?string}" type="hidden">
     <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/></h4>
@@ -86,26 +86,26 @@
             </div>
         </div>
     </div>
-</@addorEdit>
-<div class="hr-line-dashed"></div>
-<div class="row" style="text-align: center;" id="_addTab">
-    <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-check"></i><@ctx.i18n text = "保存"/></button>&nbsp;
-    <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>
+    </@f.form>
+    <div class="hr-line-dashed"></div>
+    <div class="row" style="text-align: center;" id="_addTab">
+        <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-check"></i><@ctx.i18n text = "保存"/></button>&nbsp;
+        <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>
+    </div>
 </div>
 <@footer>
-    <script type="text/javascript">
-        var prefix = baseURL + "bpm/procdef";
+<script type="text/javascript">
+    var prefix = baseURL + "bpm/procdef";
 
+    $("#task-form-add").validate({
+        focusCleanup: true
+    });
 
-        $("#task-form-add").validate({
-            focusCleanup: true
-        });
-
-        function submitHandler() {
-            if (opt.validate.form()) {
-                opt.operate.saveTab(prefix + "/taskfrom/add", $('#task-form-add').serialize());
-            }
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.saveTab(prefix + "/taskfrom/add", $('#task-form-add').serialize());
         }
-    </script>
+    }
+</script>
 </@footer>
 </@pageTheme>

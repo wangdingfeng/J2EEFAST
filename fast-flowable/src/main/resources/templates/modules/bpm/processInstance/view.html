@@ -1,8 +1,6 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="流程图">
-    <@cssLibs.bpm_css/>
-</@header>
+<@header title="流程图" bodyClass="white-bg" libs=["table","bmp"]/>
 <div class="box-body" style="padding:10px 20px 0 20px;">
     <div class="row">
         <div class="col-xs-12 text-center">
@@ -25,8 +23,7 @@
     </div>
 </div>
 <@footer>
-<@jsLibs.bpm_js/>
-<script>
+<script type="text/javascript">
     var prefix = baseURL + 'bpm/task';
     var options = {
         url: prefix + "/comment",

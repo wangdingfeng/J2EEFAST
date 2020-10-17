@@ -1,17 +1,13 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="代码预览">
-<#-- Theme style -->
-<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.css?V=${config.getDvVersion()}">
+<@header title="代码预览"  libs=["prism"]>
 <style>
     body{
         font-size: 15px !important;
     }
     .nav-tabs-custom{margin-bottom:0 !important;box-shadow:none !important;border-radius:0 !important;}
 </style>
-<#include "/common/code.html"/>
 </@header>
-<body class="hold-transition box box-main sidebar-mini ${config.getKey('SYS_INDEX_SKINNAME','skin-blue')}">
     <div class="wrapper">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -46,17 +42,13 @@
             </div>
         </div>
     </div>
-    <@footer>
-    <@jsLibs.prism_js/>
-        <script>
+<@footer>
+<script type="text/javascript">
 
-            function onLoadSuccess() {
-                opt.modal.msg("数据正在加载...请稍后");
-            }
+    function onLoadSuccess() {
+        opt.modal.msg("数据正在加载...请稍后");
+    }
 
-        </script>
-
-
-
-    </@footer>
+</script>
+</@footer>
 </@pageTheme>

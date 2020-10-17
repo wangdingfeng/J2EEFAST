@@ -1,13 +1,11 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="字典树">
-	<@cssLibs.ztree_css/>
-	<style>
-		body{height:auto;font-family: "Microsoft YaHei";}
-		button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
-	</style>
+<@header title="字典树" bodyClass="white-bg" libs=["zTree"]>
+<style>
+	body{height:auto;font-family: "Microsoft YaHei";}
+	button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
+</style>
 </@header>
-<body class="hold-transition box box-main">
 	<input id="columnId" type="hidden" value="${columnId}"/>
 	<input id="treeId"   type="hidden" value="<#if dictHtml??>${dictHtml.id}</#if>"/>
 	<input id="dictType" type="hidden" value="<#if dictHtml??>${dictHtml.dictType}</#if>"/>
@@ -25,27 +23,26 @@
     </div>
 	<div id="tree" class="ztree treeselect"></div>
 	</div>
-	<@footer>
-	<@jsLibs.ztree_js/>
-	<script>
-		$(function() {
-			var url = baseURL + "sys/dict/treeData";
-			var options = {
-		        url: url,
-		        onClick : zOnClick,
-				onCheck : onCheck
-		    };
-			$.tree.init(options);
-		});
-		
-		function zOnClick(event, treeId, treeNode) {
-		    $("#dictType").val(treeNode.name);
-		}
+<@footer>
+<script>
+	$(function() {
+		var url = baseURL + "sys/dict/treeData";
+		var options = {
+			url: url,
+			onClick : zOnClick,
+			onCheck : onCheck
+		};
+		$.tree.init(options);
+	});
+
+	function zOnClick(event, treeId, treeNode) {
+		$("#dictType").val(treeNode.name);
+	}
 
 
-		function onCheck(event, treeId, treeNode) {
-			$("#dictType").val(treeNode.name);
-		}
-	</script>
+	function onCheck(event, treeId, treeNode) {
+		$("#dictType").val(treeNode.name);
+	}
+</script>
 </@footer>
 </@pageTheme>
