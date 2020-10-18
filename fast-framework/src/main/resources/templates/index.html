@@ -1,5 +1,5 @@
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="false">
+<@pageTheme mark="true">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,10 +38,10 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/style.css">
 <link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>
 <#--<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.css?V=${config.getDvVersion()}"/>-->
-<link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}"/>
-<#--<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}"/>-->
+<#--<link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}"/>-->
+<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}"/>
 <!-- jQuery toast 提示框  -->
-<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css"/>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico">
 <#-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <#-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -130,19 +130,19 @@
 <script src="${ctxStatic}/static/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <!-- 全局遮罩-->
 <script type="text/javascript" src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js"></script>
-<script src="${ctxStatic}/static/plugins/layer/layer.js"></script>
+<script src="${ctxStatic}/static/plugins/layer/layer.min.js"></script>
 <script type="text/javascript" src="${ctxStatic}/static/plugins/layui/layui.js"></script>
 <script type="text/javascript" src="${ctxStatic}/static/libs/vue.min.js"></script>
 <!-- jQuery toast 提示框  -->
 <script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
 <!-- 全屏显示-->
-<script type="text/javascript" src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
+<#--<script type="text/javascript" src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>-->
+<script type="text/javascript" src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>
 <#-- jquery-validate 表单验证插件 -->
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.js"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js"></script>
-<#--<script type="text/javascript" src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
-<script type="text/javascript" src="${ctxStatic}/static/js/index.js?V=${config.getDvVersion()}"></script>
-<#--<script type="text/javascript" src="${ctxStatic}/static/js/index.min.js?V=${config.getDvVersion()}"></script>-->
+<#--<script type="text/javascript" src="${ctxStatic}/static/js/index.js?V=${config.getDvVersion()}"></script>-->
+<script type="text/javascript" src="${ctxStatic}/static/js/index.min.js?V=${config.getDvVersion()}"></script>
 <script type="text/javascript" src="${ctxStatic}/static/plugins/fullscreen/jquery.fullscreen.js"></script>
 </body>
 </html>
