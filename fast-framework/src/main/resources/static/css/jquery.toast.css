@@ -5,7 +5,7 @@
  * J2eeFAST 优化适配
  * @date 2020-09-27
  */
-.jq-toast-wrap { display: block; position: fixed; width: 250px;  pointer-events: none !important; margin: 0; padding: 0; letter-spacing: normal; z-index: 9000 !important; }
+.jq-toast-wrap { display: block; position: fixed; width: 250px;  pointer-events: none !important; margin: 0; padding: 0; letter-spacing: normal; z-index: 90000000 !important; }
 .jq-toast-wrap * { margin: 0; padding: 0; }
 
 /*J2eeFAST 扩展*/
