@@ -22,6 +22,8 @@ public class AddressUtil {
      public static final String IP_BAIDU_URL =  "http://api.map.baidu.com/location/ip?ak=gRhqOOqPOQzvM8nMRnVoQswejvggglqY&ip={}&coor=bd09ll";
      //百度用完转换
      public static final String IP_WHOIS_URL =  "http://whois.pconline.com.cn/ipJson.jsp?ip={}&json=true";
+     //国外免费查询IP地址
+     //http://ip-api.com/json/8.210.134.174?lang=zh-CN
 
      public static String getRealAddressByIP(String ip) {
         String address = "XX XX";
@@ -55,8 +57,7 @@ public class AddressUtil {
                     return address;
                 }
                 obj = JSONUtil.parseObj(body.body());
-                String err = obj.getStr("err");
-                if(ToolUtil.isEmpty(err)){
+                if(ToolUtil.isNotEmpty(obj.getStr("addr"))){
                     address = obj.getStr("addr");
                 }else{
                     LOG.error("获取地理位置API用尽");
