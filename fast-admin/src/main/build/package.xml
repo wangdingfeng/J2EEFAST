@@ -38,6 +38,18 @@
         <fileSet>
             <directory>../fast-framework/src/main/resources</directory>
             <outputDirectory>${file.separator}</outputDirectory>
+            <!-- Added packaging to filter uncompressed core JS -->
+            <excludes>
+                <exclude>static/libs/SM4.js</exclude>
+                <exclude>static/plugins/captcha/ase.js</exclude>
+                <exclude>static/plugins/captcha/crypto-js.js</exclude>
+                <exclude>static/plugins/captcha/verify.js</exclude>
+                <exclude>static/plugins/captcha/css/verify.css</exclude>
+                <exclude>static/js/fastJS.js</exclude>
+                <exclude>static/js/index.js</exclude>
+                <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.js</exclude>
+                <exclude>static/plugins/layer/layer.js</exclude>
+            </excludes>
         </fileSet>
         <!-- ######################################################################-->
         <fileSet>  
