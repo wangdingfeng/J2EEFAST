@@ -1783,9 +1783,9 @@
                 if(title_ === ""){
                     var tp = getItemField(item, field, that.options.escape);
                     if(field && tp && tp.length > 0){
-                        var reg = /<\/\w.*?>/g;
+                        var reg = /<[^>]+>/g;
                         if(reg.test(value)){
-                            if( $(value).is('span')){
+                            if($(value).is('span')){
                                 var txt = $(value).html();
                                 title_ = sprintf(' title="%s"', txt);
                             }
