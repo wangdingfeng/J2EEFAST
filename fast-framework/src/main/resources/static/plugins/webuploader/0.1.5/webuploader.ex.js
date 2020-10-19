@@ -1,7 +1,7 @@
 /*!
  * 参照jeesite平台(https://gitee.com/thinkgem/jeesite4)
  * J2eeFAST 二次修改
- * @version v1.0.1
+ * @version v1.0.2
  */
 if (typeof jQuery === "undefined") {
     throw new Error("fastJS JavaScript requires jQuery")
