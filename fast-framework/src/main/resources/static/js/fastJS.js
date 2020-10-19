@@ -9,7 +9,7 @@
  *       2020-08-19 新增表格动态增减行数据
  *       2020-08-20 新增加载遮罩默认提示语控制
  *       2020-08-23 优化表格记住我功能、新增右侧滑出窗口
- * @version v1.0.12
+ * @version v1.0.13
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -24,7 +24,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.12',
+            version:'1.0.13',
             debug:true,
             // 默认加载提示名人名言 如果不用 false
             loadTip:true,

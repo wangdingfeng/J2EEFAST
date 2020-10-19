@@ -9,7 +9,7 @@
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
  *       2020-08-18 解决小窗口菜单点击出现重叠问题
  *       2020-09-29 新增主页加载动画
- * @version 1.0.12
+ * @version 1.0.13
  */
 //菜单添加事件
 +function ($) {
@@ -594,7 +594,7 @@ $(function () {
             btn1: function (index) {
                 if($("#form-user-updatePass").validate().form()){
                     var data =$("#form-user-updatePass").serializeArray();
-                    $.ajax({
+                    opt.common.sendAjax({
                         type: "POST",
                         url: "sys/user/updatePass",
                         data: data,
@@ -607,6 +607,12 @@ $(function () {
                                 });
                             } else {
                                 opt.error(result.msg);
+                            }
+                        },
+                        error: function(e){
+                            console.error(JSON.stringify(e));
+                            if(e.responseJSON.msg){
+                                opt.error(e.responseJSON.msg);
                             }
                         }
                     });
