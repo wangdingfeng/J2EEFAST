@@ -81,7 +81,7 @@
     </div>
     <@compress single_line=true>
     <script type="text/javascript">
-        $("#menuIconButton${AssId?replace(".","_")}").click(function(){
+        $("#menuIconButton${AssId?replace(".","_")}").unbind('click').on('click',function(){
             var var_${AssId?replace(".","_")}iconValue =  $("#${AssId?replace(".","_")}").val();
             var options = {
                 title: <#if boxTitle =="">"<@ctx.i18n text = "图标选择"/>" <#else>"${boxTitle}"</#if>,
@@ -179,11 +179,11 @@
         <span class="input-group-btn" <#if readonly>disabled="disabled"</#if>  id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
     </div>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
-<#--    <@compress single_line=true>-->
+    <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
             var <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
-            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").click(function(){
+            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").unbind('click').on('click',function(){
                 if($(this).attr("disabled") && $(this).attr("disabled")!=''){
                     return;
                 }
@@ -245,7 +245,7 @@
             }
         })
     </script>
-<#--    </@compress>-->
+    </@compress>
 </#macro>
 
 <#--
@@ -277,7 +277,8 @@
                    isInput = false <#-- 是否允许手动label框输入 -->
                    isClear = true <#-- 弹出是否出现清除按钮-->
                    template = false <#-- 控件是否做template用-->
-                   placeholder="请输入值"
+                   keyId = "id" <#--指定获取树数据值 -->
+                   placeholder=""
                    helpTip = ""  <#--帮助提示 -->
                    ext...>
     <#local  Assname="${id}"/>
@@ -302,8 +303,11 @@
     <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
-            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").click(function(){
+            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").unbind('click').on('click',function(){
                 var treeId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val();
+                <#if keyId != "id">
+                treeId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").attr('data-id');
+                </#if>
                 var treeName =  $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val();
                 <#if correlationId !="">
                 var correlationId = $("#${correlationId}").val() == "" ? "${correlationValue}": $("#${correlationId}").val();
@@ -341,7 +345,10 @@
 
             function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit(index, layero,selfLayer) {
                 var nodes = $.tree.callBackTree(layero,index);
-                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(nodes.id).change(); /* 赋值主页面隐藏ID */
+                <#if keyId != "id">
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").attr('data-id',nodes.id);
+                </#if>
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(nodes.${keyId}).change(); /* 赋值主页面隐藏ID */
                 $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val(nodes.name).change();/* 回显主页面控件 */
                 <#if isParentIds>
                 $('input[name="${parenName}"]').val(nodes.parentIds).change();
@@ -374,7 +381,7 @@
             }
         })
     </script>
-</@compress>
+    </@compress>
 </#macro>
 
 <#--
@@ -410,13 +417,13 @@
     <#if butClass!="">
         <div class="input-group">
         <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+               type="${type}" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
         </div>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <#else>
         <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="${placeholder}"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+               type="${type}" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     </#if>
     </#compress>
@@ -574,7 +581,7 @@
     <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
-            $('#__${AssId?replace(".","_")}swh').on('click',function(e){
+            $('#__${AssId?replace(".","_")}swh').unbind('click').on('click',function(e){
                 var _value = "0";
                 if($(this).is(':checked') == true){
                     $('#${AssId?replace(".","_")}').val("0");
@@ -613,15 +620,14 @@
     </#if>
     <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
     <script id="${AssId?replace(".","_")}ContentUE" type="text/plain" style="width:100%;height:${height}px;"></script>
+    <@compress single_line=true>
     <script type="text/javascript">
-    
-  
         $(function() {
             if (window.UEDITOR_CONFIG === undefined) {
                 opt.error("ueditor 插件未引入,请模板引擎header Lis中引入!!");
                 return;
             }
-            window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}" ;
+            window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}";
             var remarksUE = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
                 maximumWords: ${maxlength},
                 readonly: ${readonly}, initialFrameHeight: ${height},
@@ -649,13 +655,14 @@
             };
             /* 编辑器加载完成事件*/
             remarksUE.ready(function(){
-                remarksUE.execCommand('insertHtml', $("#${AssId?replace(".","_")}").val())
+                remarksUE.execCommand('insertHtml', $("#${AssId?replace(".","_")}").val());
                 remarksUE.addListener('contentchange', function(){
                     remarksUE.updateContent();
                 });
             });
         });
     </script>
+    </@compress>
 </#macro>
 
 <#--
@@ -692,27 +699,27 @@
     <#else>
         <#local AssId="${id}"/>
     </#if>
-    
+
   <#if viewMode>    <#-- view 用法 <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id" required=true view=true />    -->
        <#if dictType !="">    <#-- dictType !=""  -->
-         <#list dict.getType('${dictType}') as d>                           
+         <#list dict.getType('${dictType}') as d>
                     <#list value?split(",") as k>
-	                  <#if k == (d['${dictValue}']?c)>    
-	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${dictLabel}']}"/></span> 
-	                 </#if>                     
+	                  <#if k == (d['${dictValue}']?c)>
+	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${dictLabel}']}"/></span>
+	                 </#if>
                     </#list>
            </#list>
        <#else>  <#-- else <#-- dictType !=""   -->
 	       <#list items as d>
 	            <#list value?split(",") as k>
-	                  <#if k?string == d['${itemValue}']?string>    
+	                  <#if k?string == d['${itemValue}']?string>
 	                  <span class="${viewClass}"><@ctx.i18n text = "${d['${itemLabel}']}"/></span>
 	                </#if>
 	            </#list>
 	        </#list>
        </#if>   <#-- end dictType !=""  -->
-  <#else>  <#-- view else -->   
-    
+  <#else>  <#-- view else -->
+
     <#if !multiple>
         <select id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class}" <#if required> required</#if><#if readonly> disabled="disabled"</#if>>
         <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
@@ -1041,9 +1048,10 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
 </#if>" onerror="imgUserError();"/></p>
         <p style="width: ${width}px;text-align: center;"><a href="javascript:" id="<#if id == "">${Assname}<#else>${AssId}</#if>_but"><@ctx.i18n text = "${tipHelp}"/></a></p>
     </div>
+    <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
-            $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").click(function(){
+            $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").unbind('click').on('click',function(){
                 var var_${AssId?replace(".","_")}_inpt =  $("#${AssId?replace(".","_")}_img").attr("src");
                 var options = {
                     title: "<li class='fa fa-fw fa icon-crop'></li>"+<#if boxTitle =="">"<@ctx.i18n text = "图片剪切"/>" <#else>"${boxTitle}"</#if>,
@@ -1093,6 +1101,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
             }
         })
     </script>
+</@compress>
 </#macro>
 
 <#macro selectLinkage
@@ -1129,7 +1138,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
             </div>
         </#list>
     </div>
-<#--    <@compress single_line=true>-->
+    <@compress single_line=true>
     <script type="text/javascript">
         var<#rt>
         <#list items as x>
@@ -1235,7 +1244,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
             </#list>
         })
     </script>
-<#--    </@compress>-->
+    </@compress>
 </#macro>
 
 <#macro wizard
@@ -1251,6 +1260,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
 <div id="${id}">
     <#nested>
 </div>
+<@compress single_line=true>
 <script type="text/javascript">
     $(function() {
         if ($.fn.smartWizard === undefined) {
@@ -1338,4 +1348,5 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
         });
     })
 </script>
+</@compress>
 </#macro>
