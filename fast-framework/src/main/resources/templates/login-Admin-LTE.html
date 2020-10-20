@@ -1,46 +1,70 @@
+<!--
+* Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+* @author ZhouZhou
+* @version 2020-09-28
+-->
 <#include "/common/defaultEngine.html">
 <@pageTheme mark="true">
 <!DOCTYPE html>
 <html>
 <head>
-  <#import "/common/springctx.ftl" as ctx>
-  <meta charset="utf-8">
-  <meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>登录 - J2eeFAST J2eefast.com</title>
-  <link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
-  <#--Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <#-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
-  <#-- Font Awesome -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
-  <#-- Ionicons -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css">
-  <#--animate 样式-->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
-  <#-- Theme style -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css">
-  <#-- iCheck -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
-  <#-- jQuery toast 提示框  -->
-  <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
-
-  <link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}">
-  <link rel="stylesheet" href="${ctxStatic}/static/css/style.css?V=${config.getDvVersion()}">
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
-  <#-- Vue单页面刷新闪烁标签{{}}问题解决-->
-  <style>[v-cloak]{display:none !important;}</style>
+<#import "/common/springctx.ftl" as ctx>
+<meta charset="utf-8">
+<meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>登录 - J2eeFAST J2eefast.com</title>
+<link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
+<#--Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<#-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
+<#-- Font Awesome -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
+<#--animate 样式-->
+<link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
+<#-- Theme style -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css">
+<#-- iCheck -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
+<#-- jQuery toast 提示框  -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
+<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
+<link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
+<#if verification>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
+</#if>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<#-- Vue单页面刷新闪烁标签{{}}问题解决-->
+<style>[v-cloak]{display:none !important;}
+  <#--.login-page {-->
+  <#--    background-image: url(${ctxStatic}/static/img/login/bg2.png);-->
+  <#--    background-repeat: no-repeat;-->
+  <#--    background-size:100% 100%;-->
+  <#--}-->
+  /*.login-logo a, .register-logo a {*/
+  /*    color: #fff;*/
+  /*    font-weight: 400;*/
+  /*}*/
+  .footer-item, .footer-item a{
+      color: #000;
+  }
+  .footer-item a:hover{
+      color:#00a0e9;
+  }
+</style>
 </head>
 <body class="hold-transition login-page">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
+<div id="canvas" style="position: absolute; z-index: -100; top: 0px;width: 100%; height: 98%">
+</div>
+<div id="verfyImg">
+</div>
 <div class="login-box animated fadeInLeft" id="app" v-cloak>
   <div class="login-logo">
     <a href="#">${config.getTitle()}<small>V${config.getVersion()}</small></a>
@@ -48,17 +72,18 @@
   <!-- /.login-logo -->
   <div class="login-box-body">
       <p class="login-box-msg"><@ctx.i18n text = "欢迎登录"/></p>
+      <form action="#" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" id="username" v-model="username" placeholder="<@ctx.i18n text = "账号/邮箱/手机号码"/>">
         <span class="glyphicon glyphicon-user form-control-feedback "></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" id="password" class="form-control"  v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
+        <input type="password" id="password"  autocomplete="off" class="form-control"  v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
         <span class="glyphicon glyphicon-lock form-control-feedback" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
               data-toggle="tooltip" data-placement="bottom" onmousedown="$('#password').attr('type','text')" onmouseup="$('#password').attr('type','password')"></span>
       </div>
       <div  v-if="loadcode" class="form-group has-feedback">
-        <input type="text" class="form-control"  v-model="captcha" placeholder="<@ctx.i18n text = "验证码"/>">
+        <input type="text" class="form-control"  v-model="captcha" copyright="J2eeFAST" placeholder="<@ctx.i18n text = "验证码"/>">
         <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
       </div>
       <div v-if="loadcode"  class="form-group has-feedback">
@@ -84,13 +109,17 @@
         </div>
         <!-- /.col -->
       </div>
+      </form>
       <div class="form-group  row">
           <div class="col-xs-12">
               <button type="button" class="btn btn-primary btn-block btn-flat" @click="login" data-loading="正在验证登录，请稍后..."><@ctx.i18n text = "登 录"/></button>
           </div>
       </div>
-       <div class="row">
-		  <div class="col-xs-12">
+      <div class="row">
+          <div class="col-xs-6">
+<#--              <a @click="login">手机号登录</a>-->
+          </div>
+		  <div class="col-xs-6">
 					<div class="dropdown pull-right">
 						<a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
 							<i class="fa fa-language"></i>&nbsp;<@ctx.i18n text = "中文(简体)"/>
@@ -107,7 +136,7 @@
                             <li class="mt5"></li>
 						</ul>
 					</div>
-				</div>
+          </div>
        </div>
       <#if config.getKey("SYS_IS_OAUTH") == "0">
           <div class="social-auth-links text-center">
@@ -145,12 +174,6 @@
 <div class="help-block text-center">
 <#-- Enter your password to retrieve your session -->
 </div>
-<#--<div class="login-footer">-->
-<#--    Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()}<br>-->
-<#--    <div class="login-beian">-->
-<#--&lt;#&ndash;        <img src="${ctxStatic}/statics/img/batb.png"/><a class="text-black" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011202012286">沪公网安备 31011202012286号</a>&nbsp;&nbsp;&ndash;&gt;-->
-<#--        <a href="http://www.beian.miit.gov.cn/" class="text-black" target="_blank">${config.getIPC()}</a></div>-->
-<#--</div>-->
 <div class="login-footer">
     <span class="footer-item">
       Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()}
@@ -175,20 +198,23 @@
 </div>
 <#--jQuery 3 -->
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
+<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
-<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
 <script src="${ctxStatic}/static/libs/icheck.min.js"></script>
 <#-- 全局遮罩-->
-<script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
+<script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.min.js?V=${config.getDvVersion()}"></script>
 <#-- jQuery toast 提示框  -->
 <script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery.slimscroll.min.js"></script>
-<script src="${ctxStatic}/static/libs/fastclick.min.js"></script>
-<#--<script src="${ctxStatic}/statics/libs/app.js?V=${config.getDvVersion()}"></script>-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
+<script src="${ctxStatic}/static/libs/jquery.particleground.min.js"></script>
+<#if verification>
+<script src="${ctxStatic}/static/plugins/captcha/crypto-js.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/ase.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/verify.min.js"></script>
+</#if>
 <script>var ctx = "${ctxStatic}/", _secretKey = "${_secretKey}";</script>
 <script>
     var vm = new Vue({
@@ -218,50 +244,27 @@
                 }
             },
             login: function (event) {
+                var that = this;
                 if(this.getCookie("_secretKey") == ""){
                     location.reload();
                     return;
                 }
-                var s4=new SM4Util(this.getCookie("_secretKey"));
+                if(vm.username.length < 3 ||  vm.password.length < 3){
+                    return that.errrInfo('<@ctx.i18n text = "账号或者密码输入有误"/>');
+                }
+                <#if verification>
+                $("#verfyImg").find(".mask").css("display","block");
+                <#else>
                 $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
-                $.ajax({
-                    type: "POST",
-                    url: ctx+"login",
-                    data: {"username":s4.encryptData_ECB(vm.username),
-                        "password":s4.encryptData_ECB(vm.password),
-                        "captcha":vm.captcha,
-                        "rememberMe":vm.rememberme},
-                    dataType: "json",
-                    success: function(result){
-                        if(result.code == 0){
-                            if($("input[name='rememberUserCode']").is(':checked')){
-                                window.localStorage.setItem('rememberUserCode',vm.username);
-                            }else{
-                                window.localStorage.setItem('rememberUserCode',"");
-                            };
-                            setTimeout(
-                                function () {
-                                   location.href ='index';
-                                }
-                                , 100);
-                        }else if(result.code == '50004' || result.code == '50006'){
-                            $(window).unblock();
-                            vm.loadcode = true;
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                        else{
-                            $(window).unblock();
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                    }
-                });
+                var s4=new SM4Util(that.getCookie("_secretKey"));
+                var data = {"username":s4.encryptData_ECB(vm.username),
+                    "password":s4.encryptData_ECB(vm.password),
+                    "captcha":vm.captcha,
+                    "rememberMe":vm.rememberme};
+                that.postLogin(data,true);
+                </#if>
+                return;
             },
             errrInfo : function(text){
                 $.toast({
@@ -293,6 +296,42 @@
                     }
                 };
                 return _secretKey;
+            },
+            postLogin: function(data,flag){
+                $.ajax({
+                    type: "POST",
+                    url: ctx+"login",
+                    data: data,
+                    dataType: "json",
+                    success: function(result){
+                        if(result.code == 0){
+                            if($("input[name='rememberUserCode']").is(':checked')){
+                                window.localStorage.setItem('rememberUserCode',vm.username);
+                            }else{
+                                window.localStorage.setItem('rememberUserCode',"");
+                            };
+                            setTimeout(
+                                function () {
+                                    location.href ='index';
+                                }
+                                , 100);
+                        }else if(result.code == '50004' || result.code == '50006'){
+                            if(flag){$(window).unblock()};
+                            vm.loadcode = true;
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                        else{
+                            if(flag){$(window).unblock()};
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                    }
+                });
             }
         },
         mounted :function(){
@@ -326,6 +365,29 @@
                 $(this).tooltip();
             });
 
+            /* 粒子线条背景 */
+            $('#canvas').particleground({
+                dotColor:'#7ec7fd',
+                lineColor:'#7ec7fd'
+            });
+
+            <#if verification>
+            /** 初始化验证码  弹出式 */
+            $('#verfyImg').slideVerify({
+                baseUrl:'${ctxStatic}',
+                mode:'pop',
+                success : function(params) {
+                    var s4=new SM4Util(that.getCookie("_secretKey"));
+                    var data = {"username":s4.encryptData_ECB(vm.username),
+                        "password":s4.encryptData_ECB(vm.password),
+                        "captcha":vm.captcha,
+                        "rememberMe":vm.rememberme};
+                    data = $.extend(data, params);
+                    that.postLogin(data,false);
+                },
+                error : function() {}
+            });
+            </#if>
             /*获取页面键盘事件*/
             window.document.onkeydown = that._onkeydown;
         }

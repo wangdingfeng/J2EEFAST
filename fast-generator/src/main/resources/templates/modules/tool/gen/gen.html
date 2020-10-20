@@ -9,25 +9,11 @@
 					<ul>
 						<li>
 							表名称：
-							<select name="tableName" class="form-control">
-								<option value="">所有</option>
-								<#list genTables>
-									<#items as d>
-											<option value="${d.tableName}">${d.tableName}</option>
-									</#items>
-								</#list>
-							</select>
+							<@f.select name="tableName" items=genTables itemLabel="tableName" itemValue="tableName" blankValue="" blankLabel="所有"/>
 						</li>
 						<li>
 							表描述：
-							<select name="tableComment" class="form-control">
-								<option value="">所有</option>
-								<#list genTables>
-									<#items as d>
-										<option value="${d.tableComment}">${d.tableComment}</option>
-									</#items>
-								</#list>
-							</select>
+							<@f.select name="tableComment" items=genTables itemLabel="tableComment" itemValue="tableComment" blankValue="" blankLabel="所有"/>
 						</li>
 						<li class="select-time">
 							<label>表时间： </label>

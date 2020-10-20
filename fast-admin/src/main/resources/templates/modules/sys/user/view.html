@@ -1,9 +1,11 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-    <@header title="修改用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+    <@header title="修改用户" bodyClass="white-bg" libs=["bootstrapSelect","zTree"]/>
     <div class="wrapper wrapper-content ibox-content">
+         <div class="col-md-8">
         <@f.form id="form-user-edit" class="form-horizontal">
             <@f.hidden id="id" name="id" value="${user.id?default('')}"/>
+            
             <h4 class="form-header h4">基本信息</h4>
             <div class="row">
                 <div class="col-sm-6">
@@ -105,9 +107,63 @@
             </div>
         </@f.form>
         <div class="hr-line-dashed"></div>
+        </div>
+        <div class="col-md-4">
+            <h4 class="form-header h4">已获权限<button type="button" class="btn btn-box-tool pull-right" style="position: relative;top: -6px;" id="btnRefresh" title="刷新部门"><i class="fa fa-refresh"></i></button></h4>
+            <div class="box box-solid" style="background:#FAFAFA;border-top: 1px solid rgb(210, 214, 222);">
+                <div class="box-header">
+                    <div class="box-title">
+                        <label style="max-width: 100%;margin-top: 8px;font-weight: 700;color: #0a0a0a">菜单数据</label>
+                    </div>
+                    <div class="box-tools pull-right" style="top:8px;">
+                        <a class="btn btn-box-tool" id="expand"
+                           value="dataScopeTree" >展开</a>/
+                        <a class="btn btn-box-tool" id="collapse" value="dataScopeTree" >折叠</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div id="tree" class="ztree"></div>
+                </div>
+            </div>
+         </div>
     </div>
     <@footer>
-        <script type="text/javascript">
+     <script type="text/javascript">
+
+     $(function() {
+        initZtree();
+     });
+    
+    function initZtree() {
+         var url = baseURL + "sys/menu/menuUserTreeData?userId=${user.id?default('')}";
+        var options = {
+            url: url,
+            expandLevel:1,
+           // onClick : onClick,
+            check: {
+                enable: false
+            }
+        };
+        $.tree.init(options);
+    }
+ 
+
+    /* 左侧数刷新事件*/
+    $('#btnRefresh').click(function() {
+        initZtree();
+    });
+
+
+     /* 树展开事件 */
+     $('#expand').click(function() {
+         $.tree.expand();
+     });
+
+     /* 树折叠事件 */
+     $('#collapse').click(function() {
+         $.tree.collapse();
+     });
+
 
         </script>
     </@footer>

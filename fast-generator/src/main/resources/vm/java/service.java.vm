@@ -14,7 +14,6 @@ import com.j2eefast.common.core.mutidatasource.annotaion.DataSource;
 #end##
 #if($table.master)
 import ${packageName}.entity.${childTable.className}Entity;
-import ${packageName}.service.${childTable.className}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 #end###
 import com.j2eefast.common.core.page.Query;
@@ -34,6 +33,7 @@ import java.util.Arrays;
 #foreach ($column in $columns)####
 #if($column.htmlType == "imgcup")####
 #set($isImg = "1")
+import com.baomidou.mybatisplus.core.toolkit.Sequence;
 #break###
 #end####
 #end###
@@ -188,7 +188,13 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end##     
 	@Transactional(rollbackFor = Exception.class)
 	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {####
-
+		#set($isImg = "0")#####
+		#foreach ($column in $columns)####
+		#if($column.htmlType == "imgcup")####
+		#set($isImg = "1")#####
+		#break###
+		#end####
+		#end###
 
 #if($table.rFile || $table.rImg)####
 		for (Long id : ids) {
@@ -197,7 +203,11 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file")
 			#end
 			#if($table.rImg)
 
-		    FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+			FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
+			#end####
+			#if($isImg == "1")
+
+			FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_avatar");####
 			#end####
 
 		}
@@ -212,6 +222,7 @@ return this.removeByIds(Arrays.asList(ids));
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
+	@Transactional(rollbackFor = Exception.class)
 	public boolean del${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
 
 		#if($table.rFile)####
@@ -221,6 +232,14 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file")
 		#if($table.rImg)####
 FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");####
 		#end####
+		#foreach ($column in $columns)####
+		#if($column.htmlType == "imgcup")####
+
+		FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_avatar");####
+		#break###
+		#end####
+		#end###
+
 
 		return this.removeById(${pkColumn.javaField});
 
@@ -232,14 +251,25 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
+	@Transactional(rollbackFor = Exception.class)
 	public boolean add${ClassName}(${ClassName}Entity ${className}){
 		#foreach ($column in $columns)####
 		#if($column.htmlType == "imgcup")####
 
+		//事先生成id###
+		#foreach ($column in $columns)
+		#if($column.pk)
+		#set($id00 = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+
+		${className}.set${id00}((new Sequence().nextId()));#break###
+		#end####
+		#end####
+
 		//图片剪切数据转换####
 		#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))#####
 
-		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}()));#####
+		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}(),"${tableName}_avatar",${className}.get${id00}()));#####
+
 		#break###
 		#end####
 		#end###
@@ -270,11 +300,13 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");
 			#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
 			#set($fkeyX = $fKey.javaField.substring(0,1).toUpperCase() + $fKey.javaField.substring(1))
 
-			for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
+			if(ToolUtil.isNotEmpty(${className}.get${childTable.className}())){
+				for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
 
-				${classEnty}.set${fkeyX}(pkId);
-				${classEnty}Service.add${childTable.className}(${classEnty});####
+					${classEnty}.set${fkeyX}(pkId);
+					${classEnty}Service.add${childTable.className}(${classEnty});####
 
+				}
 			}
 			#end####
 			#end####
@@ -290,14 +322,21 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
     @DataSource(name="$table.dbName")
 #end##
+	@Transactional(rollbackFor = Exception.class)
 	public boolean update${ClassName}ById(${ClassName}Entity ${className}) {
 		#foreach ($column in $columns)####
 		#if($column.htmlType == "imgcup")####
+		#foreach ($column in $columns)
+		#if($column.pk)
+		#set($id00 = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+		#break###
+		#end####
+		#end####
 
 		//图片剪切数据转换####
 		#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))#####
 
-		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}()));#####
+		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}(),"${tableName}_avatar",${className}.get${id00}()));#####
 		#break###
 		#end####
 		#end###
@@ -328,11 +367,13 @@ FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");
 			#set($fkeyX = $fKey.javaField.substring(0,1).toUpperCase() + $fKey.javaField.substring(1))
 
 			if(${classEnty}Service.del${childTable.className}ByPkId(pkId)){
-				for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
+				if(ToolUtil.isNotEmpty(${className}.get${childTable.className}())){
+					for(${childTable.className}Entity ${classEnty} :${className}.get${childTable.className}()){####
 
-					${classEnty}.set${fkeyX}(pkId);
-					${classEnty}Service.add${childTable.className}(${classEnty});####
+						${classEnty}.set${fkeyX}(pkId);
+						${classEnty}Service.add${childTable.className}(${classEnty});####
 
+					}
 				}
 			}
 			#end####

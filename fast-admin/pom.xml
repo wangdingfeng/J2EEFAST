@@ -97,7 +97,7 @@
 				<!-- 不打包资源文件（配置文件和依赖包分开） -->
 				<excludes>
 					<exclude>config/**</exclude>
-					<exclude>statics/**</exclude>
+					<exclude>static/**</exclude>
 					<exclude>public/**</exclude>
 					<exclude>mapper/**</exclude>
 					<exclude>templates/**</exclude>

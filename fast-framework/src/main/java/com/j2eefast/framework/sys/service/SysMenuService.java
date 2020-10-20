@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.base.entity.Ztree;
@@ -17,15 +15,11 @@ import com.j2eefast.common.core.constants.Cache;
 import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.entity.SysMenuEntity;
-import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
-import com.j2eefast.framework.sys.mapper.SysModuleMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.utils.Constant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
 /**
@@ -90,6 +84,11 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		List<Long> menuIdList = sysUserMapper.findAllMenuId(userId);
 		return findAllModelMenuList(menuIdList,modules);
 	}
+
+	public  List<String> findPermsByRoleId(Long roleId){
+		return this.sysMenuMapper.findPermsByRoleId(roleId);
+	}
+
 
 	/**
 	 * 获取所有菜单列表
@@ -221,6 +220,12 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		return ztrees;
 	}
 
+
+	public List<Ztree> menuUserTreeData(Long userId) {
+		List<SysMenuEntity> menuList = this.sysMenuMapper.findMenuAllByUserId(userId);
+		List<Ztree> ztrees = initZtree(menuList,null,true);
+		return ztrees;
+	}
 	/**
 	 * 对象转菜单树
 	 *
@@ -285,8 +290,7 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 	 * @param permsFlag 是否需要显示权限标识
 	 * @return 树结构列表
 	 */
-	public List<Ztree> initZtree(List<SysMenuEntity> menuList, List<String> roleMenuList, boolean permsFlag)
-	{
+	public List<Ztree> initZtree(List<SysMenuEntity> menuList, List<String> roleMenuList, boolean permsFlag){
 		List<Ztree> ztrees = new ArrayList<Ztree>();
 		boolean isCheck = !ToolUtil.isEmpty(roleMenuList);
 		for (SysMenuEntity menu : menuList)
@@ -305,12 +309,16 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		return ztrees;
 	}
 
-	public String transMenuName(SysMenuEntity menu, boolean permsFlag)
-	{
+	/**
+	 * 菜单树展示名称
+	 * @param menu 菜单对象
+	 * @param permsFlag 是否展现菜单权限
+	 * @return
+	 */
+	public String transMenuName(SysMenuEntity menu, boolean permsFlag){
 		StringBuffer sb = new StringBuffer();
 		sb.append(menu.getName() + "&nbsp;&nbsp;["+menu.getModuleCodes()+"]");
-		if (permsFlag)
-		{
+		if (permsFlag){
 			sb.append("<font color=\"#888\">&nbsp;&nbsp;&nbsp;" + StrUtil.nullToDefault(menu.getPerms(),"") + "</font>");
 		}
 		return sb.toString();

@@ -1,5 +1,7 @@
 package com.j2eefast.common.core.license;
-
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 import cn.hutool.core.util.CharsetUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.ToolUtil;

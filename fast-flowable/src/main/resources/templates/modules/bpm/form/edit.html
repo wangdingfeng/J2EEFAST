@@ -1,8 +1,8 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="修改OA请假单">
-</@header>
-<@addorEdit fromId="task-form-complete">
+<@header title="修改OA请假单" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+    <@f.form id="task-form-complete" class="form-horizontal">
             <input name="taskId" value="${taskId}" type="hidden">
             <input name="processInstanceId" value="${bpmOaForm.processInstanceId}" type="hidden">
             <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/></h4>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
             </div>
-</@addorEdit>
+    </@f.form>
     <div class="hr-line-dashed"></div>
     <div class="row" id="_addTab">
         <div class="col-sm-offset-2 col-sm-10">
@@ -107,67 +107,68 @@
             <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i> <@ctx.i18n text = "关闭"/></button>
         </div>
     </div>
+</div>
 <@footer>
-    <script type="text/javascript">
-        var prefix = baseURL + "bpm/task";
+<script type="text/javascript">
+    var prefix = baseURL + "bpm/task";
 
-        $("#task-form-complete").validate({
-            focusCleanup: true
-        });
+    $("#task-form-complete").validate({
+        focusCleanup: true
+    });
 
-        function submitHandler() {
-            if (opt.validate.form()) {
-                opt.operate.saveTab(prefix + "/complete", $('#task-form-complete').serialize());
-            }
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.saveTab(prefix + "/complete", $('#task-form-complete').serialize());
         }
+    }
 
-        function revoke(){
-            if (opt.validate.form()) {
-                opt.operate.saveTab(prefix + "/complete", $('#task-form-complete').serialize());
-            }
+    function revoke(){
+        if (opt.validate.form()) {
+            opt.operate.saveTab(prefix + "/complete", $('#task-form-complete').serialize());
         }
+    }
 
-        /*回退*/
-        function back(){
-            opt.warning("正在开发中....");
-            return;
-        }
+    /*回退*/
+    function back(){
+        opt.warning("正在开发中....");
+        return;
+    }
 
-        /*转办*/
-        function complaint(){
-            opt.warning("正在开发中....");
-            return;
-        }
+    /*转办*/
+    function complaint(){
+        opt.warning("正在开发中....");
+        return;
+    }
 
-        /*委托*/
-        function entrust(){
-            opt.warning("正在开发中....");
-            return;
-        }
+    /*委托*/
+    function entrust(){
+        opt.warning("正在开发中....");
+        return;
+    }
 
-        /*终止*/
-        function termination(){
-            opt.warning("正在开发中....");
-            return;
-        }
+    /*终止*/
+    function termination(){
+        opt.warning("正在开发中....");
+        return;
+    }
 
-        /*自由跳转*/
-        function jump() {
-            opt.warning("正在开发中....");
-            return;
-        }
-        
-        /*流程跟踪*/
-        function process() {
-            var options = {
-                url: baseURL + "bpm/processInstance/preview/${bpmOaForm.processInstanceId}",
-                title: '<@ctx.i18n text = "流程跟踪"/>',
-                btn:['<i class="fa fa-close"></i> '+$.i18n.prop("取消")],
-                width: $(top.window).width() - 300,
-                height: $(top.window).height() - 200
-            };
-            opt.modal.openMainWin(options);
-        }
-    </script>
+    /*自由跳转*/
+    function jump() {
+        opt.warning("正在开发中....");
+        return;
+    }
+
+    /*流程跟踪*/
+    function process() {
+        var options = {
+            url: baseURL + "bpm/processInstance/preview/${bpmOaForm.processInstanceId}",
+            title: '<@ctx.i18n text = "流程跟踪"/>',
+            btn:['<i class="fa fa-close"></i> '+$.i18n.prop("取消")],
+            width: $(top.window).width() - 300,
+            height: $(top.window).height() - 200
+        };
+        opt.modal.openMainWin(options);
+    }
+</script>
 </@footer>
 </@pageTheme>

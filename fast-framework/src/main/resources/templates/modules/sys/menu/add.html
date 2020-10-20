@@ -4,26 +4,26 @@
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-menu-add" class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-3 control-label "><@ctx.i18n text = "上级菜单"/>：</label>
+        <label class="col-sm-3 control-label "><span style="color: red; ">*</span><@ctx.i18n text = "上级菜单"/>：</label>
         <div class="col-sm-8">
             <@f.treeselect id="treeId" value="${menu.id}" name="parentId" boxTitle="上级菜单选择" url="sys/menu/menuTreeData"
                 labelValue="${menu.name}"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label"><@ctx.i18n text = "菜单类型"/>：</label>
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "菜单类型"/>：</label>
         <div class="col-sm-8">
             <@f.radio name="type" dictType="sys_menu_type"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label"><@ctx.i18n text = "菜单名称"/>：</label>
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "菜单名称"/>：</label>
         <div class="col-sm-8">
             <@f.input name="name" required=true/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label"><@ctx.i18n text = "所属模块"/>：</label>
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "所属模块"/>：</label>
         <div class="col-sm-8">
             <@f.checkbox name="moduleCodes" items=modules itemLabel="moduleName" itemValue="moduleCode" required=true/>
         </div>
@@ -52,16 +52,17 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label"><@ctx.i18n text = "排序"/>：</label>
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "排序"/>：</label>
         <div class="col-sm-8">
             <@f.input name="orderNum" required=true/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label"><@ctx.i18n text = "图标"/>：
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"
-               data-content="自定义获取图标:<a href='http://www.fontawesome.com.cn/faicons/' target='_blank'>http://www.fontawesome.com.cn/faicons/</a>">
-                <i class="fa fa-question-circle-o" style="color: orange"></i></a>
+<#--            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"-->
+<#--               data-content="自定义获取图标:<a href='http://www.fontawesome.com.cn/faicons/' target='_blank'>http://www.fontawesome.com.cn/faicons/</a>">-->
+<#--                <i class="fa fa-question-circle-o" style="color: orange"></i>-->
+<#--            </a>-->
         </label>
         <div class="col-sm-8">
             <@f.iconselect name="icon" placeholder="选择图标"/>
@@ -76,7 +77,7 @@
 </@f.form>
 </div>
 <@footer>
-<script>
+<script type="text/javascript">
     var prefix = baseURL + "sys/menu";
     $("#form-menu-add").validate({
         onkeyup: false,
@@ -179,28 +180,6 @@
             }
         }
     }
-
-    /*菜单管理-新增-选择菜单树*/
-    // function selectMenuTree() {
-    //     var treeId = $("#treeId").val();
-    //     var menuId = treeId > 0 ? treeId : 1;
-    //     var url = prefix + "/selectMenuTree/" + menuId;
-    //     var options = {
-    //         title: '菜单选择',
-    //         width: "380",
-    //         url: url,
-    //         callBack: doSubmit
-    //     };
-    //     opt.modal.openOptions(options);
-    // }
-    //
-    // function doSubmit(index, layero){
-    //     var body = layer.getChildFrame('body', index);
-    //     $("#treeId").val(body.find('#treeId').val());
-    //     $("#treeName").val(body.find('#treeName').val());
-    //     layer.close(index);
-    // }
-    //
 </script>
 </@footer>
 </@pageTheme>

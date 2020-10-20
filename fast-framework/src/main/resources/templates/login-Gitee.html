@@ -1,3 +1,8 @@
+<!--
+* Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+* @author ZhouZhou
+* @version 2020-09-28
+-->
 <#include "/common/defaultEngine.html">
 <@pageTheme mark="true">
 <!DOCTYPE html>
@@ -7,71 +12,66 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>登录 - J2eeFAST J2eefast.com</title>
     <link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
-    <meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta name="keywords" content="PoweredByJ2eeFast"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="authenticity_token" name="csrf-param">
     <#-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
     <#-- Font Awesome -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
-    <#-- Ionicons -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css">
-    <#-- Theme style -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
     <#--animate 样式-->
     <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
-    <#-- jQuery toast 提示框  -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
     <link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
-    <link rel="stylesheet" href="${ctxStatic}/static/css/index.css?V=${config.getDvVersion()}">
-    <link href="${ctxStatic}/static/css/gitee/gitee.css" media="screen" rel="stylesheet">
-    <link href="${ctxStatic}/static/css/gitee/semantic.css" rel="stylesheet">
+    <link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
+    <link href="${ctxStatic}/static/css/login2.min.css" media="screen" rel="stylesheet">
     <#-- iCheck -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
-    <style>[v-cloak]{display:none !important;} .checkbox label{ padding-left: 0px}
-        .ui.error.message, .ui.attached.error.message {
-            -webkit-box-shadow: 0px 0px 0px 1px #e0b4b4 inset, 0px 0px 0px 0px rgba(0,0,0,0);
-            box-shadow: 0px 0px 0px 1px #e0b4b4 inset, 0px 0px 0px 0px rgba(0,0,0,0);
+    <#if verification>
+    <link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
+    </#if>
+    <style>[v-cloak]{display:none !important;}
+        <#--.login-body {-->
+        <#--    background-image: url(${ctxStatic}/static/img/login/bg4.jpg);-->
+        <#--    background-repeat: no-repeat;-->
+        <#--    background-size:100% 100%;-->
+        <#--}-->
+        .footer-item, .footer-item a{
+            color: #000;
         }
-        .ui.error.message {
-            background-color: #FFF6F6;
-            color: #9F3A38;
+        .footer-item a:hover{
+            color:#00a0e9;
         }
     </style>
     </head>
-<body class="session-body">
+<body class="login-body">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
-<div class="site-content">
-    <div class="fixed-notice-infos">
-        <div class="all-messages">
-        </div>
+<#--<div id="canvas" style="position: absolute; z-index: -100; top: 0px;width: 100%; height: 98%">-->
+<#--</div>-->
+<!-- /content -->
+<div id="verfyImg">
+</div>
+<div class="login-content">
+    <div class="login-wrapper animated fadeInLeft" id="app" v-cloak>
         <div class="ui container">
-            <div class="flash-messages" id="messages-container"></div>
-        </div>
-    </div>
-    <div class="session-wrapper animated fadeInLeft" id="app" v-cloak>
-        <div class="ui container">
-            <div class="session__body">
-                <div class="session-sidebox">
-                    <div class="session-sidebox__container">
-                        <div class="session-sidebox__header">
-                            <div class="session-sidebox__logo">
-
+            <div class="login__body">
+                <div class="login-sidebox">
+                    <div class="login-sidebox__container">
+                        <div class="login-sidebox__header">
+                            <div class="login-sidebox__logo">
                             </div>
-                            <h1 class="session-sidebox__title">
-
+                            <h1 class="login-sidebox__title">
                             </h1>
-                            <h2 class="session-sidebox__subtitle">
+                            <h2 class="login-sidebox__subtitle">
                                 ${config.getTitle()}
                             </h2>
                         </div>
-                        <div class="session-sidebox__content">
-                            <div class="session-sidebox-content__container">
-                                <div class="session-sidebox-comments__header"> <span class="session-sidebox-comments__title">当前版本:</span>
-                                    <span class="session-sidebox-comments__position">V${config.getVersion()}</span>
+                        <div class="login-sidebox__content">
+                            <div class="login-sidebox-content__container">
+                                <div class="login-sidebox-comments__header"> <span class="login-sidebox-comments__title">当前版本:</span>
+                                    <span class="login-sidebox-comments__position">V${config.getVersion()}</span>
                                 </div>
-                                <div class="session-sidebox-comments__content">
+                                <div class="login-sidebox-comments__content">
                                     J2eeFAST是一个Java EE企业级快速开发平台，<strong>致力于打造中小企业最好用的开源免费的后台框架平台</strong>。
                                     系统基于(Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE)经典技术开发，
                                     系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流等)，
@@ -79,9 +79,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="session-sidebox__footer">
-                            <a href="https://www.yuque.com/u1174484/j2eefast/tv3kee" target="_blank"><strong class="session-sidebox__icon-hot">帮助文档</strong>
-                                <span class="session-sidebox__divider">-</span>
+                        <div class="login-sidebox__footer">
+                            <a href="https://www.yuque.com/u1174484/j2eefast/tv3kee" target="_blank"><strong class="login-sidebox__icon-hot">帮助文档</strong>
+                                <span class="login-sidebox__divider">-</span>
                                 语雀 文档
                                 <i class="iconfont icon-arrow-circle-right "></i>
                             </a>
@@ -89,34 +89,34 @@
                     </div>
 
                 </div>
-                <div class="session-form">
-                    <div class="session-form__container is-login">
-                        <header class="session-form__header">
-                            <h2 class="session-form__title">
+                <div class="login-form">
+                    <div class="login-form__container is-login">
+                        <header class="login-form__header">
+                            <h2 class="login-form__title">
                                 <span><@ctx.i18n text = "欢迎登录"/></span>
                             </h2>
                             <span class="pull-right">
-<#--                                没有帐号？<a href="https://gitee.com/signup">点此注册</a>-->
+<#--                                没有帐号？<a href="#">点此注册</a>-->
                             </span>
                         </header>
-                        <div class="session__flash-error">
+                        <div class="login__flash-error">
                             <div id="msg_error" class="ui message error" style="visibility: hidden">错误提示</div>
                         </div>
-                        <form accept-charset="UTF-8" action="${ctxStatic}/login" class="ui custom form session__control session-login__form session-login__with-password "
+                        <form accept-charset="UTF-8" action="${ctxStatic}/login" class="ui custom form login__control login-login__form login-login__with-password "
                             method="post"  autocomplete="off">
-                            <div class="session-login__body">
-                                <div class="session-form__fields">
+                            <div class="login-login__body">
+                                <div class="login-form__fields">
                                     <div class="git-login-form-fields">
                                         <div class="field">
                                             <input class="login-password__account-input" id="username" v-model="username" placeholder="<@ctx.i18n text = "账号/邮箱/手机号码"/>" type="text">
                                         </div>
                                         <div class="field">
-                                            <input data-encrypt="true" id="password" v-model="password" placeholder="<@ctx.i18n text = "密码"/>" type="password">
+                                            <input autocomplete="off" id="password" v-model="password" placeholder="<@ctx.i18n text = "密码"/>" type="password">
                                         </div>
                                         <div v-if="loadcode" class="field">
                                             <div class="ui right labeled input captcha-labeled">
-                                                <input class="session-login__captcha-input" v-model="captcha" placeholder="<@ctx.i18n text = "验证码"/>" type="text">
-                                                <div class="ui basic orange button session-login__captcha-button" :style="src"  @click="refreshCode">
+                                                <input v-model="captcha" placeholder="<@ctx.i18n text = "验证码"/>" type="text">
+                                                <div class="ui basic orange button login__captcha-button" copyright="J2eeFAST" :style="src"  @click="refreshCode">
 <#--                                                    <img alt="<@ctx.i18n text = "如果看不清楚，请单击图片刷新!"/>"  :src="src" @click="refreshCode">-->
                                                 </div>
                                             </div>
@@ -130,7 +130,7 @@
                                                 </div>
                                             </div>
                                             <div class="field">
-<#--                                                <a class="session__toggle-button" data-control="phone" href="https://gitee.com/login">短信验证登录</a>-->
+<#--                                                <a class="login__toggle-button" data-control="phone" href="https://gitee.com/login">短信验证登录</a>-->
                                                 <div class="checkbox icheck hide">
                                                     <label>
                                                         <input type="checkbox" name="rememberme" v-model="rememberme" data-style="square-blue"> <@ctx.i18n text = "免登录"/>
@@ -140,7 +140,7 @@
                                         </div>
 
                                         <div class="field">
-                                            <input class="ui fluid orange submit button large"@click="login" data-loading="正在验证登录，请稍后..." type="button" value="<@ctx.i18n text = "登 录"/>">
+                                            <input class="ui fluid orange submit button large" @click="login" data-loading="正在验证登录，请稍后..." type="button" value="<@ctx.i18n text = "登 录"/>">
                                         </div>
 <#--                                        <div class="field text-center">-->
 <#--&lt;#&ndash;                                            <a class="forget-password" href="https://gitee.com/password/new">已有帐号，忘记密码？</a>&ndash;&gt;-->
@@ -165,24 +165,19 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="session-login-oauth">
-                            <div class="session-login__oschina">
-<#--                                <a href="https://gitee.com/auth/oschina"><i class="icon-logo-osc iconfont osc"></i>-->
-<#--                                    <span>-->
-<#--                                        使用 OSChina 帐号登录-->
-<#--                                    </span>-->
-<#--                                </a>-->
+                        <div class="login-login-oauth">
+                            <div class="login-login__oschina">
                             </div>
                             <#if config.getKey("SYS_IS_OAUTH") == "0">
-                            <div class="session-login-oauth__container">
+                            <div class="login-login-oauth__container">
                                 <div class="field">
-                                    <div class="ui horizontal divider session-login__oauth-title">
+                                    <div class="ui horizontal divider login-login__oauth-title">
                                         <span class="text-muted">
                                             其他方式登录
                                         </span>
                                     </div>
                                 </div>
-                                <div class="ui horizontal list session-oauth__list">
+                                <div class="ui horizontal list login-oauth__list">
                                     <div class="item" title="<@ctx.i18n text = "使用 Gitee 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                         <a href="${ctxStatic}/auth/gitee">
                                             <img src="${ctxStatic}/static/img/gitee.svg"/>
@@ -212,8 +207,8 @@
 
                 </div>
             </div>
-            <div class="session__footer">
-                <span class="session__footer-item">
+            <div class="login__footer">
+                <span class="footer-item">
                     Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()}
                 </span>
                 <span class="footer-item">
@@ -229,8 +224,8 @@
                     </#items>
                 </#list>
             </div>
-            <div class="session__footer">
-                <span class="session__footer-item">
+            <div class="login__footer">
+                <span class="login__footer-item">
                     <a href="http://www.beian.miit.gov.cn/" class="text-black" target="_blank">${config.getIPC()}</a>
                 </span>
             </div>
@@ -239,20 +234,19 @@
 </div>
 <#--jQuery 3 -->
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
+<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
-<script src="${ctxStatic}/static/plugins/bootstrap-tooltip/bootstrap-tooltip-custom-class.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
 <script src="${ctxStatic}/static/libs/icheck.min.js"></script>
-<#-- 全局遮罩-->
-<script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>
-<#-- jQuery toast 提示框  -->
-<script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery.slimscroll.min.js"></script>
-<script src="${ctxStatic}/static/libs/fastclick.min.js"></script>
-<#--<script src="${ctxStatic}/statics/libs/app.js"></script>-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
+<#if verification>
+<script src="${ctxStatic}/static/plugins/captcha/crypto-js.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/ase.min.js"></script>
+<script src="${ctxStatic}/static/plugins/captcha/verify.min.js"></script>
+</#if>
+<#--<script src="${ctxStatic}/static/libs/jquery.particleground.min.js"></script>-->
 <script>var ctx = "${ctxStatic}/", _secretKey = "${_secretKey}";</script>
 <script>
     var loginStatus = "${loginStatus?default("")}";
@@ -283,69 +277,29 @@
                 }
             },
             login: function (event) {
+                var that = this;
                 if(this.getCookie("_secretKey") == ""){
                     location.reload();
                     return;
                 }
-                var s4=new SM4Util(this.getCookie("_secretKey"));
+                if(vm.username.length < 3 ||  vm.password.length < 3){
+                    return that.errrInfo('<@ctx.i18n text = "账号或者密码输入有误"/>');
+                }
+                <#if verification>
+                $("#verfyImg").find(".mask").css("display","block");
+                <#else>
                 $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
-                $.ajax({
-                    type: "POST",
-                    url: ctx+"login",
-                    data: {"username":s4.encryptData_ECB(vm.username),
-                        "password":s4.encryptData_ECB(vm.password),
-                        "captcha":vm.captcha,
-                        "rememberMe":vm.rememberme},
-                    dataType: "json",
-                    success: function(result){
-                        /*登录成功*/
-                        if(result.code == 0){
-                            /*获取登陆前用户是否勾选记住账号*/
-                            if($("input[name='rememberUserCode']").is(':checked')){
-                                window.localStorage.setItem('rememberUserCode',vm.username);
-                            }else{
-                                window.localStorage.setItem('rememberUserCode',"");
-                            };
-                            setTimeout(
-                                function () {
-                                    location.href ='index';
-                                }
-                                , 100);
-                        }else if(result.code == '50004' || result.code == '50006'){
-                            $(window).unblock();
-                            vm.loadcode = true;
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                        else{
-                            $(window).unblock();
-                            vm.errrInfo(result.msg);
-                            vm.captcha = '';
-                            vm.password = '';
-                            vm.refreshCode();
-                        }
-                    }
-                });
+                var s4=new SM4Util(that.getCookie("_secretKey"));
+                var data = {"username":s4.encryptData_ECB(vm.username),
+                    "password":s4.encryptData_ECB(vm.password),
+                    "captcha":vm.captcha,
+                    "rememberMe":vm.rememberme};
+                that.postLogin(data,true);
+                </#if>
+                return;
             },
             errrInfo : function(text){
-                <#--$.toast({-->
-                <#--    heading: '<@ctx.i18n text = "警告"/>',-->
-                <#--    text: text,-->
-                <#--    hideAfter:3000,-->
-                <#--    position: {-->
-                <#--        right: 8,-->
-                <#--        bottom: 4-->
-                <#--    },-->
-                <#--    textAlign: 'left',-->
-                <#--    showHideTransition: 'slide',-->
-                <#--    allowToastClose: true,-->
-                <#--    loader: true,-->
-                <#--    /*stack: 5,*/-->
-                <#--    icon: 'error'-->
-                <#--})-->
                 var err = $("#msg_error");
                 err.html(text);
                 err.css('visibility', 'visible');
@@ -372,6 +326,42 @@
                     }
                 };
                 return _secretKey;
+            },
+            postLogin: function(data,flag){
+                $.ajax({
+                    type: "POST",
+                    url: ctx+"login",
+                    data: data,
+                    dataType: "json",
+                    success: function(result){
+                        if(result.code == 0){
+                            if($("input[name='rememberUserCode']").is(':checked')){
+                                window.localStorage.setItem('rememberUserCode',vm.username);
+                            }else{
+                                window.localStorage.setItem('rememberUserCode',"");
+                            };
+                            setTimeout(
+                                function () {
+                                    location.href ='index';
+                                }
+                                , 100);
+                        }else if(result.code == '50004' || result.code == '50006'){
+                            if(flag){$(window).unblock()};
+                            vm.loadcode = true;
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                        else{
+                            if(flag){$(window).unblock()};
+                            vm.errrInfo(result.msg);
+                            vm.captcha = '';
+                            vm.password = '';
+                            vm.refreshCode();
+                        }
+                    }
+                });
             }
         },
         mounted :function(){
@@ -405,6 +395,25 @@
             $('[data-toggle="tooltip"]').each(function () {
                 $(this).tooltip();
             });
+
+            <#if verification>
+            /** 初始化验证码  弹出式 */
+            $('#verfyImg').slideVerify({
+                baseUrl:'${ctxStatic}',
+                mode:'pop',
+                success : function(params) {
+                    var s4=new SM4Util(that.getCookie("_secretKey"));
+                    var data = {"username":s4.encryptData_ECB(vm.username),
+                        "password":s4.encryptData_ECB(vm.password),
+                        "captcha":vm.captcha,
+                        "rememberMe":vm.rememberme};
+                    data = $.extend(data, params);
+                    that.postLogin(data,false);
+                },
+                error : function() {}
+            });
+            </#if>
+
 
             /*获取页面键盘事件*/
             window.document.onkeydown = that._onkeydown;

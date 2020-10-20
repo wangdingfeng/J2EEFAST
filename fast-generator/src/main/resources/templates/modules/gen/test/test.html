@@ -8,20 +8,20 @@
      <div class="select-list">
       <ul>
            <li>
-              <label> <@ctx.i18n text = "员工编号"/>：
-               <input type="text" class="form-control" placeholder="员工编号" name="code"/> </label>
+              <label> <@ctx.i18n text = "员工编号"/>：</label>
+               <input type="text" class="form-control" placeholder="员工编号" name="code"/>
             </li>
            <li>
-              <label> <@ctx.i18n text = "姓名"/>：
-               <input type="text" class="form-control" placeholder="姓名" name="name"/> </label>
+              <label> <@ctx.i18n text = "姓名"/>：</label>
+               <input type="text" class="form-control" placeholder="姓名" name="name"/>
             </li>
            <li>
-              <label> <@ctx.i18n text = "邮箱"/>：
-               <input type="text" class="form-control" placeholder="邮箱" name="email"/> </label>
+              <label> <@ctx.i18n text = "邮箱"/>：</label>
+               <input type="text" class="form-control" placeholder="邮箱" name="email"/>
             </li>
         <li>
           <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
-          <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.from.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+          <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
        </li>
       </ul>
    </div>
@@ -48,6 +48,7 @@
     var listFlag = "${permission.hasPermi("gen:test:add")}";
     var delFlag = "${permission.hasPermi("gen:test:del")}";
     var visible = ${permission.isPermitteds("gen:test:edit,gen:test:del,gen:test:add")?string('true', 'false')};
+    var sexDatas = ${dict.getDictListJson('sys_user_sex')};
     var prefix = baseURL + "gen/test";
 
     $(function() {
@@ -75,7 +76,8 @@
               ,{field : 'name',title : '<@ctx.i18n text = "姓名"/>'}
               ,{field : 'email',title : '<@ctx.i18n text = "邮箱"/>'}
                ,{field : 'phone',title : '<@ctx.i18n text = "电话"/>'}
-              ,{field : 'sex',title : '<@ctx.i18n text = "性别"/>'}
+               ,{field : 'sex',title : '<@ctx.i18n text = "性别"/>',formatter: function(value, row, index) {
+                            return $.table.selectDictLabels(sexDatas, value); }}
               ,{field : 'age',title : '<@ctx.i18n text = "年龄"/>'}
               ,{field : 'joinDate',title : '<@ctx.i18n text = "入职日期"/>'}
               ,{field : 'leaveDate',title : '<@ctx.i18n text = "离职日期"/>'}

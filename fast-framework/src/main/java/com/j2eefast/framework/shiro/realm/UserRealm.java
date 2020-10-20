@@ -10,6 +10,8 @@ import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
+import com.j2eefast.framework.sys.service.SysMenuService;
+import com.j2eefast.framework.sys.service.SysModuleService;
 import com.j2eefast.framework.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -35,6 +37,8 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.shiro.service.SysLoginService;
 import com.j2eefast.framework.utils.Constant;
 
+import javax.annotation.Resource;
+
 
 /**
  * 自定义的指定Shiro验证用户登录的类 认证
@@ -46,9 +50,9 @@ public class UserRealm extends AuthorizingRealm {
 
 	@Autowired
 	private SysLoginService sysLoginService;
-	@Autowired
+	@Resource
 	private SysModuleMapper sysModuleMapper;
-	@Autowired
+	@Resource
 	private SysMenuMapper sysMenuMapper;
 
 
@@ -101,7 +105,7 @@ public class UserRealm extends AuthorizingRealm {
 				throw new UnknownAccountException(e.getMessage(), e);
 			}
 		}catch (Exception e){
-			log.info("对用户[" + username + "]进行登录验证..验证未通过{}", e.getMessage());
+			log.error("对用户[" + username + "]进行登录验证..验证未通过:{}", e.getMessage());
             throw new AuthenticationException(e.getMessage(), e);
         }
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(),

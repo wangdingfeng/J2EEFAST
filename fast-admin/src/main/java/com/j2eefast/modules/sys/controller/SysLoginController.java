@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.util.IdUtil;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
 import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -67,9 +69,9 @@ public class SysLoginController extends BaseController {
 	@Autowired
 	private SysDictDataService sysDictDataService;
 	@Autowired
-	private SysConfigService sysConfigService;
-	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private CaptchaService captchaService;
 	
 	/**
 	 *生成验证码图片
@@ -150,6 +152,7 @@ public class SysLoginController extends BaseController {
 			}
 		}
 		mmp.put("loginView",view);
+		mmp.put("verification",Global.getDbKey("SYS_LOGIN_VERIFICATION","1").equals("1"));
 		return "login-" + view;
 	}
 
@@ -165,6 +168,15 @@ public class SysLoginController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseData login(String username, String password,Boolean rememberMe) {
+
+		if(Global.getDbKey("SYS_LOGIN_VERIFICATION","1").equals("1")){
+			//后台二次认证 图形验证码
+			CaptchaVO captchaVO = new CaptchaVO();
+			captchaVO.setCaptchaVerification(super.getPara("__captchaVerification"));
+			if(!captchaService.verification(captchaVO).isSuccess()){
+				return error("50004","图形验证码不正确!");
+			}
+		}
 		String secretKey = super.getCookie(ConfigConstant.SECRETKEY);
 		Subject subject = null;
 		try {

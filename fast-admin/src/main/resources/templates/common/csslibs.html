@@ -65,6 +65,9 @@
         <#if x == "colorpicker">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css"/>
         </#if>
+        <#if x == "wizard">
+            <link rel="stylesheet" href="${ctxStatic}/static/plugins/wizard/css/smart_wizard_all.css"/>
+        </#if>
     </#list>
 </#if>
 <#--<link rel="stylesheet" href="${ctxStatic}/static/css/all-skins.css?V=${config.getDvVersion()}">-->
@@ -74,7 +77,7 @@
 <#--  layui-->
 <link rel="stylesheet" href="${ctxStatic}/static/plugins/layui/css/layui.css"/>
 <link rel="stylesheet" href="${ctxStatic}/static/css/style.css?V=${config.getDvVersion()}" />
-<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>
-<#--<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.css?V=${config.getDvVersion()}" />-->
+<#--<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>-->
+<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.css?V=${config.getDvVersion()}" />
 </#compress>
 </#macro>

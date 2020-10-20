@@ -277,7 +277,7 @@
 				}
 			},
 			mounted :function(){
-				$.ajax({
+				opt.common.sendAjax({
 					type: "POST",
 					url: baseURL + 'sys/server/info',
 				    data: "",

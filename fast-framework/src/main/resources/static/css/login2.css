@@ -1,0 +1,460 @@
+/*!
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * @author ZhouZhou
+ * @version 2020-09-28
+ */
+@charset "UTF-8";
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Liberation Sans", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, SimSun, "WenQuanYi Zen Hei Sharp", sans-serif;
+    font-size: 14px;
+    line-height: 1.33;
+    min-width: 1040px;
+    background-color: white;
+    color: #40485b;
+}
+.login-body{
+    background: #e3e7ec;
+}
+.checkbox label{ padding-left: 0px}
+.ui.error.message, .ui.attached.error.message {
+    -webkit-box-shadow: 0px 0px 0px 1px #e0b4b4 inset, 0px 0px 0px 0px rgba(0,0,0,0);
+    box-shadow: 0px 0px 0px 1px #e0b4b4 inset, 0px 0px 0px 0px rgba(0,0,0,0);
+}
+.ui.error.message {
+    background-color: #FFF6F6;
+    color: #9F3A38;
+}
+.login-sidebox::after {
+    background: url(../img/left-2.png) no-repeat right bottom;
+}
+.login-sidebox::before {
+    background: url(../img/left-1.png) no-repeat 0 0;
+}
+.login-sidebox::before, .login-sidebox::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.login-content {
+    min-height: calc(100vh - 323px);
+    border-bottom: 1px solid transparent;
+}
+
+.login-wrapper {
+    min-width: 1040px;
+    min-height: 99.9vh;
+    position: relative;
+}
+
+.login-wrapper>.ui.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1000px;
+    padding: 0;
+    z-index: 1;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-height: 750px){
+    .login-wrapper > .ui.container {
+        margin-top: 40px;
+        top: 0;
+        left: 50%;
+        -webkit-transform: translate(-50%, 0);
+        transform: translate(-50%, 0);
+    }
+}
+
+.login__body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: auto;
+    width: inherit;
+    position: relative;
+    -webkit-box-shadow: 0px 20px 80px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 20px 80px 0px rgba(0,0,0,0.3);
+}
+.login__body:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    background: #fff;
+    z-index: -1;
+}
+.login-sidebox {
+    color: #fff;
+    position: relative;
+    padding: 50px 80px 48px;
+    background: -webkit-gradient(linear, left bottom, left top, from(#213652), to(#072656));
+    background: linear-gradient(0deg,#51a0a0 0%, #18165d 100%);
+}
+.login-sidebox__container {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.login-sidebox__content {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.login-sidebox, .login-form {
+    margin: 0 auto;
+    width: 50%;
+    min-height: 564px;
+}
+.login-sidebox-content__container {
+    color: #fff;
+    font-size: 14px;
+    margin-top: 46px;
+}
+.login-sidebox-comments__header {
+    opacity: 0.5;
+}
+.login-sidebox-comments__content {
+    margin-top: 16px;
+    line-height: 1.71429;
+}
+
+.login-sidebox-comments__position {
+    margin-left: 12px;
+}
+.login-sidebox__subtitle {
+    font-weight: normal;
+    font-size: 32px;
+}
+.login-sidebox__footer {
+    font-size: 14px;
+    padding-top: 40px;
+    margin-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+.login-sidebox__footer a {
+    color: white;
+}
+/**右侧登录*/
+.login-form__container {
+    height: 100%;
+    padding: 50px 75px 48px;
+    position: relative;
+}
+.login-form__header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 24px;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+}
+.login-form__title {
+    display: inline-block;
+}
+.login__flash-error {
+    margin-bottom: 16px;
+}
+.ui.form {
+    position: relative;
+    max-width: 100%;
+}
+.login-login__body {
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.ui.form .fields .field, .ui.form .field {
+    clear: both;
+    margin: 0em 0em 1em;
+}
+.ui.custom.form .ui.labeled.input>input {
+    padding-right: 1em !important;
+}
+.ui[class*="right labeled"].input input {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-right-color: transparent !important;
+}
+.login__captcha-button {
+    width: 136px;
+}
+.ui.labeled.captcha-labeled>.ui.button {
+    display: table-cell;
+    vertical-align: middle;
+}
+.ui.labeled.input {
+    display: table;
+}
+.ui.basic.orange.buttons .button, .ui.basic.orange.button {
+    background: transparent !important;
+    border: 1px solid #fe7300;
+    color: #fe7300 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.ui.form input:not([type]), .ui.form input[type="text"], .ui.form input[type="email"], .ui.form input[type="date"], .ui.form input[type="datetime-local"], .ui.form input[type="password"], .ui.form input[type="number"], .ui.form input[type="url"], .ui.form input[type="tel"] {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Liberation Sans", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, SimSun, "WenQuanYi Zen Hei Sharp", sans-serif;
+    margin: 0em;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);
+    line-height: 1.2142em;
+    padding: 0.67861em 1em;
+    font-size: 1em;
+    background: #ffffff;
+    border: 1px solid rgba(39,41,43,0.15);
+    color: rgba(0,0,0,0.8);
+    border-radius: 0.2857rem;
+    border: 1px solid #dfe3e9;
+    -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
+    box-shadow: 0em 0em 0em 0em transparent inset;
+    -webkit-transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    -webkit-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+}
+.ui.form textarea, .ui.form input:not([type]), .ui.form input[type="text"], .ui.form input[type="email"], .ui.form input[type="date"], .ui.form input[type="datetime-local"], .ui.form input[type="password"], .ui.form input[type="number"], .ui.form input[type="url"], .ui.form input[type="tel"], .ui.form .ui.input {
+    width: 100%;
+    vertical-align: top;
+}
+h1, h2, h3, h4, h5 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Liberation Sans", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, SimSun, "WenQuanYi Zen Hei Sharp", sans-serif;
+    /*line-height: 1.33em;*/
+    margin: calc(2rem - 0.165em ) 0em 1rem;
+    /*font-weight: bold;*/
+    font-weight: normal;
+    padding: 0em;
+}
+.ui.large.button {
+    font-size: 18px;
+    line-height: 22px;
+    padding: 8px 26px;
+    font-weight: 500;
+}
+.ui.buttons .ui.orange.button, .ui.orange.buttons .button, .ui.orange.icon.button, .ui.orange.button {
+    color: #fff;
+    background: #fe7300;
+}
+.ui.orange.button:hover {
+    background-color: #e28560;
+    color: #ffffff;
+    text-shadow: none;
+}
+.ui.fluid.buttons, .ui.button.fluid, .ui.fluid.buttons>.button {
+    display: block;
+    width: 100%;
+}
+input {
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: -internal-light-dark(black, white);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: textfield;
+    background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    padding: 1px 2px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(195, 195, 195));
+    border-image: initial;
+}
+
+.ui.form input[type="text"]:focus,.ui.form input[type="password"]:focus{
+    /*border-color: #3c8dbc !important;*/
+    border-color: #e28560;
+    outline: 0;
+    box-shadow: 0 0 0 .143rem rgba(252, 161, 49, 0.25)
+}
+
+.ui.button {
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1em;
+    outline: none;
+    border: none;
+    vertical-align: baseline;
+    background-color: #e0e0e0;
+    color: rgba(0,0,0,0.6);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Liberation Sans", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, SimSun, "WenQuanYi Zen Hei Sharp", sans-serif;
+    margin: 0em 0.25em 0em 0em;
+    padding: 0.78571em 1.5em 0.78571em;
+    text-transform: none;
+    text-shadow: none;
+    font-weight: bold;
+    line-height: 1;
+    font-style: normal;
+    text-align: center;
+    text-decoration: none;
+    background-image: none;
+    border-radius: 0.2857rem;
+    -webkit-box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(39,41,43,0.15) inset;
+    box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(39,41,43,0.15) inset;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+    transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+    transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+    will-change: '';
+    -webkit-tap-highlight-color: transparent;
+}
+.login-login__oschina {
+    text-align: center;
+}
+.login-login-oauth__container {
+    margin-top: 34px;
+}
+::before, ::after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+.ui.horizontal.divider::before, .ui.horizontal.divider::after {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABaAAAAACCAYAAACuTHuKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo1OThBRDY4OUNDMTYxMUU0OUE3NUVGOEJDMzMzMjE2NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo1OThBRDY4QUNDMTYxMUU0OUE3NUVGOEJDMzMzMjE2NyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjU5OEFENjg3Q0MxNjExRTQ5QTc1RUY4QkMzMzMyMTY3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU5OEFENjg4Q0MxNjExRTQ5QTc1RUY4QkMzMzMyMTY3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+VU513gAAADVJREFUeNrs0DENACAQBDBIWLGBJQby/mUcJn5sJXQmOQMAAAAAAJqt+2prAAAAAACg2xdgANk6BEVuJgyMAAAAAElFTkSuQmCC");
+}
+.ui.horizontal.divider::after {
+    background-position: left 1em top 50%;
+}
+.ui.horizontal.divider::before, .ui.horizontal.divider::after {
+    content: '';
+    display: table-cell;
+    position: relative;
+    top: 50%;
+    width: 50%;
+    background-repeat: no-repeat;
+}
+.ui.horizontal.divider::before {
+    background-position: right 1em top 50%;
+}
+.ui.horizontal.list {
+    display: inline-block;
+    font-size: 0em;
+}
+ul.ui.list:last-child, ol.ui.list:last-child, .ui.list:last-child {
+    margin-bottom: 0em;
+    padding-bottom: 0em;
+}
+ul.ui.list, ol.ui.list, .ui.list {
+    list-style-type: none;
+    margin: 1em 0em;
+    padding: 0em 0em;
+}
+.login-oauth__list {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-pack: center !important;
+    -ms-flex-pack: center !important;
+    justify-content: center !important;
+}
+.login-login-oauth {
+    margin-top: 54px;
+}
+.login-login-oauth__container {
+    margin-top: 34px;
+}
+.ui.horizontal.login-login__oauth-title {
+    font-weight: normal;
+}
+.ui.divider {
+    margin: 1.4rem 0rem;
+    line-height: 1;
+    height: 0em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0,0,0,0.85);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.ui.horizontal.divider {
+    display: table;
+    white-space: nowrap;
+    height: auto;
+    margin: '';
+    line-height: 1;
+    text-align: center;
+}
+
+.ui.horizontal.list > .item:first-child, .ui.horizontal.list > .item:last-child {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+.ui.horizontal.list > .item:first-child {
+    margin-left: 0em !important;
+    padding-left: 0em !important;
+}
+.login-oauth__list > .item {
+    margin-left: 48px !important;
+}
+.ui.list .item a>img {
+    width: 32px;
+    height: 32px;
+}
+.login-sidebox__icon-hot::after {
+    content: 'hot';
+    position: absolute;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 1px;
+    margin-top: -12px;
+    background-color: #C71D23;
+    -webkit-transform: scale(0.84);
+    transform: scale(0.84);
+}
+.login-sidebox__divider {
+    margin: 0 7px;
+}
+.login__footer {
+    margin-top: 50px;
+    text-align: center;
+}

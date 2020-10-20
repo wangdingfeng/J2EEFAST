@@ -1,11 +1,33 @@
-/*this is basic form validation using for validation person's basic information author:Clara Guo data:2017/07/20*/
-$(document).ready(function(){
-	$.validator.setDefaults({       
-		  submitHandler: function(form) {    
-		 		form.submit();    
-		}       
-	});
+/*!
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * @author J2eeFAST
+ * @version 2020-09-30
+ */
+opt.domReady(function(){
 
+	//配置通用的默认提示语
+	var icon = "<i class='fa fa-times-circle'></i>  ";
+	if(opt.common.isNotEmpty($.validator.messages)){
+		opt.common.extend($.validator.messages,{
+			required: icon + $.i18n.prop("必填"),
+			remote: icon + $.i18n.prop("sys.msg.remote"),
+			email: icon + $.i18n.prop("sys.msg.email"),
+			url: icon + $.i18n.prop("sys.msg.url"),
+			date: icon + $.i18n.prop("sys.msg.date"),
+			dateISO: icon + $.i18n.prop("sys.msg.dateISO"),
+			number: icon + $.i18n.prop("sys.msg.number"),
+			digits: icon + $.i18n.prop("sys.msg.digits"),
+			creditcard: icon +$.i18n.prop("sys.msg.creditcard"),
+			equalTo: icon + $.i18n.prop("sys.msg.equalTo"),
+			extension: icon + $.i18n.prop("sys.msg.extension"),
+			maxlength: $.validator.format(icon + $.i18n.prop("sys.msg.maxlength")),
+			minlength: $.validator.format(icon + $.i18n.prop("sys.msg.minlength")),
+			rangelength: $.validator.format(icon +$.i18n.prop("sys.msg.rangelength")),
+			range: $.validator.format(icon + $.i18n.prop("sys.msg.range")),
+			max: $.validator.format(icon + $.i18n.prop("sys.msg.max")),
+			min: $.validator.format(icon + $.i18n.prop("sys.msg.min"))
+		});
+	}
 
 	//手机号码验证身份证正则合并：(^\d{15}$)|(^\d{17}([0-9]|X)$)
 	jQuery.validator.addMethod("isMobile",function(value,element){
@@ -94,6 +116,13 @@ $(document).ready(function(){
 			 return false;
 		}
 		});
+
+	$.validator.setDefaults({
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+
 	//校验基础信息表单
 	$("#basicInfoForm").validate({
 		errorElement:'span',

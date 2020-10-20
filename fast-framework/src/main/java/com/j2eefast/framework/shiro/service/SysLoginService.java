@@ -2,6 +2,8 @@ package com.j2eefast.framework.shiro.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.auth.AuthService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.*;
@@ -13,6 +15,9 @@ import com.j2eefast.framework.sys.factory.UserFactory;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
+import com.j2eefast.framework.sys.service.SysMenuService;
+import com.j2eefast.framework.sys.service.SysModuleService;
+import com.j2eefast.framework.sys.service.SysUserService;
 import com.j2eefast.framework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +30,8 @@ import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import com.j2eefast.framework.utils.RedisKeys;
+
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -41,13 +48,13 @@ public class SysLoginService implements AuthService {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	@Autowired
+	@Resource
 	private SysUserMapper sysUserMapper;
 
-	@Autowired
+	@Resource
 	private SysModuleMapper sysModuleMapper;
 
-	@Autowired
+	@Resource
 	private SysMenuMapper sysMenuMapper;
 
 
@@ -110,6 +117,11 @@ public class SysLoginService implements AuthService {
 		if(ToolUtil.isEmpty(user)){
 			AsyncManager.me().execute(AsyncFactory.recordLogininfor(username,-1L,-1L, "50001","账号或密码错误,请重试."));
 			throw new RxcException(ToolUtil.message("sys.login.failure"),"50001");
+		}
+		
+		//user status : 1 disable
+		if ("1".equals(user.getStatus())) {
+			throw new RxcException(ToolUtil.message("sys.login.accountDisabled"),"50001");
 		}
 
 		//判断密码是否正确

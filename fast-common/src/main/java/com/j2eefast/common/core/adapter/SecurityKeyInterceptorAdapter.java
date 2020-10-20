@@ -35,7 +35,6 @@ public class SecurityKeyInterceptorAdapter extends HandlerInterceptorAdapter{
 		if(request.getCookies() == null){
 			_secretKey = IdUtil.simpleUUID().toLowerCase();
 			CookieUtil.setReadCookie(response,ConfigConstant.SECRETKEY, _secretKey,60*60*24*7);
-
 		}else{
 			_secretKey = CookieUtil.getCookie(request,ConfigConstant.SECRETKEY);
 			if(ToolUtil.isEmpty(_secretKey)){

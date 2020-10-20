@@ -11,6 +11,8 @@ import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
+import com.j2eefast.framework.sys.service.SysMenuService;
+import com.j2eefast.framework.sys.service.SysModuleService;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -33,14 +36,12 @@ import java.util.*;
 @Slf4j
 public class FreeRealm extends AuthorizingRealm {
 
-
-    @Autowired
-    private SysModuleMapper sysModuleMapper;
-    @Autowired
-    private SysMenuMapper sysMenuMapper;
     @Autowired
     private SysLoginService sysLoginService;
-
+    @Resource
+    private SysModuleMapper sysModuleMapper;
+    @Resource
+    private SysMenuMapper sysMenuMapper;
     /**
      * 免密授权授权认证
      * @param principals

@@ -62,6 +62,9 @@
               ,{field : 'fileName',title : '<@ctx.i18n text = "文件名称"/>' ,formatter: function(value, row, index) {
                             return $.table.tooltip(value,10);
                         }}
+              ,{field : 'type',title : '<@ctx.i18n text = "文件类型"/>',formatter: function(value,row, index){
+                        return opt.common.getExt(row.fileName);
+               }}
              ,{field : 'classify',title : '<@ctx.i18n text = "文件归类"/>' ,formatter: function(value, row, index) {
                         return $.table.selectDictLabel(classify, value);
                 }}

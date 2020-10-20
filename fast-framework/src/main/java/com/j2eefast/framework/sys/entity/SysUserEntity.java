@@ -16,9 +16,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.core.base.entity.annotaion.JsonListBaselgonre;
 import com.j2eefast.common.core.base.entity.annotaion.JsonListFiledIgnore;
 import com.j2eefast.common.core.enums.ConvertType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * <p>系统用户</p>
@@ -28,12 +31,13 @@ import lombok.Data;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
+@Data
 @TableName("sys_user")
 //设置头高
 @HeadRowHeight(20)
 @HeadFontStyle(fontHeightInPoints = 12)
 @ExcelIgnoreUnannotated
-@Data
+@JsonListBaselgonre(fileds = {"createTime"})
 public class SysUserEntity extends BaseEntity {
 
 	/**
@@ -79,6 +83,7 @@ public class SysUserEntity extends BaseEntity {
 	 */
 	@ExcelProperty("邮箱")
 	@ColumnWidth(25)
+	@JsonListFiledIgnore(exist = false, convert = ConvertType.EMAIL)
 	private String email;
 
 	/**
@@ -129,7 +134,7 @@ public class SysUserEntity extends BaseEntity {
 	 */
 	@TableField(exist = false)
 	@JsonListFiledIgnore
-	private List<String> RoleKeys;
+	private List<String> roleKeys;
 
 
 	/**
@@ -248,4 +253,7 @@ public class SysUserEntity extends BaseEntity {
 	@TableField(exist = false)
 	@JsonListFiledIgnore
 	private String sid;
+
+
+
 }

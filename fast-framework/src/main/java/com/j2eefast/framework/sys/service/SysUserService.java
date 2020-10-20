@@ -12,14 +12,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.j2eefast.common.core.config.RabbitmqProducer;
+import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.CheckPassWord;
 import com.j2eefast.common.core.utils.PageUtil;
+import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.rabbit.constant.RabbitBeanInfo;
 import com.j2eefast.common.rabbit.constant.RabbitInfo;
 import com.j2eefast.framework.annotation.DataFilter;
+import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
+import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.utils.Constant;
@@ -83,11 +88,13 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		String mobile = (String) params.get("mobile");
 		String email = (String) params.get("email");
 		String compId = (String) params.get("compId");
+		Long[] ids  = (Long[]) params.get("ids");
 		return sysUserMapper.findList(StrUtil.nullToDefault(username,""),
 				StrUtil.nullToDefault(status,""),
 				StrUtil.nullToDefault(mobile,""),
 				StrUtil.nullToDefault(email,""),
 				StrUtil.nullToDefault(compId,""),
+				ids,
 				(String) params.get(Constant.SQL_FILTER));
 	}
 
@@ -251,6 +258,23 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		return sysUserMapper.updatePassWord(userId,password,salt,pwdSecurityLevel) > 0;
 	}
 
+	/**
+	* @Title: checkDataScope 
+	* @Description: Check whether the (ids) belongs to the current user (loginUser)
+	* @param ids  void 
+	* @Date: 2020年9月25日
+	 */
+	public void checkDataScope(Long... ids) {	
+		if (!UserUtils.hasAnyRoleKeys(Constant.SU_ADMIN)) {
+			//check current user has data scope for the deleted use
+			Map<String, Object> params = Maps.newConcurrentMap();
+			params.put("ids", ids);
+			List<?> listData =SpringUtil.getAopProxy(this).findList(params);
+			if (null == listData || listData.size() == 0 || listData.size() != ids.length) {
+				throw new RxcException(ToolUtil.message("illegal request"),"50001");
+			}
+		}		
+	}
 
 	public boolean checkUserNameUnique(String username) {
 		int count = this.count(new QueryWrapper<SysUserEntity>().eq("username",username));
@@ -269,8 +293,31 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		return true;
 	}
 
+	/**
+	 * 根据用户名称查询
+	 * @param username
+	 * @return
+	 */
 	public SysUserEntity findUserByUserName(String username){
 		return sysUserMapper.findUserByUserName(username);
+	}
+
+	/**
+	 * 手机号码查询
+	 * @param mobile
+	 * @return
+	 */
+	public SysUserEntity findUserByMobile(String mobile){
+		return sysUserMapper.findUserByMobile(mobile);
+	}
+
+	/**
+	 * 电子邮件查询
+	 * @param email
+	 * @return
+	 */
+	public SysUserEntity findUserByEmail(String email){
+		return sysUserMapper.findUserByEmail(email);
 	}
 
 	public boolean changeStatus(SysUserEntity user) {
@@ -278,6 +325,12 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	}
 
 	public SysUserEntity findUserByUserId(Long userId){
-		return sysUserMapper.findUserByUserId(userId);
+		SysUserEntity user = sysUserMapper.findUserByUserId(userId);
+		SysLoginInfoEntity loginInfo = ConstantFactory.me().getFirstLoginInfo(user.getUsername());
+		//上次登陆地点
+		user.setLoginLocation(loginInfo.getLoginLocation());
+		//上次登陆时间
+		user.setLoginTime(loginInfo.getLoginTime());
+		return user;
 	}
 }

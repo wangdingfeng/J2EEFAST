@@ -1,5 +1,7 @@
 package com.j2eefast.common.core.shiro;
 
+import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.crypto.digest.MD5;
 import com.j2eefast.common.core.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
@@ -8,6 +10,7 @@ import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.serializer.SerializationException;
 
 import java.io.Serializable;
@@ -23,6 +26,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
 
     @Autowired
     private RedisUtil redisUtil;
+    @Value("${fast.csrf.enabled: false}")
+    private boolean csrfEnabled;
 
     /**
      * doReadSession be called about 10 times when login.
@@ -119,6 +124,9 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         String key = getRedisSessionKey(session.getId());
         if (expire == DEFAULT_EXPIRE) {
             this.redisUtil.setSession(key, session, (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
+            if(csrfEnabled) {
+                this.redisUtil.setSession("sys_csrfToken:" + key, Base64Encoder.encode(MD5.create().digestHex16(session.getId().toString())) + Base64Encoder.encode(session.getId().toString()), (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
+            }
             return;
         }
         if (expire != NO_EXPIRE && expire * MILLISECONDS_IN_A_SECOND < session.getTimeout()) {
@@ -129,6 +137,9 @@ public class RedisSessionDAO extends AbstractSessionDAO {
                     + " . It may cause some problems.");
         }
         this.redisUtil.setSession(key, session, expire);
+        if(csrfEnabled) {
+            this.redisUtil.setSession("sys_csrfToken:" + key, Base64Encoder.encode(MD5.create().digestHex16(session.getId().toString())) + Base64Encoder.encode(session.getId().toString()), expire);
+        }
     }
 
     @Override
@@ -139,6 +150,9 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         }
         try {
             redisUtil.delSession(getRedisSessionKey(session.getId()));
+            if(csrfEnabled) {
+                redisUtil.delSession("sys_csrfToken:" + getRedisSessionKey(session.getId()));
+            }
         } catch (SerializationException e) {
             log.error("delete session error. session id= {}",session.getId());
         }

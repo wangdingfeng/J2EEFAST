@@ -5,6 +5,7 @@ import com.j2eefast.common.core.enums.ConvertType;
 import java.lang.annotation.*;
 
 /**
+ * 控制实体类Page分页-字段输出
  * @author huanzhou
  */
 @Documented
@@ -14,7 +15,10 @@ public @interface JsonListFiledIgnore {
 
     ConvertType convert() default ConvertType.EMPTY;
 
-
+    /**
+     * 默认不输出
+     * @return
+     */
     boolean exist() default true;
 
     /**

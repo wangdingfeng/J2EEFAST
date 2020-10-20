@@ -8,10 +8,18 @@
  *       2020-05-17 优化菜单显示
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
  *       2020-08-18 解决小窗口菜单点击出现重叠问题
- * @version 1.0.12
+ *       2020-09-29 新增主页加载动画
+ * @version 1.0.13
  */
 //菜单添加事件
 +function ($) {
+
+    //主页加载动画
+    opt.domReady(function(){
+        setTimeout(function(){
+            $('.mini-loader').css('display','none').remove();
+        },1000);
+    });
 
     //初始化i18n插件
     $.i18n.properties({
@@ -48,6 +56,8 @@
             title: $.i18n.prop('首页'),
             id: '0'
         };
+        
+        //var data =  opt.getLeftFirstMenuConig();
         opt.navTabAdd(data);
     };
 
@@ -301,7 +311,7 @@
         var that = this;
         Default.element.on("tab(main-tab)",function (data) {
             //跳转指定TBA
-            opt.scrollToTab(this);
+            scrollToTab(this);
             var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
             var url = target.attr('src');
             if(url != "main" && ($(this).attr("lay-id")+"").length != 16){
@@ -312,7 +322,15 @@
             var _id = $(this).attr('lay-id');
             var _module =$(this).children('em').data('module');
             if(_id !== '0' && _module !== '_sysInfo'){
-                $("#leftMenu > ul").addClass('hide');
+                // $("#leftMenu > ul").addClass('hide');
+                // $("#leftMenu > ul").css('display','none');
+                //隐藏无关左侧栏
+                $("#leftMenu > ul").each(function () {
+                    if($(this).attr('id') != 'leftMenu-'+ _module){
+                        $(this).removeClass('active').css('display','none');
+                    }
+                });
+
                 //联动Top菜单
                 $('#topMenu li').each(function () {
                     if($(this).children('a').data('code') === _module){
@@ -323,14 +341,17 @@
                 });
 
                 //联动左侧菜单
-                $('#leftMenu-' + _module).removeClass('hide');
+                // $('#leftMenu-' + _module).removeClass('hide');
+                //判断是否已经展示
+                if(!$("#leftMenu-" + _module).hasClass('active')){
+                    $("#leftMenu-" + _module).fadeIn(500).addClass('active');
+                }
                 var flag = false;
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                     if(that.queryMenu($(this), _id)){
                         flag = true;
                     }
                 });
-                console.log("flag:"+ flag);
                 if(flag){
                     $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                         that.recursiveHideMenu($(this));
@@ -396,123 +417,115 @@
         Plugin();
     })
 }(jQuery);
-//右键菜单
-$(function () {
 
-    // 右键菜单实现
-    $.contextMenu({
-        selector: ".layui-tab-card>.layui-tab-title li",
-        trigger: 'right',
-        autoHide: true,
-        items: {
-            "refresh": {
-                name: $.i18n.prop("刷新当前"),
-                icon: "fa-refresh",
-                callback: function(key, opt) {
-                    if (!$(this).hasClass('layui-this')) {
-                        window.opt.navToTab($(this).attr("lay-id"));
-                    }
-                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
-                    var url = target.attr('src');
-                    window.opt.block('','#content-main');
-                    target.attr('src', url).on("load",function () {
-                        setTimeout(function(){
-                            window.opt.unblock('#content-main')
-                        }, 30);
-                    });
-                }
-            },
-            "close_other": {
-                name: $.i18n.prop("关闭其他"),
-                icon: "fa-window-close-o",
-                callback: function(key, opt) {
-                    if (!$(this).hasClass('layui-this')) {
-                        window.opt.navToTab($(this).attr("lay-id"));
-                    }
-                    $(".layui-tab-title li").each(function(){
-                        if($(this).attr("lay-id") != 0  && !$(this).hasClass("layui-this")){
-                            $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
-                            return;
-                        }
-                    })
-                    window.opt.scrollToTab(this);
-                }
-            },
-            // "close_current": {
-            //     name: $.i18n.prop("关闭当前"),
-            //     icon: "fa-close",
-            //     callback: function(key, opt) {
-            //         if($(this).attr("lay-id") != 0){
-            //             opt.$trigger.find('i').trigger("click");
-            //         }
-            //     }
-            // },
-            "close_all": {
-                name: $.i18n.prop("关闭全部"),
-                icon: "fa-window-close",
-                callback: function(key, opt) {
-                    if($(".layui-tab-title li").length > 1){
-                        $(".layui-tab-title li").each(function(){
-                            if($(this).attr("lay-id") != 0){
-                                $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
-                            }
-                        })
-                    }
-                }
-            },
-            "step1": "---------",
-            "close_left": {
-                name: $.i18n.prop("关闭左侧"),
-                icon: "fa-reply",
-                callback: function(key, opt) {
-                    if (!$(this).hasClass('layui-this')) {
-                        window.opt.navToTab($(this).attr("lay-id"));
-                    }
-                    this.prevAll('li').not(":last").each(function() {
-                        $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
-                    });
-                    window.opt.scrollToTab(this);
-                }
-            },
-            "close_right": {
-                name: $.i18n.prop("关闭右侧"),
-                icon: "fa-share",
-                callback: function(key, opt) {
-                    if (!$(this).hasClass('layui-this')) {
-                        window.opt.navToTab($(this).attr("lay-id"));
-                    }
-                    this.nextAll('li').each(function() {
-                        $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
-                    });
-                    window.opt.scrollToTab(this);
-                }
-            },
-            "step": "---------",
-            "full": {
-                name: $.i18n.prop("全屏显示"),
-                icon: "fa-arrows-alt",
-                callback: function(key, opt) {
-                    if (!$(this).hasClass('layui-this')) {
-                        window.opt.navToTab($(this).attr("lay-id"));
-                    }
-                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
-                    target.fullScreen(true);
-                }
-            },
-            "open": {
-                name: $.i18n.prop("新窗口打开"),
-                icon: "fa-link",
-                callback: function(key, opt) {
-                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
-                    window.open(target.attr('src'));
-                }
-            },
-        }
+//计算集合宽度
+function calSumWidth(elements) {
+    var width = 0;
+    $(elements).each(function() {
+        width += $(this).outerWidth(true);
     });
-})
+    return width;
+}
+
+//滚动到指定选项卡
+function scrollToTab(element) {
+    var $tabTitle = $('#larry-tab .layui-tab-title'),
+        marginLeft = Math.abs(parseInt($tabTitle.css('margin-left'))),
+        marginLeftVal = calSumWidth($(element).prevAll()),//当前元素 左边 长度
+        marginRightVal = Math.abs(parseInt(calSumWidth($(element).nextAll())));//当前元素 右边 长度
+    var tab_bar = Math.abs(parseInt($tabTitle.children('.layui-tab-bar').outerWidth(true)));
+    marginRightVal = marginRightVal - tab_bar;
+    //可视区域tab宽度
+    var visibleWidth = $tabTitle.outerWidth(true) - 70;
+
+    var tabwidth = 0;
+    //实际滚动宽度
+    var scrollVal = 0;
+    var DISPLACEMENT = 210;
+    $tabTitle.children('li').each(function(){
+        tabwidth+= $(this).outerWidth(true);
+    });
+    //当前tab 总长度 小于 可视长度则不需要位移
+    if(tabwidth < visibleWidth){
+        $tabTitle.css("margin-left",'0px');
+        return false;
+    }
+    if(marginRightVal == 0){
+        scrollVal = tabwidth - visibleWidth;
+    }
+    if(marginLeftVal > visibleWidth){
+        scrollVal =  parseInt((marginLeftVal / DISPLACEMENT)) * DISPLACEMENT;
+        if((scrollVal + visibleWidth) > tabwidth){
+            scrollVal = tabwidth - visibleWidth;
+        }
+    }
+    $tabTitle.css("margin-left",0 - scrollVal + 'px');
+    return;
+}
+
+//查看左侧隐藏的选项卡
+function scrollTabLeft(){
+    var $tabTitle = $('#larry-tab .layui-tab-title');
+    var marginLeftVal = Math.abs(parseInt($tabTitle.css('margin-left')));
+
+    //可视区域tab宽度
+    var visibleWidth = $tabTitle.outerWidth(true) - 70;
+
+    //当前tab 总长度
+    var tabwidth = 0;
+    $tabTitle.children('li').each(function(){
+        tabwidth+= $(this).outerWidth(true);
+    });
+
+    //实际滚动宽度
+    var scrollVal = 0;
+    var DISPLACEMENT = 210;
+    if (tabwidth < visibleWidth || marginLeftVal == 0) {//当前tab 总长度 小于 可视长度则不需要位移
+        $tabTitle.css("margin-left",'0px');
+        return false;
+    } else {
+        if(marginLeftVal > DISPLACEMENT){
+            scrollVal = marginLeftVal - DISPLACEMENT;
+        }else{
+            scrollVal = 0;
+        }
+    }
+    $tabTitle.css("margin-left",0 - scrollVal + 'px');
+}
+
+/* 查看右侧隐藏的选项卡*/
+function scrollTabRight(){
+    var $tabTitle = $('#larry-tab .layui-tab-title');
+    //当前TBA位移长度
+    var marginLeftVal = Math.abs(parseInt($tabTitle.css('margin-left')));
+    //可视区域tab宽度
+    var visibleWidth = $tabTitle.outerWidth(true) - 70;
+
+    //当前tab 总长度
+    var tabwidth = 0;
+    $tabTitle.children('li').each(function(){
+        tabwidth+= $(this).outerWidth(true);
+    });
+    //实际滚动宽度
+    var scrollVal = 0;
+    var DISPLACEMENT = 210;
+    if(tabwidth < visibleWidth){ //当前tab 总长度 小于 可视长度则不需要位移
+        $tabTitle.css("margin-left",'0px');
+        return false;
+    }else{
+        if((tabwidth - marginLeftVal - DISPLACEMENT) > visibleWidth){
+            scrollVal = marginLeftVal + DISPLACEMENT;
+        }else {
+            scrollVal = tabwidth - visibleWidth;
+        }
+        $tabTitle.css("margin-left",0 - scrollVal + 'px');
+    }
+}
 
 //设置监听事件
 $(function () {
+
+
 
     /*$(window).on("load",function () {
         setTimeout(function(){
@@ -581,7 +594,7 @@ $(function () {
             btn1: function (index) {
                 if($("#form-user-updatePass").validate().form()){
                     var data =$("#form-user-updatePass").serializeArray();
-                    $.ajax({
+                    opt.common.sendAjax({
                         type: "POST",
                         url: "sys/user/updatePass",
                         data: data,
@@ -594,6 +607,12 @@ $(function () {
                                 });
                             } else {
                                 opt.error(result.msg);
+                            }
+                        },
+                        error: function(e){
+                            console.error(JSON.stringify(e));
+                            if(e.responseJSON.msg){
+                                opt.error(e.responseJSON.msg);
                             }
                         }
                     });
@@ -613,10 +632,10 @@ $(function () {
     });
 
     //左滑动
-    $('#scrollTabLeft').on('click', opt.scrollTabLeft);
+    $('#scrollTabLeft').on('click', scrollTabLeft);
 
     //右滑动
-    $('#scrollTabRight').on('click', opt.scrollTabRight);
+    $('#scrollTabRight').on('click', scrollTabRight);
 
     // 全屏显示
     $('#fullScreen').on('click', function () {
@@ -627,6 +646,117 @@ $(function () {
     $('#lockOs').on('click', function () {
         window.location.href  = baseURL + "Account/Lock?" + Math.random();
         return;
+    });
+
+    // 右键菜单实现
+    $.contextMenu({
+        selector: ".layui-tab-card>.layui-tab-title li",
+        trigger: 'right',
+        autoHide: true,
+        items: {
+            "refresh": {
+                name: $.i18n.prop("刷新当前"),
+                icon: "fa-refresh",
+                callback: function(key, opt) {
+                    if (!$(this).hasClass('layui-this')) {
+                        window.opt.navToTab($(this).attr("lay-id"));
+                    }
+                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
+                    var url = target.attr('src');
+                    window.opt.block('','#content-main');
+                    target.attr('src', url).on("load",function () {
+                        setTimeout(function(){
+                            window.opt.unblock('#content-main')
+                        }, 30);
+                    });
+                }
+            },
+            "close_other": {
+                name: $.i18n.prop("关闭其他"),
+                icon: "fa-window-close-o",
+                callback: function(key, opt) {
+                    if (!$(this).hasClass('layui-this')) {
+                        window.opt.navToTab($(this).attr("lay-id"));
+                    }
+                    $(".layui-tab-title li").each(function(){
+                        if($(this).attr("lay-id") != 0  && !$(this).hasClass("layui-this")){
+                            $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
+                            return;
+                        }
+                    })
+                    scrollToTab(this);
+                }
+            },
+            // "close_current": {
+            //     name: $.i18n.prop("关闭当前"),
+            //     icon: "fa-close",
+            //     callback: function(key, opt) {
+            //         if($(this).attr("lay-id") != 0){
+            //             opt.$trigger.find('i').trigger("click");
+            //         }
+            //     }
+            // },
+            "close_all": {
+                name: $.i18n.prop("关闭全部"),
+                icon: "fa-window-close",
+                callback: function(key, opt) {
+                    if($(".layui-tab-title li").length > 1){
+                        $(".layui-tab-title li").each(function(){
+                            if($(this).attr("lay-id") != 0){
+                                $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
+                            }
+                        })
+                    }
+                }
+            },
+            "step1": "---------",
+            "close_left": {
+                name: $.i18n.prop("关闭左侧"),
+                icon: "fa-reply",
+                callback: function(key, opt) {
+                    if (!$(this).hasClass('layui-this')) {
+                        window.opt.navToTab($(this).attr("lay-id"));
+                    }
+                    this.prevAll('li').not(":last").each(function() {
+                        $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
+                    });
+                    scrollToTab(this);
+                }
+            },
+            "close_right": {
+                name: $.i18n.prop("关闭右侧"),
+                icon: "fa-share",
+                callback: function(key, opt) {
+                    if (!$(this).hasClass('layui-this')) {
+                        window.opt.navToTab($(this).attr("lay-id"));
+                    }
+                    this.nextAll('li').each(function() {
+                        $(this).children('i.layui-tab-close[data-id="' + $(this).attr("lay-id") + '"]').trigger("click");
+                    });
+                    scrollToTab(this);
+                }
+            },
+            "step": "---------",
+            "full": {
+                name: $.i18n.prop("全屏显示"),
+                icon: "fa-arrows-alt",
+                callback: function(key, opt) {
+                    if (!$(this).hasClass('layui-this')) {
+                        window.opt.navToTab($(this).attr("lay-id"));
+                    }
+                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
+                    target.fullScreen(true);
+                }
+            },
+            "open": {
+                name: $.i18n.prop("新窗口打开"),
+                icon: "fa-link",
+                callback: function(key, opt) {
+                    var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
+                    window.open(target.attr('src'));
+                }
+            }
+        }
     });
 
     //便签 - 左侧弹出
@@ -677,8 +807,6 @@ $(function () {
         var url = hash.substring(1, hash.length);
         $('em[data-url$="' + url + '"]').click();
     };
-
-
     //////////////////////////////////////////////////////////////////
 
 });

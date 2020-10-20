@@ -1,24 +1,13 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="选择数据库"/>
-<@addorEdit fromId="form-db-select">
-	<div class="form-group" style="padding-top: 20px;">
+<@header title="选择数据库" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<@f.form id="form-db-select">
+	<div class="form-group" style="padding-top: 60px;">
 		<label class="col-sm-3 control-label ">选择数据库：</label>
 		<div class="col-sm-8">
-			<select id="dbName" name="dbId" class="form-control">
-				<#list listDb>
-					<#items as d>
-						<#if d.status == '0' >
-							<option  value="${d.id}" text="${d.dbName}" >${d.dbName}</option>
-						</#if>
-					</#items>
-				</#list>
-			</select>
+			<@f.select name="dbName" items=listDb itemLabel="dbName" itemValue="id" />
 		</div>
 	</div>
-</@addorEdit>
-<@footer>
-<script>
-</script>
-</@footer>
+</@f.form>
+<@footer/>
 </@pageTheme>

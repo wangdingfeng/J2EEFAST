@@ -1,16 +1,7 @@
-package com.j2eefast.framework.config;/**
- * @ClassName: LockHandlerInterceptorAdapter
- * @Package: com.j2eefast.framework.config
- * @Description: 锁屏拦截器(用一句话描述该文件做什么)
- * @author: zhouzhou Emall:18774995071@163.com
- * @time 2020/1/18 12:25
- * @version V1.0
- 
- */
+package com.j2eefast.framework.config;
 
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -18,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**

@@ -52,33 +52,17 @@
 </@f.form>
 </div>
 <@footer>
-    <script type="text/javascript">
-        var prefix = baseURL + "sys/module"
-        $("#form-sysModule-add").validate({
-            focusCleanup: true
-        });
+<script type="text/javascript">
+    var prefix = baseURL + "sys/module"
+    $("#form-sysModule-add").validate({
+        focusCleanup: true
+    });
 
-        function submitHandler() {
-            if (opt.validate.form()) {
-                opt.operate.save(prefix + "/add", $('#form-sysModule-add').serialize());
-            }
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/add", $('#form-sysModule-add').serialize());
         }
-        $("#_iconButton").click(function(){
-            var options = {
-                url: baseURL + 'sys/menu/iconSelect?value='+$("#_icon").val(),
-                title:'<@ctx.i18n text = "图标选择"/>',
-                callBack: doIconSubmit
-            };
-            opt.modal.openMainWin(options);
-        });
-
-        function doIconSubmit(index, layero,_layer){
-            var body = _layer.getChildFrame('body', index);
-            var icon = body.find('#icon').val();
-            $("#menuIconIcon").attr("class",'fa fa-fw '+icon);
-            $("#_icon").val(icon).change();
-            _layer.close(index);
-        }
+    }
 </script>
 </@footer>
 </@pageTheme>

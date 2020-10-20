@@ -1,7 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage"]>
-
 </@header>
 <style>
 .form-group .control-label {
@@ -395,11 +394,50 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>多选组件：</label>
+                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_tableselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>多选组件：</label>
                     <div class="col-sm-10">
                         <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
                    {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
+                        <div id="c_tableselect" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //弹出选择标签(适用于大数据):<@f.tableselect/>
+                                    //参数:
+                                    1. name 控件name 必输
+                                    2. id 控件id 不是必输 如果不输则与name名称一样
+                                    3. boxTitle 弹窗标题
+                                    4. tableInfo 显示表格列信息 必输
+                                    tableInfo 说明：字段为JS数组对象 与表格$.table columns 含义相似
+                                    {
+                                        field:'表格字段标签',title:'列表头名称',query:'此列是否做查询',dict:'表格列字典转换'
+                                    }
+                                    5. placeholder 提示值
+                                    6. width="1200" 弹出宽度
+                                    7. height="" 高度
+                                    8. value="" 值
+                                    9. labelValue="" 显示值
+                                    10. labelName="" <#--标签名称 -->
+                                    11. required=false <#-- 是否必输-->
+                                    12. readonly 控件是否可以编辑 不是必输 默认"false"
+                                    13. checked=true 多选 false 单选
+                                    14. class = "form-control" <#-- 输入框样式-->
+                                    15. butClass = "fa fa-fw fa-address-card-o"
+                                    16. isClear = true <#-- 弹出是否出现清除按钮-->
+                                    17. url = "sys/user/list" <#-- 访问数据URL-->
+                                    18. keyId = "id" <#--表示获取数据id字段名称 -->
+                                    19. keyName = "name" <#--表示显示名称 -->
+                                    //回调函数
+                                    //tableCallback(id, event, index, layero, nodes);
+
+                                    //栗子 🌰
+                                    <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                                    {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
+
+                                </#noparse>
+                            </@f.code>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -497,12 +535,90 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_treeTable" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>树表异步分页实例：</label>
+                    <div class="col-sm-10">
+                        <@table id="bootstrap-tree-table">
+                        </@table>
+                        <div id="c_treeTable" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //树表格标签:<@table id="bootstrap-tree-table"/>
+                                    //参数:
+                                    1. id 控件id 必输
+                                    2. 与普通表格一样支持上面功能按钮. 例如:
+                                    <@table id="bootstrap-tree-table">
+                                    <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i><@ctx.i18n text = "展开/折叠"/></a>
+                                    </@table>
+                                    JS.函数参数简单说明:
+                                    url: 数据请求url
+                                    id: 控制对象ID
+                                    height: 设置表格高度
+                                    rootIdValue: 树根节点 id
+                                    sortName: 排序字段
+                                    sortOrder: 默认升序
+                                    async: 是否为异步分页加载数据
+                                    toolbar: 工具栏名称
+                                    striped: false,
+                                    pageSize: 一页条数
+                                    pageList:  分页数据库
+                                    asynUrl: 异步点击请求url
+                                    $.treeTable.init(options);
+                                    普通树表实例请看- 机构、公司 业务
+                                    异步分页树实例请看- 行政区域 业务
+                                </#noparse>
+                            </@f.code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </@f.form>
     <div class="hr-line-dashed"></div>
     </div>
 <@footer>
 <script type="text/javascript">
-	
+
+    // -----
+    /**
+     * 树表实例
+     **/
+    var prefix = baseURL + "sys/area";
+    var datas_type = ${dict.getDictListJson('sys_area_type')};
+    $(function() {
+        var options = {
+            //id: 'bootstrap-tree-table',// 默认 bootstrap-tree-table
+            url: prefix + "/list",       // 分页请求
+            code: "id",                  // 数据唯一
+            expandAll: false,
+            expandFirst: false,
+            parentCode: "parentId",      // 父节点标签
+            uniqueId: "id",              // 唯一ID
+            sortName: "id",              // 排序
+            //pageSize: 12,              // 一页条数 默认
+            //pageList: [12, 24, 32],    // 分页数据库 默认
+            async: true,                 // 开启异步
+            asynUrl: prefix + "/listChild", // 点击异步请求
+            columns: [
+                {field: 'selectItem', radio: true}, //是否需要点击选择
+                {field : 'name',title : '<@ctx.i18n text = "(行政代码)名称"/>',width:'250px', align: 'left',halign:"center",formatter: function(value, row, index) {
+                        return "（"+row.areaCode+"）"+value;
+                    }
+                }
+                ,{field : 'wholeName',title : '<@ctx.i18n text = "区域全称"/>',width:'300px', align: 'left', formatter: function(value, row, index) {return $.table.tooltip(value,30);}}
+                ,{field : 'level',title : '<@ctx.i18n text = "区域等级"/>', align: 'center', formatter: function(value, row, index) {return $.table.selectDictLabel(datas_type, value);}}
+                ,{field : 'cityCode',title : '<@ctx.i18n text = "电话区号"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+                ,{field : 'zipCode',title : '<@ctx.i18n text = "邮政编码"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+                ,{field : 'lon',title : '<@ctx.i18n text = "本区域经度"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+                ,{field : 'lat',title : '<@ctx.i18n text = "本区域纬度"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
+            ]
+        };
+        $.treeTable.init(options);
+    });
+    // -------
+
     /**
      * 下拉选择框 回调函数案例
      * @param id
@@ -545,6 +661,7 @@
 
 
     /**
+     *  弹出树窗口
      *  id 为组件id
      *  event 为组件点击按钮名称 ok 确定 clear 清除 cancel 取消
      *  index 弹出窗口index
@@ -568,6 +685,20 @@
     }
 
     /**
+     *  弹出表格选择
+     *  id 为组件id
+     *  event 为组件点击按钮名称 ok 确定 clear 清除 cancel 取消
+     *  index 弹出窗口index
+     *  layero
+     *  nodes 确认事件传的参数
+     **/
+    function tableCallback(id, event, index, layero, nodes){
+        if(id == "selectuser"){
+            console.log("弹出表格选择===>>>>: id:" + id + "  event:" + event + " index:" + index + "  layero:"+ layero + " nodes:" + JSON.stringify(nodes));
+        }
+    }
+
+    /**
      * 多级联动控件回调事件
      * @param name 主控件名称 指<#noparse><@f.selectLinkage name="cidy"/></#noparse>中的name
      * @param id 点击事件id
@@ -585,6 +716,8 @@
             }
         }
     }
+
+
 </script>
 </@footer>
 </@pageTheme>

@@ -23,7 +23,11 @@
         height: 40px !important;
         font-size: 14px !important;
     }
-    #search #search-input, #search .hint {
+    #search, #search .hint {
+        padding-right: 43px;
+        border-radius: 23px;
+    }
+    input[name]{
         padding-left: 38px;
         padding-right: 43px;
         border-radius: 23px;
@@ -38,7 +42,7 @@
     #search #search-clear {
         text-decoration: none;
         position: absolute;
-        right: 12px;
+        right: 60px;
         top: 31px;
         color: #b3b3b3;
     }
@@ -54,6 +58,7 @@
         <li><a href="#tab_1_1" data-toggle="tab">Simple Line Icons</a></li>
         <li class="active"><a href="#tab_1_2" data-toggle="tab">Font Awesome Icons</a></li>
         <li><a href="#tab_1_3" data-toggle="tab">Glyphicons</a></li>
+        <li><a href="#tab_1_4" data-toggle="tab">Ionicons<span data-index="_new" class="label label-danger"><@ctx.i18n text = "新"/></span></a></li>
     </ul>
     <#include "/common/icon.html"/>
 </div>
@@ -99,6 +104,14 @@
         colseLayer();
     });
 
+    $("#tab_1_4").find('.fa-hover').click(function() {
+        $("#icon").val($(this).find('i').attr('class'));
+        _p.find("#pickIcon").attr('class',$("#icon").val());
+    }).dblclick(function() {
+        $("#icon").val($(this).find('i').attr('class'));
+        colseLayer();
+    });
+
     $('input[name="search2"]').bind("blur", function blurKey(e) {
         if($(this).val() === ""){
             $("#tab_fa_2").removeClass('hide');
@@ -123,6 +136,14 @@
         search("3");
     });
 
+    $('input[name="search4"]').bind("blur", function blurKey(e) {
+        if($(this).val() === ""){
+            $("#tab_fa_4").removeClass('hide');
+        };
+    }).bind("input propertychange", function f(){
+        search("4");
+    });
+
     function search(index){
         var $search = $('input[name="search'+index+'"]');
         var $tab = $("#tab_fa_"+index);
@@ -144,7 +165,9 @@
                 if(index == "1" || index == "3"){
                     _s = $(this).find('i').attr('class').replace('fa','');
                 };
-
+                if(index == "4"){
+                    _s = $(this).find('i').attr('class').replace('fa icon-size ','');
+                };
                 var flag = false;
                 for(var i=0; i<arrt.length; i++){
                     if(arrt[i] == _s){

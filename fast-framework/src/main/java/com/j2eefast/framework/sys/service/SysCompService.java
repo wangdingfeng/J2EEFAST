@@ -10,7 +10,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.j2eefast.common.core.base.entity.Ztree;
+import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -19,6 +21,8 @@ import com.j2eefast.framework.sys.entity.SysCompEntity;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysCompMapper;
 import com.j2eefast.framework.utils.Constant;
+import com.j2eefast.framework.utils.UserUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +34,7 @@ import javax.annotation.Resource;
  * @time 2018-12-05 08:58
  */
 @Service
-public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity> {
+public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 
 	@Resource
 	private SysCompDeptService sysCompDeptService;
@@ -78,12 +82,14 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity> {
 		String parentId = (String)params.get("parentId");
 		String status = (String)params.get("status");
 		String id = (String)params.get("id");
+		Long[] ids  = (Long[]) params.get("ids");
 		return this.baseMapper.getDeptList(
 											StrUtil.nullToDefault(id,""),
 											StrUtil.nullToDefault(parentId,""),
 											StrUtil.nullToDefault(name,""),
 											StrUtil.nullToDefault(status,""),
 											StrUtil.nullToDefault(type,""),
+											ids,
 											(String) params.get(Constant.SQL_FILTER));
 	}
 
@@ -211,6 +217,24 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity> {
 			return  false;
 		}
 		return true;
+	}
+	
+	/**
+	* @Title: checkDataScope 
+	* @Description: Check whether the (ids) belongs to the current user (loginUser)
+	* @param ids  void 
+	* @Date: 2020年9月25日
+	 */
+	public void checkDataScope(Long... ids) {	
+		if (!UserUtils.hasAnyRoleKeys(Constant.SU_ADMIN)) {
+			//check current user has data scope for the deleted use
+			Map<String, Object> params = Maps.newConcurrentMap();
+			params.put("ids", ids);
+			List<?> listData =SpringUtil.getAopProxy(this).getDeptList(params);
+			if (null == listData || listData.size() == 0 || listData.size() != ids.length) {
+				throw new RxcException(ToolUtil.message("illegal request"),"50001");
+			}
+		}		
 	}
 
 	/**

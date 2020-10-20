@@ -46,10 +46,50 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#version" href="#v10" aria-expanded="true">v2.1.0<code class="pull-right">2020.10.20</code></a>
+                                        </h5>
+                                    </div>
+                                    <div id="v10" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ol>
+                                                <li>1. 增加core中的分步式锁注解，实现业务id方式的注解锁.</li>
+                                                <li>2. 增加User View页面的权限树，显示该用户已获取的权限</li>
+                                                <li>3. 将Shiro的自己定义url filter移动配置application.yml</li>
+                                                <li>4. 优化shiro权限,优化session管理</li>
+                                                <li>5. 增加select组件的view方式</li>
+                                                <li>6. 增加了fastJS.js中获取菜单的函数，用于打开指定的页面</li>
+                                                <li>7. 优化项目启动配置</li>
+                                                <li>8. 优化登录页面样式</li>
+                                                <li>9. 修复SM4加密jar包引用冲突问题</li>
+                                                <li>10.修复表格主子表子表编辑数据更新问题</li>
+                                                <li>11.修复checkbox组件字典表回显问题</li>
+                                                <li>12.新增树状表支持异步加载及分页显示</li>
+                                                <li>13.优化树表UI细节</li>
+                                                <li>14.扩增表格行titel提示 修复转义问题</li>
+                                                <li>15.优化重写admin-LTE、Gitee登录页面去除多余样式</li>
+                                                <li>16.新增表单导向插件</li>
+                                                <li>17.新增表单导向组件、演示示例</li>
+                                                <li>18.新增信息通知演示示例</li>
+                                                <li>19.新增主页面加载动画</li>
+                                                <li>20.修复图片剪切组件上传大小限制问题</li>
+                                                <li>21.优化主要样式、与便签样式</li>
+                                                <li>22.屏蔽登录提示音</li>
+                                                <li>23.新增一套Ionicons 系统图标. 完全融合系统方便使用</li>
+                                                <li>24.升级fastjson到最新版1.2.74</li>
+                                                <li>25.新增系统防护请求伪造（CSRF）攻击、通过配置文件控制</li>
+                                                <li>26.去除系统include.html模板引用</li>
+                                                <li>27.其他细节优化</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#version" href="#v9" aria-expanded="true">v2.0.9<code class="pull-right">2020.09.06</code></a>
                                         </h5>
                                     </div>
-                                    <div id="v9" class="panel-collapse collapse in">
+                                    <div id="v9" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <ol>
                                                 <li>1. 解决登录IP转换位置接口不够用问题.</li>
@@ -357,144 +397,6 @@
             </div>
         </div>
     </div>
-<#--    <div class="row">-->
-<#--        <div class="col-sm-3">-->
-<#--            <div class="ibox float-e-margins">-->
-<#--                <div class="ibox-title">-->
-<#--                    <span class="label label-success pull-right">月</span>-->
-<#--                    <h5>收入</h5>-->
-<#--                </div>-->
-<#--                <div class="ibox-content">-->
-<#--                    <h1 class="no-margins">40 886,200</h1>-->
-<#--                    <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i>-->
-<#--                    </div>-->
-<#--                    <small>总收入</small>-->
-<#--                </div>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--        <div class="col-sm-3">-->
-<#--            <div class="ibox float-e-margins">-->
-<#--                <div class="ibox-title">-->
-<#--                    <span class="label label-info pull-right">全年</span>-->
-<#--                    <h5>订单</h5>-->
-<#--                </div>-->
-<#--                <div class="ibox-content">-->
-<#--                    <h1 class="no-margins">275,800</h1>-->
-<#--                    <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i>-->
-<#--                    </div>-->
-<#--                    <small>新订单</small>-->
-<#--                </div>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--        <div class="col-sm-3">-->
-<#--            <div class="ibox float-e-margins">-->
-<#--                <div class="ibox-title">-->
-<#--                    <span class="label label-primary pull-right">今天</span>-->
-<#--                    <h5>访客</h5>-->
-<#--                </div>-->
-<#--                <div class="ibox-content">-->
-<#--                    <h1 class="no-margins">106,120</h1>-->
-<#--                    <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i>-->
-<#--                    </div>-->
-<#--                    <small>新访客</small>-->
-<#--                </div>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--        <div class="col-sm-3">-->
-<#--            <div class="ibox float-e-margins">-->
-<#--                <div class="ibox-title">-->
-<#--                    <span class="label label-danger pull-right">最近一个月</span>-->
-<#--                    <h5>活跃用户</h5>-->
-<#--                </div>-->
-<#--                <div class="ibox-content">-->
-<#--                    <h1 class="no-margins">80,600</h1>-->
-<#--                    <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i>-->
-<#--                    </div>-->
-<#--                    <small>12月</small>-->
-<#--                </div>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--    </div>-->
-<#--    <div class="row">-->
-<#--        <div class="col-sm-12">-->
-<#--            <div class="ibox float-e-margins">-->
-<#--                <div class="ibox-title">-->
-<#--                    <h5>用户项目列表</h5>-->
-<#--                    <div class="ibox-tools">-->
-<#--                        <a class="collapse-link">-->
-<#--                            <i class="fa fa-chevron-up"></i>-->
-<#--                        </a>-->
-<#--                        <a class="close-link">-->
-<#--                            <i class="fa fa-times"></i>-->
-<#--                        </a>-->
-<#--                    </div>-->
-<#--                </div>-->
-<#--                <div class="ibox-content">-->
-<#--                    <table class="table table-hover no-margins">-->
-<#--                        <thead>-->
-<#--                        <tr>-->
-<#--                            <th>状态</th>-->
-<#--                            <th>日期</th>-->
-<#--                            <th>用户</th>-->
-<#--                            <th>值</th>-->
-<#--                        </tr>-->
-<#--                        </thead>-->
-<#--                        <tbody>-->
-<#--                        <tr>-->
-<#--                            <td><small>进行中...</small>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 11:20</td>-->
-<#--                            <td>青衣5858</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 24%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><span class="label label-warning">已取消</span>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 10:40</td>-->
-<#--                            <td>徐子崴</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 66%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><small>进行中...</small>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 01:30</td>-->
-<#--                            <td>姜岚昕</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 54%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><small>进行中...</small>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 02:20</td>-->
-<#--                            <td>武汉大兵哥</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 12%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><small>进行中...</small>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 09:40</td>-->
-<#--                            <td>荆莹儿</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 22%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><span class="label label-primary">已完成</span>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 04:10</td>-->
-<#--                            <td>栾某某</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 66%</td>-->
-<#--                        </tr>-->
-<#--                        <tr>-->
-<#--                            <td><small>进行中...</small>-->
-<#--                            </td>-->
-<#--                            <td><i class="fa fa-clock-o"></i> 12:08</td>-->
-<#--                            <td>范范范二妮</td>-->
-<#--                            <td class="text-navy"> <i class="fa fa-level-up"></i> 23%</td>-->
-<#--                        </tr>-->
-<#--                        </tbody>-->
-<#--                    </table>-->
-<#--                </div>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--    </div>-->
 <@footer>
 <script type="text/javascript">
     function show() {

@@ -788,6 +788,7 @@ $.extend( $.validator, {
 			for ( method in rules ) {
 				rule = { method: method, parameters: rules[ method ] };
 				try {
+
 					result = $.validator.methods[ method ].call( this, val, element, rule.parameters );
 
 					// If a method indicates that the field is optional and therefore valid,
@@ -1575,14 +1576,13 @@ $.extend( $.validator, {
 			this.startRequest( element );
 			data = {};
 			data[ element.name ] = value;
-			$.ajax( $.extend( true, {
+			var config = {
 				mode: "abort",
 				port: "validate" + element.name,
 				dataType: "json",
 				data: data,
 				context: validator.currentForm,
 				success: function( response ) {
-					console.log(typeof data);
 					var valid = response === true || response === "true",
 						errors, message, submitted;
 
@@ -1605,7 +1605,13 @@ $.extend( $.validator, {
 					previous.valid = valid;
 					validator.stopRequest( element, valid );
 				}
-			}, param ) );
+			};
+			if($('meta[name="csrf-token"]').attr("content")){
+				config = $.extend(config,{headers: {
+						"X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+					}});
+			}
+			$.ajax( $.extend( true, config, param ));
 			return "pending";
 		}
 	}

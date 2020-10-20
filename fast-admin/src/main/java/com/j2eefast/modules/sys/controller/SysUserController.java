@@ -109,6 +109,8 @@ public class SysUserController extends BaseController {
 	 */
 	@GetMapping("/edit/{userId}")
 	public String edit(@PathVariable("userId") Long userId,ModelMap mmap){
+		//check data scope
+		sysUserService.checkDataScope(userId);
 		
 		SysUserEntity user = sysUserService.findUserByUserId(userId);
 		mmap.put("roles", sysRoleService.getRolesAll());
@@ -121,7 +123,9 @@ public class SysUserController extends BaseController {
 
 	@GetMapping("/view/{userId}")
 	public String view(@PathVariable("userId") Long userId,ModelMap mmap){
-
+		//check data scope
+		sysUserService.checkDataScope(userId);
+		
 		SysUserEntity user = sysUserService.findUserByUserId(userId);
 		mmap.put("roles", sysRoleService.getRolesAll());
 		mmap.put("posts",sysPostService.getPostAll());
@@ -137,6 +141,10 @@ public class SysUserController extends BaseController {
 	 */
 	@GetMapping("/authRole/{userId}")
 	public String authRole(@PathVariable("userId") Long userId,ModelMap mmap){
+		
+		//check data scope
+		sysUserService.checkDataScope(userId);
+		
 		SysUserEntity user = sysUserService.findUserByUserId(userId);
 		// 获取用户所属的角色列表
 		List<Long> roleIdList = sysUserRoleService.findRoleIdList(userId);
@@ -218,6 +226,9 @@ public class SysUserController extends BaseController {
 	@RequiresPermissions("sys:user:resetPwd")
 	@GetMapping("/resetPwd/{id}")
 	public String resetPwd(@PathVariable("id") Long userId, ModelMap mmap){
+		//check data scope
+		sysUserService.checkDataScope(userId);
+		
 		mmap.put("user", sysUserService.getById(userId));
 		return urlPrefix + "/resetPwd";
 	}
@@ -230,6 +241,9 @@ public class SysUserController extends BaseController {
 	@ResponseBody
 	public ResponseData resetPwdSave(SysUserEntity user){
 
+		//check data scope
+		sysUserService.checkDataScope(user.getId());
+		
 		LoginUserEntity loginUser = UserUtils.getUserInfo();
 		if(user.getPassword().equals(Global.getDbKey("sys.user.initPassword"))){
 			user.setPwdSecurityLevel("0");
@@ -295,6 +309,7 @@ public class SysUserController extends BaseController {
 		if (ToolUtil.isEmpty(user.getPassword())) {
 			return error("密码不能为空");
 		}
+		sysCompService.checkDataScope(user.getId());
 		ValidatorUtil.validateEntity(user);
 		return sysUserService.add(user)?success(): error("新增失败!");
 	}
@@ -307,6 +322,12 @@ public class SysUserController extends BaseController {
 	@RequiresPermissions("sys:user:edit")
 	@ResponseBody
 	public ResponseData edit(@Validated SysUserEntity user) {
+		//check data scope
+		sysUserService.checkDataScope(user.getId());
+		
+		//check comp data scope
+		sysCompService.checkDataScope(user.getCompId());
+		
 		ValidatorUtil.validateEntity(user);
 		return sysUserService.update(user) ? success() : error("修改失败!");
 	}
@@ -316,13 +337,16 @@ public class SysUserController extends BaseController {
 	 * 用户状态修改
 	 */
 	@BussinessLog(title = "用户管理", businessType = BusinessType.UPDATE)
-	@RequiresRoles(Constant.SU_ADMIN)
+	//@RequiresRoles(Constant.SU_ADMIN)
 	@RepeatSubmit
 	@RequiresPermissions("sys:user:edit")
 	@PostMapping("/changeStatus")
 	@ResponseBody
-	public ResponseData changeStatus(SysUserEntity user)
-	{
+	public ResponseData changeStatus(SysUserEntity user){
+		if(!UserUtils.hasAnyRoleKeys(Constant.SU_ADMIN)) {
+			//check data scope
+			sysUserService.checkDataScope(user.getId());
+		}
 		return sysUserService.changeStatus(user) ? success() : error("修改失败!");
 	}
 
@@ -347,6 +371,9 @@ public class SysUserController extends BaseController {
 	@PostMapping("/authRole/insertAuthRoles")
 	@ResponseBody
 	public ResponseData selectAuthUserAll(Long userId, Long[] roleIds){
+		//check data scope
+		sysUserService.checkDataScope(userId);
+		
 		return  sysUserRoleService.addUserAuths(userId, roleIds)?success() : error("授权失败!");
 	}
 
@@ -362,6 +389,9 @@ public class SysUserController extends BaseController {
 		if(ArrayUtil.contains(ids,UserUtils.getUserId())){
 			return error("不能删除自己!");
 		}
+		//check data scope
+		sysUserService.checkDataScope(ids);
+		
 		return sysUserService.delUser(ids)?success(): error("删除失败!");
 	}
 }

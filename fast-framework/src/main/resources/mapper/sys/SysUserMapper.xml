@@ -223,6 +223,12 @@
         <if test="compId != null and compId != ''">
             AND u.comp_id  = #{compId}
         </if>
+        <if test="ids !=null and ids.length > 0">
+            and u.id in
+          <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
+            #{id}
+           </foreach>
+        </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
@@ -314,11 +320,13 @@
         SELECT u.id AS id,
         u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,
         u.dept_id,u.comp_id,d.name AS deptName,
+        <!-- sli.ipaddr AS ip,  sli.login_time AS loginTime,-->
         <if test="_databaseId == 'oracle'">NVL(c.name,'总公司') AS comp_name</if>
         <if test="_databaseId == 'mysql'">IFNULL(c.name,"总公司") AS comp_name</if>
 		FROM sys_user u
         LEFT JOIN sys_comp c ON u.comp_id = c.id
         LEFT JOIN (SELECT id, name FROM sys_comp) d ON u.dept_id = d.id
+        <!-- LEFT JOIN sys_login_infor sli ON sli.username = u.username AND login_time = (SELECT MAX(login_time) FROM sys_login_infor tt WHERE tt.username = u.username) -->
         WHERE u.id = #{id} AND u.del_flag = '0'
     </select>
 

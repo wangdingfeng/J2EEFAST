@@ -34,12 +34,25 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+       <!-- 加密依赖-->
+      <dependency>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15</artifactId>
+      </dependency>
 
         <dependency>
              <groupId>org.projectlombok</groupId>
              <artifactId>lombok</artifactId>
          </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -68,6 +81,18 @@
 		 <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        
+       <dependency>
+           <groupId>org.redisson</groupId>
+           <artifactId>redisson-spring-boot-starter</artifactId>
+           <version>3.13.4</version>
+           <exclusions>
+               <exclusion>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-actuator</artifactId>
+               </exclusion>
+           </exclusions>
         </dependency>
         
          <dependency>
@@ -207,6 +232,18 @@
               <groupId>net.coobird</groupId>
               <artifactId>thumbnailator</artifactId>
               <version>0.4.8</version>
+          </dependency>
+
+          <dependency>
+              <groupId>com.github.anji-plus</groupId>
+              <artifactId>captcha-spring-boot-starter</artifactId>
+              <version>1.2.4</version>
+              <exclusions>
+                  <exclusion>
+                      <groupId>com.alibaba</groupId>
+                      <artifactId>fastjson</artifactId>
+                  </exclusion>
+              </exclusions>
           </dependency>
 
          <!-- 报表工具-->

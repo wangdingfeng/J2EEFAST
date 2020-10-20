@@ -2,6 +2,7 @@
  * ueditor完整配置项
  * 可以在这里配置整个编辑器的特性
  * j2eefast 修改增强功能 2020年3月31日 11点25分
+ * J2eeFAST 扩展xss
  */
 /**************************提示********************************
  * 所有被注释的配置项均为UEditor默认值。
@@ -369,12 +370,14 @@
 		//output xss过滤
 		,outputXssFilter: true
 		// xss过滤白名单 名单来源: https://raw.githubusercontent.com/leizongmin/js-xss/master/lib/default.js
+		// 增加规则
 		,whitList: {
 			a:      ['target', 'href', 'title', 'class', 'style'],
 			abbr:   ['title', 'class', 'style'],
 			address: ['class', 'style'],
 			area:   ['shape', 'coords', 'href', 'alt'],
 			article: [],
+			fieldset:['style'],
 			aside:  [],
 			audio:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'class', 'style'],
 			b:      ['class', 'style'],
@@ -392,12 +395,12 @@
 			dd:     ['class', 'style'],
 			del:    ['datetime'],
 			details: ['open'],
-			div:    ['class', 'style'],
+			div:    ['class', 'style','align'],
 			dl:     ['class', 'style'],
 			dt:     ['class', 'style'],
 			em:     ['class', 'style'],
 			font:   ['color', 'size', 'face'],
-			footer: [],
+			footer: ['style'],
 			h1:     ['class', 'style'],
 			h2:     ['class', 'style'],
 			h3:     ['class', 'style'],
@@ -413,12 +416,12 @@
 			mark:   [],
 			nav:    [],
 			ol:     ['class', 'style'],
-			p:      ['class', 'style'],
+			p:      ['class', 'style','align'],
 			pre:    ['class', 'style'],
 			s:      [],
-			section:[],
+			section:['style'],
 			small:  [],
-			span:   ['class', 'style'],
+			span:   ['class', 'style','align'],
 			sub:    ['class', 'style'],
 			sup:    ['class', 'style'],
 			strong: ['class', 'style'],

@@ -188,8 +188,12 @@ angular.module('flowableModeler')
         }
 
         $scope.model.loading = true;
-
-        $http({method: 'POST', url: FLOWABLE.APP_URL.getModelsUrl(), data: $scope.model.process}).
+        var headers = {};
+        if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+            window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+           headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content};
+        }
+        $http({method: 'POST', url: FLOWABLE.APP_URL.getModelsUrl(), data: $scope.model.process,headers:headers}).
             success(function(data) {
                 $scope.$hide();
 
@@ -241,8 +245,12 @@ angular.module('flowableModeler')
         }
 
         $scope.model.loading = true;
-
-        $http({method: 'POST', url: FLOWABLE.APP_URL.getCloneModelsUrl($scope.model.process.id), data: $scope.model.process}).
+        var headers = {};
+        if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+            window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+            headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content};
+        }
+        $http({method: 'POST', url: FLOWABLE.APP_URL.getCloneModelsUrl($scope.model.process.id), data: $scope.model.process,headers:headers}).
             success(function(data) {
                 $scope.$hide();
 
@@ -284,10 +292,17 @@ angular.module('flowableModeler')
               url = FLOWABLE.APP_URL.getImportProcessModelUrl();
           }
 
+          var headers = {};
+          if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+              window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+              headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content};
+          }
+
           Upload.upload({
               url: url,
               method: 'POST',
-              file: file
+              file: file,
+              headers:headers
           }).progress(function(evt) {
               $scope.model.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 

@@ -91,7 +91,7 @@
             modalName: "机构",
             columns: [
                 {field: 'selectItem', radio: true},
-                {field: 'name', title: "<@ctx.i18n text = "机构名称"/>"},
+                {field: 'name', title: "<@ctx.i18n text = "机构名称"/>",align: 'left'},
                 {field: 'orderNum', title: "<@ctx.i18n text = "排序"/>"},
                 {field: 'type', title: "<@ctx.i18n text = "类型"/>", formatter: function(value, item, index) {
                         return $.table.selectDictLabel(datas, item.type);}

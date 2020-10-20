@@ -1,8 +1,8 @@
-<#include "/common/include.html"/>
+<#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-    <@header title="修改OA请假单">
-    </@header>
-    <@addorEdit fromId="task-form-info">
+<@header title="请假单" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+    <@f.form id="task-form-info" class="form-horizontal">
         <input name="taskId" value="${taskId}" type="hidden">
         <input name="processInstanceId" value="${bpmOaForm.processInstanceId}" type="hidden">
         <div class="form-group">
@@ -55,6 +55,6 @@
                 <textarea class="form-control"  readonly="true">${bpmOaForm.leaveReason?default("")}</textarea>
             </div>
         </div>
-    </@addorEdit>
-    <@footer/>
+</@f.form>
+<@footer/>
 </@pageTheme>

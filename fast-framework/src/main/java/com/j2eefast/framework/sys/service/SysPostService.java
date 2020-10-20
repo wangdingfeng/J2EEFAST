@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.framework.annotation.DataFilter;
 import com.j2eefast.framework.sys.entity.SysPostEntity;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.framework.sys.mapper.SysPostMapper;
@@ -43,7 +44,7 @@ public class SysPostService  extends ServiceImpl<SysPostMapper,SysPostEntity> {
         return new PageUtil(page);
     }
 
-
+    @DataFilter(deptAlias = "c")
     public List<SysPostEntity> getPostList(Map<String, Object> params){
         String postCode = (String) params.get("postCode");
         String postName = (String) params.get("postName");

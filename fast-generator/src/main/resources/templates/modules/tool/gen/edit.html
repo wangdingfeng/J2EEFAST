@@ -445,7 +445,7 @@
 	    }
 
 	    function selectMenu() {
-			opt.modal.open("<@ctx.i18n text = "设置菜单"/>",prefix + "/selectMenu/" +  $('input[name="id"]').val(),'','',doSubmitMenu,true)
+			opt.modal.open("<@ctx.i18n text = "设置菜单"/>",prefix + "/selectMenu/" +  $('input[name="id"]').val(),'','',doSubmitMenu)
         }
 
 		function doSubmitMenu(index, layero,_layer){
@@ -727,11 +727,12 @@
 		            title: '字典类型',
 		            width: "15%",
 		            formatter: function (value, row, index) {
-		        		var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.id);
-						return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectDictTree(\""+ row.id+"\", this)'><i class='fa fa-fw fa-search'></i></a></span>";
+		        		//var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.id);
+						//return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectDictTree(\""+ row.id+"\", this)'><i class='fa fa-fw fa-search'></i></a></span>";
+						var data = { "index": index, "value": opt.common.nullToStr(value,"") };
+						return opt.template('selectDictTypeTpl',data);
 		        	}
 		        }]
-				// ]
 		    };
 		    $.table.init(options);
 
@@ -980,7 +981,6 @@
 
 <!-- 查询方式 -->
 <script id="queryTypeTpl" type="text/template">//<!--
-<div>
 <select class="form-control" name="columns[{{d.index}}].queryType">
     <option value="EQ" {{# if (d.queryType ==="EQ"){ }}selected{{# } }}>=</option>
     <option value="NE" {{# if (d.queryType ==="NE"){ }}selected{{# } }}>!=</option>
@@ -991,13 +991,11 @@
     <option value="LIKE" {{# if (d.queryType ==="LIKE"){ }}selected{{# } }}>Like</option>
     <option value="BETWEEN" {{# if (d.queryType ==="BETWEEN"){ }}selected{{# } }}>Between</option>
 </select>
-</div>
 //-->
 </script>
 
 <!-- 显示类型 -->
 <script id="htmlTypeTpl" type="text/template">//<!--
-<div>
 <select class="form-control" name="columns[{{d.index}}].htmlType">
     <option value="input" {{# if (d.htmlType ==="input"){ }}selected{{# } }}>文本框</option>
     <option value="textarea" {{# if (d.htmlType ==="textarea"){ }}selected{{# } }}>文本域</option>
@@ -1013,21 +1011,26 @@
     <option value="imgcup" {{# if (d.htmlType ==="imgcup"){ }}selected{{# } }}>图片剪辑</option>
     <option value="addr" {{# if (d.htmlType ==="addr"){ }}selected{{# } }}>多级地址</option>
 </select>
-</div>
 //-->
 </script>
-
 <!-- 说明样式 -->
 <script id="circleTypeTpl" type="text/template">//<!--
-<div>
 <select class="form-control" name="columns[{{d.index}}].circleType">
     <option value="T" {{# if (d.circleType ==="T"){ }}selected{{# } }}>普通样式</option>
     <option value="Q" {{# if (d.circleType ==="Q"){ }}selected{{# } }}>黄色问号</option>
     <option value="R" {{# if (d.circleType ==="R"){ }}selected{{# } }}>红色明显</option>
 </select>
-</div>
 //-->
 </script>
 </#noparse>
+<!-- 字段对应字典-->
+<script id="selectDictTypeTpl" type="text/template">//<!--
+<@f.treeselect
+	id="selectDict_{{d.index}}"
+    value="{{d.value}}" labelValue="{{d.value}}" keyId="name"
+    name="columns[{{d.index}}].dictType" template=true boxTitle="请选需要对应字典数据" url="sys/dict/treeData"/>
+//-->
+</script>
+
 
 

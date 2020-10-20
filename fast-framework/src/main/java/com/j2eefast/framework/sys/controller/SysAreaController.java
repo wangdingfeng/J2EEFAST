@@ -37,14 +37,35 @@ public class SysAreaController extends BaseController{
     public String area(){
         return prefix + "/area";
     }
-        
+
+    /******** 树表异步请求分页 start*******************************/
+    /**
+     * 前端树表分页请求
+     * @param params
+     * @param sysAreaEntity
+     * @return
+     */
     @RequestMapping("/list")
     @RequiresPermissions("sys:area:list")
     @ResponseBody
     public ResponseData list(@RequestParam Map<String, Object> params,SysAreaEntity sysAreaEntity) {
+        PageUtil page = sysAreaService.findPage(params,sysAreaEntity);
+        return success(page);
+    }
+
+    /**
+     * 异步请求数据
+     * @param sysAreaEntity
+     * @return
+     */
+    @RequestMapping("/listChild")
+    @RequiresPermissions("sys:area:list")
+    @ResponseBody
+    public ResponseData listChild(SysAreaEntity sysAreaEntity) {
 		List<SysAreaEntity> list = sysAreaService.selectList(sysAreaEntity);
         return success().put("list", list);
     }
+    /***********树表异步请求分页 end ******/
 
     @RequestMapping("/treeData")
     @RequiresPermissions("sys:area:tree")

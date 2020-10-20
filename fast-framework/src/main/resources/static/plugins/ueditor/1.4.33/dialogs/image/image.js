@@ -705,12 +705,14 @@
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
                 header['X_Requested_With'] = 'XMLHttpRequest';
+                if($('meta[name="csrf-token"]',window.parent.document).attr("content")){
+                    header['X-CSRF-Token'] = $('meta[name="csrf-token"]',window.parent.document).attr("content");
+                }
             });
 
             uploader.on('uploadProgress', function (file, percentage) {
                 var $li = $('#' + file.id),
                     $percent = $li.find('.progress span');
-
                 $percent.css('width', percentage * 100 + '%');
                 percentages[ file.id ][ 1 ] = percentage;
                 updateTotalProgress();

@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.common.core.crypto;
 
 import java.math.BigInteger;
@@ -13,9 +16,11 @@ import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECFieldElement;
 import org.bouncycastle.math.ec.ECPoint;
 
-
-public class SM2
-{
+/**
+ * SM2运算
+ * @author ZhouZhou
+ */
+public class SM2 {
     //正式参数
     public static String[] ecc_param = {
             "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF",
@@ -54,8 +59,9 @@ public class SM2
 
         this.ecc_gx_fieldelement = new ECFieldElement.Fp(this.ecc_p, this.ecc_gx);
         this.ecc_gy_fieldelement = new ECFieldElement.Fp(this.ecc_p, this.ecc_gy);
-        this.ecc_curve = new ECCurve.Fp(this.ecc_p, this.ecc_a, this.ecc_b, null, null);
-        this.ecc_point_g = new ECPoint.Fp(this.ecc_curve, this.ecc_gx_fieldelement, this.ecc_gy_fieldelement,false);
+
+        this.ecc_curve = new ECCurve.Fp(this.ecc_p, this.ecc_a, this.ecc_b);
+        this.ecc_point_g = new ECPoint.Fp(this.ecc_curve, this.ecc_gx_fieldelement, this.ecc_gy_fieldelement);
 
         this.ecc_bc_spec = new ECDomainParameters(this.ecc_curve, this.ecc_point_g, this.ecc_n);
 
@@ -85,10 +91,10 @@ public class SM2
         p = HexUtil.byteConvert32Bytes(this.ecc_gy);
         sm3.update(p, 0, p.length);
 
-        p = HexUtil.byteConvert32Bytes(userKey.getXCoord().toBigInteger());
+        p = HexUtil.byteConvert32Bytes(userKey.getX().toBigInteger());
         sm3.update(p, 0, p.length);
 
-        p = HexUtil.byteConvert32Bytes(userKey.getYCoord().toBigInteger());
+        p = HexUtil.byteConvert32Bytes(userKey.getY().toBigInteger());
         sm3.update(p, 0, p.length);
 
         byte[] md = new byte[sm3.getDigestSize()];
@@ -111,7 +117,7 @@ public class SM2
                 k = ecpriv.getD();
                 kp = ecpub.getQ();
 
-                r = e.add(kp.getXCoord().toBigInteger());
+                r = e.add(kp.getX().toBigInteger());
                 r = r.mod(this.ecc_n);
             }while ((r.equals(BigInteger.ZERO)) || (r.add(k).equals(this.ecc_n)));
 
@@ -137,6 +143,6 @@ public class SM2
         ECPoint x1y1 = this.ecc_point_g.multiply(sm2Result.s);
 
         x1y1 = x1y1.add(userKey.multiply(t));
-        sm2Result.R = e.add(x1y1.getXCoord().toBigInteger()).mod(this.ecc_n);
+        sm2Result.R = e.add(x1y1.getX().toBigInteger()).mod(this.ecc_n);
     }
 }

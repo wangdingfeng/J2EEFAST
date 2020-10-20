@@ -202,6 +202,9 @@ public class FileUploadUtils {
         byte[] data = Base64.decode(base64);
 
         try {
+            //删除
+            FileUploadUtils.me().removeFileUpload(bizId,bizType);
+
         	String fullPath =  Global.getAttachPath() + imageUrl ;
             FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
             SysFilesEntity sysFile = new SysFilesEntity();

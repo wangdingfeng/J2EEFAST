@@ -86,7 +86,6 @@
 		function onCheck(event, treeId, treeNode) {
 			//选中指定节点
 			$._tree.selectNode(treeNode);
-			console.log($.tree.getParentIds(treeNode));
 			$("#parentIds").val($.tree.getParentIds(treeNode));
 			var treeId = treeNode.id;
 			var treeName = treeNode.name;

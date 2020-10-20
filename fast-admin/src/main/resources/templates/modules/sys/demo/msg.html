@@ -1,0 +1,312 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="消息通知" bodyClass="white-bg" libs=["prism","bootstrapSelect"]>
+</@header>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    系统默认排版显示
+                </div>
+                <div class="ibox-content form-horizontal">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-primary" onclick="opt.success('我是成功通知!!!')">成功通知</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="opt.error('我是失败错误通知！！！')">失败通知</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-warning" onclick="opt.warning('我是警告通知!!!!')">警告通知</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-info" onclick="opt.info('我是提示通知！！！！')">提示通知</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <@f.code>
+                                    <#noparse>
+                                    //系统自带封装的消息通知
+                                    //无需Lib 组件引用
+                                    使用:
+                                    JS 函数:
+                                    参数:
+                                         msg: 通知信息(必填)
+                                    callback: 信息消失回调函数(可选)
+                                    // 成功通知: opt.success('我是成功通知!!!');
+                                    // 失败错误: opt.error('我是失败错误通知！！！')
+                                    // 警告通知: opt.warning('我是警告通知!!!!')
+                                    // 提示通知: opt.info('我是提示通知！！！！')
+                                    // 回调: opt.info('我是提示通知！！！！',function(){
+                                                conlos.log('--->>>> 通知消失回调了!!!!');
+                                            })
+                                    // 注意:信息通知最好使用此方法、因为这些方法都是通过封装判断的、由于项目前端
+                                       是iframe模式。如果脱离ifrme此方法也不会报错、而是已layui弹框形式展现
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    自定义显示
+                </div>
+                <div class="ibox-content form-horizontal">
+                   <div class="row">
+                       <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="col-sm-4 control-label">通知文字：</label>
+                               <div class="col-sm-8">
+                                   <@f.input name="msgTxt" value="我是通知文字！！！！！"/>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="col-sm-4 control-label">标题栏：</label>
+                               <div class="col-sm-8">
+                                   <@f.input name="msgTitle" value="信息通知"/>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">进入动画：</label>
+                                <div class="col-sm-8">
+                                    <select id="transition" class="form-control">
+                                        <option value="fade">Fade</option>
+                                        <option value="slide">Slide</option>
+                                        <option value="plain">Plain</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">关闭按钮：</label>
+                                <div class="col-sm-8">
+                                    <select id="toast-close" class="form-control">
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">自动隐藏：</label>
+                                <div class="col-sm-8">
+                                    <select  id="auto-hide-toast" class="form-control">
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">消失时间(毫秒)：</label>
+                                <div class="col-sm-8">
+                                    <@f.input name="msgHideTime" value="3000"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">同时出现：</label>
+                                <div class="col-sm-8">
+                                    <select  id="isToasts" class="form-control">
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">出现个数：</label>
+                                <div class="col-sm-8">
+                                    <@f.input name="msgLength" value="5"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">显示位置：</label>
+                                <div class="col-sm-8">
+                                    <select id="position" class="form-control">
+                                        <option value="bottom-left">Bottom Left</option>
+                                        <option value="bottom-right">Bottom Right</option>
+                                        <option value="top-left">Top Left</option>
+                                        <option value="top-right">Top Right</option>
+                                        <option value="top-center">Top Center</option>
+                                        <option value="bottom-center">Bottom Center</option>
+                                        <option value="mid-center">Mid Center</option>
+<#--                                        <option value="custom-position">Custom</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">图标：</label>
+                                <div class="col-sm-8">
+                                    <select id="IconImg" class="form-control">
+                                        <option value="">-- No icon --</option>
+                                        <option selected="selected" value="warning">Warning</option>
+                                        <option value="success">Success</option>
+                                        <option value="error">Error</option>
+                                        <option value="info">Information</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">字体位置：</label>
+                                <div class="col-sm-8">
+                                    <select id="text-align" class="form-control">
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                        <option value="center">Center</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">进度条：</label>
+                                <div class="col-sm-8">
+                                    <select name="show-loader" id="show-loader" class="form-control">
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">进度条颜色：</label>
+                                <div class="col-sm-8">
+                                    <input type="color" id="loader-bg" class="form-control" value="#000000">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-5">
+                            <button type="button" class="btn btn-sm btn-primary" onclick="sendMsg()"><i class="fa fa-send"></i> <@ctx.i18n text = "发送通知"/></button>&nbsp;
+                            <button type="button" class="btn btn-sm btn-danger" onclick="closeAll()"><i class="fa  icon-close"></i> <@ctx.i18n text = "关闭全部"/></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <@f.code>
+                                <#noparse>
+                                    //自定义显示通知
+                                    //无需Lib 组件引用
+                                    使用:
+                                    JS 函数:
+                                    参数:
+                                    text: 通知内容(必填)
+                                    heading: 标题(可选)
+                                    showHideTransition: 进入动画(可选)
+                                    allowToastClose: 是否有关闭按钮(可选)
+                                    hideAfter: 是否自动隐藏(可选)
+                                    stack: 是否同时出现(可选)
+                                    position: 位置信息
+                                    icon: 显示图标
+                                    textAlign: 显示文字布局
+                                    loader: 是否显示进度条
+                                    loaderBg: 进度条颜色
+
+                                    opt.toast;
+                                </#noparse>
+                            </@f.code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<@footer>
+<script type="text/javascript">
+
+
+    $('#position').on('change',function(){
+        closeAll();
+    })
+
+    /**
+     * 关闭全部
+     */
+    function closeAll(){
+        if(opt.toast){
+            opt.toast().reset('all');
+        }
+    }
+
+    /**
+     * 自定义发送消息
+     */
+    function sendMsg(){
+        var options = {};
+        //通知显示内容
+        options.text = $('#msgTxt').val();
+        //显示标题 可以不传
+        if(opt.common.isNotEmpty($('#msgTitle').val())){
+            options.heading = $('#msgTitle').val();
+        }
+        //进入动画(不是必传)
+        options.showHideTransition = $('#transition').val();
+        //关闭按钮(不是必传)
+        options.allowToastClose = ( $('#toast-close').val() === 'true' ) ? true : false;
+        //是否自动隐藏(不是必传)
+        options.hideAfter =  ( $('#auto-hide-toast').val() === 'true' ) ? parseInt($('#msgHideTime').val(),10) : false;
+        //是否出现多个(不是必传)
+        options.stack = ( $('#isToasts').val() === 'true' ) ? parseInt($('#msgLength').val(),10) : false;
+
+        //显示位置必填
+        options.position = $('#position').val();
+        //显示图标(不是必填)
+        if($('#IconImg').val() != ""){
+            options.icon = $('#IconImg').val();
+        }
+        //显示文字布局(不是必输)
+        options.textAlign = $('#text-align').val();
+        //是否显示进度条(不是必输)
+        options.loader = $('#show-loader').val() === 'false' ? false : true;
+        //进度条颜色(不是必输)
+        options.loaderBg = $('#loader-bg').val();
+
+        console.log(JSON.stringify(options));
+        if(opt.toast){
+            opt.toast(options);
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>
