@@ -23,6 +23,8 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.rabbit.constant.RabbitBeanInfo;
 import com.j2eefast.common.rabbit.constant.RabbitInfo;
 import com.j2eefast.framework.annotation.DataFilter;
+import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
+import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.utils.Constant;
@@ -323,6 +325,12 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	}
 
 	public SysUserEntity findUserByUserId(Long userId){
-		return sysUserMapper.findUserByUserId(userId);
+		SysUserEntity user = sysUserMapper.findUserByUserId(userId);
+		SysLoginInfoEntity loginInfo = ConstantFactory.me().getFirstLoginInfo(user.getUsername());
+		//上次登陆地点
+		user.setLoginLocation(loginInfo.getLoginLocation());
+		//上次登陆时间
+		user.setLoginTime(loginInfo.getLoginTime());
+		return user;
 	}
 }
