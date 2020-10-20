@@ -38,11 +38,11 @@
              id = ""
              class = "form-control"
              value = ""
-             readOnly = false
+             readonly = false
              rows = "5"
              required = false
 >
-    <textarea id="<#if id == "">${name}<#else>${id}</#if>" name="<#if id == "">${name}<#else>${id}</#if>"  class="${class}" rows="${rows}" <#if readOnly>readOnly = "true"</#if> <#if required> required</#if>><#if value != "">${value}</#if></textarea>
+    <textarea id="<#if id == "">${name}<#else>${id}</#if>" name="<#if id == "">${name}<#else>${id}</#if>"  class="${class}" rows="${rows}" <#if readonly>readonly = "true"</#if> <#if required> required</#if>><#if value != "">${value}</#if></textarea>
 </#macro>
 
 <#--
@@ -1111,7 +1111,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
         items = ["选择省份","选择市","选择地区"]
         url = "sys/area/load" <#--联动数据请求URL -->
         split = "," <#--数据分割符-->
-        readOnly = false
+        readonly = false
         value = ""
         >
     <#local  Assname="${id}"/>
@@ -1238,7 +1238,7 @@ ${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
                         }
                     }
                 });
-                <#if readOnly>
+                <#if readonly>
                     $('#<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}').selectPageDisabled(true);
                 </#if>
             </#list>
