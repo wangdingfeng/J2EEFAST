@@ -60,10 +60,7 @@
             <div class="form-group">
             <label class="col-sm-4 control-label"><@ctx.i18n text = "性别"/>：</label>
             <div class="col-sm-8">
-                <select name="sex" class="form-control m-b">
-                    <option value="">所有</option>
-                </select>
-                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                <@f.radio name="sex" dictType="sys_user_sex"  />
             </div>
         </div>
 

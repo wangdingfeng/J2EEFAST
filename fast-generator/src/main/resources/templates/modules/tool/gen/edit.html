@@ -727,11 +727,12 @@
 		            title: '字典类型',
 		            width: "15%",
 		            formatter: function (value, row, index) {
-		        		var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.id);
-						return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectDictTree(\""+ row.id+"\", this)'><i class='fa fa-fw fa-search'></i></a></span>";
+		        		//var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.id);
+						//return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectDictTree(\""+ row.id+"\", this)'><i class='fa fa-fw fa-search'></i></a></span>";
+						var data = { "index": index, "value": opt.common.nullToStr(value,"") };
+						return opt.template('selectDictTypeTpl',data);
 		        	}
 		        }]
-				// ]
 		    };
 		    $.table.init(options);
 
@@ -1012,7 +1013,6 @@
 </select>
 //-->
 </script>
-
 <!-- 说明样式 -->
 <script id="circleTypeTpl" type="text/template">//<!--
 <select class="form-control" name="columns[{{d.index}}].circleType">
@@ -1023,5 +1023,14 @@
 //-->
 </script>
 </#noparse>
+<!-- 字段对应字典-->
+<script id="selectDictTypeTpl" type="text/template">//<!--
+<@f.treeselect
+	id="selectDict_{{d.index}}"
+    value="{{d.value}}" labelValue="{{d.value}}" keyId="name"
+    name="columns[{{d.index}}].dictType" template=true boxTitle="请选需要对应字典数据" url="sys/dict/treeData"/>
+//-->
+</script>
+
 
 

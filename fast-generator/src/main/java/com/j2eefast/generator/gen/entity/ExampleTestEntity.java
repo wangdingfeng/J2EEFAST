@@ -19,7 +19,7 @@ import com.j2eefast.framework.sys.entity.SysDeptEntity;
 /**
  * example_test
  * @author: ZhouZhou
- * @date 2020-09-06 16:35
+ * @date 2020-10-19 22:26
  */
 @Data
 @TableName("example_test")

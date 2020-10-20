@@ -20,7 +20,7 @@ import java.util.Arrays;
  *
  * 工作经历Service接口
  * @author: ZhouZhou
- * @date 2020-09-06 16:35
+ * @date 2020-10-19 22:26
  */
 @Service
 public class ExampleTestChildService extends ServiceImpl<ExampleTestChildMapper,ExampleTestChildEntity> {
@@ -63,8 +63,7 @@ public class ExampleTestChildService extends ServiceImpl<ExampleTestChildMapper,
      * 批量删除
      */
 	@Transactional(rollbackFor = Exception.class)
-	public boolean delExampleTestChildByIds(Long[] ids) {
-
+	public boolean delExampleTestChildByIds(Long[] ids) {																										
 return this.removeByIds(Arrays.asList(ids));
 
 	}
@@ -72,10 +71,12 @@ return this.removeByIds(Arrays.asList(ids));
 	/**
      * 单个删除
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean delExampleTestChildById(Long id) {
 
 		
-		
+																												
+
 		return this.removeById(id);
 
 	}
@@ -83,6 +84,7 @@ return this.removeByIds(Arrays.asList(ids));
 	/**
      * 保存
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean addExampleTestChild(ExampleTestChildEntity exampleTestChild){
 																										
 		if(this.save(exampleTestChild)){			
@@ -94,6 +96,7 @@ return this.removeByIds(Arrays.asList(ids));
 	/**
      * 修改根居ID
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean updateExampleTestChildById(ExampleTestChildEntity exampleTestChild) {
 																										
 		if(this.updateById(exampleTestChild)){			

@@ -4,7 +4,6 @@ package com.j2eefast.generator.gen.service;
 import com.j2eefast.generator.gen.entity.ExampleTestEntity;
 import com.j2eefast.generator.gen.mapper.ExampleTestMapper;
 import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
-import com.j2eefast.generator.gen.service.ExampleTestChildService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
@@ -19,12 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
+import com.baomidou.mybatisplus.core.toolkit.Sequence;
 import com.j2eefast.framework.utils.FileUploadUtils;
 /**
  *
  * 单范例Service接口
  * @author: ZhouZhou
- * @date 2020-09-06 16:35
+ * @date 2020-10-19 22:26
  */
 @Service
 public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTestEntity> {
@@ -71,11 +71,11 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      * 批量删除
      */
 	@Transactional(rollbackFor = Exception.class)
-	public boolean delExampleTestByIds(Long[] ids) {
-
+	public boolean delExampleTestByIds(Long[] ids) {																						
 		for (Long id : ids) {
 			FileUploadUtils.me().removeFileUpload(id,"example_test_file");						
-		    FileUploadUtils.me().removeFileUpload(id,"example_test_img");			
+			FileUploadUtils.me().removeFileUpload(id,"example_test_img");						
+			FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");			
 		}
 		return this.removeByIds(Arrays.asList(ids));
 
@@ -84,10 +84,13 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	/**
      * 单个删除
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean delExampleTestById(Long id) {
 
 		FileUploadUtils.me().removeFileUpload(id,"example_test_file");		
-		FileUploadUtils.me().removeFileUpload(id,"example_test_img");		
+		FileUploadUtils.me().removeFileUpload(id,"example_test_img");																						
+		FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");		
+
 		return this.removeById(id);
 
 	}
@@ -95,10 +98,14 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	/**
      * 保存
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean addExampleTest(ExampleTestEntity exampleTest){
 																				
+		//事先生成id				
+		exampleTest.setId((new Sequence().nextId()));
 		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar",exampleTest.getId()));
+		
 		if(this.save(exampleTest)){			
 
 			//更新关联附件信息						
@@ -106,9 +113,11 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 			FileUploadUtils.saveFileUpload(pkId,"example_test_file");						
 			FileUploadUtils.saveFileUpload(pkId,"example_test_img");						
 			//保存子表信息
-			for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
-				exampleTestChild.setTestId(pkId);
-				exampleTestChildService.addExampleTestChild(exampleTestChild);
+			if(ToolUtil.isNotEmpty(exampleTest.getExampleTestChild())){
+				for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
+					exampleTestChild.setTestId(pkId);
+					exampleTestChildService.addExampleTestChild(exampleTestChild);
+				}
 			}
 						
 			return true;
@@ -119,10 +128,11 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	/**
      * 修改根居ID
      */
+	@Transactional(rollbackFor = Exception.class)
 	public boolean updateExampleTestById(ExampleTestEntity exampleTest) {
-																				
+																										
 		//图片剪切数据转换
-		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar()));		
+		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar",exampleTest.getId()));		
 		if(this.updateById(exampleTest)){			
 			//更新关联附件信息						
 			Long pkId =  exampleTest.getId();			
@@ -130,9 +140,11 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 			FileUploadUtils.saveFileUpload(pkId,"example_test_img");						
 			//保存子表信息
 			if(exampleTestChildService.delExampleTestChildByPkId(pkId)){
-				for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
-					exampleTestChild.setTestId(pkId);
-					exampleTestChildService.addExampleTestChild(exampleTestChild);
+				if(ToolUtil.isNotEmpty(exampleTest.getExampleTestChild())){
+					for(ExampleTestChildEntity exampleTestChild :exampleTest.getExampleTestChild()){
+						exampleTestChild.setTestId(pkId);
+						exampleTestChildService.addExampleTestChild(exampleTestChild);
+					}
 				}
 			}
 						
