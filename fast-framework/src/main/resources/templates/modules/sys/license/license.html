@@ -134,7 +134,6 @@
                         focusCleanup: true
                     });
                     if(layero.find('#form-downlod').validate().form()){
-
                         opt.common.sendAjax({
                             url: prefix + "/creatLicense",
                             data: layero.find('#form-downlod').serialize(),
@@ -150,16 +149,6 @@
                                 }
                             }
                         })
-                        /**下载**/
-                        /*opt.operate.post(prefix + "/creatLicense", layero.find('#form-downlod').serialize(),function (r) {
-                            console.log("--->>>"+ r.code);
-                            if(r.code == opt.variable.web_status.SUCCESS){
-                                downLoadXls(prefix+"/download?path="+r.path + "&checkCode=" + r.checkCode);
-                                return;
-                            }else{
-                                opt.error(r.msg);
-                            }
-                        });*/
                     }
                 }
             });
