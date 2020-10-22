@@ -40,12 +40,12 @@
 			<artifactId>fast-web</artifactId>
 		</dependency>
 
-		<!-- 不用工作流模块注解去掉-->
+		<!-- 不用工作流模块注解去掉
 		<dependency>
 			<groupId>com.j2eefast</groupId>
 			<artifactId>fast-flowable</artifactId>
 			<version>3.2.0</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>
@@ -117,14 +117,14 @@
 				<filtering>false</filtering>
 			</resource>
 
-			<!-- 不要工作流请注释掉-->
+			<!-- 不要工作流请注释掉
 			<resource>
 				<directory>../fast-flowable/src/main/resources</directory>
 				<includes>
 					<include>**/**</include>
 				</includes>
 				<filtering>false</filtering>
-			</resource>
+			</resource>-->
 
 			<resource>
 				<directory>../fast-generator/src/main/resources</directory>
