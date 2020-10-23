@@ -53,9 +53,16 @@ color: #dd5a43;
 			<ul>
 	        	<#list tableInfo as tb>
 	       		<#if tb.query>
-	       		<li>
-	                <@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
-	            </li>
+				<#if tb.dict =="">
+				<li>
+					<@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
+				</li>
+				<#else>
+				<li>
+					<@ctx.i18n text = "${tb.title}"/>:
+					<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
+				</li>
+				</#if>
 	       		</#if>
 	        	</#list>
 	            <#if isorga>
