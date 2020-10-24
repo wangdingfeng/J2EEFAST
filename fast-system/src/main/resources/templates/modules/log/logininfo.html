@@ -88,7 +88,8 @@
                 },
 				{field: 'username', title: '登录名称', sortable: true},
 				{field: 'ipaddr', title: '登录地址'},
-				{field: 'loginLocation', title: '登录地点'},
+				{field: 'loginLocation', title: '登录地点',formatter: function (value, row, index) {
+						return $.table.tooltip(value,10);}},
 				{field: 'compName', title: "<@ctx.i18n text = "归属公司"/>",formatter: function (value, row, index) {
 						return $.table.tooltip(value,5);}
 				},

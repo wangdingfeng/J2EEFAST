@@ -15,15 +15,6 @@
 			</li>
 			<li class="select-selectpicker">
 				<label>操作类型： </label>
-<#--				<select id="businessTypes" name="businessTypes" class="selectpicker" data-none-selected-text="请选择" multiple>-->
-<#--					<#list dict.getType('sys_oper_type')>-->
-<#--						<#items as d>-->
-<#--							<#if d.status =='0' >-->
-<#--								<option value="${d.dictValue}" text="${d.dictLabel}">${d.dictLabel}</option>-->
-<#--							</#if>-->
-<#--						</#items>-->
-<#--					</#list>-->
-<#--				</select>-->
 				<@f.select name="businessTypes" multiple = true class="selectpicker" dictType="sys_oper_type" required=true/>
 			</li>
 			<li>
@@ -109,7 +100,10 @@
 			},
 			{
 				field: 'operLocation',
-				title: '操作地点'
+				title: '操作地点',
+				formatter: function (value, row, index) {
+					return $.table.tooltip(value,10);
+				}
 			},
 			{
 				field: 'status',
