@@ -203,7 +203,6 @@ color: #dd5a43;
 	};
 	function onLoadSuccess(rows,layero, index,_sf){
 		tableData = rows;
-
 		/*初始化表格*/
 		initTable();
 
@@ -232,16 +231,44 @@ color: #dd5a43;
     
     
     function onSelectData(data){
-		var temp = "";
-		for(var i=0; i<data.length; i++){
-			temp += '<span id="s_'+data[i].id+'" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+data[i].id+'">×</a></span>';
-		};
-		if(temp.length > 0){
-			$("#selectName").html(temp);
-			$("#selectNum").html(data.length);
+    	if(data.length == opt.table.rememberSelectedIds[opt.table.options.id].length ) {
+			var temp = "";
+			for (var i = 0; i < data.length; i++) {
+				temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+			};
+			if (temp.length > 0) {
+				$("#selectName").html(temp);
+				$("#selectNum").html(data.length);
+			} else {
+				$("#selectName").html("");
+				$("#selectNum").html("0");
+			}
 		}else{
-			$("#selectName").html("");
-			$("#selectNum").html("0");
+			if(id_data.length > 0){
+				var temp = "";
+				for (var i = 0; i < data.length; i++) {
+					temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+				};
+				for (var i = 0; i < id_data.length; i++) {
+					temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] + '<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+				};
+				if (temp.length > 0) {
+					$("#selectName").html(temp);
+					$("#selectNum").html(data.length + id_data.length);
+				}
+			}else{
+				var temp = "";
+				for (var i = 0; i < data.length; i++) {
+					temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+				};
+				if (temp.length > 0) {
+					$("#selectName").html(temp);
+					$("#selectNum").html(data.length);
+				} else {
+					$("#selectName").html("");
+					$("#selectNum").html("0");
+				}
+			}
 		}
     };
     
@@ -302,16 +329,40 @@ color: #dd5a43;
 		var keyId = "";
 		var keyName="";
 		var rows = $.table.selectAllColumnRows();
-		for(var i=0; i<rows.length; i++){
-			keyId +=rows[i].${keyId} + '${separator}';
-			keyName += rows[i].${keyName} + '${separator}';
-		};
-		if(keyId.length > 0){
-			keyId = keyId.substr(0,keyId.length -"${separator}".length);
-			keyName = keyName.substr(0,keyName.length -"${separator}".length);
+		if(opt.common.isEmpty(opt.table.rememberSelectedIds[opt.table.options.id]) || rows.length == opt.table.rememberSelectedIds[opt.table.options.id].length ){
+			for(var i=0; i<rows.length; i++){
+				keyId +=rows[i].${keyId} + '${separator}';
+				keyName += rows[i].${keyName} + '${separator}';
+			};
+			if(keyId.length > 0){
+				keyId = keyId.substr(0,keyId.length -"${separator}".length);
+				keyName = keyName.substr(0,keyName.length -"${separator}".length);
+			}
+			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
+			return true;
+		}else{
+			/*修复回显问题*/
+			for(var i=0; i<rows.length; i++){
+				keyId +=rows[i].${keyId} + '${separator}';
+				keyName += rows[i].${keyName} + '${separator}';
+			};
+			var un = $.table.selectAllColumns();
+			for(var i=0; i<id_data.length; i++){
+				var tableTemp = {};
+				keyId +=id_data[i] + '${separator}';
+				keyName +=name_data[i] + '${separator}';
+				tableTemp.${keyId} = id_data[i];
+				tableTemp.${keyName} = name_data[i];
+				rows.push(tableTemp);
+				un.push(id_data[i]);
+			}
+			if(keyId.length > 0){
+				keyId = keyId.substr(0,keyId.length -"${separator}".length);
+				keyName = keyName.substr(0,keyName.length -"${separator}".length);
+			}
+			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:un};
+			return true;
 		}
-		tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
-    	return true;
     }
 </script>
 </@footer>

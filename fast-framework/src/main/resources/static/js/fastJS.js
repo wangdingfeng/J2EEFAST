@@ -3605,10 +3605,10 @@ if (typeof jQuery === "undefined") {
                     rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                         return row;
                     });
-                    if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-                        opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
-                        opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
-                    }
+                    // if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                    //     opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
+                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
+                    // }
                     rows = $.table.affectedRowIds(rows);
                 }
                 return opt.common.uniqueFn(rows);
@@ -3629,10 +3629,10 @@ if (typeof jQuery === "undefined") {
                     rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                         return row;
                     });
-                    if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-                        opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
-                        opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
-                    }
+                    // if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                    //     opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
+                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
+                    // }
                     return rows;
                 }
             },
