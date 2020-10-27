@@ -402,8 +402,9 @@
 <#macro input name
               id = "" <#-- ID 如果ID 不传则跟name一致-->
               value = ""
-              type = "text"
-              dataFormat = "" <#-- 格式化-->
+              type = "text" <#--多增加 date -->
+              dataFormat = "" <#-- 时间格式化-->
+              dataType = "date" <#-- 控件显示-->
               required=false <#-- 是否必输-->
               class = "form-control" <#-- 输入框样式-->
               placeholder=""
@@ -416,14 +417,14 @@
     <#compress>
     <#if butClass!="">
         <div class="input-group">
-        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+               type="<#if type == "date">text<#else>${type}</#if>" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
         </div>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <#else>
-        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+               type="<#if type == "date">text<#else>${type}</#if>" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     </#if>
     </#compress>

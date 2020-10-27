@@ -43,8 +43,9 @@
                              //参数: 1. name 控件name 必输
                                     2. id 控件id 不是必输 如果不输则与name名称一样
                                     3. value 控件值 不是必输 默认""
-                                    4. type 控件类型 不是必输 默认 text
-                                    5. dataFormat 控件格式化 不是必输 暂时预留 格式化后期处理
+                                    4. type 控件类型 不是必输 默认 text 多增加 date
+                                    5. dataFormat 时间格式化 不是必输 格式化
+                                    6. dataType  默认 "date" 时间控件显示类型 date 年月日 year 年 month 年月 datetime 详细时间
                                     6. required 控件在from 不是必输 默认false 表单中是否必输 true为表单中必输
                                     7. class 输入框控件样式 不是必输 默认form-control
                                     8. placeholder 控件输入框提示内容 不是必输 默认""
@@ -67,6 +68,25 @@
                          </#noparse>
                         </@f.code>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>时间选择：</label>
+                    <div class="col-sm-8">
+                        <@f.input name="date" type="date" dataType="datetime" dataFormat="yyyy-MM-dd HH:mm:ss"
+                        placeholder="请选择时间"  butClass="fa fa-calendar-plus-o" required=true helpTip="登录账号数字加字母组合,至少3位"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>年月选择：</label>
+                    <div class="col-sm-8">
+                        <@f.input name="date" type="date" dataFormat="yyyy-MM-dd"/>
                     </div>
                 </div>
             </div>
@@ -201,6 +221,7 @@
             </div>
         </div>
         </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
@@ -216,9 +237,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_radio" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>单选框：</label>
                     <div class="col-sm-8">
-                        <div class="input-group">
-                            <@f.radio name="type" dictType="sys_menu_type"/>
-                        </div>
+                        <@f.radio name="type" dictType="sys_menu_type"/>
                     </div>
                 </div>
             </div>

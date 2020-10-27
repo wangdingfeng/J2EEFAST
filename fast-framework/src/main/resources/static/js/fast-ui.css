@@ -934,6 +934,7 @@ label {
 
 .select-list .select-time input {
 	width: 93px;
+	font-size: 13px;
 }
 
 .select-time label,.select-time span,.select-time input {
