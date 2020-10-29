@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.8.RELEASE</version>
+        <version>2.2.10.RELEASE</version>
     </parent>
     <!-- 用户可以在maven中定义一些属性，然后在其他地方用${xxx}进行引用 -->
     <properties>
