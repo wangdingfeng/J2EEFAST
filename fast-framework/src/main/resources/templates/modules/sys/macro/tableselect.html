@@ -187,8 +187,9 @@ color: #dd5a43;
     		if(id_data.length > 0){
 				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], id_data,opt.table.options.uniqueId);
 				var temp = "";
-				for(var i=0; i< name_data.length; i++){
-					temp += '<span class="label label-success">' + name_data[i] + '</span>   ';
+				for(var i=0; i< id_data.length; i++){
+					temp += '<span class="label label-success" id="s_'+id_data[i]+'">' + name_data[i]+
+							'<a href="#" onclick="rm(this)" class="close" tabindex="'+id_data[i]+'">×</a></span>';
 				}
 				if(temp.length > 0){
 					$("#selectName").html(temp);
@@ -286,23 +287,25 @@ color: #dd5a43;
     		if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
 
                 var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-
-                $("#selectNum").html(selectedRows.length - 1);
-
                 var rows;
-                for(var i=0; i<selectedRows.length; i++){
-                	if(selectedRows[i].id == id){
-                		rows = selectedRows[i];
-                	}
-                };
-
-                if(opt.common.isNotEmpty(selectedRows)) {
-                    opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,'id');
-                };
+				if(opt.common.isNotEmpty(selectedRows)) {
+					for(var i=0; i<selectedRows.length; i++){
+						if(selectedRows[i].id == id){
+							rows = selectedRows[i];
+						}
+					};
+					opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,'id');
+				}
 
                 var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
                 if(opt.common.isNotEmpty(selectedIds)) {
-                	 var rowIds = $.table.affectedRowIds(rows);
+					var rowIds = [];
+					$("#selectNum").html(selectedIds.length - 1);
+					if(opt.common.isEmpty(rows)){
+						rowIds.push(id);
+					}else{
+						rowIds = $.table.affectedRowIds(rows);
+					}
                     opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,'id');
                 }
     		}
