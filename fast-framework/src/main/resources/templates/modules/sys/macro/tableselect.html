@@ -1,3 +1,8 @@
+<!--
+* Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+* @author ZhouZhou
+* @version 2020-10-29
+-->
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="true">
 <@header title="表格选择组件" libs=["table","tokenfield"]>
@@ -130,7 +135,7 @@ color: #dd5a43;
 		/* 初始表格对象 */
 		var options = {
 			url: prefix,
-			uniqueId: "id", /* 唯一ID */
+			uniqueId: "${keyId}", /* 唯一ID */
 			showSearch: false,
 			showRefresh: false,
 			showToggle: false,
@@ -210,7 +215,8 @@ color: #dd5a43;
 		var temp = "";
 		if(opt.common.isNotEmpty(rows) && rows.table){
 			for(var i=0; i<rows.table.length; i++){
-				temp += '<span class="label label-success" id="s_'+rows.table[i].id+'">' + rows.table[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].id+'">×</a></span>';
+				temp += '<span class="label label-success" id="s_'+rows.table[i].${keyId}+'">' + rows.table[i].${keyName}
+						+ '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].${keyId}+'">×</a></span>';
 			};
 			if(temp.length > 0){
 				$("#selectName").html(temp);
@@ -230,12 +236,15 @@ color: #dd5a43;
     	$("#selectNum").html("0");
     };
     
-    
+    /**
+	 * 点击回调处理
+	 */
     function onSelectData(data){
     	if(data.length == opt.table.rememberSelectedIds[opt.table.options.id].length ) {
 			var temp = "";
 			for (var i = 0; i < data.length; i++) {
-				temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+				temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+						'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
 			};
 			if (temp.length > 0) {
 				$("#selectName").html(temp);
@@ -246,21 +255,48 @@ color: #dd5a43;
 			}
 		}else{
 			if(id_data.length > 0){
+				var notTemp = [];
+				var temp = "";
+				var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+				for(var i=0; i< tempData.length; i++){
+					var flag = false;
+					for(var j=0; j< data.length; j++){
+						if(tempData[i] == data[j].${keyId}){
+							flag = true;
+						}
+					}
+					if(!flag){
+						notTemp.push(tempData[i]);
+					}
+				}
 				var temp = "";
 				for (var i = 0; i < data.length; i++) {
-					temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+					temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
 				};
+				var num = 0;
 				for (var i = 0; i < id_data.length; i++) {
-					temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] + '<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+					var flag = false;
+					for(var j = 0; j < notTemp.length; j++){
+						if(id_data[i] == notTemp[j]){
+							flag = true;
+							num++;
+						}
+					};
+					if(flag) {
+						temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] +
+								'<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+					}
 				};
 				if (temp.length > 0) {
 					$("#selectName").html(temp);
-					$("#selectNum").html(data.length + id_data.length);
+					$("#selectNum").html(data.length + num);
 				}
 			}else{
 				var temp = "";
 				for (var i = 0; i < data.length; i++) {
-					temp += '<span id="s_' + data[i].id + '" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].id + '">×</a></span>';
+					temp += '<span id="s_' + data[i].${keyId}  + '" class="label label-success">' + data[i].${keyName} +
+							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
 				};
 				if (temp.length > 0) {
 					$("#selectName").html(temp);
@@ -290,11 +326,11 @@ color: #dd5a43;
                 var rows;
 				if(opt.common.isNotEmpty(selectedRows)) {
 					for(var i=0; i<selectedRows.length; i++){
-						if(selectedRows[i].id == id){
+						if(selectedRows[i].${keyId} == id){
 							rows = selectedRows[i];
 						}
 					};
-					opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,'id');
+					opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.id);
 				}
 
                 var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
@@ -306,7 +342,7 @@ color: #dd5a43;
 					}else{
 						rowIds = $.table.affectedRowIds(rows);
 					}
-                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,'id');
+                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.id);
                 }
     		}
     		$('#s_'+id).remove();
@@ -349,21 +385,43 @@ color: #dd5a43;
 				keyId +=rows[i].${keyId} + '${separator}';
 				keyName += rows[i].${keyName} + '${separator}';
 			};
-			var un = $.table.selectAllColumns();
+			var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+			var notTemp = [];
+			for(var i=0; i< tempData.length; i++){
+				var flag = true;
+				for(var j=0; j<rows.length; j++){
+					if(tempData[i] == rows[j].${keyId}){
+						flag = false;
+						break;
+					}
+				};
+				if(flag){
+					notTemp.push(tempData[i]);
+				};
+			};
 			for(var i=0; i<id_data.length; i++){
 				var tableTemp = {};
-				keyId +=id_data[i] + '${separator}';
-				keyName +=name_data[i] + '${separator}';
-				tableTemp.${keyId} = id_data[i];
-				tableTemp.${keyName} = name_data[i];
-				rows.push(tableTemp);
-				un.push(id_data[i]);
-			}
+				var flag = true;
+				for(var j=0; j< notTemp.length; j++){
+					if(notTemp[j] == id_data[i]){
+						flag = false;
+						break;
+					}
+				};
+				if(!flag){
+					keyId +=id_data[i] + '${separator}';
+					keyName +=name_data[i] + '${separator}';
+					tableTemp.${keyId} = id_data[i];
+					tableTemp.${keyName} = name_data[i];
+					rows.push(tableTemp);
+				}
+			};
+
 			if(keyId.length > 0){
 				keyId = keyId.substr(0,keyId.length -"${separator}".length);
 				keyName = keyName.substr(0,keyName.length -"${separator}".length);
 			}
-			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:un};
+			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:tempData};
 			return true;
 		}
     }
