@@ -330,19 +330,16 @@ color: #dd5a43;
 							rows = selectedRows[i];
 						}
 					};
-					opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.id);
+					if(opt.common.isNotEmpty(rows))
+						opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.uniqueId);
 				}
 
                 var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
                 if(opt.common.isNotEmpty(selectedIds)) {
 					var rowIds = [];
 					$("#selectNum").html(selectedIds.length - 1);
-					if(opt.common.isEmpty(rows)){
-						rowIds.push(id);
-					}else{
-						rowIds = $.table.affectedRowIds(rows);
-					}
-                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.id);
+					rowIds.push(id);
+                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.uniqueId);
                 }
     		}
     		$('#s_'+id).remove();
