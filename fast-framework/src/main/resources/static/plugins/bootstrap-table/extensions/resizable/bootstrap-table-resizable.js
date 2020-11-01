@@ -2,6 +2,8 @@
  * @author: Dennis Hernández
  * @webSite: http://djhvscf.github.io/Blog
  * @version: v1.0.0
+ *
+ * J2eeFAST 二次修改
  */
 
 (function ($) {
@@ -13,24 +15,21 @@
 
         //Creates the plugin
         that.$el.colResizable({
-            liveDrag: that.options.liveDrag,
-            fixed: that.options.fixed,
-            headerOnly: that.options.headerOnly,
-            minWidth: that.options.minWidth,
             hoverCursor: that.options.hoverCursor,
-            dragCursor: that.options.dragCursor,
-            onResize: that.onResize,
-            onDrag: that.options.onResizableDrag
+            onResize: that.onResizableResize,
+            onDrag: that.options.onResizableDrag,
+            table: true
         });
     };
 
     $.extend($.fn.bootstrapTable.defaults, {
+        timeoutHeaderColumns_: 0,
         resizable: false,
         liveDrag: false,
         fixed: true,
         headerOnly: false,
         minWidth: 15,
-        hoverCursor: 'e-resize',
+        hoverCursor: 'col-resize',
         dragCursor: 'e-resize',
         onResizableResize: function (e) {
             return false;
@@ -58,17 +57,22 @@
 
         _resetView.apply(this, Array.prototype.slice.apply(arguments));
 
+        if(this.options.cardView){
+            return;
+        }
         if (this.options.resizable) {
             // because in fitHeader function, we use setTimeout(func, 100);
-            setTimeout(function () {
+            clearTimeout(that.timeoutHeaderColumns_);
+            this.timeoutHeaderColumns_ = setTimeout(function () {
                 initResizable(that);
             }, 100);
         }
     };
 
-    BootstrapTable.prototype.onResize = function (e) {
-        var that = $(e.currentTarget);
-        that.bootstrapTable('resetView');
-        that.data('bootstrap.table').options.onResizableResize.apply(e);
-    }
+    // BootstrapTable.prototype.onResize = function (e) {
+    //     // var that = $(e.currentTarget);
+    //     // that.bootstrapTable('resetView');
+    //     // that.data('bootstrap.table').options.onResizableResize.apply(e);
+    //     console.log("---<<<<<<<<<<<<<<")
+    // }
 })(jQuery);
