@@ -103,13 +103,6 @@
 			</resource>
 			<!--/////////拷贝子项目资源-////////////// -->
 			<resource>
-				<directory>../fast-system/src/main/resources</directory>
-				<includes>
-					<include>**/**</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
 				<directory>../fast-web/src/main/resources</directory>
 				<includes>
 					<include>**/**</include>

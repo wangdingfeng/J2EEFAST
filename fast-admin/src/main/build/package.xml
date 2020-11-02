@@ -18,10 +18,6 @@
         </fileSet>
         <!-- 添加子应用  静态配置文件-->
         <fileSet>
-            <directory>../fast-system/src/main/resources</directory>
-            <outputDirectory>${file.separator}</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../fast-web/src/main/resources</directory>
             <outputDirectory>${file.separator}</outputDirectory>
         </fileSet>
