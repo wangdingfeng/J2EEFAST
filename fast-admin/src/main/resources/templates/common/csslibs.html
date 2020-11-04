@@ -14,11 +14,16 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
 <#compress>
 <#if !(Libs?is_string) && Libs?? && (Libs?size > 0) >
+    <#assign flag=0 />
     <#list Libs as x>
         <#-- 对应CSS样式-->
-        <#if x == "table">
+        <#if (x == "table" || x == "treeTable") && flag == 0>
+            <#assign flag=1 />
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2-bootstrap.css?V=${config.getDvVersion()}"/>
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.css?V=${config.getDvVersion()}"/>
+        </#if>
+        <#if x == "table">
+            <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.contextMenu.min.css" />
         </#if>
         <#if x == "zTree">
             <link rel="stylesheet" href="${ctxStatic}/static/plugins/ztree/3.5/css/metroStyle/metroStyle.css?V=${config.getDvVersion()}"/>
