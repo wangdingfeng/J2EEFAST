@@ -574,7 +574,21 @@
         // 缓存并格式化数据
         var formatData = function(data) {
             var _root = options.rootIdValue ? options.rootIdValue : null;
-            var firstCode = data[0][options.parentCode];
+            var firstCode;
+            for(var i=0; i< data.length; i++){
+                var f = data[i][options.parentCode];
+                var flag = false;
+                for(var k=0; k<data.length; k++){
+                    if(data[k][options.code] == f){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag){
+                    firstCode = f;
+                    break;
+                }
+            }
             $.each(data, function(index, item) {
                 // 添加一个默认属性，用来判断当前节点有没有被显示
                 item.isShow = false;
@@ -595,7 +609,7 @@
                     item[options.parentCode] == null ||
                     item[options.parentCode] == firstCode ||
                     item[options.parentCode] == '';
-                if (!item[options.parentCode] || (_root ? (item[options.parentCode] == options.rootIdValue) : _defaultRootFlag)) {
+                if (!item[options.parentCode] || ((_root && _root == firstCode) ? (item[options.parentCode] == options.rootIdValue) : _defaultRootFlag)) {
                     if (!target.data_list["_root_"]) {
                         target.data_list["_root_"] = [];
                     }
