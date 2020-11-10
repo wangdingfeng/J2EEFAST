@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.j2eefast.common.core.utils.ToolUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import com.j2eefast.common.core.exception.RxcException;
@@ -197,6 +198,9 @@ public class GenUtils
      * @return 替换后的名字
      */
     public static String replaceText(String text){
+        if(ToolUtil.isEmpty(text)){
+            return "";
+        }
         return text.replaceAll("(?:表|FAST)", "");
     }
 

@@ -83,7 +83,7 @@
 				                    <div class="form-group">
 				                        <label class="col-sm-4 control-label"><span style="color: red; ">*</span>表描述：</label>
 				                        <div class="col-sm-8">
-				                            <input name="tableComment" class="form-control" type="text" placeholder="请输入表描述" maxlength="500" value="${gen_table.tableComment}" required>
+				                            <input name="tableComment" class="form-control" type="text" placeholder="请输入表描述" maxlength="500" value="${gen_table.tableComment?default('')}" required>
 				                        </div>
 				                    </div>
 				                </div>
@@ -224,7 +224,7 @@
 											<label class="col-sm-4 control-label"><span style="color: red; ">*</span>设置菜单：</label>
 											<div class="col-sm-8">
 												<div class="input-group">
-													<input class="form-control" type="text" onclick="selectMenu()" id="menuName" name="menuName" readonly="true" value="${gen_table.menuName}">
+													<input class="form-control" type="text" onclick="selectMenu()" id="menuName" name="menuName" readonly="true" value="${gen_table.menuName?default('')}">
 													<span class="input-group-btn"><a  href="javascript:selectMenu();"><i id="menuIconIcon" class="fa fa-fw ${gen_table.menuIcon?default("")}"></i></a></span>
 												</div>
 											</div>
@@ -718,7 +718,7 @@
 					title: '字段说明',
 					width: "10%",
 					formatter: function (value, row, index) {
-						var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].editInfo' value='%s' id='columns_edit_info_%s'>", index, value, row.id);
+						var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].editInfo' value='%s' id='columns_edit_info_%s'>", index, opt.common.nullToStr(value,""), row.id);
 						return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectinputEdit(\"" + row.id +"\", this)'><i class='fa fa-fw fa-edit'></i></a></span>";
 					}
 				},

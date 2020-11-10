@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #end
             #if($c.htmlType == "dept")##
 
-        left join sys_comp dept001 ON (dept001.type = 1 AND dept001.id = a.$c.columnName )####
+        left join sys_comp dept001 ON (dept001.type = '1' AND dept001.id = a.$c.columnName )####
 #end####
         #end##foreach
 
@@ -100,16 +100,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="${className}Joins"/>#end
 
 		<where>
-#foreach($c in $columns)##
-    #if($c.javaField == 'delFlag')###
-        a.del_flag = '0'#end##
+#foreach($c in $columns)###
+#if($c.javaField == 'delFlag')###
+       a.del_flag = '0'#end#####
 #end###
 #foreach($c in $columns)##
 #if($c.isQuery == "1" )## isQuery 
 #if($c.queryType == 'EQ')## queryType  /** 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围） */
-#if($c.javaType == "SysCompEntity" || $c.javaType == "SysDeptEntity" || $c.javaType == "SysUserEntity") 
+#if($c.javaType == "SysCompEntity" || $c.javaType == "SysDeptEntity" || $c.javaType == "SysUserEntity")###
              <if test="${c.javaField} != null and ${c.javaField}.id !=null and ${c.javaField}.id != '' "> and a.${c.columnName} = #{${c.javaField}.id} </if>
 #else
+
             <if test="${c.javaField} != null #if(${c.javaType}=="String") and ${c.javaField} != ''#end"> and a.${c.columnName} = #{${c.javaField}} </if>
 #end
 #elseif($c.queryType == 'NE')##
@@ -121,11 +122,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #elseif($c.queryType == 'LIKE') ##
 
             <if test="${c.javaField} != null #if(${c.javaType}=="String") and ${c.javaField} != ''#end">
-                     and a.${c.columnName} LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{${c.javaField}}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{${c.javaField}}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{${c.javaField}},'%')</if>
-			</if>
+                     and a.${c.columnName} LIKE###
+                     #if($dbTypeName == 'mssql')###
+
+                         '%'+#{${c.javaField}}+'%'###
+
+                     #end###
+                     #if($dbTypeName == 'oracle')###
+
+                         '%'||#{${c.javaField}}||'%'###
+
+                     #end###
+                     #if($dbTypeName == 'mysql' || $dbTypeName == 'postgresql')###
+
+                         CONCAT('%',#{${c.javaField}},'%')####
+
+                     #end###
+			</if>####
 			
 #elseif($c.queryType == 'BETWEEN')##
 #set($AttrName=$c.javaField.substring(0,1).toUpperCase() + ${c.javaField.substring(1)})##
@@ -135,9 +148,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end ##queryType
 #end ##isQuery 
 #end ##foreach 	 
-               <if test = "sql_filter !=null and sql_filter!=''">
-                   and ${sql_filter}
-               </if>    
+               <if test = "sql_filter !=null and sql_filter!=''">####
+                   and ${sql_filter}###
+               </if>###
 		</where>
 	 </select>
 
@@ -171,10 +184,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="${className}.${c.javaField} != null #if(${c.javaType}=="String") and ${className}.${c.javaField} != ''#end"> and a.${c.columnName} &lt; #{${className}.${c.javaField}}</if>
 #elseif($c.queryType == 'LIKE') ##
             <if test="${className}.${c.javaField} != null #if(${c.javaType}=="String") and ${className}.${c.javaField} != ''#end">
-                     and a.${c.columnName} LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{${className}.${c.javaField}}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{${className}.${c.javaField}}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{${className}.${c.javaField}},'%')</if>
+                     and a.${c.columnName} LIKE###
+
+                    #if($dbTypeName == 'mssql')
+                        '%'+#{${className}.${c.javaField}}+'%'
+                    #end
+                    #if($dbTypeName == 'oracle')
+                        '%'||#{${className}.${c.javaField}}||'%'
+                    #end
+                    #if($dbTypeName == 'mysql' || $dbTypeName == 'postgresql')
+                        CONCAT('%',#{${className}.${c.javaField}},'%')
+                    #end
 			</if>
 #elseif($c.queryType == 'BETWEEN')##
 #set($AttrName=$c.javaField.substring(0,1).toUpperCase() + ${c.javaField.substring(1)})##

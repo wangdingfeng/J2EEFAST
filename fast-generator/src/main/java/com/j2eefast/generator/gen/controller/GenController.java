@@ -251,7 +251,7 @@ public class GenController extends BaseController {
     @RequiresPermissions("tool:gen:list")
     @GetMapping("/importTable/{dbId}")
     public String importTable(@PathVariable("dbId") String dbId,ModelMap mmap){    	     	
-        SysDatabaseEntity db =  sysDatabaseService.getById(dbId);
+        SysDatabaseEntity db =  sysDatabaseService.getById(Convert.toLong(dbId));
         String dbName = db.getDbName();
         mmap.put("dbName", dbName);
         List<GenTableEntity> list = genTableService.generateDbTableList(db);

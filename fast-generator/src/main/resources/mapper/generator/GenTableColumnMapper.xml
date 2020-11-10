@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        select 
          <include refid="genTableColumns"/>
        from gen_table_column
-       where table_id = #{tableId}
+       where table_id = '${tableId}'
        order by sort
     </select>
     
@@ -115,6 +115,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 and table_name = (#{tableName})
 		 order by ordinal_position
 	    </if>
+        <if test="dbType == 'postgresql'">
+           select a.attnum as sort,a.attname as columnName,
+           concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as columnType,
+           d.description as columnComment
+           ,(case when a.attnotnull = 't'  then '1' else '0' end) as isRequired
+           , (case when position(CAST( a.attnum as VARCHAR) in k.pik) > 0 then '1' else '0' end) as isPk
+           from pg_class c, pg_attribute a , pg_type t, pg_description d, (SELECT p.conrelid,p.conkey::text as pik from pg_constraint as p) as k
+           where  c.relname = '${tableName}' and a.attnum>0 and a.attrelid = c.oid and a.atttypid = t.oid and  d.objoid=a.attrelid and d.objsubid=a.attnum
+           and c.oid = k.conrelid
+       </if>
 	   <if test="dbType == 'oracle'">
 	      SELECT
 				t.COLUMN_NAME AS columnName,
@@ -144,7 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteGenTableColumnByIds" parameterType="Long">
         delete from gen_table_column where table_id in
         <foreach collection="array" item="tableId" open="(" separator="," close=")">
-            #{tableId}
+            '${tableId}'
         </foreach>
     </delete>
 

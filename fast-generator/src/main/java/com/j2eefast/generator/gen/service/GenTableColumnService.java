@@ -102,11 +102,11 @@ public class GenTableColumnService extends ServiceImpl<GenTableColumnMapper,GenT
     
     
     public List<GenTableColumnEntity> generateDbTableColumnsByName(String dbName,String tableName) {
-    	  List<GenTableColumnEntity> list = Lists.newArrayList();
+	    List<GenTableColumnEntity> list = Lists.newArrayList();
 		try {
-			SysDatabaseEntity db=    sysDatabaseMapper.getByName(dbName);
+			SysDatabaseEntity db = sysDatabaseMapper.getByName(dbName);
 			 DataSourceContextHolder.setDataSourceType(dbName);
-			  list = genTableColumnMapper.generateDbTableColumnsByName(db.getDbType(), db.getSchema() , tableName);
+			 list = genTableColumnMapper.generateDbTableColumnsByName(db.getDbType(), db.getSchema() , tableName);
 		} catch (Exception e) {
 		   e.printStackTrace();
 		}finally {

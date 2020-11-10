@@ -1,12 +1,15 @@
 package com.j2eefast.generator.gen.util;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.Sequence;
+import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.utils.SpringUtil;
+import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.framework.utils.UserUtils;
 import com.j2eefast.generator.gen.config.GenConfig;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
@@ -18,6 +21,7 @@ import cn.hutool.core.util.StrUtil;
 
 import com.j2eefast.generator.gen.service.GenTableColumnService;
 import com.j2eefast.generator.gen.service.GenTableService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +30,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author zhouzhou
  * @date 2020-03-12 22:53
  */
+@Slf4j
 public class VelocityUtils
 {
     /** 项目空间路径 */
@@ -42,8 +47,7 @@ public class VelocityUtils
      * 
      * @return 模板列表
      */
-    public static VelocityContext prepareContext(GenTableEntity genTable)
-    {
+    public static VelocityContext prepareContext(GenTableEntity genTable){
         //生成模块名
         String moduleName = genTable.getModuleName();
         //生成业务名
@@ -79,6 +83,7 @@ public class VelocityUtils
         velocityContext.put("createBy", UserUtils.getLoginName());
         velocityContext.put("updateBy", UserUtils.getLoginName());
         velocityContext.put("dbTypeTb", genTable.isDbTypeTb());
+        velocityContext.put("dbTypeName", JdbcUtils.getDbType(DataSourceContext.getDataSourcesConfs().get(genTable.getDbName()).getUrl()).getDb());
         velocityContext.put("importList", getImportList(genTable.getColumns()));
         Sequence n =  new Sequence();
         for(int i=0; i< 5; i++){

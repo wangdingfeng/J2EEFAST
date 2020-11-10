@@ -3,6 +3,7 @@ package ${packageName}.service;
 
 import ${packageName}.entity.${ClassName}Entity;
 import ${packageName}.mapper.${ClassName}Mapper;
+import cn.hutool.core.convert.Convert;
 #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
@@ -119,7 +120,7 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end ##query
 #end##foreach
 #if($table.child && $pkc=="0")
-		String ${fKey.javaField} = (String) params.get("${fKey.javaField}");
+		${fKey.javaType} ${fKey.javaField} = Convert.toLong(params.get("${fKey.javaField}"));
 		queryWrapper.eq(ToolUtil.isNotEmpty(${fKey.javaField}), "${fKey.columnName}", ${fKey.javaField});
 #end
 		Page<${ClassName}Entity> page = ${className}Mapper.selectPage(new Query<${ClassName}Entity>(params).getPage(), queryWrapper);
