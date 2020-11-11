@@ -54,7 +54,7 @@
     }else if (extName == 'txt' || extName == 'html'){
         document.write('<iframe id="mainFrame" name="mainFrame" class="box" style="border:0;background:#fff;"></iframe>');
         $('#mainFrame').attr('src', (fileUrl));
-    }else if (extName == 'img' || extName == 'png' || extName == "jpg"){
+    }else if (extName == 'img' || extName == 'png' || extName == "jpg" || extName == 'gif'){
         document.write('<div class="box" style="display:flex;align-items:center">'
             + '<div style="flex:1;display:flex;justify-content:center">'
             + '<a href="'+fileUrl+'"></a></div></div>');
