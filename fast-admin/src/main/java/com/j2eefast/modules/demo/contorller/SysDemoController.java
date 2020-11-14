@@ -1,25 +1,17 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.demo.contorller;
 
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2eefast.common.core.controller.BaseController;
-import com.j2eefast.common.core.page.Query;
-import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.ResponseData;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.Constant;
-import lombok.Data;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.*;
 
 /**

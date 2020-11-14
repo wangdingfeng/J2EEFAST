@@ -1,5 +1,8 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
-
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.j2eefast.common.core.base.entity.Ztree;
@@ -11,15 +14,12 @@ import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.sys.entity.SysDictTypeEntity;
 import com.j2eefast.framework.sys.service.SysDictTypeSerive;
 import com.j2eefast.common.core.controller.BaseController;
-import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  * @ProjectName: fast
  * @Package: com.j2eefast.modules.sys.controller
  * @ClassName: SysDictTypeController
- * @Author: zhouzhou Emall:18774995071@163.com
+ * @Author: zhouzhou Emall:loveingowp@163.com
  * @Description:
  * @Date: 2019/12/18 14:47
  * @Version: 1.0

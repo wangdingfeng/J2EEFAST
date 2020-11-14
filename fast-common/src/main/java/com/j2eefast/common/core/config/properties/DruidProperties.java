@@ -1,9 +1,14 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.config.properties;
 
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +56,8 @@ public class DruidProperties {
      * 多源数据库
      */
     private Map<Object, Object> map;
-    
+
+
     public void config(DruidDataSource dataSource) {
 
         dataSource.setUrl(url);

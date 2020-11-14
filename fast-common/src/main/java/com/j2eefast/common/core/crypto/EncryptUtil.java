@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 
 package com.j2eefast.common.core.crypto;
 import java.security.Key;
@@ -515,7 +519,7 @@ public class EncryptUtil
     /**
      *  SM4 反解PinBlock
      * @Description:TODO
-     * @author zhouzhou 18774995071@163.com
+     * @author zhouzhou loveingowp@163.com
      * @time 2019-05-24 11:05
      * @param accountNo 卡号
      * @param pin pin 密码密文

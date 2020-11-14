@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.config;
 
 import cn.hutool.core.util.StrUtil;
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Component;
 /**
  * <p>yml 文件敏感信息处理类</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-24 20:45
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

@@ -1,14 +1,14 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import cn.hutool.core.util.IdUtil;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import com.j2eefast.common.config.service.SysConfigService;
@@ -38,8 +38,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +50,6 @@ import com.j2eefast.common.core.crypto.SoftEncryption;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.exception.ServiceException;
 import com.j2eefast.common.core.manager.AsyncManager;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
-import com.j2eefast.framework.sys.service.SysUserDeptService;
 import com.j2eefast.framework.utils.RedisKeys;
 import com.j2eefast.framework.utils.UserUtils;
 
@@ -164,7 +160,7 @@ public class SysLoginController extends BaseController {
 	 * @author zhouzhou
 	 * @date 2020-03-07 14:47
 	 */
-	@FastLicense(vertifys = {"online","detection"})
+//	@FastLicense(vertifys = {"online","detection"})
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseData login(String username, String password,Boolean rememberMe) {
@@ -177,6 +173,7 @@ public class SysLoginController extends BaseController {
 				return error("50004","图形验证码不正确!");
 			}
 		}
+
 		String secretKey = super.getCookie(ConfigConstant.SECRETKEY);
 		Subject subject = null;
 		try {
@@ -205,7 +202,6 @@ public class SysLoginController extends BaseController {
 			}
 			return error(msg);
 		}
-
 		return success("登录成功!");
 	}
 
