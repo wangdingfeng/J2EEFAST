@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 import com.j2eefast.common.core.utils.SpringUtil;
@@ -9,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * 
  * @Description:系统参数
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2019-04-15 17:35
  * @version V1.0 
  *

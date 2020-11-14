@@ -12,7 +12,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 
 /**
  * @Description: cron表达式工具类
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/19 13:33
  * @version V1.0
  

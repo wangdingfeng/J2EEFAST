@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import cn.hutool.core.date.DateUnit;
@@ -23,7 +27,7 @@ import java.util.*;
 /**
  * <p>公告服务实现类</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-26 10:58
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

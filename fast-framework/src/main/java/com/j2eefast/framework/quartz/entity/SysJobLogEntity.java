@@ -67,6 +67,26 @@ public class SysJobLogEntity implements Serializable {
 	@TableField(value = "create_time", fill = FieldFill.INSERT)
 	private Date createTime;
 
+	@TableField(exist = false)
+	private String beginTime;
+
+	@TableField(exist = false)
+	private String endTime;
+
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public String getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+
 	public Long getId() {
 		return id;
 	}

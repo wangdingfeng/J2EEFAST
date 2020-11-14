@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.license.interceptor;
 
@@ -23,7 +24,7 @@ import java.lang.reflect.Method;
 /**
  * <p>证书连接器</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-18 09:15
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

@@ -1,36 +1,38 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-
-import com.alibaba.excel.util.FileUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.j2eefast.common.core.utils.HttpContextUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.framework.oss.cloud.CloudStorageService;
+import com.j2eefast.framework.oss.cloud.OSSFactory;
 import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
-import com.j2eefast.framework.sys.constant.factory.IConstantFactory;
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
 import com.j2eefast.framework.sys.entity.SysFilesEntity;
 import com.j2eefast.framework.sys.service.SysFileService;
-import com.j2eefast.framework.sys.service.SysFileUploadService;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 组件文件处理
+ * @author huanzhou
+ */
 public class FileUploadUtils {
-
-//	private static  SysFileUploadService sysFileUploadService = SpringUtil.getBean(SysFileUploadService.class);
-//
-//	private static  SysFileService sysFileService = SpringUtil.getBean(SysFileService.class);
 
     public static FileUploadUtils me() {
         return new FileUploadUtils();
@@ -49,7 +51,7 @@ public class FileUploadUtils {
         if(ToolUtil.isNotEmpty(fileDels)){
             String[] dels = StrUtil.split(fileDels,StrUtil.COMMA);
             for(String fId: dels){
-                ConstantFactory.me().getSysFileUploadService().removeByBizId(fId,String.valueOf(bizId));
+                ConstantFactory.me().getSysFileUploadService().removeByBizId(Convert.toLong(fId),bizId);
             }
         }
         //新增关联
@@ -57,8 +59,8 @@ public class FileUploadUtils {
             String[] files = StrUtil.split(fileUploads,StrUtil.COMMA);
             SysFileService sysFileService = SpringUtil.getBean(SysFileService.class);
             for(String fileId: files){
-                if(ConstantFactory.me().getSysFileUploadService().getSysFileUploadByBizId(fileId,String.valueOf(bizId))){
-                    SysFilesEntity filesEntity = sysFileService.getSysFileById(Long.valueOf(fileId));
+                if(ConstantFactory.me().getSysFileUploadService().getSysFileUploadByBizId(Convert.toLong(fileId),bizId)){
+                    SysFilesEntity filesEntity = sysFileService.getSysFileById(Convert.toLong(fileId));
                     SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
                     sysFileUploadEntity.setBizId(bizId);
                     sysFileUploadEntity.setFileName(filesEntity.getFileName());
@@ -83,7 +85,7 @@ public class FileUploadUtils {
     	temp.setBizType(bizType);
     	temp.setBizId(bizId);   	
     	List<SysFileUploadEntity> list = ConstantFactory.me().getSysFileUploadService().selectList(temp);
-    	if (null != list && list.size() > 0) {
+    	if (ToolUtil.isNotEmpty(list)) {
     		for (SysFileUploadEntity up :list ) {
     			deleteFileRelation(up.getFileId());
     		}
@@ -101,19 +103,28 @@ public class FileUploadUtils {
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteFileRelation(Long fileId) {
 		SysFilesEntity fileEntity = ConstantFactory.me().getSysFileService().getById(fileId);
-		if (null != fileEntity) {
-			String divPath = (fileEntity.getClassify().equals("0") || fileEntity.getClassify().equals("1")) ? Global.getAttachPath() : Global.getEditorPath() ;
-			String filePath = divPath + fileEntity.getFilePath() ;
-			File file = new File(filePath);
-			//删除文件
-			if (file.exists() && file.isFile()) {
-				FileUtils.delete(new File(filePath));
-			}
-			
+		if (ToolUtil.isNotEmpty(fileEntity)) {
+            //获取文件根路径
+			String divPath = (fileEntity.getClassify().equals("0") ||
+                    fileEntity.getClassify().equals("1")) ? Global.getAttachPath() : Global.getEditorPath();
+			//存储文件类型
+            int ossType = Integer.parseInt(fileEntity.getOssType());
+
+            //本地直接文件删除
+            if(ossType == Constant.CloudService.LOCAL.getValue()){
+                String filePath = divPath + fileEntity.getFilePath();
+                //删除文件
+                if (FileUtil.exist(filePath)) {
+                    FileUtil.del(filePath);
+                }
+            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+                //阿里云OSS
+                OSSFactory.build().delFileOss(fileEntity.getFilePath());
+            }
+
 			//删除业务关联 sys_file_upload
-			if (null != fileEntity.getFileUpload() && null != fileEntity.getFileUpload().getId()) {
-                ConstantFactory.me().getSysFileUploadService().deleteSysFileUploadById(fileEntity.getFileUpload().getId());
-			}
+            ConstantFactory.me().getSysFileUploadService().removeByFileId(fileId);
+
 			//删除sys_file
             ConstantFactory.me().getSysFileService().delSysFilesById(fileId);
 		}
@@ -167,15 +178,13 @@ public class FileUploadUtils {
     * @param fileName  为空时,使用bizId+后缀名 命名
     * @return  String  保文件的路径名
     * @author mfksn001@163.com
+    *         zhouzhou 新增支持OSS
     * @Date: 2020年8月24日
      */
     public static String saveImgBase64(String imgBase64,String bizType,Long bizId,String fileName) {
     	if (imgBase64.equals(StrUtil.EMPTY)) {
             return null;
         }
-    	
-    	
-
         String extension = null;
         String type = StrUtil.subBetween(imgBase64, "data:", ";base64,");
         if (StrUtil.containsIgnoreCase(type, "image/jpeg")) {
@@ -188,7 +197,9 @@ public class FileUploadUtils {
         String saveName = IdUtil.fastSimpleUUID() + "." + extension ;
         if (StringUtils.isNotBlank(fileName)) {     	
         	saveName = fileName + "." + extension; 
-        }        
+        }
+        //获取系统上传文件配置
+        int ossType = OSSFactory.getOSSType();
 
         String imageUrl = File.separator + "avatar"
                 + File.separator +
@@ -205,15 +216,24 @@ public class FileUploadUtils {
             //删除
             FileUploadUtils.me().removeFileUpload(bizId,bizType);
 
-        	String fullPath =  Global.getAttachPath() + imageUrl ;
-            FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
+            if(ossType == Constant.CloudService.LOCAL.getValue()){
+                FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
+            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+                imageUrl = "attach"+imageUrl;
+                //阿里云
+                CloudStorageService cloud = OSSFactory.build();
+                cloud.upload(data, imageUrl);
+                cloud.shutdown();
+            }
             SysFilesEntity sysFile = new SysFilesEntity();
             sysFile.setFileMd5(ToolUtil.encodingFilename(saveName));
             sysFile.setFileName(saveName);
             sysFile.setFilePath(imageUrl);
             sysFile.setClassify("1");
-            sysFile.setFileSize(new BigDecimal(FileUtil.size(new File(fullPath))));
+            sysFile.setOssType(Integer.toString(ossType));
+            sysFile.setFileSize(new BigDecimal(data.length));
             ConstantFactory.me().getSysFileService().save(sysFile);
+
             if (StringUtils.isNotBlank(bizType)) {
 	             SysFileUploadEntity sysFileUploadEntity  = new SysFileUploadEntity();
 	             sysFileUploadEntity.setBizId(bizId);
@@ -228,14 +248,12 @@ public class FileUploadUtils {
 
         return imageUrl;
     }
-    /*
+
+    /**
      * 使用业务ID作为文件名
      */
     public static String saveImgBase64(String imgBase64,String bizType,Long bizId) {
        return saveImgBase64( imgBase64, bizType, bizId,null);
     }
-    
- 
- 
     
 }

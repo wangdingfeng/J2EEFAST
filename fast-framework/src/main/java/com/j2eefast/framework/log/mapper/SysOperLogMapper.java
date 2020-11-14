@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * <p> 操作日志 Mapper 接口</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-20 16:43
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

@@ -1,16 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.entity.server;
 
 import cn.hutool.core.util.NumberUtil;
 
-/**
- * 
- * @Description: 內存相关信息
- * @author zhouzhou 18774995071@163.com
- * @time 2019-04-03 10:26
- * @version V1.0 
- 的
- *
- */
 public class MemEntity
 {
     /**

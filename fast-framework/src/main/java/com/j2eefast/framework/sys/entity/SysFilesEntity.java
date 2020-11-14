@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ */
 package com.j2eefast.framework.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -8,6 +15,8 @@ import java.math.BigDecimal;
 
 /**
  * 文件实体表类
+ * @author huanzhou
+ * @date 2020-10-23
  */
 @Data
 @TableName("sys_file")
@@ -32,6 +41,15 @@ public class SysFilesEntity extends BaseEntity{
      * 文件相对路径
      */
     private String filePath;
+
+    /**
+     * 文件存储的对象类型
+     * 0 本地
+     * 1 阿里
+     * 2 腾讯
+     * 3 七牛
+     */
+    private String ossType;
 
     /**
      * 文件归档分类

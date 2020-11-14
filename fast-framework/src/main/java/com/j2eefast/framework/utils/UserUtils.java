@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
@@ -18,7 +22,7 @@ import com.j2eefast.common.core.utils.ToolUtil;
 /**
  * 
  * 登陆用户信息
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2018-11-15 20:20
  * @version V1.0
  *

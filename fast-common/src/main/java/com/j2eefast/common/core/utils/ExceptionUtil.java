@@ -8,7 +8,7 @@ import java.io.StringWriter;
 /**
  * <p>异常工具类.</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-26 17:59
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

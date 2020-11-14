@@ -2,6 +2,8 @@ package com.j2eefast.framework.quartz.service;
 
 import java.util.Arrays;
 import java.util.Map;
+
+import com.j2eefast.framework.utils.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -43,6 +45,12 @@ public class SysJobLogService extends ServiceImpl<SysJobLogMapper,SysJobLogEntit
 			    .apply(ToolUtil.isNotEmpty(endTime)," date_format(create_time,'%y%m%d') "
 			    		+ "<= date_format('"+endTime+"','%y%m%d')")
 		);
+		return new PageUtil(page);
+	}
+
+	public PageUtil findPage(Map<String, Object> params,SysJobLogEntity sysJobLog) {
+		Page<SysJobLogEntity> page = this.baseMapper.findPage(new Query<SysJobLogEntity>(params).getPage(),
+														      sysJobLog);
 		return new PageUtil(page);
 	}
 	

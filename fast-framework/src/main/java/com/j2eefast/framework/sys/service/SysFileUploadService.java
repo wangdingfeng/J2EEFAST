@@ -1,6 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 
+import cn.hutool.core.convert.Convert;
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
 import com.j2eefast.framework.sys.mapper.SysFileUploadMapper;
 import com.j2eefast.common.core.page.Query;
@@ -91,12 +96,20 @@ public class SysFileUploadService extends ServiceImpl<SysFileUploadMapper,SysFil
         return this.save(sysFileUpload);
     }
 
-    public boolean removeByBizId(String fileId, String bizid){
-		return  this.remove(new QueryWrapper<SysFileUploadEntity>().eq("file_id",fileId).eq("biz_id",bizid));
+    public boolean removeByBizId(Long fileId, Long bizid){
+		return  this.remove(new QueryWrapper<SysFileUploadEntity>()
+				.eq("file_id",fileId).eq("biz_id",bizid));
 	}
 
-	public boolean getSysFileUploadByBizId(String fileId, String bizid){
-		if(this.count(new QueryWrapper<SysFileUploadEntity>().eq("file_id",fileId).eq("biz_id",bizid))> 0){
+	public boolean removeByFileId(Long fileId){
+		return  this.remove(new QueryWrapper<SysFileUploadEntity>().eq("file_id",fileId));
+	}
+
+	public boolean getSysFileUploadByBizId(Long fileId, Long bizid){
+		String fileIdKey = "file_id";
+		String bizIdKey= "biz_id";
+		if(this.count(new QueryWrapper<SysFileUploadEntity>().eq(fileIdKey,
+				fileId).eq(bizIdKey,bizid))> 0){
 			return false;
 		}
 		return true;

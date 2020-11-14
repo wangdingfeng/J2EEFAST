@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.controller;
 
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -17,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 
  * @Description:服务监控控制类
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2019-04-03 12:40
  * @version V1.0 
  *

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.date.DateUtil;
@@ -39,7 +43,7 @@ import java.util.Map;
 /**
  * <p>公告页面控制器</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-26 11:02
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

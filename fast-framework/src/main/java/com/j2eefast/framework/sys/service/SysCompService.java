@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import java.util.ArrayList;
@@ -30,7 +34,7 @@ import javax.annotation.Resource;
 
 /**
  * 公司名称
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2018-12-05 08:58
  */
 @Service

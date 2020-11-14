@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.entity;
 
 import java.io.Serializable;
@@ -11,7 +15,7 @@ import lombok.Data;
 /**
  * 
  * 用户与地区对应关系
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2018-12-05 22:43
  */
 @Data

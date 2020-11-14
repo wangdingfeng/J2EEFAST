@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.license.creat;
 
@@ -18,7 +19,7 @@ import java.util.prefs.Preferences;
 /**
  * <p>许可证书生成类,注意此类不能项目中应当与项目分离单独使用</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-19 14:03
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

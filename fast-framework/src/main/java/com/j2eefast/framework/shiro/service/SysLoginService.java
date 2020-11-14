@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * 
  * @Description:登陆验证
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2019-04-09 15:10
  * @version V1.0 
  *

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.controller;
 
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
@@ -32,7 +36,7 @@ import java.util.Map;
  * @ProjectName: fast
  * @Package: com.j2eefast.system.monitor.controller
  * @ClassName: SysUserOnlineController
- * @Author: zhouzhou Emall:18774995071@163.com
+ * @Author: zhouzhou Emall:loveingowp@163.com
  * @Description:
  * @Date: 2019/12/23 17:58
  * @Version: 1.0

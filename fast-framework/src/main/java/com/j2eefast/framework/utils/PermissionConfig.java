@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 
@@ -9,7 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author: zhouzhou Emall:18774995071@163.com
+ * @Author: zhouzhou Emall:loveingowp@163.com
  * @Description: html调用 Freemarker 实现按钮权限可见性
  * @Date: 2019/12/19 16:48
  * @Version: 1.0

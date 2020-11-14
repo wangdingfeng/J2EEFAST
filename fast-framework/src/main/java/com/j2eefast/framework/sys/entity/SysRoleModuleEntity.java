@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -9,7 +13,7 @@ import java.io.Serializable;
 
 /**
  * 角色与模块中间表
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/15 11:29
  * @version V1.0
  */
