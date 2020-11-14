@@ -1,7 +1,9 @@
-package com.j2eefast.common.core.license;
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
+package com.j2eefast.common.core.license;
+
 import cn.hutool.core.util.CharsetUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -18,7 +20,7 @@ import java.util.List;
 
 /**
  * <p>自定义LicenseManager，用于增加额外的服务器硬件信息校验</p>
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-17 09:14
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
