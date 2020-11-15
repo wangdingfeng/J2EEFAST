@@ -1,4 +1,7 @@
-/* 需要引入的css文件 */
+/*!
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 .verify-code {
 	font-size: 20px;
 	text-align: center;
@@ -61,8 +64,8 @@
 }
 .verifybox-top{
     padding: 0 15px;
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     text-align: left;
     font-size: 16px;
     color: #45494c;
@@ -75,14 +78,29 @@
 }
 .verifybox-close{
     position: absolute;
-    top: 13px;
+    top: 8px;
     right: 9px;
     width: 24px;
     height: 24px;
     line-height: 24px;
     text-align: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
 }
+
+.verifybox-close .icon-close{
+    font-weight: bold;
+}
+
+.verifybox-close:hover {
+    transition: transform 0.2s ease;
+    transform:rotate(60deg);
+    -ms-transform:rotate(60deg);
+    -moz-transform:rotate(60deg);
+    -webkit-transform:rotate(60deg);
+    -o-transform:rotate(60deg);
+}
+
 .mask{
     position: fixed;
     top: 0;
@@ -147,7 +165,7 @@
     top: 0px;
     left: 0;
     background: #fff;
-    cursor: pointer;
+    cursor: move;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
@@ -182,16 +200,28 @@
 	position: relative;
 }
 
-.verify-img-panel .verify-refresh {
-	width: 25px;
-	height: 25px;
-	text-align:center;
-	padding: 5px;
-	cursor: pointer;
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 2;
+/*.verify-img-panel .verify-refresh {*/
+/*	width: 25px;*/
+/*	height: 25px;*/
+/*	text-align:center;*/
+/*	padding: 5px;*/
+/*	cursor: pointer;*/
+/*	position: absolute;*/
+/*	top: 0;*/
+/*	right: 0;*/
+/*	z-index: 2;*/
+/*}*/
+
+.verify-img-panel .verify-refresh img {
+    pointer-events: auto;
+    display: block;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: 200ms;
+    cursor: pointer;
 }
 
 .verify-img-panel .icon-refresh {
