@@ -183,7 +183,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null">remark = #{remark},</if>
 			<if test="childId != null">child_id = #{childId},</if>
 			<if test="childFieldId != null">child_field_id = #{childFieldId},</if>
+			<if test=" _databaseId  == 'mysql'">
 			update_time = sysdate()
+			</if>
+			<if test=" _databaseId  == 'postgresql'">
+			update_time = now()
+			</if>
+
 		</set>
 		where id = #{id}
 	</update>
@@ -218,15 +224,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>
 			</if>
         </if>
-        
+
+		<if test="dbType == 'postgresql'">
+			SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment
+			from pg_tables as p
+			LEFT JOIN pg_class  as c on p.tablename = c.relname
+			<where>
+				<if test="schema != null and schema != ''">
+					AND  p.tableowner = '${schema}'
+				</if>
+				AND p.tablename NOT LIKE 'qrtz_%'
+				<if test="tableName != null and tableName != ''">
+					AND p.tablename like concat('%', #{tableName}, '%')
+				</if>
+				<if test="tableComment != null and tableComment != ''">
+					AND table_comment like concat('%', #{tableComment}, '%')
+				</if>
+				<if test="notList != null">
+					AND p.tablename NOT IN
+					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+		</if>
+
        <if test="dbType == 'oracle'">
-         	SELECT 
-				t.TABLE_NAME AS table_name, 
+         	SELECT
+				t.TABLE_NAME AS table_name,
 				nvl(c.COMMENTS,t.TABLE_NAME) AS table_comment,  o.created as create_time, o.last_ddl_time as update_time
-			  FROM all_tables t 
+			  FROM all_tables t
 			  LEFT JOIN user_tab_comments c ON t.table_name = c.table_name
 			  LEFT JOIN dba_objects o ON t.table_name = o.object_name   and t.OWNER = o.OWNER
-			<where>	
+			<where>
 			      AND t.OWNER =  upper(#{schema})
 				  AND t.table_name NOT LIKE  upper('qrtz_%') 
 		     <if test="tableName != null and tableName != ''">
@@ -256,6 +286,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<foreach collection="tableNames" item="tableName" open="(" separator="," close=")">
 				#{tableName}
 			</foreach>
+			</if>
+
+			<if test="dbType == 'postgresql'">
+				SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment
+				from pg_tables as p
+				LEFT JOIN pg_class  as c on p.tablename = c.relname
+				<where>
+					<if test="schema != null and schema != ''">
+						AND  p.tableowner = '${schema}'
+					</if>
+					AND p.tablename NOT LIKE 'qrtz_%' AND p.tablename NOT LIKE 'gen_%'
+					and p.tablename in
+					<foreach collection="tableNames" item="tableName" open="(" separator="," close=")">
+						#{tableName}
+					</foreach>
+				</where>
 			</if>
 			
 		   <if test="dbType == 'oracle'">
@@ -298,7 +344,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>
 			</if>
         </if>
-        
+
+		<if test="dbType == 'postgresql'">
+			SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment
+			from pg_tables as p
+			LEFT JOIN pg_class  as c on p.tablename = c.relname
+			<where>
+				<if test="schema != null and schema != ''">
+					AND  p.tableowner = '${schema}'
+				</if>
+				AND p.tablename NOT LIKE 'qrtz_%'
+				<if test="tableName != null and tableName != ''">
+					AND p.tablename like concat('%', #{tableName}, '%')
+				</if>
+				<if test="tableComment != null and tableComment != ''">
+					AND table_comment like concat('%', #{tableComment}, '%')
+				</if>
+				<if test="notList != null">
+					AND p.tablename NOT IN
+					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+		</if>
        <if test="dbType == 'oracle'">
          	SELECT 
 				t.TABLE_NAME AS table_name, 

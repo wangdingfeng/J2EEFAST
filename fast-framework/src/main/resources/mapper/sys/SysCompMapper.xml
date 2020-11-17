@@ -28,7 +28,14 @@
             AND c.parent_id = #{parentId}
         </if>
         <if test="id != null and id != ''">
-            AND (FIND_IN_SET(#{id},c.parent_ids) OR (c.id = #{id} AND c.del_flag = '0'))
+            <if test="_databaseId == 'mysql'">
+                AND (FIND_IN_SET(#{id},c.parent_ids)
+                OR (c.id = #{id} AND c.del_flag = '0'))
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                AND ('${id}' = ANY(STRING_TO_ARRAY(c.parent_ids, ','))
+                OR (c.id = '${id}' AND c.del_flag = '0'))
+            </if>
         </if>
         <if test="name != null and name != ''">
             AND c.name like concat('%', #{name}, '%')

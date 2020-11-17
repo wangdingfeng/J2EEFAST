@@ -3,16 +3,52 @@
 
 <mapper namespace="com.j2eefast.framework.quartz.mapper.SysJobLogMapper">
 
+    <sql id="sysJobLogColumns">
+         a.id as "id" ,
+         a.job_id as "jobId" ,
+         a.job_name as "jobName" ,
+         a.job_group as "jobGroup" ,
+         a.invoke_target as "invokeTarget" ,
+         a.status as "status" ,
+         a.error as "error" ,
+         a.times as "times" ,
+         a.create_time as "createTime"
+     </sql>
+
 	<update id="cleanJobLog">
     <!-- truncate table sys_job_log -->
         DELETE FROM sys_job_log
     </update>
 
-   <!-- <delete id="deleteJobByIds" parameterType="Long">
-        delete from sys_job_log where log_id in
-        <foreach collection="array" item="logId" open="(" separator="," close=")">
-            #{logId}
-        </foreach>
-    </delete> -->
-    
+    <select id="findPage" resultType="com.j2eefast.framework.quartz.entity.SysJobLogEntity">
+        SELECT
+        <include refid="sysJobLogColumns"/>
+        FROM sys_job_log a
+        <where>
+            <if test="sysJobLog.jobName != null  and sysJobLog.jobName != ''">
+                AND a.job_name LIKE
+                <if test="_databaseId == 'oracle'"> '%'||#{sysJobLog.jobName}||'%'</if>
+                <if test="_databaseId == 'mssql'">'%'+#{sysJobLog.jobName}+'%'</if>
+                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">concat('%',#{sysJobLog.jobName},'%')</if>
+            </if>
+            <if test="sysJobLog.jobGroup != null  and sysJobLog.jobGroup != ''"> AND a.job_group = #{sysJobLog.jobGroup} </if>
+            <if test="sysJobLog.status != null  and sysJobLog.status != ''"> AND a.status = #{sysJobLog.status} </if>
+            <if test="_databaseId == 'mysql'">
+                <if test="sysJobLog.beginTime != null and sysJobLog.beginTime != ''">
+                    AND date_format(a.create_time,'%y%m%d') <![CDATA[ >= ]]> date_format(#{sysJobLog.beginTime},'%y%m%d')
+                </if>
+                <if test="sysJobLog.endTime != null and sysJobLog.beginTime != null  and sysJobLog.endTime != '' and sysJobLog.endTime != sysJobLog.beginTime">
+                    AND date_format(a.create_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{sysJobLog.beginTime},'%y%m%d')
+                </if>
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                <if test="sysJobLog.beginTime != null and sysJobLog.beginTime != ''">
+                    AND a.create_time <![CDATA[ >= ]]> '${sysJobLog.beginTime}'::timestamp
+                </if>
+                <if test="sysJobLog.beginTime != null  and sysJobLog.endTime != ''">
+                    AND a.create_time <![CDATA[ < ]]> ('${sysJobLog.endTime}'::timestamp + '1 day')
+                </if>
+            </if>
+        </where>
+    </select>
 </mapper>

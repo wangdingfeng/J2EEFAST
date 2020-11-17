@@ -11,7 +11,7 @@
 
     <!--  实体栏位  -->
     <sql id="sysLoginInfoColumns">
-          DISTINCT a.id as "id"   ,
+          a.id as "id"   ,
           a.username as "username"   ,
           a.ipaddr as "ipaddr"   ,
           a.login_location as "loginLocation"   ,
@@ -42,9 +42,9 @@
             from (select * FROM sys_login_infor WHERE username = #{username}
             AND status = '00000' ORDER BY login_time ) where rownum=1
         </if>
-        <if test="_databaseId  == 'mysql'">
+        <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'">
             from sys_login_infor
-            where username = #{username}  AND status = "00000" ORDER BY login_time
+            where username = #{username}  AND status = '00000' ORDER BY login_time
             DESC LIMIT 1
         </if>
     </select>
@@ -58,29 +58,45 @@
             <if test="username != null and username != ''">
                 AND a.username LIKE
                 <if test="_databaseId == 'oracle'"> '%,'||#{username}||',%'</if>
-                <if test="_databaseId == 'mysql'"> CONCAT('%', #{username}, '%')</if>
+                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{username}, '%')</if>
             </if>
             <if test="ipaddr != null and ipaddr != ''">
                 AND a.ipaddr LIKE
                 <if test="_databaseId == 'oracle'"> '%,'||#{ipaddr}||',%'</if>
-                <if test="_databaseId == 'mysql'"> CONCAT('%', #{ipaddr}, '%')</if>
+                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{ipaddr}, '%')</if>
             </if>
             <if test="status != null and status != ''">
                 <if test="status == '-1'">
                 AND a.status != '00000'
                 </if>
                 <if test="status != '-1'">
-                    AND a.status != #{status}
+                    AND a.status = #{status}
                 </if>
             </if>
-            <if test="deptId != null and deptId != ''">
-                AND  FIND_IN_SET(#{deptId},d.parent_ids) OR a.dept_id = #{deptId}
+            <if test="deptId != null and deptId !=''">
+                <if test="_databaseId == 'mysql'">
+                    AND (FIND_IN_SET(#{deptId},d.parent_ids) OR a.dept_id = #{deptId})
+                </if>
+                <if test="_databaseId == 'postgresql'">
+                    AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
+                    OR a.dept_id = '${deptId}')
+                </if>
             </if>
-            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(a.login_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            <if test="_databaseId == 'mysql'">
+                <if test="beginTime != null and beginTime != ''">
+                    AND date_format(a.login_time,'%y%m%d') <![CDATA[ >= ]]> date_format(#{beginTime},'%y%m%d')
+                </if>
+                <if test="endTime != null and beginTime != null">
+                    AND date_format(a.login_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{beginTime},'%y%m%d')
+                </if>
             </if>
-            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(a.login_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            <if test="_databaseId == 'postgresql'">
+                <if test="beginTime != null and beginTime != ''">
+                    AND a.login_time <![CDATA[ >= ]]> '${beginTime}'::timestamp
+                </if>
+                <if test="beginTime != null  and endTime != ''">
+                    AND a.login_time <![CDATA[ < ]]> ('${endTime}'::timestamp + '1 day')
+                </if>
             </if>
             <!-- 数据范围过滤 -->
             <if test = "sql_filter !=null and sql_filter!=''">
