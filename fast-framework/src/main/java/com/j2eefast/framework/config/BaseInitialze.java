@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @ClassName: BaseInitialze
  * @Package: com.j2eefast.framework.config
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/14 18:32
  * @version V1.0
  *

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * mybatis-plus 配置
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/14 18:32
  * @version V1.0
  * EnableAspectJAutoProxy 此处作用是使框架暴露代理对象 使其SpringUtil.getAopProxy 能够获取
@@ -57,13 +57,12 @@ public class MybatisPlusConfig {
 
 	/**
 	 * 动态配置 mapper 的扫描路径
-	 * @author: zhouzhou Emall:18774995071@163.com
+	 * @author: zhouzhou Emall:loveingowp@163.com
 	 */
 	@Bean
 	public MapperScannerConfigurer mapperScannerConfigurer(){
 		MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
-		String mapperPackage = PropertiesUtils.getInstance().getProperty("mybatis-plus.mapper-package","com.j2eefast.*.*.mapper," +
-				"com.j2eefast.*.*.dao");
+		String mapperPackage = PropertiesUtils.getInstance().getProperty("mybatis-plus.mapper-package","com.j2eefast.*.*.mapper");
 		if(ToolUtil.isNotEmpty(mapperPackage)){
 			scannerConfigurer.setBasePackage("com.j2eefast.*.*.mapper,"+mapperPackage);
 		}else{
