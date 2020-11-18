@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 
 /**
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 15:18
  * @version V1.0
  */

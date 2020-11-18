@@ -4,7 +4,7 @@ package com.j2eefast.generator.gen.util;
  * @ClassName: GenConstants
  * @Package: com.j2eefast.generator.gen.util
  * @Description: 代码生成常量
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 17:51
  * @version V1.0
  

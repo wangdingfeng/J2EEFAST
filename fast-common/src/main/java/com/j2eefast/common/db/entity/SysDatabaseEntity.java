@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.utils.DbUtil;
 
 import lombok.Data;
@@ -85,10 +86,13 @@ public class SysDatabaseEntity extends BaseEntity {
 		if ("mysql".equals(DbUtil.getDbType(this.jdbcDriver))) {
 			return "";   //取当前连接的数据库名
 		}
-		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
-			return this.getUserName();
-		}
-		return "";
+//		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
+//			return this.getUserName();
+//		}
+//		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
+//			return
+//		}
+		return DataSourceContext.getDataSourcesConfs().get(this.dbName).getUsername();
 	}
 	
 	/** 数据库类型    oacle|mysql|sqlserver */

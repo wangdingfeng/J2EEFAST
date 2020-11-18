@@ -18,7 +18,7 @@
 // * @ClassName: GenTableColumnServiceImpl
 // * @Package: com.j2eefast.generator.service.impl
 // * @Description: (用一句话描述该文件做什么)
-// * @author: zhouzhou Emall:18774995071@163.com
+// * @author: zhouzhou Emall:loveingowp@163.com
 // * @time 2020/1/6 15:28
 // * @version V1.0
 //

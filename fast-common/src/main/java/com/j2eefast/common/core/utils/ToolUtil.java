@@ -7,10 +7,12 @@ import java.util.regex.Pattern;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.OshiUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
@@ -20,6 +22,8 @@ import me.zhyd.oauth.model.AuthToken;
 import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.*;
 import me.zhyd.oauth.utils.AuthStateUtils;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,6 +44,7 @@ import oshi.hardware.NetworkIF;
  * @author zhouzhou
  * @date 2020-03-11 15:02
  */
+@Slf4j
 public class ToolUtil{
 
 	private static int 							counter 							= 0;
@@ -61,6 +66,7 @@ public class ToolUtil{
         }
         return sb.toString();
     }
+
 	
 	/**
 	 * 判断对象是否为空  true 不为空
@@ -129,6 +135,19 @@ public class ToolUtil{
     }
 
     /**
+     * String[] 转换 Long[]
+     * @param strs
+     * @return
+     */
+    public  static Long[] StrToLong(String[] strs){
+        Long[] lon = new Long[strs.length];
+        for(int i=0; i< strs.length; i++){
+            lon[i] = Long.valueOf(strs[i]);
+        }
+        return lon;
+    }
+
+    /**
      * 对象组中是否全是空对象
      *
      * @author zhouzhou
@@ -166,7 +185,7 @@ public class ToolUtil{
 	 * <pre>
 	 * StrUtil.convertFileSize(1024)   			= 1kB
 	 * </pre>
-	 * @author zhouzhou 18774995071@163.com
+	 * @author zhouzhou loveingowp@163.com
 	 * @time 2019-04-03 12:29
 	 * @param size 字节大小
 	 * @return 转换后大小字符串
@@ -667,5 +686,75 @@ public class ToolUtil{
             throw new AuthException("未获取到有效的Auth配置");
         }
         return authRequest;
+    }
+
+
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     * @param fileName
+     * @param in
+     */
+    public static void fileDownload(HttpServletRequest request,
+                             HttpServletResponse response,
+                             String fileName,
+                             InputStream in) throws Exception {
+        //浏览器设置
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+            //IE浏览器处理
+            fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            // 非IE浏览器的处理：
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        //下载的文件携带这个名称
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        //文件下载类型--二进制文件
+        response.setContentType("application/octet-stream");
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(in.available());
+        int len = 0;
+        while (-1 != (len = in.read(buffer, 0, buffer.length))) {
+            bos.write(buffer,0,len);
+        }
+        log.info("==============================下载包长度:!" + bos.size() +"   ========================");
+        response.setHeader("Content-Length",bos.size()+ "");
+        in.close();
+        ServletOutputStream sos = response.getOutputStream();
+        sos.write(bos.toByteArray());
+        sos.flush();
+        sos.close();
+        log.info("==============================下载完成![" + fileName +"]   ========================");
+        return;
+    }
+
+    /**
+     * 文件视图下载
+     * @param response
+     * @param fileName
+     * @param in
+     * @throws IOException
+     */
+    public static void fileView(HttpServletResponse response,
+                                String fileName,
+                                InputStream in) throws IOException {
+
+        response.setContentType(HttpUtil.getMimeType(fileName));
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(in.available());
+        int len = 0;
+        while (-1 != (len = in.read(buffer, 0, buffer.length))) {
+            bos.write(buffer,0,len);
+        }
+        log.info("==============================下载包长度:!" + bos.size() +"   ========================");
+        response.setHeader("Content-Length",bos.size()+ "");
+        in.close();
+        ServletOutputStream sos = response.getOutputStream();
+        sos.write(bos.toByteArray());
+        sos.flush();
+        sos.close();
+        log.info("==============================下载完成![" + fileName +"]   ========================");
     }
 }

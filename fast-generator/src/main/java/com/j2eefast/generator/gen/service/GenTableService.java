@@ -448,8 +448,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     	}    	
         int row = this.genTableMapper.updateGenTable(genTable);
         if (row > 0) {
-            for (GenTableColumnEntity cenTableColumn : genTable.getColumns())
-            {
+            for (GenTableColumnEntity cenTableColumn : genTable.getColumns()) {
                 genTableColumnService.updateGenTableColumn(cenTableColumn);
             }
             return  true;

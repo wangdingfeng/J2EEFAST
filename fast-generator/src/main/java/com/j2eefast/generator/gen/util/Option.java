@@ -29,6 +29,9 @@ public class Option {
     /** 树名称字段 */
     private String treeName;
 
+    /** 是否异步加载 1 异步 0 同步*/
+    private String async;
+
 	public String getTreeCode() {
 		return treeCode;
 	}
@@ -37,6 +40,13 @@ public class Option {
 		this.treeCode = treeCode;
 	}
 
+	public String getAsync() {
+		return async;
+	}
+
+	public void setAsync(String async) {
+		this.async = async;
+	}
 
 	public String getTreeParentCode() {
 		return treeParentCode;

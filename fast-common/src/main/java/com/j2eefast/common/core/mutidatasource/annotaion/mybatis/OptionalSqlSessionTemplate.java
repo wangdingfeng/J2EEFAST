@@ -18,11 +18,6 @@ import static org.apache.ibatis.reflection.ExceptionUtil.unwrapThrowable;
 import static org.mybatis.spring.SqlSessionUtils.*;
 /**
  * <p>DataSourceContextHolder 动态获取SqlSessionFactory</p>
- *
- * @author: zhouzhou
- * @date: 2020-04-15 14:34
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
  */
 public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 

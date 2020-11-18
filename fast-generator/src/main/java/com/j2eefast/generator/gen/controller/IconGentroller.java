@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @ClassName: IconGentroller
  * @Package: com.j2eefast.generator.gen.controller
  * @Description: (用一句话描述该文件做什么)
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/5 19:54
  * @version V1.0
  

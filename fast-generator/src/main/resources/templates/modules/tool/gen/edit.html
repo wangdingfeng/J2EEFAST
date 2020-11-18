@@ -330,7 +330,7 @@
 					            <div class="row">
 					                <div class="col-sm-6">
 					                    <div class="form-group">
-					                        <label class="col-sm-4 control-label" title="树显示的编码字段名， 如：dept_id"><span style="color: red; ">*</span>树编码字段：<i class="fa fa-question-circle-o"></i></label>
+					                        <label class="col-sm-4 control-label" title="树显示的编码字段名， 如：Id"><span style="color: red; ">*</span>树编码字段：<i class="fa fa-question-circle-o"></i></label>
 					                        <div class="col-sm-8">
 					                            <select class='form-control' id="treeCode" name='option.treeCode' style="width: 100%">
 					                                <option value="">---请选择---</option>
@@ -375,6 +375,18 @@
 					                        </div>
 					                    </div>
 					                </div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label" title="树节点的显示名称字段名， 如：dept_name"><span style="color: red; ">*</span>加载方式：<i class="fa fa-question-circle-o"></i></label>
+											<div class="col-sm-8">
+												<select class='form-control' id="treeName" name='option.async' style="width: 100%">
+													<option value="">---请选择---</option>
+													<option value="1" <#if (gen_table.option.async)?default("") == "1">selected = "selected"</#if> >异步加载</option>
+													<option value="0" <#if (gen_table.option.async)?default("") == "0">selected = "selected"</#if>>同步加载</option>
+												</select>
+											</div>
+										</div>
+									</div>
 					            </div>
 					            </div>
 								<div class="hide" id="masterInfo">
