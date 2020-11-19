@@ -562,7 +562,7 @@
                id = ""
                value = "" <#-- 开关组件默认 0 1 值-->
                default = true <#-- 默认开-->
-               judgeVlue = "0" <#-- 判断值默认0 开-->
+               judgeValue = "0" <#-- 判断值默认0 开-->
 >
     <#local  Assname="${id}"/>
     <#if name != "">
@@ -576,7 +576,7 @@
     </#if>
     <label class="toggle-switch switch-solid">
         <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
-        <input type="checkbox" id="__${AssId?replace(".","_")}swh" <#if value == "" && default>checked="true"</#if> <#if value != "" && value == judgeVlue>checked="true"</#if>/>
+        <input type="checkbox" id="__${AssId?replace(".","_")}swh" <#if value == "" && default>checked="true"</#if> <#if value != "" && value == judgeValue>checked="true"</#if>/>
         <span></span>
     </label>
     <@compress single_line=true>
@@ -629,23 +629,31 @@
                 opt.error("ueditor 插件未引入,请模板引擎header Lis中引入!!");
                 return;
             }
-            window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}";
             var remarksUE_${AssId?replace(".","_")} = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
+                serverUrl: window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}",
                 <#--maximumWords: ${maxlength},-->
                 readonly: ${readonly?string('true','false')},
                 initialFrameHeight: ${height}
                 <#if toolbars == "text" && !readonly>
                 ,toolbars: [[
-                    'undo', 'redo', '|','bold', 'italic', 'underline','forecolor',
-                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist',"|",'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                    'undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
                 ]]
                 ,elementPathEnabled: false
                 ,wordCount: false
-                <#elseif toolbars == "text" && readonly>
+                <#elseif readonly>
                 ,toolbars: []
                 ,elementPathEnabled: false
                 ,wordCount: false
                 ,enableContextMenu: false
+                <#elseif toolbars != "text" && toolbars!= "all" && !readonly >
+                ,toolbars: [[
+                    'undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                    ,'|',${toolbars}
+                ]]
+                ,elementPathEnabled: false
+                ,wordCount: false
                 </#if>
             });
             /* 更新编辑器内容  remarksUE.updateContent();*/
