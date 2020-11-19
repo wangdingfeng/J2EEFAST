@@ -9,8 +9,8 @@
 	</sql>
 
     <sql id="selectRoleContactVo">
-        select distinct r.id, r.role_name, r.role_key,
-            r.status, r.del_flag, r.create_time, r.remark,r.data_scope,r.role_sort
+        select distinct r.id, r.role_name, r.role_key, r.role_sort,
+            r.status, r.del_flag, r.create_time, r.remark,r.data_scope
         from sys_role r
 	        left join sys_user_role ur on ur.role_id = r.id
 	        left join sys_user u on u.id = ur.user_id
@@ -48,6 +48,7 @@
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
+        order by r.role_sort
     </select>
 
     <select id="getRoleList" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
@@ -66,6 +67,7 @@
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
+        order by r.role_sort
     </select>
 
 
