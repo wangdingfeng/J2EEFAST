@@ -1,11 +1,12 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.generator.gen.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
-
-import java.io.Serializable;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 /**

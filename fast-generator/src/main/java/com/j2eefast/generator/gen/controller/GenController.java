@@ -1,8 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.generator.gen.controller;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.google.common.collect.Lists;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
@@ -11,12 +14,10 @@ import com.j2eefast.common.core.mutidatasource.annotaion.mybatis.MybatisMapperRe
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.context.SqlSessionFactoryContext;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.service.SysDatabaseService;
-import com.j2eefast.framework.sys.service.SysDictTypeSerive;
 import com.j2eefast.framework.sys.service.SysModuleService;
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.framework.utils.UserUtils;
@@ -25,11 +26,9 @@ import com.j2eefast.generator.gen.entity.GenTableEntity;
 import com.j2eefast.generator.gen.service.GenTableColumnService;
 import com.j2eefast.generator.gen.service.GenTableService;
 import com.j2eefast.generator.gen.util.GenUtils;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.HashUtil;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -46,15 +45,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
- * @ClassName: GenController
- * @Package: com.j2eefast.generator.controller
  * @Description: 码生成 操作处理
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 14:45
  * @version V1.0
-
- *
  */
 @Controller
 @RequestMapping("/tool/gen")

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.generator.gen.config;
 
 import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
@@ -9,8 +13,6 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * <p>代码生成器获取切换数据源</p>

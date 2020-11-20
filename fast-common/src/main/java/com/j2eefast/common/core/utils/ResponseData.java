@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 
 import java.util.HashMap;
@@ -11,7 +15,8 @@ import java.util.HashMap;
  * @version: 1.0.1
  */
 public class ResponseData extends HashMap<String, Object> {
-
+	
+	private static final long 									    serialVersionUID 			= 1L;
 	/** 状态码 */
 	public static final                     String                  CODE_TAG                    = "code";
 	/** 返回内容 */

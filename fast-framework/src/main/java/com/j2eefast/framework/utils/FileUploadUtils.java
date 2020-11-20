@@ -84,7 +84,7 @@ public class FileUploadUtils {
     	SysFileUploadEntity temp = new SysFileUploadEntity();
     	temp.setBizType(bizType);
     	temp.setBizId(bizId);   	
-    	List<SysFileUploadEntity> list = ConstantFactory.me().getSysFileUploadService().selectList(temp);
+    	List<SysFileUploadEntity> list = ConstantFactory.me().getSysFileUploadService().findList(temp);
     	if (ToolUtil.isNotEmpty(list)) {
     		for (SysFileUploadEntity up :list ) {
     			deleteFileRelation(up.getFileId());
@@ -255,5 +255,4 @@ public class FileUploadUtils {
     public static String saveImgBase64(String imgBase64,String bizType,Long bizId) {
        return saveImgBase64( imgBase64, bizType, bizId,null);
     }
-    
 }

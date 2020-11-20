@@ -1,17 +1,6 @@
 package com.j2eefast.generator.gen.util;
-/**
- *
- * @ClassName: GenConstants
- * @Package: com.j2eefast.generator.gen.util
- * @Description: 代码生成常量
- * @author: zhouzhou Emall:loveingowp@163.com
- * @time 2020/1/6 17:51
- * @version V1.0
- 
- *
- */
-public class GenConstants
-{
+
+public class GenConstants{
     /** 单表（增删改查） */
     public static final String TPL_CRUD = "crud";
 

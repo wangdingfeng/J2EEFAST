@@ -10,8 +10,6 @@ import com.j2eefast.framework.sys.entity.SysDictDataEntity;
 import com.j2eefast.framework.sys.service.SysDictDataService;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.util.List;
 

@@ -1,23 +1,20 @@
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
 package com.j2eefast.common.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.ResourceUtils;
 
 /**
- * <p>资源供给</p>
- *
- * @author: zhouzhou Emall:loveingowp@163.com
- * @date: 2019-03-26 17:57
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
+ * p>资源供给</p>
+ * @author ThinkGem
  */
 public class ResourceUtil extends org.springframework.util.ResourceUtils {
 

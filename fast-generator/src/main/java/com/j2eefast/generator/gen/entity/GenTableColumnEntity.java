@@ -1,13 +1,13 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.generator.gen.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.j2eefast.common.core.base.entity.BaseEntity;
-
 import cn.hutool.core.util.StrUtil;
-
 import org.apache.commons.lang3.StringUtils;
-
 import javax.validation.constraints.NotBlank;
 
 /**

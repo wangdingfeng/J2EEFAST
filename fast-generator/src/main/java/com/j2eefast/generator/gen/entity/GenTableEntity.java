@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.generator.gen.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,15 +17,9 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
- *
  * @ClassName: GenTable
- * @Package: com.j2eefast.generator.entity
- * @Description: (用一句话描述该文件做什么)
  * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 15:14
- * @version V1.0
- 
- *
  */
 @TableName("gen_table")
 public class GenTableEntity extends BaseEntity {

@@ -1,14 +1,4 @@
-/** 
-* @Project : fast-generator
-* @Title : Options.java
-* @Package com.j2eefast.generator.gen.entity
-* @author mfksn001@163.com
-* @date 2020年6月10日 上午9:04:21
-* @Copyright : 2020 
-* @version V1.0 
-*/
 package com.j2eefast.generator.gen.util;
-
 
 /**
   * @ClassName Options
