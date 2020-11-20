@@ -10,7 +10,7 @@
   
   <artifactId>fast-common</artifactId>
   <version>3.3.0</version>
-  <name>fast-common 公共工具</name>
+  <name>fast 公共工具</name>
   <url>http://www.j2eefast.com</url>
   
   <properties>
@@ -151,6 +151,12 @@
           <dependency>
               <groupId>com.oracle</groupId>
               <artifactId>ojdbc6</artifactId>
+          </dependency>
+
+          <dependency>
+              <groupId>org.postgresql</groupId>
+              <artifactId>postgresql</artifactId>
+              <version>42.2.14</version>
           </dependency>
 
         <dependency>

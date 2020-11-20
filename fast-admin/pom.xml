@@ -39,8 +39,8 @@
 			<groupId>com.j2eefast</groupId>
 			<artifactId>fast-flowable</artifactId>
 			<version>3.2.0</version>
-		</dependency>
-		-->
+		</dependency>-->
+
 <!--		<dependency>-->
 <!--		  <groupId>p6spy</groupId>-->
 <!--		  <artifactId>p6spy</artifactId>-->
