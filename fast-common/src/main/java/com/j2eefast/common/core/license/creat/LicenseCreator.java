@@ -7,12 +7,10 @@ package com.j2eefast.common.core.license.creat;
 import cn.hutool.core.io.FileUtil;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.license.CustomKeyStoreParam;
-import com.j2eefast.common.core.license.CustomLicenseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.schlichtherle.license.*;
 import javax.security.auth.x500.X500Principal;
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.prefs.Preferences;
 

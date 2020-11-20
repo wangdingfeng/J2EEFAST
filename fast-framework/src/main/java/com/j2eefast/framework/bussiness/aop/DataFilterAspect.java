@@ -1,30 +1,25 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.bussiness.aop;
 
-import java.lang.reflect.Modifier;
 import java.util.*;
-
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 import com.j2eefast.framework.utils.UserUtils;
-import io.swagger.models.auth.In;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.annotation.DataFilter;
-import com.j2eefast.framework.sys.service.SysCompService;
-import com.j2eefast.framework.sys.service.SysDeptService;
-import com.j2eefast.framework.sys.service.SysUserDeptService;
 import com.j2eefast.framework.utils.Constant;
-import cn.hutool.core.bean.BeanUtil;
 
 /**
  * 

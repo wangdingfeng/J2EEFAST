@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.config;
 
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -6,7 +10,6 @@ import com.j2eefast.framework.quartz.service.SysJobService;
 import com.j2eefast.framework.quartz.utils.ScheduleUtils;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
-import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 /**

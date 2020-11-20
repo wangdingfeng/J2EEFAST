@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import javax.servlet.DispatcherType;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +17,8 @@ import java.util.Map;
 
 /**
  * Filter配置
+ * @author: zhouzhou Emall:loveingowp@163.com
+ * @date: 2019-03-24 22:01
  */
 @Configuration
 public class FilterConfig {
@@ -34,8 +35,7 @@ public class FilterConfig {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
-	public FilterRegistrationBean xssFilterRegistration()
-	{
+	public FilterRegistrationBean xssFilterRegistration(){
 		FilterRegistrationBean registration = new FilterRegistrationBean();
 		registration.setDispatcherTypes(DispatcherType.REQUEST);
 		registration.setFilter(new XssFilter());

@@ -6,19 +6,12 @@ package com.j2eefast.common.core.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
-import com.j2eefast.common.core.crypto.DesUtils;
 import com.j2eefast.common.core.crypto.EnctryptTools;
 import com.j2eefast.common.core.crypto.MyEncryptablePropertyDetector;
-import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.JasyptUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyResolver;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * <p>yml 文件敏感信息处理类</p>
@@ -43,7 +36,7 @@ public class MyEncryptablePropertyResolver implements EncryptablePropertyResolve
                 if(StrUtil.startWith(str,MyEncryptablePropertyDetector.ENCODED_PASSWORD_HINT_ENC,true)){
                     str = StrUtil.removeSuffixIgnoreCase(StrUtil.removePrefixIgnoreCase(str,
                             MyEncryptablePropertyDetector.ENCODED_PASSWORD_HINT_ENC),"}");
-                    if(ToolUtil.isEmpty(key)){ //AB01950E7FA163AF3323F059F3DF8D87
+                    if(ToolUtil.isEmpty(key)){
                         key = ConfigConstant.KEY;
                     }
                     str = JasyptUtils.decyptPwd(str,key);

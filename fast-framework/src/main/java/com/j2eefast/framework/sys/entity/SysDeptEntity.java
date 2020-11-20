@@ -42,6 +42,7 @@ public class SysDeptEntity  extends BaseEntity {
 	private Integer orderNum;
 
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/**

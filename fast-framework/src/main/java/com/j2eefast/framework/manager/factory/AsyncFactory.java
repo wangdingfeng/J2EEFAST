@@ -1,8 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.manager.factory;
 
 import java.util.Date;
 import java.util.TimerTask;
-
 import com.j2eefast.common.core.utils.HttpContextUtil;
 import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
 import com.j2eefast.framework.log.entity.SysOperLogEntity;
@@ -11,9 +14,7 @@ import com.j2eefast.framework.log.service.SysOperLogSerice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.j2eefast.common.core.utils.AddressUtil;
-import com.j2eefast.common.core.utils.ServletUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
-import com.j2eefast.framework.utils.UserUtils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;

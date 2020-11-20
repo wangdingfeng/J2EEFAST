@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.ibatis.reflection.MetaObject;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.j2eefast.common.core.utils.ToolUtil;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 自定义SQL填充器
@@ -16,17 +17,25 @@ import com.j2eefast.common.core.utils.ToolUtil;
  */
 public class MybatisPulsMetaObjectHandler  implements MetaObjectHandler {
 
+    @Value("${mybatis-plus.global-config.db-config.logic-not-delete-value: 0}")
+    private String logicDeleteValue;
+
+	/**
+	 * Mybatis-Plus 自带save方法自动填充默认值
+	 */
 	@Override
 	public void insertFill(MetaObject metaObject) {
+		//检查逻辑删除字段
 		Object delFlag = getFieldValByName(getDeleteFlagFieldName(), metaObject);
         if (ToolUtil.isEmpty(delFlag)) {
             setFieldValByName(getDeleteFlagFieldName(), getDefaultDelFlagValue(), metaObject);
         }
+        //检查创建时间
         Object createTime = getFieldValByName(getCreateTimeFieldName(), metaObject);
         if (ToolUtil.isEmpty(createTime)) {
             setFieldValByName(getCreateTimeFieldName(), new Date(), metaObject);
         }
-
+        //检查创建者
         Object createUser = getFieldValByName(getCreateByFieldName(), metaObject);
         if (ToolUtil.isEmpty(createUser)) {
 
@@ -37,10 +46,17 @@ public class MybatisPulsMetaObjectHandler  implements MetaObjectHandler {
         }
 	}
 
+	/**
+	 *  Mybatis-Plus 自带update方法自动填充默认值
+	 */
 	@Override
 	public void updateFill(MetaObject metaObject) {
-		setFieldValByName(getUpdateTimeFieldName(), new Date(), metaObject);
-
+		
+		Object updateTime = getFieldValByName(getUpdateTimeFieldName(),metaObject);
+		if(ToolUtil.isEmpty(updateTime)) {
+			setFieldValByName(getUpdateTimeFieldName(), new Date(), metaObject);
+		}
+		
         Object updateBy = getFieldValByName(getUpdateByFiledName(), metaObject);
         if (ToolUtil.isEmpty(updateBy)) {
 
@@ -62,7 +78,7 @@ public class MybatisPulsMetaObjectHandler  implements MetaObjectHandler {
      * 获取逻辑删除字段的默认值
      */
     protected Object getDefaultDelFlagValue() {
-        return "0" ;
+        return logicDeleteValue ;
     }
     
     /**

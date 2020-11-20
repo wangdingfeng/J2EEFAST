@@ -10,10 +10,8 @@ import com.j2eefast.common.core.utils.CookieUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * 安全key,多语言 拦截器

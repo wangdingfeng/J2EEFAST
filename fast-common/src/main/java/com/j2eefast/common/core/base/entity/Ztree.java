@@ -6,10 +6,6 @@ package com.j2eefast.common.core.base.entity;
 
 import java.io.Serializable;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * 树对象
  * @author zhouzhou

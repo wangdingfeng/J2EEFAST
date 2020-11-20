@@ -1,8 +1,11 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.shiro.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
-
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.auth.AuthService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
@@ -15,11 +18,7 @@ import com.j2eefast.framework.sys.factory.UserFactory;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
-import com.j2eefast.framework.sys.service.SysMenuService;
-import com.j2eefast.framework.sys.service.SysModuleService;
-import com.j2eefast.framework.sys.service.SysUserService;
 import com.j2eefast.framework.utils.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -30,7 +29,6 @@ import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import com.j2eefast.framework.utils.RedisKeys;
-
 import javax.annotation.Resource;
 import java.util.*;
 
@@ -44,8 +42,8 @@ import java.util.*;
  */
 @Component
 public class SysLoginService implements AuthService {
-		
-	@Autowired
+
+	@Resource
 	private RedisUtil redisUtil;
 
 	@Resource
@@ -59,7 +57,7 @@ public class SysLoginService implements AuthService {
 
 
 	@Override
-	public Integer LoginBeforeVerify(String username, String password) {
+	public Integer loginBeforeVerify(String username, String password) {
 		//获取登陆错误次数
 		Integer number = redisUtil.get(RedisKeys.getUserLoginKey(username),Integer.class);
 
@@ -100,7 +98,7 @@ public class SysLoginService implements AuthService {
 	@Override
 	public LoginUserEntity loginVerify(String username, String password) {
 
-		Integer number = this.LoginBeforeVerify(username,password);
+		Integer number = this.loginBeforeVerify(username,password);
 
 		SysUserEntity user = this.sysUserMapper.findUserByUserName(username);
 

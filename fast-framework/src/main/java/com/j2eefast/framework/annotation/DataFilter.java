@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.annotation;
 
 import java.lang.annotation.Documented;
@@ -10,7 +14,6 @@ import java.lang.annotation.Target;
  * 数据过滤
  * @author huanzhou
  */
-
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

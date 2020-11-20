@@ -4,14 +4,7 @@
  */
 package com.j2eefast.framework.sys.entity;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotBlank;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import lombok.Data;
 
@@ -48,6 +41,7 @@ public class SysDictDataEntity extends BaseEntity {
 
 	/** 删除标志*/
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/* css样式（如：color:red)*/

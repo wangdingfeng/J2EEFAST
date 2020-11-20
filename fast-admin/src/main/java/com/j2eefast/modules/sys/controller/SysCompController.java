@@ -45,10 +45,6 @@ public class SysCompController extends BaseController {
 
 	@Autowired
 	private SysCompDeptService sysCompDeptService;
-	
-
-	@Autowired
-	private SysDeptService sysDeptService;
 
 	@Autowired
 	private SysAreaService sysAreaService;

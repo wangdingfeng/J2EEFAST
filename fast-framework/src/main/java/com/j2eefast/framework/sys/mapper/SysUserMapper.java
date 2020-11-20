@@ -9,9 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户 Mapper 接口

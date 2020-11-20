@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2019-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.exception;
 
 import lombok.Data;

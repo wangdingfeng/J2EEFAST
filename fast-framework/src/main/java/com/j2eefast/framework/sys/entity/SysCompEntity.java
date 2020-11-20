@@ -89,6 +89,7 @@ public class SysCompEntity extends BaseEntity {
 	 * 是否假删除-改变标志
 	 */
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/**

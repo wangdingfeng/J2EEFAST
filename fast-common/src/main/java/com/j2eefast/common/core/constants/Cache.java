@@ -2,7 +2,6 @@ package com.j2eefast.common.core.constants;
 
 public interface Cache {
 
-
     /**
      * 常量缓存
      */

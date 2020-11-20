@@ -1,9 +1,12 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -28,13 +31,11 @@ public class AddressUtil {
      public static String getRealAddressByIP(String ip) {
         String address = "XX XX";
         // 内网不查询
-        if (NetUtil.isInnerIP(ip))
-        {
+        if (NetUtil.isInnerIP(ip)){
             return "内网IP";
         }
         JSONObject obj;
-        try
-        {
+        try{
             HttpResponse body = HttpRequest.get(StrUtil.format(IP_BAIDU_URL, ip)).charset("GBK").execute();
             if (StrUtil.isBlank(body.body())){
                 LOG.error("获取地理位置异常 {}", ip);
@@ -64,8 +65,7 @@ public class AddressUtil {
                 }
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e){
             LOG.error("获取地理位置异常 {}", ip);
         }
         return address;

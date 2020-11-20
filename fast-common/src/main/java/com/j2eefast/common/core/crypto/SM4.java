@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.crypto;
 
 import java.util.Arrays;
@@ -5,11 +9,12 @@ import java.util.Arrays;
 /**
  * 国密算法SM4
  * @author zhouzhou
- *
  */
 public class SM4 {
-	public static final int ENCRYPT=1; //加密
-	public static final int DECRYPT=0; //解密
+	//加密
+	public static final int ENCRYPT=1;
+	//解密
+	public static final int DECRYPT=0;
 	public static final int ROUND=32;
 	public static final int BLOCK=16;
 	
@@ -171,8 +176,7 @@ public class SM4 {
 	 * @return
 	 *
 	 */
-	public static int GMSM4(byte[] in,int inLen,byte[] key,byte[] out,int CryptFlag)
-	{
+	public static int GMSM4(byte[] in,int inLen,byte[] key,byte[] out,int CryptFlag){
 		int point=0;
 		int[] round_key=new int[ROUND]; 
 		//int[] round_key={0};
@@ -212,8 +216,7 @@ public class SM4 {
 	 * @param key
 	 * @return
 	 */
-	public static byte[] encryptData_ECB(byte[] plainText,byte[] key)
-	{
+	public static byte[] encryptData_ECB(byte[] plainText,byte[] key){
 		byte[] out = new byte[plainText.length];
 		GMSM4(plainText,plainText.length,key, out,1);
 		return out;

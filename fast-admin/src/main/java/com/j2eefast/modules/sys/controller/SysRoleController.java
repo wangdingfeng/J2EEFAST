@@ -36,17 +36,11 @@ public class SysRoleController extends BaseController {
 	@Autowired
 	private SysRoleService sysRoleService;
 	@Autowired
-	private SysRoleMenuService sysRoleMenuService;
-	@Autowired
-	private SysRoleDeptService sysRoleDeptService;
-	@Autowired
 	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysModuleService sysModuleService;
 	@Autowired
 	private SysRoleModuleService sysRoleModuleService;
-	@Autowired
-	private SysCompService sysCompService;
 	@Autowired
 	private SysUserService sysUserService;
 
@@ -306,7 +300,5 @@ public class SysRoleController extends BaseController {
 	public ResponseData changeStatus(SysRoleEntity role){
 		return sysRoleService.changeStatus(role) ? success() : error("角色状态修改失败!");
 	}
-
-
 
 }

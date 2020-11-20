@@ -90,7 +90,7 @@ public class SysConfigController extends BaseController {
 		if (!sysConfigService.checkConfigKeyUnique(config)){
 			return error("新增参数'" + config.getParamName() + "'失败，参数键名已存在");
 		}
-		return sysConfigService.add(config)?success():error("新增失败!");
+		return sysConfigService.addSysConfig(config)?success():error("新增失败!");
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class SysConfigController extends BaseController {
 		if (!sysConfigService.checkConfigKeyUnique(config)) {
 			return error("修改参数'" + config.getParamName() + "'失败，参数键名已存在");
 		}
-		return sysConfigService.update(config)?success():error("修改失败!");
+		return sysConfigService.updateSysConfigById(config)?success():error("修改失败!");
 	}
 
 	/**

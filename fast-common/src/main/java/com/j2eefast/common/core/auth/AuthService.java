@@ -23,9 +23,10 @@ public interface AuthService {
 	/**
 	 * 登陆前校验
 	 * @param username
+	 * @param password
 	 * @return
 	 */
-	Integer LoginBeforeVerify(String username, String password);
+	Integer loginBeforeVerify(String username, String password);
 
 	/**
 	 * 登陆校验账号密码
@@ -44,8 +45,8 @@ public interface AuthService {
 
 	/**
 	 * 获取权限列表通过角色id
-	 *
 	 * @param roleId 角色id
+	 * @return
 	 */
 	List<String> findPermissionsByRoleId(Long roleId);
 

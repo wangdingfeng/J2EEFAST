@@ -197,7 +197,7 @@ public class SysUserController extends BaseController {
 	@RepeatSubmit
 	@ResponseBody
 	public ResponseData password(String oldPassword, String newPassword) {
-		AssertUtil.isBlank(newPassword, ToolUtil.message("sys.user.newpassw.tips"));
+		ToolUtil.isBlank(newPassword, ToolUtil.message("sys.user.newpassw.tips"));
 		LoginUserEntity loginUser = UserUtils.getUserInfo();
 		// 原密码
 		oldPassword = UserUtils.sha256(oldPassword, loginUser.getSalt());

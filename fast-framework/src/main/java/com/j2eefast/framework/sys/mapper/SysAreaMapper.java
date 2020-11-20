@@ -5,7 +5,6 @@
 package com.j2eefast.framework.sys.mapper;
 
 import com.j2eefast.framework.sys.entity.SysAreaEntity;
-import java.io.Serializable;
 import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

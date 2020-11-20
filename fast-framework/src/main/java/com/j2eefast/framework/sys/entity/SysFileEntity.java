@@ -6,16 +6,12 @@ package com.j2eefast.framework.sys.entity;
 
 
 /**
- * 
  * @Description:系统文件相关信息
  * @author zhouzhou loveingowp@163.com
  * @time 2019-04-03 10:21
  * @version V1.0 
- 的
- *
  */
-public class SysFileEntity
-{
+public class SysFileEntity{
     /**
      * 盘符路径
      */

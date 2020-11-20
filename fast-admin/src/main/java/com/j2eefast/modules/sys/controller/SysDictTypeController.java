@@ -24,11 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ProjectName: fast
- * @Package: com.j2eefast.modules.sys.controller
- * @ClassName: SysDictTypeController
- * @Author: zhouzhou Emall:loveingowp@163.com
- * @Description:
+ * 字典列表控制类
+ * @author huanzhou
  * @Date: 2019/12/18 14:47
  * @Version: 1.0
  */
@@ -42,8 +39,7 @@ public class SysDictTypeController extends BaseController {
 
     @RequiresPermissions("sys:dict:view")
     @GetMapping()
-    public String dictType()
-    {
+    public String dictType(){
         return urlPrefixBase + "/type";
     }
 
@@ -94,12 +90,12 @@ public class SysDictTypeController extends BaseController {
     @RequiresPermissions("sys:dict:add")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData addSave(@Validated SysDictTypeEntity dict)
-    {
-        if (!sysDictTypeSerive.checkDictTypeUnique(dict))
-        {
+    public ResponseData addSave(@Validated SysDictTypeEntity dict){
+    	
+        if (!sysDictTypeSerive.checkDictTypeUnique(dict)){
             return error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
+        
         if(sysDictTypeSerive.save(dict)){
             return success();
         }else{
@@ -111,8 +107,8 @@ public class SysDictTypeController extends BaseController {
      * 修改字典类型
      */
     @GetMapping("/edit/{dictId}")
-    public String edit(@PathVariable("dictId") Long dictId, ModelMap mmap)
-    {
+    public String edit(@PathVariable("dictId") Long dictId, ModelMap mmap){
+    	
         mmap.put("dictHtml", sysDictTypeSerive.getById(dictId));
         return urlPrefixBase + "/edit";
     }
@@ -124,8 +120,7 @@ public class SysDictTypeController extends BaseController {
     @RequiresPermissions("sys:dict:edit")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData editSave(@Validated SysDictTypeEntity dict)
-    {
+    public ResponseData editSave(@Validated SysDictTypeEntity dict){
         if (!sysDictTypeSerive.checkDictTypeUnique(dict)) {
             return error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }

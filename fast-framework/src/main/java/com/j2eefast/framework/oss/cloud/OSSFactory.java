@@ -1,8 +1,12 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.oss.cloud;
 
 import com.j2eefast.common.config.service.SysConfigService;
+import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.SpringUtil;
-import com.j2eefast.framework.utils.ConfigConstant;
 import com.j2eefast.framework.utils.Constant;
 
 /**

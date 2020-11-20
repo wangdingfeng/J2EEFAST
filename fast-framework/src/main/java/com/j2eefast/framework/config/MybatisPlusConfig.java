@@ -1,14 +1,14 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.config;
 
-import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.datasources.MybatisPulsMetaObjectHandler;
 import com.j2eefast.common.core.io.PropertiesUtils;
-import com.j2eefast.common.core.mutidatasource.annotaion.aop.MultiSourceAop;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.utils.UserUtils;
-import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;

@@ -49,7 +49,7 @@ public class AntiFakeCsrfFilter {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new CsrfFilter());
-        registration.setOrder(Integer.MAX_VALUE -1);
+        registration.setOrder(Integer.MAX_VALUE -2);
         registration.addUrlPatterns("/*");
         registration.setName("csrfFilter");
         return registration;

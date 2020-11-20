@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.db.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,9 +13,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.utils.DbUtil;
-
 import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -66,6 +69,7 @@ public class SysDatabaseEntity extends BaseEntity {
 	 * 逻辑删除 是否删除
 	 */
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/**

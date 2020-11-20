@@ -3,10 +3,9 @@
  * No deletion without permission
  */
 package com.j2eefast.common.core.license;
+
 import cn.hutool.core.io.FileUtil;
 import de.schlichtherle.license.AbstractKeyStoreParam;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

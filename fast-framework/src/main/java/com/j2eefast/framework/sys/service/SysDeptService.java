@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -19,7 +17,6 @@ import com.j2eefast.framework.sys.entity.SysDeptEntity;
 import com.j2eefast.framework.sys.mapper.SysDeptMapper;
 import com.j2eefast.framework.utils.Constant;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
 /**

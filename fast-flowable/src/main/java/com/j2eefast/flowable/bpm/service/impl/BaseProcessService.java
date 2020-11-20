@@ -1,9 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.j2eefast.flowable.bpm.entity.CommentEntity;
-import com.j2eefast.flowable.bpm.mapper.IHisFlowableActinstMapper;
-import com.j2eefast.flowable.bpm.mapper.IRunFlowableActinstMapper;
 import com.j2eefast.flowable.bpm.mapper.ProcessInstanceMapper;
 import com.j2eefast.flowable.bpm.service.FlowableActinstService;
 import com.j2eefast.flowable.bpm.service.FlowableCommentService;

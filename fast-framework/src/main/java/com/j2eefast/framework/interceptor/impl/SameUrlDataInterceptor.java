@@ -10,16 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- /**
  *
- * @ClassName: SameUrlDataInterceptor
- * @Package: com.j2eefast.framework.interceptor.impl
  * @Description: 判断请求url和数据是否和上一次相同， 如果和上次相同，则是重复提交表单。 有效时间为10秒内。
  * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 12:51
  * @version V1.0
- 
- *
  */
 @Component
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor

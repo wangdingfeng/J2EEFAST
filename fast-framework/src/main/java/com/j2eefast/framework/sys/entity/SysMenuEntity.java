@@ -4,10 +4,8 @@
  */
 package com.j2eefast.framework.sys.entity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.baomidou.mybatisplus.annotation.*;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import lombok.Data;

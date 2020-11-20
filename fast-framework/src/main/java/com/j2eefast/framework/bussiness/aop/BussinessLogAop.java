@@ -1,16 +1,18 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.bussiness.aop;
 
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
-
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.JSON;
 import com.j2eefast.common.core.utils.ServletUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.log.entity.SysOperLogEntity;
 import com.j2eefast.framework.manager.factory.AsyncFactory;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;

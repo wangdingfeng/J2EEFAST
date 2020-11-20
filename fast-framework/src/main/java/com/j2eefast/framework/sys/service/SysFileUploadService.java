@@ -4,8 +4,6 @@
  */
 package com.j2eefast.framework.sys.service;
 
-
-import cn.hutool.core.convert.Convert;
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
 import com.j2eefast.framework.sys.mapper.SysFileUploadMapper;
 import com.j2eefast.common.core.page.Query;
@@ -70,8 +68,8 @@ public class SysFileUploadService extends ServiceImpl<SysFileUploadMapper,SysFil
 	* @author mfksn001@163.com
 	* @Date: 2020年8月14日
 	 */
-	 public List<SysFileUploadEntity> selectList(SysFileUploadEntity sysFileUploadEntity){
-		 return sysFileUploadMapper.selectList(sysFileUploadEntity);
+	 public List<SysFileUploadEntity> findList(SysFileUploadEntity sysFileUploadEntity){
+		 return sysFileUploadMapper.findList(sysFileUploadEntity);
 	 }
 	 
 	/**

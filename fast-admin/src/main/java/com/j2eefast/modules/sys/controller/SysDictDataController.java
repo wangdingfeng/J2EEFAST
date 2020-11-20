@@ -23,13 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ProjectName: fast
- * @Package: com.j2eefast.modules.sys.controller
- * @ClassName: SysDictDataController
- * @Author: zhouzhou Emall:loveingowp@163.com
- * @Description:
- * @Date: 2019/12/18 14:20
- * @Version: 1.0
+ * 字典管理控制类
+ * @author zhouzhou
+ * @date 2019/12/18 14:20
  */
 @Controller
 @RequestMapping("/sys/dict/data")

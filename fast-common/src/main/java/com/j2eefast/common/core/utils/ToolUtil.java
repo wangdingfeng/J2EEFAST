@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
@@ -12,27 +11,18 @@ import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.OshiUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
+import com.j2eefast.common.core.exception.RxcException;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
-import me.zhyd.oauth.model.AuthCallback;
-import me.zhyd.oauth.model.AuthResponse;
-import me.zhyd.oauth.model.AuthToken;
-import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.*;
-import me.zhyd.oauth.utils.AuthStateUtils;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import cn.hutool.core.util.NumberUtil;
@@ -66,6 +56,24 @@ public class ToolUtil{
         }
         return sb.toString();
     }
+    
+    public static void isBlank(String str, String message) {
+		if (ToolUtil.isEmpty(str)) {
+			throw new RxcException(message);
+		}
+	}
+
+	public static void isNull(Object object, String message) {
+		if (object == null) {
+			throw new RxcException(message);
+		}
+	}
+	
+	public static void isNull(Object object, String message, String code) {
+		if (object == null) {
+			throw new RxcException(message,code);
+		}
+	}
 
 	
 	/**
@@ -752,9 +760,11 @@ public class ToolUtil{
         response.setHeader("Content-Length",bos.size()+ "");
         in.close();
         ServletOutputStream sos = response.getOutputStream();
-        sos.write(bos.toByteArray());
-        sos.flush();
-        sos.close();
+        try{
+            sos.write(bos.toByteArray());
+            sos.flush();
+            sos.close();
+        }catch (Exception e){}
         log.info("==============================下载完成![" + fileName +"]   ========================");
     }
 }

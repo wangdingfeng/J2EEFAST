@@ -8,7 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 
 /**
- * <p></p>
+ * <p>分割截取配置文件加密信息</p>
  *
  * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-24 20:37

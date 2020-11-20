@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.config;
 
 import java.io.Serializable;
@@ -68,6 +72,12 @@ public class ShiroConfig {
 	 */
 	@Value("${shiro.cookie.httpOnly: true}")
 	private boolean httpOnly;
+
+	/**
+	 * 设置cipherKey密钥
+	 */
+	@Value("${shiro.cookie.cipherKey}")
+	private String cipherKey;
 
 	/**
 	 * 设置Cookie的过期时间，秒为单位
@@ -212,8 +222,7 @@ public class ShiroConfig {
 	/**
      * cookie 属性设置
      */
-    public SimpleCookie rememberMeCookie()
-    {
+    public SimpleCookie rememberMeCookie(){
         SimpleCookie cookie = new SimpleCookie("rememberMe");
         cookie.setDomain(domain);
         cookie.setPath(path);
@@ -225,11 +234,10 @@ public class ShiroConfig {
 	 /**
      * 记住我
      */
-    public CookieRememberMeManager rememberMeManager()
-    {
+    public CookieRememberMeManager rememberMeManager(){
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(Base64.decode("fCq+/xW488hMTCD+cmJ3aQ=="));
+        cookieRememberMeManager.setCipherKey(Base64.decode(cipherKey));
         return cookieRememberMeManager;
     }
 
@@ -253,7 +261,7 @@ public class ShiroConfig {
 		//授权认证配置
 		if (null !=filterMap && filterMap.size() != 0) {			
 			  shiroFilter.setFilterChainDefinitionMap(filterMap);
-			}
+		}
 		return shiroFilter;
 	}
 

@@ -116,8 +116,8 @@ public class SysProfileController extends BaseController {
     @PostMapping("/updateUser")
     @ResponseBody
     public ResponseData updateUser(SysUserEntity user) {
-        AssertUtil.isBlank(user.getName(), ToolUtil.message("sys.user.name.tips"));
-        AssertUtil.isBlank(user.getMobile(), ToolUtil.message("sys.user.phone.tips"));
+        ToolUtil.isBlank(user.getName(), ToolUtil.message("sys.user.name.tips"));
+        ToolUtil.isBlank(user.getMobile(), ToolUtil.message("sys.user.phone.tips"));
         
         if(!ReUtil.isMatch(Constant.MOBILE_PHONE_NUMBER_PATTERN, user.getMobile())){
             return error(ToolUtil.message("sys.user.phone.improper.format"));

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.quartz.entity;
 
 
@@ -62,6 +66,7 @@ public class SysJobEntity extends BaseEntity {
 	 * 逻辑删除 是否删除
 	 */
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 	
 	/**

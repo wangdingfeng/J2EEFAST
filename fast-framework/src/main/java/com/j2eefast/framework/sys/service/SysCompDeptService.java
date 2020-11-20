@@ -4,18 +4,13 @@
  */
 package com.j2eefast.framework.sys.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.framework.sys.entity.SysCompDeptEntity;
 import com.j2eefast.framework.sys.mapper.SysCompDeptMapper;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
 @Service

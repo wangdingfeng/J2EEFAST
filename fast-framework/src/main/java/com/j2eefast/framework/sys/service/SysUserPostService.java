@@ -11,8 +11,6 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.entity.SysUserPostEntity;
 import com.j2eefast.framework.sys.mapper.SysUserPostMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

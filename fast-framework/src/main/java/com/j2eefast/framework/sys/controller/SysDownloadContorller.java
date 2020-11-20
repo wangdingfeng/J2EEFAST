@@ -5,16 +5,12 @@
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
-import com.j2eefast.common.core.constants.ConfigConstant;
-import com.j2eefast.common.core.crypto.SoftEncryption;
-import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.framework.utils.Global;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

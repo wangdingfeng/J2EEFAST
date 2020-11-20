@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.config.service;
 
 import cn.hutool.core.convert.Convert;
@@ -14,8 +18,8 @@ import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -30,14 +34,14 @@ import java.util.Map;
 @Service
 public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEntity> {
 
-    private static final String                     CONFIG_KEY                  = "sys:config:";
+    private static final String                     CONFIG_KEY                  =                       "sys:config:";
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     /**
-     * 页面翻页查询
-     * @param params
+     * 页面翻页查询 根据Key Name 查询
+     * @param params 传入查询参数
      * @return
      */
     public PageUtil findPage(Map<String, Object> params) {
@@ -52,8 +56,10 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEnti
 
     /**
      * 保存
+     * @param sysConfig
+     * @return
      */
-    public boolean add(SysConfigEntity sysConfig){
+    public boolean addSysConfig(SysConfigEntity sysConfig){
         if(this.save(sysConfig)){
             redisUtil.set(CONFIG_KEY+sysConfig.getParamKey(),sysConfig);
             return true;
@@ -66,7 +72,7 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEnti
      * @param sysConfig
      * @return
      */
-    public boolean update(SysConfigEntity sysConfig){
+    public boolean updateSysConfigById(SysConfigEntity sysConfig){
         if(this.updateById(sysConfig)){
             redisUtil.set(CONFIG_KEY+sysConfig.getParamKey(),sysConfig);
             return true;
@@ -75,6 +81,12 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEnti
     }
 
 
+    /**
+     * 更新Key 更新值
+     * @param key
+     * @param value
+     * @return
+     */
     public boolean updateValueByKey(String key, String value) {
        if(this.baseMapper.updateValueByKey(key, value) > 0){
            redisUtil.delete(CONFIG_KEY+key);
@@ -113,16 +125,15 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEnti
 
     public <T> T getConfigObject(String key, Class<T> clazz) {
         String value = getParamValue(key);
+        //判断获取值,是否转换Bean对象
         if (!StrUtil.isBlankOrUndefined(value) && JSONUtil.isJson(value)
-                && !ClassUtil.equals(clazz, "String", false)) { //判断获取值,是否转换Bean对象
+                && !ClassUtil.equals(clazz, "String", false)) {
             return JSONUtil.toBean(value, clazz);
-            //return new Gson().fromJson(value, clazz);
         }
-
-        if(ClassUtil.equals(clazz, "String", false)) { //String 转换
+        //String 转换
+        if(ClassUtil.equals(clazz, "String", false)) {
             return Convert.convert(clazz, value);
         }
-
         try {
             return clazz.newInstance();
         } catch (Exception e) {

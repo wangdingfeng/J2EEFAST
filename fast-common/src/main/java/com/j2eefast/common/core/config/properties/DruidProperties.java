@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 import com.alibaba.druid.pool.DruidDataSource;
-import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>数据库数据源配置</p>

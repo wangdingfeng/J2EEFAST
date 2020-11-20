@@ -2,9 +2,9 @@ package com.j2eefast.framework.shiro;
 
 import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
+import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.framework.utils.ConfigConstant;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import lombok.extern.slf4j.Slf4j;

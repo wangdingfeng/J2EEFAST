@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.controller;
 
 import com.j2eefast.common.core.controller.BaseController;
@@ -13,7 +17,6 @@ import org.flowable.ui.common.security.SecurityUtils;
 import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.flowable.idm.engine.impl.persistence.entity.UserEntityImpl;

@@ -46,16 +46,9 @@ public class SysDeptController extends BaseController {
 	private SysUserService sysUserService;
 
 	@Autowired
-	private SysCompDeptService sysCompDeptService;
-
-	@Autowired
 	private SysCompService sysCompService;
-	
-	@Autowired
-	private SysUserDeptService sysUserDeptService;
 
-	@Autowired
-	private SysAreaService sysAreaService;
+
 
 	/**
 	 * 选择公司树

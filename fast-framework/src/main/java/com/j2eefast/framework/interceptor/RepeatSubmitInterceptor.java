@@ -23,13 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @ClassName: RepeatSubmitInterceptor
- * @Package: com.j2eefast.framework.interceptor
- * @Description: 防止重复提交拦截器(用一句话描述该文件做什么)
+ * @Description: 防止重复提交拦截器
  * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/1/6 12:41
  * @version V1.0
- 
  *
  */
 @Component
