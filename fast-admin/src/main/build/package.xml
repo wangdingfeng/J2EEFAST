@@ -34,7 +34,7 @@
         <fileSet>
             <directory>../fast-framework/src/main/resources</directory>
             <outputDirectory>${file.separator}</outputDirectory>
-            <!-- Added packaging to filter uncompressed core JS -->
+            <!-- Added packaging to filter uncompressed core JS(打包排除核心未压缩的文件)-->
             <excludes>
                 <exclude>static/libs/SM4.js</exclude>
                 <exclude>static/plugins/captcha/ase.js</exclude>
@@ -44,6 +44,7 @@
                 <exclude>static/js/fastJS.js</exclude>
                 <exclude>static/js/index.js</exclude>
                 <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.js</exclude>
+                <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.css</exclude>
                 <exclude>static/plugins/layer/layer.js</exclude>
             </excludes>
         </fileSet>
