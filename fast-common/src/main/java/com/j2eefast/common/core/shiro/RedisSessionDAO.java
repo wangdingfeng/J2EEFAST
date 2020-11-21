@@ -52,7 +52,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
-    private static ThreadLocal sessionsInThread = new ThreadLocal();
+    @SuppressWarnings("rawtypes")
+	private static ThreadLocal sessionsInThread = new ThreadLocal();
 
     @Override
     public void update(Session session) throws UnknownSessionException {
@@ -226,8 +227,9 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         return session;
     }
 
-    private void setSessionToThreadLocal(Serializable sessionId, Session s) {
-        Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
+    @SuppressWarnings("unchecked")
+	private void setSessionToThreadLocal(Serializable sessionId, Session s) {
+		Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
         if (sessionMap == null) {
             sessionMap = new HashMap<Serializable, SessionInMemory>();
             sessionsInThread.set(sessionMap);
@@ -263,7 +265,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             return null;
         }
 
-        Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
+        @SuppressWarnings("unchecked")
+		Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
         SessionInMemory sessionInMemory = sessionMap.get(sessionId);
         if (sessionInMemory == null) {
             return null;
@@ -319,7 +322,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         this.sessionInMemoryEnabled = sessionInMemoryEnabled;
     }
 
-    public static ThreadLocal getSessionsInThread() {
+    @SuppressWarnings("rawtypes")
+	public static ThreadLocal getSessionsInThread() {
         return sessionsInThread;
     }
 }

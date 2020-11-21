@@ -32,6 +32,7 @@ import java.util.*;
  * @author huanzhou
  * @date: 2020-03-18 09:15
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 @ControllerAdvice
 public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
@@ -42,7 +43,8 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
         return true;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request,
                                   ServerHttpResponse response) {

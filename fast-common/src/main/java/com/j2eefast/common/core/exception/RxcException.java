@@ -4,14 +4,16 @@
  */
 package com.j2eefast.common.core.exception;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 自定义异常处理
  * @author zhouzhou
  * @date 2020-03-12 15:42
  */
-@Data
+@Getter
+@Setter
 public class RxcException extends RuntimeException {
 
 	private static final long 					serialVersionUID 					= 1L;

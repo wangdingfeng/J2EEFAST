@@ -45,6 +45,8 @@ public class DemoConfig {
 	private String urlPatterns;
 	@Value("${fast.demoMode.ip: 192.168.1.1}")
 	private String ip;
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
     public FilterRegistrationBean demoFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();

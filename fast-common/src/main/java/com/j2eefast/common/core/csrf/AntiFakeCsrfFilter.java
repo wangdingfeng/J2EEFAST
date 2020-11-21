@@ -44,7 +44,8 @@ public class AntiFakeCsrfFilter {
     @Value("${fast.csrf.urlReferer: }")
     private String urlReferer;
 
-    @Bean
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
     public FilterRegistrationBean csrfFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);

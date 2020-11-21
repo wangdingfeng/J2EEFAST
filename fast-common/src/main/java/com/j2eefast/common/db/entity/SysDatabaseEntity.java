@@ -13,7 +13,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.utils.DbUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -24,9 +25,12 @@ import javax.validation.constraints.NotBlank;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Data
+@Getter
+@Setter
 @TableName("sys_database")
 public class SysDatabaseEntity extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@TableId(type = IdType.ASSIGN_ID)
 	private Long id;

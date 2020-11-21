@@ -17,12 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.utils.ValidatorUtil;
 import com.j2eefast.framework.sys.entity.SysCompEntity;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.framework.utils.Constant;
 
@@ -39,10 +37,7 @@ public class SysCompController extends BaseController {
 
 	@Autowired
 	private SysCompService sysCompService;
-
-	@Autowired
-	private SysUserService sysUserService;
-
+	
 	@Autowired
 	private SysCompDeptService sysCompDeptService;
 
@@ -191,24 +186,9 @@ public class SysCompController extends BaseController {
 		
 		if(UserUtils.getUserId().equals(Constant.SUPER_ADMIN) ||
 				UserUtils.hasRole(Constant.SU_ADMIN)){
-			// 先判断是否有子公司
-			List<SysCompEntity> list = sysCompService.listByMap(new MapUtil().put("parent_id", compId));
-			if (ToolUtil.isNotEmpty(list) && list.size() > 0) {
-				return error("请先删除子部门");
-			}
-			// 在判断公司是否有分配到用户上面如果改公司已经分配到用户上,先删除用户在删
-			List<SysUserEntity> users = sysUserService.listByMap(new MapUtil().put("comp_id", compId));
-			if (ToolUtil.isNotEmpty(users) && users.size() > 0) {
-				return error("请先删除关联用户");
-			}
-
-			// 删除
-			//sysCompDeptService.deleteBatch(new Long[] { compId });
-			sysCompDeptService.removeByMap(new MapUtil().put("comp_id",compId));
-
-			if(sysCompService.removeById(compId)){
+			if(sysCompService.delSysCompById(compId)) {
 				return success();
-			}else{
+			}else {
 				return error("删除失败!");
 			}
 		}else{

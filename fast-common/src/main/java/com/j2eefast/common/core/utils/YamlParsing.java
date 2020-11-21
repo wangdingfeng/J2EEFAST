@@ -4,13 +4,11 @@
  */
 package com.j2eefast.common.core.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.YamlProcessor;
 import org.springframework.core.CollectionFactory;
 import org.springframework.lang.Nullable;
-
 import java.util.*;
 
 /**
@@ -21,7 +19,6 @@ import java.util.*;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Slf4j
 public class YamlParsing extends YamlProcessors implements FactoryBean<Properties>, InitializingBean {
 
 	private boolean singleton = true;

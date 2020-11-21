@@ -67,7 +67,8 @@ public class RedisCache<K, V> implements Cache<K, V> {
             if (rawValue == null) {
                 return null;
             }
-            V value = (V) rawValue;
+            @SuppressWarnings("unchecked")
+			V value = (V) rawValue;
             return value;
         } catch (SerializationException e) {
             throw new CacheException(e);
@@ -99,7 +100,8 @@ public class RedisCache<K, V> implements Cache<K, V> {
         try {
             String redisCacheKey = getRedisCacheKey(key);
             Object rawValue = redisUtil.getSession(redisCacheKey);
-            V previous = (V) rawValue;
+            @SuppressWarnings("unchecked")
+			V previous = (V) rawValue;
             redisUtil.delSession(redisCacheKey);
             return previous;
         } catch (SerializationException e) {
@@ -227,7 +229,8 @@ public class RedisCache<K, V> implements Cache<K, V> {
         return convertedKeys;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Collection<V> values() {
         Set<String> keys = null;
         try {

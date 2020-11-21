@@ -70,10 +70,10 @@ public class SysDictDataController extends BaseController {
     @RequiresPermissions("sys:dict:add")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData addSave(@Validated SysDictDataEntity dict)
-    {
+    public ResponseData addSave(@Validated SysDictDataEntity dict){
         if(sysDictDataService.save(dict)){
-            List<SysDictDataEntity> list = sysDictDataService.list(new QueryWrapper<SysDictDataEntity>().eq("dict_type",dict.getDictType()).
+            List<SysDictDataEntity> list = sysDictDataService.list(new QueryWrapper<SysDictDataEntity>().
+            		eq("dict_type",dict.getDictType()).
                     eq("status","0").orderBy(true, true, "dict_sort"));
             sysConfigRedis.saveOrUpdateDict(dict.getDictType(),list);
             return success();
@@ -86,8 +86,7 @@ public class SysDictDataController extends BaseController {
      * 修改字典类型
      */
     @GetMapping("/edit/{dictCode}")
-    public String edit(@PathVariable("dictCode") Long dictCode, ModelMap mmap)
-    {
+    public String edit(@PathVariable("dictCode") Long dictCode, ModelMap mmap){
         mmap.put("dictHtml", sysDictDataService.getById(dictCode));
         return urlPrefix + "/edit";
     }

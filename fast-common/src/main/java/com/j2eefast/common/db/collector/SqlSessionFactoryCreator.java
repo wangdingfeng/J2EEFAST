@@ -1,7 +1,7 @@
 package com.j2eefast.common.db.collector;
 
 import cn.hutool.core.date.SystemClock;
-import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
+//import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.db.context.DataSourceContext;
 import lombok.Data;
@@ -63,6 +63,7 @@ public class SqlSessionFactoryCreator {
 
 	private final Interceptor[] interceptors;
 
+	@SuppressWarnings("rawtypes")
 	private final TypeHandler[] typeHandlers;
 
 	private final LanguageDriver[] languageDrivers;
@@ -79,7 +80,7 @@ public class SqlSessionFactoryCreator {
 
 	public SqlSessionFactoryCreator(MybatisPlusProperties properties,
 									ObjectProvider<Interceptor[]> interceptorsProvider,
-									ObjectProvider<TypeHandler[]> typeHandlersProvider,
+									@SuppressWarnings("rawtypes") ObjectProvider<TypeHandler[]> typeHandlersProvider,
 									ObjectProvider<LanguageDriver[]> languageDriversProvider,
 									ResourceLoader resourceLoader,
 									ObjectProvider<DatabaseIdProvider> databaseIdProvider,
@@ -222,7 +223,7 @@ public class SqlSessionFactoryCreator {
 		if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
 			Resource[] resource = this.properties.resolveMapperLocations();
 			Resource[] resource1 = new Resource[0];
-			Resource[] resource2 = new Resource[0];
+//			Resource[] resource2 = new Resource[0];
 			if(dbName.equals(DataSourceContext.FLOWABLE_DATASOURCE_NAME)){
 //				Resource[] resource3 = new Resource[0];
 				try {

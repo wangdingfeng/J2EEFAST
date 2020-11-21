@@ -4,7 +4,6 @@
  */
 package com.j2eefast.modules.sys.controller;
 
-import java.util.List;
 import java.util.Map;
 import com.j2eefast.common.config.entity.SysConfigEntity;
 import com.j2eefast.common.config.service.SysConfigService;
@@ -17,10 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
-import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.utils.ValidatorUtil;
 import com.j2eefast.common.core.controller.BaseController;
 
@@ -126,9 +123,8 @@ public class SysConfigController extends BaseController {
 	@RequiresPermissions("sys:config:del")
 	@ResponseBody
 	public ResponseData delete(Long[] ids) {
-		List<SysConfigEntity> list= sysConfigService.list(new QueryWrapper<SysConfigEntity>().
-				eq("config_type","Y").in("id",ids));
-		if(ToolUtil.isNotEmpty(list)){
+		//检查是否有系统参数
+		if(sysConfigService.checkSysConfigKey(ids)) {
 			return error("删除参数失败，系统参数不能删除");
 		}
 		return sysConfigService.deleteBatchByIds(ids)?success():error("删除失败!");

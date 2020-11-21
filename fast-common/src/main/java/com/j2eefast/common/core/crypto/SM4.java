@@ -71,7 +71,7 @@ public class SM4 {
 	
 	public static void SMS4Crypt(byte[] Input,byte[] Output,int[] rk)
 	{
-		int r,mid,x0,x1,x2,x3;
+		int r,mid;
 		int[] x= new int[4];
 		int[] tmp = new int[4];
 		for(int i=0;i<4;i++)

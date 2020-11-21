@@ -68,7 +68,8 @@ public class HttpContextUtil {
         if (request == null) {
             return values;
         }
-        Enumeration enums = request.getParameterNames();
+        @SuppressWarnings("rawtypes")
+		Enumeration enums = request.getParameterNames();
         while (enums.hasMoreElements()) {
             String paramName = (String) enums.nextElement();
             String paramValue = request.getParameter(paramName);

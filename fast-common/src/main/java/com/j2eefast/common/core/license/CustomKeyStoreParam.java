@@ -36,7 +36,7 @@ public class CustomKeyStoreParam extends AbstractKeyStoreParam {
      */
     private String keyPwd;
 
-    public CustomKeyStoreParam(Class clazz, String resource, String alias, String storePwd, String keyPwd) {
+    public CustomKeyStoreParam(@SuppressWarnings("rawtypes") Class clazz, String resource, String alias, String storePwd, String keyPwd) {
         super(clazz, resource);
         this.storePath = resource;
         this.alias = alias;

@@ -29,8 +29,10 @@ public class DruidConfig {
 	/**
 	 * druidServlet注册
 	 */
+	@SuppressWarnings("rawtypes")
 	@Bean
 	public ServletRegistrationBean druidServletRegistration() {
+		@SuppressWarnings("unchecked")
 		ServletRegistrationBean registration = new ServletRegistrationBean(new StatViewServlet());
 		registration.addUrlMappings("/druid/*");
 		return registration;
@@ -39,6 +41,7 @@ public class DruidConfig {
 	/**
 	 * druid监控 配置URI拦截策略
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean druidStatFilter() {
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());

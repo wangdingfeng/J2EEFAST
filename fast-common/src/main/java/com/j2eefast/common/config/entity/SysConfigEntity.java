@@ -13,8 +13,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
-
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * <p>系统配置参数</p>
@@ -24,7 +24,8 @@ import lombok.Data;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Data
+@Getter
+@Setter
 @TableName("sys_config")
 public class SysConfigEntity extends BaseEntity {
 	

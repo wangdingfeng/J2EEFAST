@@ -26,6 +26,7 @@ import com.j2eefast.common.core.utils.ToolUtil;
 @Aspect
 public class MultiSourceAop implements Ordered {
 
+	@SuppressWarnings("unused")
 	private String[]  						names					   = null;
 	private String 	  						defaultdb 				   = "DEFAULT";
 	

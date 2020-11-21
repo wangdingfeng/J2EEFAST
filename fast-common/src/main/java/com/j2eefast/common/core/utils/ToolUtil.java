@@ -419,7 +419,8 @@ public class ToolUtil{
             }
         }
     	if(value instanceof List){
-            List<String> a = (List) value;
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+			List<String> a = (List) value;
             for(int i=0; i< a.size(); i++){
                 src += a.get(i)+s;
             }
@@ -440,6 +441,7 @@ public class ToolUtil{
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static AuthRequest getAuthRequest(String source,String clientId,String clientSecret,String redirectUri, AuthStateCache authStateCache) {
         AuthRequest authRequest = null;
         switch (source.toLowerCase()) {

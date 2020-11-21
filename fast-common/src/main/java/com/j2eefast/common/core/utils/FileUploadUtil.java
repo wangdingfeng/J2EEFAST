@@ -31,7 +31,6 @@ public class FileUploadUtil {
      * 默认上传的地址
      */
     private static String 						defaultBaseDir 						= "/";
-    private static int 							counter 							= 0;
 
     public static void setDefaultBaseDir(String defaultBaseDir)
     {

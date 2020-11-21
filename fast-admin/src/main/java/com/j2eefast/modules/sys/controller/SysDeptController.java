@@ -5,14 +5,11 @@
 package com.j2eefast.modules.sys.controller;
 
 import java.util.*;
-
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
-import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.common.core.utils.ValidatorUtil;
 import com.j2eefast.framework.sys.entity.SysCompEntity;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.service.*;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,7 +24,6 @@ import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.sys.entity.SysDeptEntity;
 
-
 /**
  * 地区管理
  * @author zhouzhou
@@ -41,9 +37,6 @@ public class SysDeptController extends BaseController {
 
 	@Autowired
 	private SysDeptService sysDeptService;
-
-	@Autowired
-	private SysUserService sysUserService;
 
 	@Autowired
 	private SysCompService sysCompService;
@@ -89,9 +82,9 @@ public class SysDeptController extends BaseController {
 
 
 
-	/*
-	 地区主页
-	* */
+	/**
+	 * 地区主页
+	 */
 	@RequiresPermissions("sys:dept:view")
 	@GetMapping()
 	public String dept() {
@@ -185,7 +178,6 @@ public class SysDeptController extends BaseController {
 					parentId = sysDeptEntity.getParentId();
 					continue;
 				}
-
 				if (parentId > sysDeptEntity.getParentId().longValue()) {
 					parentId = sysDeptEntity.getParentId();
 				}
@@ -261,36 +253,11 @@ public class SysDeptController extends BaseController {
 	@RequiresPermissions("sys:dept:del")
 	@ResponseBody
 	public ResponseData delete(@PathVariable("deptId") Long deptId) {
-//		// 判断是否有子部门
-//		List<Long> deptList = sysDeptService.findDetpIdList(deptId);
-//		if (ToolUtil.isNotEmpty(deptList) && deptList.size() > 0) {
-//			return error("存在下级地区,不允许删除");
-//		}
-//		List<Long> userList = sysUserDeptService.findUserIdList(deptId);
-//		if(ToolUtil.isNotEmpty(userList) && userList.size() > 0) {
-//			return error("地区存在用户,不允许删除");
-//		}
-//		return sysDeptService.removeById(deptId)? success(): error("删除失败!");
 		if(UserUtils.getUserId().equals(Constant.SUPER_ADMIN) ||
 				UserUtils.hasRole(Constant.SU_ADMIN)){
-			// 先判断是否有子公司
-			List<SysCompEntity> list = sysCompService.listByMap(new MapUtil().put("parent_id", deptId));
-			if (ToolUtil.isNotEmpty(list) && list.size() > 0) {
-				return error("请先删除子部门");
-			}
-			// 在判断公司是否有分配到用户上面如果改公司已经分配到用户上,先删除用户在删
-			List<SysUserEntity> users = sysUserService.listByMap(new MapUtil().put("comp_id", deptId));
-			if (ToolUtil.isNotEmpty(users) && users.size() > 0) {
-				return error("请先删除关联用户");
-			}
-
-			// 删除
-			//sysCompDeptService.deleteBatch(new Long[] { compId });
-			//sysCompDeptService.removeByMap(new MapUtil().put("comp_id",compId));
-
-			if(sysCompService.removeById(deptId)){
+			if(sysCompService.delSysCompById(deptId)) {
 				return success();
-			}else{
+			}else {
 				return error("删除失败!");
 			}
 		}else{

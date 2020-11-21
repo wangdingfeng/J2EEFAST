@@ -93,7 +93,8 @@ public class YamlUtil{
      * @param qualifiedKey Key
      * @param value value值
      */
-    public static void setProperty(Map<?, ?> map, Object qualifiedKey, Object value) {
+    @SuppressWarnings("unchecked")
+	public static void setProperty(Map<?, ?> map, Object qualifiedKey, Object value) {
         if (map != null && !map.isEmpty() && qualifiedKey != null) {
             String input = String.valueOf(qualifiedKey);
             if (!input.equals("")) {

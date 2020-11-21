@@ -164,7 +164,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, ResultHandler handler) {
+	public void select(String statement, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, handler);
 	}
 
@@ -172,7 +172,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, Object parameter, ResultHandler handler) {
+	public void select(String statement, Object parameter, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, parameter, handler);
 	}
 
@@ -180,7 +180,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
+	public void select(String statement, Object parameter, RowBounds rowBounds, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, parameter, rowBounds, handler);
 	}
 

@@ -79,8 +79,6 @@ public class SysAuthController extends BaseController {
      */
     @RequestMapping("/auth/callback/{source}")
     public ModelAndView login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request) {
-        System.out.println("进入callback：" + source + " callback params：" + JSONUtil.parse(callback).toString());
-
         String dictLabel = dictConfig.getLabel("sys_oauth",source);
         if(ToolUtil.isEmpty(dictLabel)){
             Map<String, Object> map = new HashMap<>(1);
@@ -90,7 +88,8 @@ public class SysAuthController extends BaseController {
         JSONObject json =  JSONUtil.parseObj(dictLabel);
         AuthRequest authRequest = ToolUtil.getAuthRequest(source,
                 json.getStr("clientId"),json.getStr("clientSecret"),json.getStr("redirectUri"),stateRedisCache);
-        AuthResponse<AuthUser> response = authRequest.login(callback);
+        @SuppressWarnings("unchecked")
+		AuthResponse<AuthUser> response = authRequest.login(callback);
         System.out.println(JSONUtil.parse(response).toString());
         if (response.ok()) {
             if(source.equals("gitee")){
@@ -99,7 +98,7 @@ public class SysAuthController extends BaseController {
             if(UserUtils.isLogin()){
                 SysUserEntity user = sysUserMapper.findAuthByUuid(source+ response.getData().getUuid());
                 if(!ToolUtil.isEmpty(user)){
-                    return new ModelAndView("redirect:/index#sys/user/profile/oauth2?err=5001#_sysInfo");
+                    return new ModelAndView(REDIRECT+"/index#sys/user/profile/oauth2?err=5001#_sysInfo");
                 }
                 //若已经登录则直接绑定系统账号
                 SysAuthUserEntity authUser = new SysAuthUserEntity();
@@ -112,7 +111,7 @@ public class SysAuthController extends BaseController {
                 authUser.setEmail(response.getData().getEmail());
                 authUser.setSource(source);
                 sysAuthUserService.saveAuthUser(authUser);
-                return new ModelAndView("redirect:/index#sys/user/profile/oauth2#_sysInfo");
+                return new ModelAndView(REDIRECT+"/index#sys/user/profile/oauth2#_sysInfo");
             }
             SysUserEntity user = sysUserMapper.findAuthByUuid(source+ response.getData().getUuid());
             if(!ToolUtil.isEmpty(user)){
@@ -121,14 +120,14 @@ public class SysAuthController extends BaseController {
                 UserToken token = new UserToken(user.getUsername(), user.getPassword(), LoginType.FREE.getDesc(),false);
                 subject = UserUtils.getSubject();
                 subject.login(token);
-                return new ModelAndView("redirect:/index");
+                return new ModelAndView(REDIRECT+"/index");
             }else{
                 //游客登录 演示网站暂时定死账号登录
                 Subject subject = null;
                 UserToken token = new UserToken("99999", "123456", LoginType.NORMAL.getDesc(),false);
                 subject = UserUtils.getSubject();
                 subject.login(token);
-                return new ModelAndView("redirect:/index");
+                return new ModelAndView(REDIRECT+"/index");
             }
         }
         Map<String, Object> map = new HashMap<>(1);

@@ -8,7 +8,6 @@ import com.j2eefast.common.core.config.properties.DruidProperties;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.dao.SysDataBaseDao;
 import com.j2eefast.common.db.factory.AtomikosFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import javax.sql.DataSource;
 import java.util.Map;
@@ -21,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Slf4j
 public class DataSourceContext {
 	/**
 	 * 主数据源名称

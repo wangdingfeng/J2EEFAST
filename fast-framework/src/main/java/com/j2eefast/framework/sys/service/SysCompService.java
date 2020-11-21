@@ -14,14 +14,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.exception.RxcException;
+import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.annotation.DataFilter;
 import com.j2eefast.framework.sys.entity.SysCompEntity;
+import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysCompMapper;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
@@ -34,6 +37,8 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 
 	@Resource
 	private SysCompDeptService sysCompDeptService;
+	@Resource
+	private SysUserService sysUserService;
 	@Resource
 	private SysCompMapper sysCompMapper;
 
@@ -136,6 +141,34 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 
 	public List<Long> findDetpIdList(Long parentId) {
 		return sysCompMapper.findDetpIdList(parentId);
+	}
+	
+	/**
+	 * 通过id删除
+	 * @param ids
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public boolean delSysCompById(Long id) {
+		
+		// 先判断是否有子公司
+		List<SysCompEntity> list = this.listByMap(new MapUtil().put("parent_id", id));
+		if (ToolUtil.isNotEmpty(list)) {
+			throw new RxcException("请先删除子部门","50001");
+		}
+		// 在判断公司是否有分配到用户上面如果改公司已经分配到用户上,先删除用户在删
+		List<SysUserEntity> users = sysUserService.listByMap(new MapUtil().put("comp_id", id));
+		if (ToolUtil.isNotEmpty(users)) {
+			throw new RxcException("请先删除关联用户","50001");
+		}
+		//删除关联地区
+		sysCompDeptService.removeByMap(new MapUtil().put("comp_id",id));
+
+		if(this.removeById(id)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public List<SysCompEntity> getSubCompEntitys(Long id){

@@ -37,8 +37,10 @@ public class RedisUtil {
 	 */
 	@Value("${fast.redis.enabled: true}")
 	private Boolean enabled;
+	@SuppressWarnings("unused")
 	@Autowired
 	private StringRedisTemplate 					stringRedisTemplate;
+	@SuppressWarnings("rawtypes")
 	@Autowired
 	private RedisTemplate 							redisTemplate;
 	@Resource(name = "redisTemplate")
@@ -72,6 +74,7 @@ public class RedisUtil {
 	 * @param key 键
 	 * @param time 时间(秒)
 	 */
+	@SuppressWarnings("unchecked")
 	public void expire(String key,long time){
 		redisTemplate.expire(key, time, TimeUnit.SECONDS);
 	}
@@ -79,6 +82,7 @@ public class RedisUtil {
 	/**
 	 * 数据存放Set集合
 	 */
+	@SuppressWarnings("unchecked")
 	public void add(String key,long expire,String... values) {
 		
 		if(enabled) {
@@ -111,6 +115,7 @@ public class RedisUtil {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void set(String key, Object value, long expire) {
 		
 		if(enabled) {
@@ -122,6 +127,7 @@ public class RedisUtil {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setMillse(String key, Object value, long expire) {
 		
 		if(enabled) {
@@ -146,10 +152,12 @@ public class RedisUtil {
 	 * @param key 键
 	 * @param value 值
 	 */
+	@SuppressWarnings("unchecked")
 	public void  setSession(String key,Object value) {
 		redisTemplate.opsForValue().set(key, value);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setSeConds(String key, Object value, long expire) {
 		
 		if(enabled) {
@@ -175,6 +183,7 @@ public class RedisUtil {
 	 * @param value 值
 	 * @param time 时间(秒) time要大于0 如果time小于等于0 将设置无限期
 	 */
+	@SuppressWarnings("unchecked")
 	public void setSession(String key,Object value,long time){
 		if(time>0){
 			redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -191,6 +200,7 @@ public class RedisUtil {
 		return;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T get(String key, Class<T> clazz, long expire) {
 		
 		if(enabled) {
@@ -211,6 +221,7 @@ public class RedisUtil {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String get(String key, long expire) {
 		
 		if(enabled) {
@@ -241,6 +252,7 @@ public class RedisUtil {
 		return redisTemplate.opsForValue().get(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void delete(String key) {
 		
 		if(enabled) {
@@ -269,6 +281,7 @@ public class RedisUtil {
 	 * @return
 	 */
 	public Set<String> scan(String key){
+		@SuppressWarnings("unchecked")
 		Set<String> execute = (Set<String>) this.redisTemplate.execute(new RedisCallback<Set<String>>() {
 
 			@Override
@@ -293,6 +306,7 @@ public class RedisUtil {
 	 * @return
 	 */
 	public Long scanSize(String key){
+		@SuppressWarnings("unchecked")
 		long dbSize = (long) this.redisTemplate.execute(new RedisCallback<Long>() {
 
 			@Override
@@ -309,6 +323,7 @@ public class RedisUtil {
 		return dbSize;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean deletes(String key){
 		if(enabled) {
 			Set<String> keys = redisTemplate.keys(key);

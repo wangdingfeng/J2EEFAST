@@ -21,6 +21,7 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -153,6 +154,20 @@ public class SysConfigService extends ServiceImpl<SysConfigMapper, SysConfigEnti
             return  false;
         }
         return true;
+    }
+    
+    /**
+     * 通过主键ID集合数组判断是否存在系统参数
+     * @param ids
+     * @return
+     */
+	public boolean checkSysConfigKey(Long[] ids) {
+    	List<SysConfigEntity> list= this.list(new QueryWrapper<SysConfigEntity>().eq("config_type","Y")
+    			.in("id",Arrays.asList(ids)));
+		if(ToolUtil.isNotEmpty(list)){
+			return true;
+		}
+		return false;
     }
 
     /**

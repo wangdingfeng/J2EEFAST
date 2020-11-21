@@ -57,6 +57,7 @@ public class EncryptUtil
      * @return byte[] ������Կֵ
      * @throws EncryptException
      */
+	@SuppressWarnings("restriction")
 	public static byte[] generateKey(byte keyLen) throws EncryptException
 	{
 		try
@@ -140,6 +141,7 @@ public class EncryptUtil
      * @return byte[] ���ܺ�����
      * @throws EncryptException
      */
+	@SuppressWarnings("unlikely-arg-type")
 	public static byte[] doEncrypt(byte mode, byte[] keyValue, byte[] data,
 			byte[] initIV) throws EncryptException
 	{
@@ -577,6 +579,7 @@ public class EncryptUtil
 //				accountNo.length() == 19)){
 //			return "1";
 //		}
+		@SuppressWarnings("unused")
 		byte[] JpinKey = null;
 		byte[] pinBlock = null;
 		//byte[] key = HexUtil.convertHexStrToByteArray(keyValue);

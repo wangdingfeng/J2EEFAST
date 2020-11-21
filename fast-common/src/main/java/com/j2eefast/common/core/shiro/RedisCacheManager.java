@@ -15,7 +15,8 @@ public class RedisCacheManager implements CacheManager {
 
 
     // fast lookup by name map
-    private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();
+    @SuppressWarnings("rawtypes")
+	private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();
 
     @Autowired
     private RedisUtil redisUtil;
@@ -33,11 +34,13 @@ public class RedisCacheManager implements CacheManager {
     public static final String DEFAULT_PRINCIPAL_ID_FIELD_NAME = "username";
     private String principalIdFieldName = DEFAULT_PRINCIPAL_ID_FIELD_NAME;
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <K, V> Cache<K, V> getCache(String name) throws CacheException {
         log.debug("get cache, name=" + name);
 
-        Cache cache = caches.get(name);
+        @SuppressWarnings("rawtypes")
+		Cache cache = caches.get(name);
 
         if (cache == null) {
             cache = new RedisCache<K, V>(redisUtil, keyPrefix + name + ":", expire, principalIdFieldName);

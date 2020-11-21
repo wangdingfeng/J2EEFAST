@@ -155,6 +155,7 @@ public class MybatisMapperRefresh {
 	 * @param list
 	 * @param namespace
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	private void cleanParameterMap(List<XNode> list, String namespace) {
 		for (XNode parameterMapNode : list) {
 			String id = parameterMapNode.getStringAttribute("id");

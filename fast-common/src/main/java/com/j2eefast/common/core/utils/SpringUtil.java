@@ -86,6 +86,7 @@ public class SpringUtil implements BeanFactoryPostProcessor{
 	 * @param <T>
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T getAopProxy(T invoker){
 		return (T) AopContext.currentProxy();
 	}
