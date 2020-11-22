@@ -112,25 +112,12 @@
               <artifactId>shiro-spring</artifactId>
           </dependency>
 
-          <!-- Shiro使用EhCache缓存框架 -->
+          <!-- Shiro使用EhCache缓存框架
           <dependency>
               <groupId>org.apache.shiro</groupId>
               <artifactId>shiro-ehcache</artifactId>
-          </dependency>
-        
-        <!--feign远程调用，**注意可选**-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
+          </dependency> -->
+          
 		<!-- SpringWeb模块 -->
 		<dependency>
             <groupId>org.springframework</groupId>
@@ -163,21 +150,6 @@
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId> 
 		</dependency>
-
-<!--      <dependency>-->
-<!--          <groupId>org.mybatis.spring.boot</groupId>-->
-<!--          <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--      </dependency>-->
-        
-<!--         <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus</artifactId>-->
-<!--         </dependency>-->
-        
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
-<!--         </dependency>-->
 
           <dependency>
               <groupId>com.alibaba</groupId>
