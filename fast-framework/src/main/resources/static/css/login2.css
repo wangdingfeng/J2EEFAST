@@ -1,5 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  * @author ZhouZhou
  * @version 2020-09-28
  */
@@ -147,7 +148,7 @@ body {
 }
 .login-sidebox__footer {
     font-size: 14px;
-    padding-top: 40px;
+    padding-top: 30px;
     margin-top: 24px;
     border-top: 1px solid rgba(255,255,255,0.2);
 }
