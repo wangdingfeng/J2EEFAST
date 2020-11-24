@@ -1,7 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage"]>
-</@header>
+<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage","treeTable"]>
 <style>
 .form-group .control-label {
     font-weight: normal;
@@ -11,7 +10,7 @@
     vertical-align: top;
 }
 </style>
-
+</@header>
 <div class="wrapper wrapper-content ibox-content">
 <a data-toggle="collapse" href="#c_tip" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">点组件label中的&nbsp;"?"&nbsp;显示源码帮助</span>
     <@f.tip class="danger"><strong>重要提示: &nbsp;点击组件label中的&nbsp;'?'&nbsp;显示源码帮助 </strong>,J2eeFAST平台 前端模板引擎组件写法类似 HTML 本身控件写法,属性值方式.</@f.tip>
@@ -37,10 +36,10 @@
                         <@f.input name="username" placeholder="请输入登录账号"  butClass="fa fa-envelope-open" required=true helpTip="登录账号数字加字母组合,至少3位"/>
                         <#-- f.code 是为了演示说明 可以删除-->
                         <div id="c_hidden" class="panel-collapse collapse" >
-                        <@f.code>
-                         <#noparse>
-                             //输入框组件标签:<@f.input/>
-                             //参数: 1. name 控件name 必输
+                            <@f.code>
+                                <#noparse>
+                                    //输入框组件标签:<@f.input/>
+                                    //参数: 1. name 控件name 必输
                                     2. id 控件id 不是必输 如果不输则与name名称一样
                                     3. value 控件值 不是必输 默认""
                                     4. type 控件类型 不是必输 默认 text 多增加 date
@@ -53,20 +52,20 @@
                                     10.helpTip 帮助提示 不是必输 默认""
                                     11.readonly 控件是否可以编辑 不是必输 默认""
                                     12.maxlength 控件输入最大长度 不是必输 默认 ""
-                             //栗子 🌰
-                             <@f.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required=true
-                             helpTip="登录账号数字加字母组合,至少3位"/>
+                                    //栗子 🌰
+                                    <@f.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required=true
+                                    helpTip="登录账号数字加字母组合,至少3位"/>
 
-                             //表单隐藏域标签:<@f.hidden/>
-                             //参数: 1. name 控件name 必输
+                                    //表单隐藏域标签:<@f.hidden/>
+                                    //参数: 1. name 控件name 必输
                                     2. id 控件id 不是必输 如果不输则与name名称一样
                                     3. value 控件值 不是必输 默认""
                                     4. type 控件类型 不是必输 默认 hidden
                                     5. refresh 隐藏域在from 表单中能否被重置按钮清空 不是必输 默认 true
-                             //栗子 🌰
-                             <@f.hidden name="id"/>
-                         </#noparse>
-                        </@f.code>
+                                    //栗子 🌰
+                                    <@f.hidden name="id"/>
+                                </#noparse>
+                            </@f.code>
                         </div>
                     </div>
                 </div>
@@ -120,6 +119,42 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
+                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_htmlText" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>信息描述支持html：</label>
+                    <div class="col-sm-10">
+                        <@f.ueditor name="htmlText" toolbars="'simpleupload','attachment'" />
+                        <div id="c_htmlText" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //libs["ueditor"]
+                                    //百度富文本组件标签:<@f.ueditor/>
+                                    //参数: 1. name 控件name 必输
+                                    2. id 控件id 不是必输 如果不输则与name名称一样
+                                    3. bizType 用于关联文件数据库
+                                    4. bizId 用于关联文件数据库，管理物理文件
+                                    5. value 控件值 不是必输 默认""
+                                    6. readonly 控件是否可以编辑 不是必输 默认 false
+                                    7. maxlength 最大输入长度默认不限 不是必输
+                                    8. height 控件高度 不是必输 默认"300"
+                                    9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
+                                    10. toolbars="all" 默认工具栏显示所有, text 显示文字信息
+                                    //回调函数
+                                    //webuploaderRefresh(id,html);
+
+                                    //栗子 🌰
+                                    <@f.ueditor name="noticeContent"  value="${noticeContent?html}  />
+                                    //bizType和bizId 如果需要富文件上传的文件，被系统数库记录，请使用两个参数与实体类
+                                    //由于新增实体时没有id(bizId) 因此需要在打面新增页面前产生id到端，${exampleTest.id} 提交前产生id
+                                    <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
+                                </#noparse>
+                            </@f.code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
                     <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_imageclip" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>图片剪切：</label>
                     <div class="col-sm-10">
                         <@f.imageclip name="imgCp"/>
@@ -163,7 +198,7 @@
             </div>
         </div>
         <div class="row">
-      <div class="col-sm-12">
+            <div class="col-sm-12">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_select" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>下拉单选：</label>
                     <div class="col-sm-4">
@@ -173,8 +208,8 @@
                     <div class="col-sm-4">
                         <@f.select name="businessTypes" multiple=true  dictType="sys_oper_type" required=true/>
                     </div>
-              </div>
-           </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -221,7 +256,6 @@
             </div>
         </div>
         </div>
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
@@ -413,7 +447,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_tableselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>多选组件：</label>
+                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_tableselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>弹窗表格形式,单、多选组件：</label>
                     <div class="col-sm-10">
                         <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
@@ -439,7 +473,7 @@
                                     10. labelName="" <#--标签名称 -->
                                     11. required=false <#-- 是否必输-->
                                     12. readonly 控件是否可以编辑 不是必输 默认"false"
-                                    13. checked=true 多选 false 单选
+                                    13. checked=true <#-- true多选 false 单选 默认多选 -->
                                     14. class = "form-control" <#-- 输入框样式-->
                                     15. butClass = "fa fa-fw fa-address-card-o"
                                     16. isClear = true <#-- 弹出是否出现清除按钮-->
@@ -482,7 +516,7 @@
                                        8. height 控件高度 不是必输 默认"300"
                                        9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
                                 //回调函数
-                                //webuploaderRefresh(html);
+                                //webuploaderRefresh(id,html);
 
                                 //栗子 🌰
                                 <@f.ueditor name="noticeContent"  value="${noticeContent?html}  />
@@ -496,7 +530,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
@@ -557,10 +590,14 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_treeTable" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>树表异步分页实例：</label>
+                    <label class="col-sm-2 control-label">
+                        <a data-toggle="collapse" href="#c_treeTable" aria-expanded="true">
+                            <i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp
+                        </a>
+                        <span style="color: red; ">*</span>树表异步分页实例：
+                    </label>
                     <div class="col-sm-10">
-                        <@table id="bootstrap-tree-table">
-                        </@table>
+                        <@table id="bootstrap-tree-table"/>
                         <div id="c_treeTable" class="panel-collapse collapse" >
                             <@f.code>
                                 <#noparse>
@@ -596,7 +633,7 @@
         </div>
     </@f.form>
     <div class="hr-line-dashed"></div>
-    </div>
+</div>
 <@footer>
 <script type="text/javascript">
 
