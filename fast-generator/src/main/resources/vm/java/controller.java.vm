@@ -180,7 +180,7 @@ public class ${ClassName}Controller extends BaseController{##
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData del(${pkColumn.javaType}[] ids) {
-      return ${className}Service.del${ClassName}ByIds(ids)? success(): error("删除失败!");
+      return ${className}Service.deleteBatchByIds(ids)? success(): error("删除失败!");
     }##
     #end
 

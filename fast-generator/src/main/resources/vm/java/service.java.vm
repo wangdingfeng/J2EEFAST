@@ -188,7 +188,7 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
     @DataSource(name="$table.dbName")
 #end##     
 	@Transactional(rollbackFor = Exception.class)
-	public boolean del${ClassName}ByIds(${pkColumn.javaType}[] ids) {####
+	public boolean deleteBatchByIds(${pkColumn.javaType}[] ids) {####
 		#set($isImg = "0")#####
 		#foreach ($column in $columns)####
 		#if($column.htmlType == "imgcup")####

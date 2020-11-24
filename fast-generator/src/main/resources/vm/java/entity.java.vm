@@ -78,7 +78,8 @@ public class ${ClassName}Entity ${Entity}{
     /** $column.columnComment */####
 #if($column.javaField == 'delFlag')##
 
-    @TableLogic(value="0",delval="1")###
+    @TableLogic###
+    @TableField(value = "del_flag", fill = FieldFill.INSERT)###
 #end
 #if($column.plus)##
     @TableField(exist = false)
@@ -142,7 +143,8 @@ public class ${ClassName}Entity ${Entity}{
 
     /** $column.columnComment */
 #if($column.javaField == 'delFlag')##
-    @TableLogic(value="0",delval="1")###
+    @TableLogic###
+    @TableField(value = "del_flag", fill = FieldFill.INSERT)####
 
 #end##
 #if($column.plus)
