@@ -1,6 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- *
+ * No deletion without permission
  * index 主页菜单、按钮事件
  * @author zhouzhou
  * @data 2020-02-20

@@ -1,6 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- *
+ * No deletion without permission
  * navtab 定义Tab
  * @author ZhouHuan
  * @data 2020-02-20

@@ -1,5 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  * @author J2eeFAST
  * @version 2020-01-21
  */

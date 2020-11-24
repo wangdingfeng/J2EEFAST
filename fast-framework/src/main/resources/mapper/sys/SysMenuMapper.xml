@@ -8,8 +8,11 @@
         <if test="_databaseId  == 'oracle'">
             nvl(perms,'') as perms,
         </if>
-        <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'">
+        <if test="_databaseId  == 'mysql'">
             ifnull(perms,'') as perms,
+        </if>
+        <if test="_databaseId  == 'postgresql'">
+            COALESCE(perms,'') as perms,
         </if>
         target, icon,module_codes, create_by, create_time
 		from sys_menu

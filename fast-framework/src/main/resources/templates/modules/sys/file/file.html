@@ -4,6 +4,9 @@
 <div class="container-div">
  <div class="row">
   <div class="col-sm-12 search-collapse">
+    <@f.tip class="warning">
+      上传组件支持上传下载对象存储OSS、默认本地。目前系统支持阿里OSS
+    </@f.tip>
     <@f.form id="file-form" class="form-inline">
      <div class="select-list">
       <ul>
@@ -34,13 +37,14 @@
         </a>
     </@shiro.hasPermission>
    </@table>
-  <div>
+  </div>
 </div>
 <@footer>
 <script type="text/javascript">
     var delFlag = "${permission.hasPermi("sys:file:del")}";
     var visible = ${permission.isPermitteds("sys:file:del")?string('true', 'false')};
      var datas =  ${dict.getDictListJson('sys_file_status')};
+     var ossTypeDict =  ${dict.getDictListJson('sys_oss_type')};
     var classify =  ${dict.getDictListJson('sys_file_classify')};
     var prefix = baseURL + "sys/file";
 
@@ -69,7 +73,10 @@
                         return $.table.selectDictLabel(classify, value);
                 }}
               ,{field : 'fileUpload.bizType',title : '<@ctx.i18n text = "业务类型"/>'} 
-              ,{field : 'fileUpload.bizId',title : '<@ctx.i18n text = "业务ID"/>'} 
+              ,{field : 'fileUpload.bizId',title : '<@ctx.i18n text = "业务ID"/>',visible: false}
+              ,{field : 'ossType',title : '<@ctx.i18n text = "对象存储OSS类型"/>',formatter: function (value, row, index) {
+                        return $.table.selectDictLabels(ossTypeDict, value);
+               }}
               ,{field : 'filePath',title : '<@ctx.i18n text = "相对路径"/>' ,formatter: function(value, row, index) {
                         return $.table.tooltip(value,20);
                     }}
