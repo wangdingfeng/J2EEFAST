@@ -78,6 +78,7 @@
 </div>
 <@footer>
 <script type="text/javascript">
+
     var editFlag = "${permission.hasPermi('sys:user:edit')}";
     var delFlag = "${permission.hasPermi('sys:user:del')}";
     var resetPwdFlag = "${permission.hasPermi('sys:user:resetPwd')}";
@@ -91,7 +92,7 @@
         if ($(this).width() < 767) {
             panehHidden = true;
         }
-        $('body').layout({ initClosed: panehHidden, west__size: 200 });
+        $('body').layout({ west__initClosed: panehHidden, west__size: 200 });
         /*加载 树、树表格*/
         initTable();
         initLeftZtree();
@@ -107,6 +108,7 @@
             viewUrl: prefix + "/view/{id}",
             exportUrl:  prefix + "/export",
             clickToSelect: false,
+            // resizable: true,
             pageSize: 12,
             pageList: [12, 24, 36],
             sortName: "createTime",
@@ -118,7 +120,7 @@
             modalName: "用户",
             columns:[
                 {
-                    title: "<@ctx.i18n text = "序号"/>", width: 10, formatter: function (value, row, index) {
+                    title: "<@ctx.i18n text = "序号"/>",width:35, formatter: function (value, row, index) {
                         return $.table.serialNumber(index);
                     }
                 },
