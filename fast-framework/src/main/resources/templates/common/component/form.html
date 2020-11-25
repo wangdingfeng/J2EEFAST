@@ -239,8 +239,8 @@
             </#if>
 
             function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
-                if(typeof userCallback == 'function'){
-                    userCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
+                if(typeof tableCallback == 'function'){
+                    tableCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
                 }
             }
         })
