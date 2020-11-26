@@ -3,7 +3,6 @@ package com.j2eefast.framework.quartz.utils;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.framework.quartz.entity.SysJobEntity;
 import com.j2eefast.framework.utils.Constant;

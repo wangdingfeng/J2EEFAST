@@ -24,8 +24,8 @@
         <#list Libs as x>
             <#if x == "table">
                 <#--bootstrap-table 表格插件-->
-                <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.js?V=${config.getDvVersion()}"></script>
-<#--                <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.min.js?V=${config.getDvVersion()}"></script>-->
+<#--                <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.js?V=${config.getDvVersion()}"></script>-->
+                <script src="${ctxStatic}/static/plugins/bootstrap-table/bootstrap-table.min.js?V=${config.getDvVersion()}"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/locale/bootstrap-table-i18n.js"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
                 <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>
@@ -37,8 +37,8 @@
             </#if>
             <#-- 表单树插件-->
             <#if x == "treeTable">
-<#--                <script src="${ctxStatic}/static/plugins/bootstrap-treetable/bootstrap-treetable.min.js?V=${config.getDvVersion()}"></script>-->
-                <script src="${ctxStatic}/static/plugins/bootstrap-treetable/bootstrap-treetable.js?V=${config.getDvVersion()}"></script>
+                <script src="${ctxStatic}/static/plugins/bootstrap-treetable/bootstrap-treetable.min.js?V=${config.getDvVersion()}"></script>
+<#--                <script src="${ctxStatic}/static/plugins/bootstrap-treetable/bootstrap-treetable.js?V=${config.getDvVersion()}"></script>-->
             </#if>
             <#-- zTree 树-->
             <#if x == "zTree">
@@ -96,8 +96,8 @@
             <#-- 文件上传-->
             <#if x == "fileupload">
             	<script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.js"></script>
-                <#-- <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.js?V=${config.getDvVersion()}"></script>-->
-				<script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.js?V=${config.getDvVersion()}"></script>
+                 <script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.min.js?V=${config.getDvVersion()}"></script>
+<#--				<script src="${ctxStatic}/static/plugins/webuploader/0.1.5/webuploader.ex.js?V=${config.getDvVersion()}"></script>-->
             </#if>
             <#-- 表格拖拽-->
             <#if x == "tableReorder">
@@ -124,8 +124,8 @@
             <#-- 可自行扩展, 如果插件有CSS样式请在 cssLibs 相应添加-->
         </#list>
 </#if>
-<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>
-<#--<script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>-->
+<#--<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>-->
+<script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>
 <#-- jquery-validate 表单验证插件 -->
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.js"></script>
 <script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js"></script>

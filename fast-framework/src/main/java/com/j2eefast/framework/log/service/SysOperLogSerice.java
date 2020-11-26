@@ -17,17 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 /**
- *
- * @author: zhouzhou Emall:loveingowp@163.com
- * @date: 2019-03-20 16:46
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
+ * 操作日志查询
+ * @author huanzhou
+ * @date 2019-03-20 16:46
  */
 @Service
 public class SysOperLogSerice extends ServiceImpl<SysOperLogMapper, SysOperLogEntity> {
 
 	/**
 	 * 页面展示查询翻页
+	 * @author ZhouZhou
+	 * @date 2019-03-20 17:46
+	 * @param params 页面参数
+	 * @return
 	 */
 	@DataFilter(deptAlias="d")
 	public PageUtil findPage(Map<String, Object> params) {

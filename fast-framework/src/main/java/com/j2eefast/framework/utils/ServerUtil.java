@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class ServerUtil{
     
-    private static final int OSHI_WAIT_SECOND = 200;
+    private static final int OSHI_WAIT_SECOND = 800;
     
     /**
      * CPU相关信息
@@ -188,9 +188,9 @@ public class ServerUtil{
     private void setSysFiles(OperatingSystem os)
     {
         FileSystem fileSystem = os.getFileSystem();
-        OSFileStore[] fsArray = fileSystem.getFileStores();
-        for (OSFileStore fs : fsArray)
-        {
+        //OSFileStore[] fsArray = fileSystem.getFileStores();
+        List<OSFileStore> fsArray = fileSystem.getFileStores();
+        for (OSFileStore fs : fsArray) {
             long free = fs.getUsableSpace();
             long total = fs.getTotalSpace();
             long used = total - free;

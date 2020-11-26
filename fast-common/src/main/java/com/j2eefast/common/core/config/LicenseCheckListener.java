@@ -64,20 +64,20 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
         public void onApplicationEvent(ContextRefreshedEvent event) {
             //获取机器码
             try{
-//                ToolUtil.getFastServerInfos();
-//
-//                //安装
-//                LOG.info("++++++++ 开始安装证书 ++++++++");
-//
-//                LicenseVerifyParam param = this.getVerifyParam();
-//
-//                LicenseVerify licenseVerify = new LicenseVerify();
-//
-//                //安装证书
-//                licenseVerify.install(param);
-//
-//                //验证证书唯一码是否有效
-//                LOG.info("++++++++ 证书安装结束 ++++++++");
+                ToolUtil.getFastServerInfos();
+
+                //安装
+                LOG.info("++++++++ 开始安装证书 ++++++++");
+
+                LicenseVerifyParam param = this.getVerifyParam();
+
+                LicenseVerify licenseVerify = new LicenseVerify();
+
+                //安装证书
+                licenseVerify.install(param);
+
+                //验证证书唯一码是否有效
+                LOG.info("++++++++ 证书安装结束 ++++++++");
 
             }catch (Exception e){
                 LOG.error("安装证书异常:",e);

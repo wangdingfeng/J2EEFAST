@@ -44,6 +44,8 @@
                 <exclude>static/js/fastJS.js</exclude>
                 <exclude>static/js/index.js</exclude>
                 <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.js</exclude>
+                <exclude>static/plugins/bootstrap-table/bootstrap-table.js</exclude>
+                <exclude>static/plugins/bootstrap-treetable/bootstrap-treetable.js</exclude>
                 <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.css</exclude>
                 <exclude>static/plugins/layer/layer.js</exclude>
             </excludes>

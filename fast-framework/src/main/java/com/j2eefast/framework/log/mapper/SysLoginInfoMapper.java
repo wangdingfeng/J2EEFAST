@@ -11,7 +11,7 @@ import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
 import org.apache.ibatis.annotations.Param;
 
 /**
- *  登陆日志 Mapper 接口
+ * 登陆日志 Mapper 接口
  * @author zhouzhou
  * @date 2018-03-13 15:00
  */

@@ -71,15 +71,15 @@
                 <if test="beginTime != null and beginTime != ''">
                     AND date_format(a.oper_time,'%y%m%d') <![CDATA[ >= ]]> date_format(#{beginTime},'%y%m%d')
                 </if>
-                <if test="endTime != null and beginTime != null">
-                    AND date_format(a.oper_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{beginTime},'%y%m%d')
+                <if test="endTime != null and endTime != ''">
+                    AND date_format(a.oper_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{endTime},'%y%m%d')
                 </if>
             </if>
             <if test="_databaseId == 'postgresql'">
                 <if test="beginTime != null and beginTime != ''">
                     AND a.oper_time <![CDATA[ >= ]]> '${beginTime}'::timestamp
                 </if>
-                <if test="beginTime != null  and endTime != ''">
+                <if test="endTime != null  and endTime != ''">
                     AND a.oper_time <![CDATA[ < ]]> ('${endTime}'::timestamp + '1 day')
                 </if>
             </if>

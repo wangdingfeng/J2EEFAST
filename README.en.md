@@ -3,8 +3,8 @@
 #### Description
 J2eeFAST is an enterprise-level quick development platform for Java EE, We are committed to building an open-source and free background framework platform for SMEs. . The system is developed based on classic Technologies (Spring Boot, Spring MVC, Apache Shiro, MyBatis-Plus, Freemarker, Bootstrap, and AdminLTE). The built-in core modules of the system include many common basic functions ( Online code generation functions, organizations, role users, menu and button authorization, data permissions, and system parameters , license authentication, BPM workflow, etc.), It allows you to develop projects with the lowest cost and highest efficiency. She is also suitable for novice friends to practice. . At the same time, Simple and beautiful interface, high efficiency, security, controllable source code, fast version iteration, free technical exchange group And other features. It is suitable for all Web applications and will be a good helper for you to quickly develop projects.
 #### Software Architecture
-1. Core Framework: Spring Boot 2.2.5.RELEASE
-2. Security Framework: Apache Shiro 1.4.2
+1. Core Framework: Spring Boot 2.X
+2. Security Framework: Apache Shiro
 3. Template engine: Freemarker
 4. Frontend: AdminLTE 2.3.8, Bootstrap 3.3.7, Bootstrap-Table 1.11.0, JQuery 3.3.1
 5. Persistence layer framework: MyBatis-Plus 3.3.1

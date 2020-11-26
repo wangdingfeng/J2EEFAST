@@ -283,7 +283,8 @@ public class ToolUtil{
 	 */
 	public static void  getFastServerInfos(){
         if(ToolUtil.isEmpty(ConfigConstant.FAST_OS_SN)){
-			NetworkIF[] netwoeks = OshiUtil.getHardware().getNetworkIFs();
+            //NetworkIF[] netwoeks = OshiUtil.getHardware().getNetworkIFs();
+            List<NetworkIF> netwoeks = OshiUtil.getHardware().getNetworkIFs();
 			String macAddress = "";
 			List<String> IpList = new ArrayList<>();
 			for(NetworkIF net: netwoeks){
@@ -296,7 +297,7 @@ public class ToolUtil{
 			//序列号
 			String serialNumber = OshiUtil.getSystem().getSerialNumber();
 			//处理器ID
-			String processorID = OshiUtil.getProcessor().getProcessorID();
+			String processorID = OshiUtil.getProcessor().getProcessorIdentifier().getProcessorID();
 			//组装 系统机器码 mac串+序列号+处理器ID+程序系统路径+系统名称+主机名+系统架构+环境版本号  -->机器码  可以自行增加硬件信息确保唯一性
 			String temp = macAddress + serialNumber + processorID
 					+ SystemUtil.getUserInfo().getCurrentDir() + SystemUtil.getOsInfo().getName() + SystemUtil.getHostInfo().getName() +

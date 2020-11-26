@@ -74,11 +74,20 @@ spring:
             username: fast
             password: fast@123$
             filters: mergeStat
-#             driverClassName: oracle.jdbc.driver.OracleDriver
-#             url: jdbc:oracle:thin:@192.168.20.112:1521/orcl
-#             username: fast
-#             password: fast@123$
-#             filters: wall,mergeStat
+
+            #PostgreSql 数据库配置
+            #driverClassName: org.postgresql.Driver
+            #url: jdbc:postgresql://192.168.20.110:5432/fastdb
+            #username: fast
+            #password: fast@123$
+            #filters: mergeStat
+
+            #oracle 数据库配置
+            #driverClassName: oracle.jdbc.driver.OracleDriver
+            #url: jdbc:oracle:thin:@192.168.20.112:1521/orcl
+            #username: fast
+            #password: fast@123$
+            #filters: wall,mergeStat
         ###############工作流数据库配置
 #        flowable:
 #          driverClassName: com.mysql.cj.jdbc.Driver
@@ -131,7 +140,7 @@ mybatis-plus:
     #实体扫描，多个package用逗号或者分号分隔
     type-aliases-package: com.j2eefast.*.*.entity
     #扫描mapper 相当于 @MapperScan 注解,多个逗号分割
-    mapper-package: com.j2eefast.*.*.dao
+    mapper-package: com.j2eefast.*.*.mapper
     #打印sql语句,调试用
     configuration:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

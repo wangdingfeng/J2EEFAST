@@ -64,7 +64,7 @@ public class MybatisPlusConfig {
 		MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
 		String mapperPackage = PropertiesUtils.getInstance().getProperty("mybatis-plus.mapper-package","com.j2eefast.*.*.mapper");
 		if(ToolUtil.isNotEmpty(mapperPackage)){
-			scannerConfigurer.setBasePackage("com.j2eefast.*.*.mapper,"+mapperPackage);
+			scannerConfigurer.setBasePackage(mapperPackage);
 		}else{
 			scannerConfigurer.setBasePackage("com.j2eefast.*.*.mapper");
 		}

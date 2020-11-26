@@ -1,17 +1,32 @@
-package com.j2eefast.test;
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */package com.j2eefast.test;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
+import com.j2eefast.common.core.crypto.SoftEncryption;
 import com.j2eefast.common.core.utils.AddressUtil;
+import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.JasyptUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 
 /**
  * <p>数据加密测试</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-25 09:11
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
@@ -102,6 +117,17 @@ public class EncodeTest {
         String pasw = "123456";
         String cipher = EnctryptTools.SM4Encode(pasw, "123456789");
         System.out.println("SM4密文:" + cipher + "   yml文件写法:SM4{"+cipher+"}");
+    }
+
+    /**
+     * 生成Apache Shiro 唯一密钥
+     * @throws NoSuchAlgorithmException
+     */
+    @Test
+    public void getShiroDeskey() throws NoSuchAlgorithmException {
+        KeyGenerator keygen = KeyGenerator.getInstance("AES");
+        SecretKey deskey = keygen.generateKey();
+        System.out.println(Base64.encode(deskey.getEncoded()));
     }
 
     @Test

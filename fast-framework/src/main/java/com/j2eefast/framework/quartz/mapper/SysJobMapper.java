@@ -5,7 +5,6 @@
 package com.j2eefast.framework.quartz.mapper;
 
 import org.apache.ibatis.annotations.Param;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.j2eefast.framework.quartz.entity.SysJobEntity;
 

@@ -117,7 +117,7 @@ mybatis-plus:
     #实体扫描，多个package用逗号或者分号分隔
     type-aliases-package: com.j2eefast.*.*.entity
     #扫描mapper 相当于 @MapperScan 注解,多个逗号分割
-    mapper-package: com.j2eefast.*.*.dao
+    mapper-package: com.j2eefast.*.*.mapper
 
 http:
     #port: 8200 #web端口
