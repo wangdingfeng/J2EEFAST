@@ -3,6 +3,7 @@ package com.j2eefast.generator.gen.service;
 
 import com.j2eefast.generator.gen.entity.ExampleTestEntity;
 import com.j2eefast.generator.gen.mapper.ExampleTestMapper;
+import cn.hutool.core.convert.Convert;
 import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.page.Query;
@@ -24,7 +25,7 @@ import com.j2eefast.framework.utils.FileUploadUtils;
  *
  * 单范例Service接口
  * @author: ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 @Service
 public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTestEntity> {
@@ -71,7 +72,7 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
      * 批量删除
      */
 	@Transactional(rollbackFor = Exception.class)
-	public boolean delExampleTestByIds(Long[] ids) {																						
+	public boolean deleteBatchByIds(Long[] ids) {																						
 		for (Long id : ids) {
 			FileUploadUtils.me().removeFileUpload(id,"example_test_file");						
 			FileUploadUtils.me().removeFileUpload(id,"example_test_img");						

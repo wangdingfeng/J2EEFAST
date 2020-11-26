@@ -44,10 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM example_test_child a
 
 		<where>
-                                              <if test = "sql_filter !=null and sql_filter!=''">
-                   and ${sql_filter}
-               </if>    
-		</where>
+                      <if test = "sql_filter !=null and sql_filter!=''">                   and ${sql_filter}               </if>		</where>
 	 </select>
 
 	  <!--  根据获取实体 page   -->
