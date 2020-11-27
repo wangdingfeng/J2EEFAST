@@ -2781,7 +2781,19 @@ if (typeof jQuery === "undefined") {
             }
         });
 
-        $('#scroll-up').toTop();
+        /* 回到顶部绑定 */
+        if ($.fn.toTop !== undefined) {
+            //判断是否
+            if($.fn.layout !== undefined && $('.ui-layout-center')){
+                var _opt = {
+                    win:$('.ui-layout-center'),
+                    doc:$('.ui-layout-center')
+                };
+                $('#scroll-up').toTop(_opt);
+            }else{
+                $('#scroll-up').toTop();
+            }
+        }
 
         //屏蔽鼠标右键
         //document.oncontextmenu = function() {
@@ -2799,8 +2811,9 @@ if (typeof jQuery === "undefined") {
     $.fn.toTop = function(opt){
         //variables
         var elem = this;
-        var win = $(window);
-        var doc = $('html, body');
+        //修复插件冲突导致失效问题
+        var win = (opt && opt.hasOwnProperty('win')) ? opt.win : $(window);
+        var doc = (opt && opt.hasOwnProperty('doc')) ? opt.doc : $('html, body');
         //Extended Options
         var options = $.extend({
             autohide: true,
@@ -2832,14 +2845,12 @@ if (typeof jQuery === "undefined") {
 
         win.scroll(function(){
             var scrolling = win.scrollTop();
-
             if(options.autohide){
                 if(scrolling > options.offset){
                     elem.fadeIn(options.speed);
                 }
                 else elem.fadeOut(options.speed);
             }
-
         });
 
     };
