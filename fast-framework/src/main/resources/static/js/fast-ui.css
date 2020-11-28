@@ -1161,8 +1161,7 @@ body .layui-layer-page .layui-layer-content .form-file {
 .form-header {
 	font-size:14px;
 	color:#6379bb;
-	font-style: oblique;
-	border-bottom:1px solid #ddd;
+	border-bottom:2px solid #ddd;
 	margin:8px 10px 25px 10px;
 	padding-bottom:5px
 }

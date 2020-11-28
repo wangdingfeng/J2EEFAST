@@ -2754,26 +2754,6 @@ if (typeof jQuery === "undefined") {
             }).bind("input propertychange", $.tree.searchNode);
         };
 
-        // $.extend($.validator.messages, {
-        //     required: icon + $.i18n.prop("必填"),
-        //     remote: icon + $.i18n.prop("sys.msg.remote"),
-        //     email: icon + $.i18n.prop("sys.msg.email"),
-        //     url: icon + $.i18n.prop("sys.msg.url"),
-        //     date: icon + $.i18n.prop("sys.msg.date"),
-        //     dateISO: icon + $.i18n.prop("sys.msg.dateISO"),
-        //     number: icon + $.i18n.prop("sys.msg.number"),
-        //     digits: icon + $.i18n.prop("sys.msg.digits"),
-        //     creditcard: icon +$.i18n.prop("sys.msg.creditcard"),
-        //     equalTo: icon + $.i18n.prop("sys.msg.equalTo"),
-        //     extension: icon + $.i18n.prop("sys.msg.extension"),
-        //     maxlength: $.validator.format(icon + $.i18n.prop("sys.msg.maxlength")),
-        //     minlength: $.validator.format(icon + $.i18n.prop("sys.msg.minlength")),
-        //     rangelength: $.validator.format(icon +$.i18n.prop("sys.msg.rangelength")),
-        //     range: $.validator.format(icon + $.i18n.prop("sys.msg.range")),
-        //     max: $.validator.format(icon + $.i18n.prop("sys.msg.max")),
-        //     min: $.validator.format(icon + $.i18n.prop("sys.msg.min"))
-        // });
-
         // 按下ESC按钮关闭弹层
         $('body', document).on('keyup',this, function(e) {
             if (e.which === 27) {

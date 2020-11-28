@@ -224,7 +224,7 @@
         if(elem.find('ul').length > 0){
             elem.find('ul').css("display","none");
             var $li = elem.children('ul').children('li');
-            for(let i=0; i<$li.length; i++){
+            for(var i=0; i<$li.length; i++){
                 if($($li[i]).hasClass("active")){
                     $($li[i]).removeClass("active");
                     return true;
@@ -247,7 +247,7 @@
         //菜单
         if(elem.find('ul').length > 0){
             var $li = elem.children('ul').children('li');
-            for(let i=0; i<$li.length; i++){
+            for(var i=0; i<$li.length; i++){
                 if($($li[i]).hasClass("treeview")){
                     that.recursiveShowMenu($($li[i]), id);
                 }else{
@@ -273,7 +273,7 @@
         //菜单
         if(elem.find('ul').length > 0){
             var $li = elem.children('ul').children('li');
-            for(let i=0; i<$li.length; i++){
+            for(var i=0; i<$li.length; i++){
                 if($($li[i]).hasClass("treeview")){
                     return that.queryMenu($($li[i]), id);
                 }else{
