@@ -1,6 +1,6 @@
 <<@>include "/common/defaultEngine.html"/>
 ${pageTheme}
-<@header title="${functionName}列表" bodyClass="gray-bg animated fadeInRight" isAnimation="false" libs=["table","zTree","layout-latest"]/>
+<@header title="${functionName}列表" bodyClass="gray-bg animated fadeInRight" isAnimation=false libs=["table","zTree","layout-latest"]/>
 <div class="container-div">
  <div class="row">
   <div class="col-sm-12 search-collapse">
