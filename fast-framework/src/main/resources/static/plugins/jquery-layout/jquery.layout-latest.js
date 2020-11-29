@@ -765,7 +765,7 @@
             ,	tips: {
                 Open:				"展开"		// eg: "Open Pane"
                 ,	Close:				"关闭"
-                ,	Resize:				"Resize"
+                ,	Resize:				"调整大小"
                 ,	Slide:				"Slide Open"
                 ,	Pin:				"Pin"
                 ,	Unpin:				"Un-Pin"
