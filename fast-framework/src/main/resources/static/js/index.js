@@ -54,6 +54,7 @@
             href: 'main',
             icon: 'fa fa-home',
             title: $.i18n.prop('首页'),
+            module: '_main',
             id: '0'
         };
         
@@ -66,11 +67,17 @@
         var that = this;
         //用户是否勾选TAB记忆功能
         var _tab = opt.storage.get("_Tab");
-        var hash = location.hash;
+        var hash = "";
+        if(opt.variable.mode == "storage"){
+            hash = opt.storage.get("nowPath");
+        }else{
+            hash = location.hash;
+        }
+        //var hash = opt.storage.get("nowPath");
         if(_tab === "1" || _unlock === "1"){ //或者用户为屏保解锁还原页面
             //打开用户设置的菜单
             var menus = opt.storage.get("menu");
-            if(menus && hash == '' ){
+            if(menus){
                 menus = JSON.parse(menus);
                 for(var i=0; i<menus.length; i++){
                     $('.sidebar-menu').children('.treeview').each(function () {
@@ -101,7 +108,12 @@
 
         if(hash!=''){
             try{
-                var tms = hash.substring(1, hash.length).split("#");
+                var tms = "";
+                if(opt.variable.mode == "storage"){
+                    tms = hash.split("#");
+                }else {
+                    tms = hash.substring(1, hash.length).split("#");
+                }
                 var url = tms[0];
                 var $a = $('a[data-url="' + url + '"][data-module="'+tms[1]+'"]');
                 var data;
@@ -147,8 +159,10 @@
                         };
                     }
                 }
-                //清除TBA记忆
-                opt.storage.set("menu","");
+                if(_tab != "1" && _unlock != "1") {
+                    //清除TBA记忆
+                    opt.storage.set("menu", "");
+                }
                 opt.navTabAdd(data);
             }catch (e) {
                 //console.error(e);
@@ -156,13 +170,14 @@
         }
     };
 
-    // menu.prototype.init = function(){
-    //     //
-    // };
     menu.prototype.setIframeUrl = function (href,module) {
-        var nowUrl = window.location.href;
-        var newUrl = nowUrl.substring(0, nowUrl.indexOf("#"));
-        window.location.href = newUrl + "#" + href+"#"+module;
+        if(opt.variable.mode == "storage"){
+            opt.storage.set("nowPath",href+"#"+module);
+        }else {
+            var nowUrl = window.location.href;
+            var newUrl = nowUrl.substring(0, nowUrl.indexOf("#"));
+            window.location.href = newUrl + "#" + href+"#"+module;
+        }
     };
     //菜单点击事件实现方法
     menu.prototype.toggle = function (link, event) {
@@ -314,9 +329,14 @@
             scrollToTab(this);
             var target = $('iframe[data-id="' + $(this).attr("lay-id") + '"]');
             var url = target.attr('src');
-            if(url != "main" && ($(this).attr("lay-id")+"").length != 16){
+            if(opt.variable.mode == "storage"){
                 that.setIframeUrl(url,target.attr('data-module'));
+            }else{
+                if(url != "main" && ($(this).attr("lay-id")+"").length != 16){
+                    that.setIframeUrl(url,target.attr('data-module'));
+                }
             }
+
             /**********************左侧菜单同步展开 顶部变动 ******************************/
 
             var _id = $(this).attr('lay-id');
@@ -414,6 +434,9 @@
     $.fn.menu.Constructor = menu;
 
     $(function () {
+        if(window.performance.navigation.type != 1 && opt.variable.mode == "storage"){
+            opt.storage.set("nowPath","");
+        }
         Plugin();
     })
 }(jQuery);

@@ -27,6 +27,7 @@ if (typeof jQuery === "undefined") {
             pushMenu:null,
             version:'1.0.13',
             debug:true,
+            mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
             loadTip:true,
             // 表格类型
