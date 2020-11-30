@@ -29,7 +29,7 @@ public interface GenTableColumnMapper extends BaseMapper<GenTableColumnEntity> {
 	* @author mfksn001@163.com
 	* @Date: 2020年6月2日
 	*/
-	List<GenTableColumnEntity> findListByTableId(Long tableId);
+	List<GenTableColumnEntity> findListByTableId(@Param("tableId") Long tableId);
 	
 	/**
 	* @Title: generateDbTableColumnsByName 
