@@ -1,6 +1,6 @@
 package com.j2eefast.common.core.shiro;
-import org.apache.shiro.session.mgt.SimpleSession;
 
+import org.apache.shiro.session.mgt.SimpleSession;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -12,7 +12,10 @@ import java.util.Map;
  * 增加标识位，如果只是更新lastAccessTime SessionDao update方法直接返回
  */
 public class ShiroSession extends SimpleSession implements Serializable {
-    // 除lastAccessTime以外其他字段发生改变时为true
+    
+	private static final long serialVersionUID = 1L;
+	
+	// 除lastAccessTime以外其他字段发生改变时为true
     private boolean isChanged = false;
 
     public ShiroSession() {

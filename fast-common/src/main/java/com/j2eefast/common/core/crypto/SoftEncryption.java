@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.crypto;
 
@@ -213,10 +214,10 @@ public class SoftEncryption {
 
 
     /**
-     * 生成安芯钥匙通讯数据加密
+     * 生成通讯数据加密
      * @param deviceId
-     * @param devicePubKey 钥匙公钥
-     * @param batchPriKey 服务器私钥
+     * @param devicePubKey 公钥
+     * @param batchPriKey 私钥
      * @param data
      * @return
      */

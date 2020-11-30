@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 /**
@@ -19,6 +23,26 @@ public class Constant {
 	public static final String DATA_SCOPE_NULL = "0";
 
 	public static final String DATA_SCOPE_ALL = "6";
+	
+	/**
+	 * 系统登录默认风格
+	 */
+	public static final String ADMIN_LTE = "Admin-LTE";
+	
+	/**
+	 * 系统默认值0
+	 */
+	public static final String SYS_DEFAULT_VALUE_ZERO = "0";
+	
+	/**
+	 * 系统默认值1
+	 */
+	public static final String SYS_DEFAULT_VALUE_ONE = "1";
+	
+	/**
+	 * 系统默认值2
+	 */
+	public static final String SYS_DEFAULT_VALUE_TWO = "2";
 
 	/**
 	 * 自定数据权限
@@ -148,23 +172,25 @@ public class Constant {
 	 * 云服务商
 	 */
 	public enum CloudService {
+		
 		/**
-		 * 七牛云
+		 * 本地
 		 */
-		QINIU(1),
+		LOCAL(0),
+		
 		/**
 		 * 阿里云
 		 */
-		ALIYUN(2),
+		ALIYUN(1),
 		/**
 		 * 腾讯云
 		 */
-		QCLOUD(3),
+		QCLOUD(2),
 
 		/**
-		 * API服务器
+		 * 七牛云
 		 */
-		APPBCS(4);
+		QINIU(3);
 
 		private int value;
 

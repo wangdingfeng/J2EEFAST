@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.mapper;
 
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
@@ -15,20 +19,29 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  */
 public interface SysFileUploadMapper extends BaseMapper<SysFileUploadEntity> {
 
-	/**
+    /**
      * 自定义分页查询
-     * @param  page
-     * @param  SysFileUploadEntity 实体类
+     * @param page
+     * @param sysFileUploadEntity
+     * @param sql_filter
+     * @return
      */
      Page<SysFileUploadEntity> findPage(IPage<SysFileUploadEntity> page,
                                        @Param("sysFileUpload") SysFileUploadEntity sysFileUploadEntity,
                                        @Param("sql_filter") String sql_filter);
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
      SysFileUploadEntity selectSysFileUploadById(Serializable id);
 
-     List<SysFileUploadEntity> selectList(SysFileUploadEntity sysFileUploadEntity);
 
-
-
-     /**删除相关方法  使用mybatis-plus集成的 **/
+    /**
+     * 返回List对象
+     * @param sysFileUploadEntity
+     * @return
+     */
+     List<SysFileUploadEntity> findList(SysFileUploadEntity sysFileUploadEntity);
 }

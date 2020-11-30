@@ -1,9 +1,6 @@
 package com.j2eefast.generator.gen.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
@@ -19,7 +16,7 @@ import com.j2eefast.framework.sys.entity.SysDeptEntity;
 /**
  * example_test
  * @author: ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 @Data
 @TableName("example_test")
@@ -78,7 +75,7 @@ public class ExampleTestEntity extends BaseEntity{
     private String addrinfo;  
 
     /** 删除标记（0：正常；1：删除） */
-    @TableLogic(value="0",delval="1")
+    @TableLogic    @TableField(value = "del_flag", fill = FieldFill.INSERT)
     private String delFlag;          
 
     @TableField(exist=false)

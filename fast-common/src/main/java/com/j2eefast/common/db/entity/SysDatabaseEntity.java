@@ -1,15 +1,20 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.db.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.utils.DbUtil;
-
-import lombok.Data;
-
+import lombok.Getter;
+import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -20,9 +25,12 @@ import javax.validation.constraints.NotBlank;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Data
+@Getter
+@Setter
 @TableName("sys_database")
 public class SysDatabaseEntity extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@TableId(type = IdType.ASSIGN_ID)
 	private Long id;
@@ -65,6 +73,7 @@ public class SysDatabaseEntity extends BaseEntity {
 	 * 逻辑删除 是否删除
 	 */
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/**
@@ -85,10 +94,13 @@ public class SysDatabaseEntity extends BaseEntity {
 		if ("mysql".equals(DbUtil.getDbType(this.jdbcDriver))) {
 			return "";   //取当前连接的数据库名
 		}
-		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
-			return this.getUserName();
-		}
-		return "";
+//		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
+//			return this.getUserName();
+//		}
+//		if ("oracle".equals(DbUtil.getDbType(this.jdbcDriver))) {
+//			return
+//		}
+		return DataSourceContext.getDataSourcesConfs().get(this.dbName).getUsername();
 	}
 	
 	/** 数据库类型    oacle|mysql|sqlserver */

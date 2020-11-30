@@ -1,17 +1,16 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import cn.hutool.core.util.IdUtil;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
-import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.controller.BaseController;
@@ -21,27 +20,16 @@ import com.j2eefast.framework.manager.factory.AsyncFactory;
 import com.j2eefast.framework.shiro.LoginType;
 import com.j2eefast.framework.shiro.UserToken;
 import com.j2eefast.framework.sys.entity.SysDictDataEntity;
-import com.j2eefast.framework.sys.entity.SysRoleEntity;
-import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.sys.service.SysDictDataService;
-import com.j2eefast.framework.sys.service.SysRoleService;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.HexUtil;
-
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -51,9 +39,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.j2eefast.common.core.crypto.SoftEncryption;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.exception.ServiceException;
+import com.j2eefast.common.core.io.file.MimeType;
 import com.j2eefast.common.core.manager.AsyncManager;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
-import com.j2eefast.framework.sys.service.SysUserDeptService;
 import com.j2eefast.framework.utils.RedisKeys;
 import com.j2eefast.framework.utils.UserUtils;
 
@@ -74,22 +61,17 @@ public class SysLoginController extends BaseController {
 	private CaptchaService captchaService;
 	
 	/**
-	 *生成验证码图片
+	 * <p>生成验证码图片 系统参数管理配置</p>
+	 * <p>默认0 图形 1 算数 2 图形算数随机出现</p>
 	 * @author zhouzhou
 	 * @date 2020-03-07 14:46
 	 */
-	@RequestMapping("captcha.gif")
+	@RequestMapping(value = "captcha.gif", method = RequestMethod.GET)
 	public void captcha(HttpServletResponse response) throws IOException {
 		response.setHeader("Cache-Control", "no-store, no-cache");
-		response.setContentType("image/gif");
-		if(Global.getDbKey("SYS_LOGIN_CAPTACHA_TYPE","0").equals("0")){
-			GifCaptcha gifCaptcha = new GifCaptcha(130,48,4);
-			gifCaptcha.setCharType(Captcha.TYPE_DEFAULT);
-			String result = gifCaptcha.text();
-			UserUtils.setSessionAttribute(Constant.KAPTCHA_SESSION_KEY, result);
-			gifCaptcha.out(response.getOutputStream());
-			return;
-		}else if(Global.getDbKey("SYS_LOGIN_CAPTACHA_TYPE","0").equals("1")){
+		response.setContentType(MimeType.IMAGE_GIF);
+		if(Global.getDbKey(ConfigConstant.SYS_LOGIN_CAPTACHA_TYPE,Constant.SYS_DEFAULT_VALUE_ZERO)
+				.equals(Constant.SYS_DEFAULT_VALUE_ONE)){
 			ArithmeticCaptcha gifCaptcha = new ArithmeticCaptcha();
 			// 几位数运算，默认是两位
 			gifCaptcha.setLen(3);
@@ -100,7 +82,8 @@ public class SysLoginController extends BaseController {
 			UserUtils.setSessionAttribute(Constant.KAPTCHA_SESSION_KEY, result);
 			gifCaptcha.out(response.getOutputStream());
 			return;
-		}else if(Global.getDbKey("SYS_LOGIN_CAPTACHA_TYPE","0").equals("2")){
+		}else if(Global.getDbKey(ConfigConstant.SYS_LOGIN_CAPTACHA_TYPE,Constant.SYS_DEFAULT_VALUE_ZERO)
+				.equals(Constant.SYS_DEFAULT_VALUE_TWO)){
 			int rd= Math.random()>0.5?1:0;
 			if(rd == 1){
 				GifCaptcha gifCaptcha = new GifCaptcha(130,48,4);
@@ -121,6 +104,13 @@ public class SysLoginController extends BaseController {
 				gifCaptcha.out(response.getOutputStream());
 				return;
 			}
+		}else{
+			GifCaptcha gifCaptcha = new GifCaptcha(130,48,4);
+			gifCaptcha.setCharType(Captcha.TYPE_DEFAULT);
+			String result = gifCaptcha.text();
+			UserUtils.setSessionAttribute(Constant.KAPTCHA_SESSION_KEY, result);
+			gifCaptcha.out(response.getOutputStream());
+			return;
 		}
 	}
 
@@ -137,7 +127,7 @@ public class SysLoginController extends BaseController {
 		}
 		String view = super.getPara("view");
 		if(ToolUtil.isEmpty(view)){
-			view = Global.getDbKey("SYS_LOGIN_DEFAULT_VIEW","Admin-LTE");
+			view = Global.getDbKey(ConfigConstant.SYS_LOGIN_DEFAULT_VIEW,Constant.ADMIN_LTE);
 		}else{
 			List<SysDictDataEntity> listView = sysDictDataService.selectDictDataByType("sys_login_view");
 			boolean flag = false;
@@ -148,11 +138,12 @@ public class SysLoginController extends BaseController {
 				}
 			}
 			if(!flag){
-				view = Global.getDbKey("SYS_LOGIN_DEFAULT_VIEW","Admin-LTE");
+				view = Global.getDbKey(ConfigConstant.SYS_LOGIN_DEFAULT_VIEW,Constant.ADMIN_LTE);
 			}
 		}
 		mmp.put("loginView",view);
-		mmp.put("verification",Global.getDbKey("SYS_LOGIN_VERIFICATION","1").equals("1"));
+		mmp.put("verification",Global.getDbKey(ConfigConstant.SYS_LOGIN_VERIFICATION,Constant.SYS_DEFAULT_VALUE_ONE)
+				.equals(Constant.SYS_DEFAULT_VALUE_ONE));
 		return "login-" + view;
 	}
 
@@ -169,7 +160,8 @@ public class SysLoginController extends BaseController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseData login(String username, String password,Boolean rememberMe) {
 
-		if(Global.getDbKey("SYS_LOGIN_VERIFICATION","1").equals("1")){
+		if(Global.getDbKey(ConfigConstant.SYS_LOGIN_VERIFICATION,Constant.SYS_DEFAULT_VALUE_ONE)
+				.equals(Constant.SYS_DEFAULT_VALUE_ONE)){
 			//后台二次认证 图形验证码
 			CaptchaVO captchaVO = new CaptchaVO();
 			captchaVO.setCaptchaVerification(super.getPara("__captchaVerification"));
@@ -177,6 +169,7 @@ public class SysLoginController extends BaseController {
 				return error("50004","图形验证码不正确!");
 			}
 		}
+
 		String secretKey = super.getCookie(ConfigConstant.SECRETKEY);
 		Subject subject = null;
 		try {
@@ -205,7 +198,6 @@ public class SysLoginController extends BaseController {
 			}
 			return error(msg);
 		}
-
 		return success("登录成功!");
 	}
 
@@ -225,6 +217,13 @@ public class SysLoginController extends BaseController {
 	}
 
 
+	/**
+	 * 锁屏页面登录
+	 * @param username 账号
+	 * @param password 密码
+	 * @param request
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/Account/login", method = RequestMethod.POST)
 	public ResponseData login(String username, String password, HttpServletRequest request) {
@@ -236,8 +235,8 @@ public class SysLoginController extends BaseController {
 			Cookie[] Cookies = request.getCookies();
 			for(int i =0;Cookies !=null && i<Cookies.length;i++){
 				Cookie c = Cookies[i];
-				if(c.getName().equals("_secretKey")) {
-					request.setAttribute("_secretKey", c.getValue());
+				if(c.getName().equals(ConfigConstant.SECRETKEY)) {
+					request.setAttribute(ConfigConstant.SECRETKEY, c.getValue());
 					secretKey = c.getValue();
 				}
 			}

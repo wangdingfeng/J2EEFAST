@@ -1,9 +1,15 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.config;
 
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.j2eefast.common.db.utils.DbUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -13,6 +19,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
  */
 @Configuration
 public class ScheduleConfig {
+
+	@Value("${spring.datasource.master.url}")
+	private String jdbcUrl;
 
 	@Bean
 	public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
@@ -39,8 +48,10 @@ public class ScheduleConfig {
 		prop.put("org.quartz.jobStore.selectWithLockSQL", "SELECT * FROM {0}LOCKS UPDLOCK WHERE LOCK_NAME = ?");
 
 		// PostgreSQL数据库，需要打开此注释
-		// prop.put("org.quartz.jobStore.driverDelegateClass",
-		// "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+		if(DbUtil.getDbType(jdbcUrl).equals("postgresql")){
+			prop.put("org.quartz.jobStore.driverDelegateClass",
+			 "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+		}
 
 		factory.setQuartzProperties(prop);
 

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 单范例页面控制器
  * @author ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 @Controller
 @RequestMapping("/gen/test")
@@ -42,8 +42,8 @@ public class ExampleTestController extends BaseController{
         return prefix + "/test";
     }
         
-    @RequestMapping("/list")
     @RequiresPermissions("gen:test:list")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData list(@RequestParam Map<String, Object> params,ExampleTestEntity exampleTestEntity) {        
         PageUtil page = exampleTestService.findPage(params,exampleTestEntity);        
@@ -69,8 +69,8 @@ public class ExampleTestController extends BaseController{
         return exampleTestService.addExampleTest(exampleTest)? success(): error("新增失败!");
     }    
     
-    @RequestMapping("/child/list")
     @RequiresPermissions("gen:test:list")
+    @RequestMapping(value = "/child/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData childList(@RequestParam Map<String, Object> params) {
         PageUtil page = exampleTestChildService.findPage(params);
@@ -106,11 +106,11 @@ public class ExampleTestController extends BaseController{
      * 删除
      */
     @RepeatSubmit
+    @RequiresPermissions("gen:test:del")
     @BussinessLog(title = "单范例", businessType = BusinessType.DELETE)
     @RequestMapping(value = "/del", method = RequestMethod.POST)
-    @RequiresPermissions("gen:test:del")
     @ResponseBody
     public ResponseData del(Long[] ids) {
-      return exampleTestService.delExampleTestByIds(ids)? success(): error("删除失败!");
+      return exampleTestService.deleteBatchByIds(ids)? success(): error("删除失败!");
     }    
 }

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -5,9 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.j2eefast.framework.sys.entity.SysUserEntity;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户 Mapper 接口

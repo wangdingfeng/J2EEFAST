@@ -1,13 +1,11 @@
 /**
- * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.config;
 
-import cn.hutool.core.util.StrUtil;
-import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.license.LicenseVerify;
 import com.j2eefast.common.core.license.LicenseVerifyParam;
-import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>启动安装证书</p>
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-16 17:32
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

@@ -1,3 +1,8 @@
+<!--
+* Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+* @author ZhouZhou
+* @version 2020-10-29
+-->
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="true">
 <@header title="表格选择组件" libs=["table","tokenfield"]>
@@ -53,9 +58,16 @@ color: #dd5a43;
 			<ul>
 	        	<#list tableInfo as tb>
 	       		<#if tb.query>
-	       		<li>
-	                <@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
-	            </li>
+				<#if tb.dict =="">
+				<li>
+					<@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
+				</li>
+				<#else>
+				<li>
+					<@ctx.i18n text = "${tb.title}"/>:
+					<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
+				</li>
+				</#if>
 	       		</#if>
 	        	</#list>
 	            <#if isorga>
@@ -123,7 +135,7 @@ color: #dd5a43;
 		/* 初始表格对象 */
 		var options = {
 			url: prefix,
-			uniqueId: "id", /* 唯一ID */
+			uniqueId: "${keyId}", /* 唯一ID */
 			showSearch: false,
 			showRefresh: false,
 			showToggle: false,
@@ -180,8 +192,9 @@ color: #dd5a43;
     		if(id_data.length > 0){
 				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], id_data,opt.table.options.uniqueId);
 				var temp = "";
-				for(var i=0; i< name_data.length; i++){
-					temp += '<span class="label label-success">' + name_data[i] + '</span>   ';
+				for(var i=0; i< id_data.length; i++){
+					temp += '<span class="label label-success" id="s_'+id_data[i]+'">' + name_data[i]+
+							'<a href="#" onclick="rm(this)" class="close" tabindex="'+id_data[i]+'">×</a></span>';
 				}
 				if(temp.length > 0){
 					$("#selectName").html(temp);
@@ -196,14 +209,14 @@ color: #dd5a43;
 	};
 	function onLoadSuccess(rows,layero, index,_sf){
 		tableData = rows;
-
 		/*初始化表格*/
 		initTable();
 
 		var temp = "";
 		if(opt.common.isNotEmpty(rows) && rows.table){
 			for(var i=0; i<rows.table.length; i++){
-				temp += '<span class="label label-success" id="s_'+rows.table[i].id+'">' + rows.table[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].id+'">×</a></span>';
+				temp += '<span class="label label-success" id="s_'+rows.table[i].${keyId}+'">' + rows.table[i].${keyName}
+						+ '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].${keyId}+'">×</a></span>';
 			};
 			if(temp.length > 0){
 				$("#selectName").html(temp);
@@ -223,18 +236,76 @@ color: #dd5a43;
     	$("#selectNum").html("0");
     };
     
-    
+    /**
+	 * 点击回调处理
+	 */
     function onSelectData(data){
-		var temp = "";
-		for(var i=0; i<data.length; i++){
-			temp += '<span id="s_'+data[i].id+'" class="label label-success">' + data[i].${keyName} + '<a href="#" onclick="rm(this)" class="close" tabindex="'+data[i].id+'">×</a></span>';
-		};
-		if(temp.length > 0){
-			$("#selectName").html(temp);
-			$("#selectNum").html(data.length);
+    	if(data.length == opt.table.rememberSelectedIds[opt.table.options.id].length ) {
+			var temp = "";
+			for (var i = 0; i < data.length; i++) {
+				temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+						'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+			};
+			if (temp.length > 0) {
+				$("#selectName").html(temp);
+				$("#selectNum").html(data.length);
+			} else {
+				$("#selectName").html("");
+				$("#selectNum").html("0");
+			}
 		}else{
-			$("#selectName").html("");
-			$("#selectNum").html("0");
+			if(id_data.length > 0){
+				var notTemp = [];
+				var temp = "";
+				var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+				for(var i=0; i< tempData.length; i++){
+					var flag = false;
+					for(var j=0; j< data.length; j++){
+						if(tempData[i] == data[j].${keyId}){
+							flag = true;
+						}
+					}
+					if(!flag){
+						notTemp.push(tempData[i]);
+					}
+				}
+				var temp = "";
+				for (var i = 0; i < data.length; i++) {
+					temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+				};
+				var num = 0;
+				for (var i = 0; i < id_data.length; i++) {
+					var flag = false;
+					for(var j = 0; j < notTemp.length; j++){
+						if(id_data[i] == notTemp[j]){
+							flag = true;
+							num++;
+						}
+					};
+					if(flag) {
+						temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] +
+								'<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+					}
+				};
+				if (temp.length > 0) {
+					$("#selectName").html(temp);
+					$("#selectNum").html(data.length + num);
+				}
+			}else{
+				var temp = "";
+				for (var i = 0; i < data.length; i++) {
+					temp += '<span id="s_' + data[i].${keyId}  + '" class="label label-success">' + data[i].${keyName} +
+							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+				};
+				if (temp.length > 0) {
+					$("#selectName").html(temp);
+					$("#selectNum").html(data.length);
+				} else {
+					$("#selectName").html("");
+					$("#selectNum").html("0");
+				}
+			}
 		}
     };
     
@@ -252,24 +323,23 @@ color: #dd5a43;
     		if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
 
                 var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-
-                $("#selectNum").html(selectedRows.length - 1);
-
                 var rows;
-                for(var i=0; i<selectedRows.length; i++){
-                	if(selectedRows[i].id == id){
-                		rows = selectedRows[i];
-                	}
-                };
-
-                if(opt.common.isNotEmpty(selectedRows)) {
-                    opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,'id');
-                };
+				if(opt.common.isNotEmpty(selectedRows)) {
+					for(var i=0; i<selectedRows.length; i++){
+						if(selectedRows[i].${keyId} == id){
+							rows = selectedRows[i];
+						}
+					};
+					if(opt.common.isNotEmpty(rows))
+						opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.uniqueId);
+				}
 
                 var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
                 if(opt.common.isNotEmpty(selectedIds)) {
-                	 var rowIds = $.table.affectedRowIds(rows);
-                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,'id');
+					var rowIds = [];
+					$("#selectNum").html(selectedIds.length - 1);
+					rowIds.push(id);
+                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.uniqueId);
                 }
     		}
     		$('#s_'+id).remove();
@@ -295,16 +365,62 @@ color: #dd5a43;
 		var keyId = "";
 		var keyName="";
 		var rows = $.table.selectAllColumnRows();
-		for(var i=0; i<rows.length; i++){
-			keyId +=rows[i].${keyId} + '${separator}';
-			keyName += rows[i].${keyName} + '${separator}';
-		};
-		if(keyId.length > 0){
-			keyId = keyId.substr(0,keyId.length -"${separator}".length);
-			keyName = keyName.substr(0,keyName.length -"${separator}".length);
+		if(opt.common.isEmpty(opt.table.rememberSelectedIds[opt.table.options.id]) || rows.length == opt.table.rememberSelectedIds[opt.table.options.id].length ){
+			for(var i=0; i<rows.length; i++){
+				keyId +=rows[i].${keyId} + '${separator}';
+				keyName += rows[i].${keyName} + '${separator}';
+			};
+			if(keyId.length > 0){
+				keyId = keyId.substr(0,keyId.length -"${separator}".length);
+				keyName = keyName.substr(0,keyName.length -"${separator}".length);
+			}
+			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
+			return true;
+		}else{
+			/*修复回显问题*/
+			for(var i=0; i<rows.length; i++){
+				keyId +=rows[i].${keyId} + '${separator}';
+				keyName += rows[i].${keyName} + '${separator}';
+			};
+			var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+			var notTemp = [];
+			for(var i=0; i< tempData.length; i++){
+				var flag = true;
+				for(var j=0; j<rows.length; j++){
+					if(tempData[i] == rows[j].${keyId}){
+						flag = false;
+						break;
+					}
+				};
+				if(flag){
+					notTemp.push(tempData[i]);
+				};
+			};
+			for(var i=0; i<id_data.length; i++){
+				var tableTemp = {};
+				var flag = true;
+				for(var j=0; j< notTemp.length; j++){
+					if(notTemp[j] == id_data[i]){
+						flag = false;
+						break;
+					}
+				};
+				if(!flag){
+					keyId +=id_data[i] + '${separator}';
+					keyName +=name_data[i] + '${separator}';
+					tableTemp.${keyId} = id_data[i];
+					tableTemp.${keyName} = name_data[i];
+					rows.push(tableTemp);
+				}
+			};
+
+			if(keyId.length > 0){
+				keyId = keyId.substr(0,keyId.length -"${separator}".length);
+				keyName = keyName.substr(0,keyName.length -"${separator}".length);
+			}
+			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:tempData};
+			return true;
 		}
-		tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
-    	return true;
     }
 </script>
 </@footer>

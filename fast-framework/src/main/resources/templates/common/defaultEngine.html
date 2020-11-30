@@ -15,6 +15,7 @@
 	<#else>
 		<#nested>
 	</#if>
+<@compress single_line=true>
 <script>
     var _hmt = _hmt || [];
     (function() {
@@ -24,14 +25,15 @@
       s.parentNode.insertBefore(hm, s);
     })();
 </script>
+</@compress>
 <#assign jscssLib="">
-<#assign animationTag="">
+<#assign animationTag=true>
 </#macro>
 <#--页面公共头部-->
 <#macro header title = "默认标题J2eeFAST"
                libs = "" <#-- 需要引入的css js样式 -->
                bodyClass = "gray-bg" <#-- body样式-->
-               isAnimation = "true" <#--是否需要页面动画 -->
+               isAnimation = true <#--是否需要页面动画 -->
                animation = "fadeInRight" <#-- -->
                style = "" <#-- body style-->
                 >
@@ -57,8 +59,10 @@
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico"/>
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
 <script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
-<script> var baseURL = "${ctxStatic}/", _lang = "${config.getSysLang()}",  _username = "<@shiro.principal property="username"/>"  ,
- LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var img=event.srcElement;img.src=baseURL+"static/img/user2-160x160.jpg"; img.onerror=null;}</script>
+<script>
+var baseURL = "${ctxStatic}/", _lang = "${config.getSysLang()}",  _username = "<@shiro.principal property="username"/>"  ,
+LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var img=event.srcElement;img.src=baseURL+"static/img/user2-160x160.jpg"; img.onerror=null;}
+</script>
 <@cssLibs.css Libs = libs/>
 <#-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <#-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -74,14 +78,14 @@
 <#nested>
 </head>
 <body class="${bodyClass} sidebar-mini ${config.getKey('SYS_INDEX_SKINNAME','skin-blue')}" <#if style !="">style="${style}"</#if>>
-<#if animationTag == "true">
+<#if animationTag>
 <div id="__bodyDiv009" class="animated ${animation}">
 </#if>
 </#macro>
 
 <#--页面公共尾部-->
 <#macro footer>
-<#if animationTag == "true">
+<#if animationTag>
 </div>
 </#if>
 <a id="scroll-up" href="#" class="btn btn-sm display"><i class="fa fa-angle-double-up"></i></a>

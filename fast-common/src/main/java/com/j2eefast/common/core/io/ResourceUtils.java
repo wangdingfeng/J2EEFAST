@@ -1,4 +1,6 @@
-
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
 package com.j2eefast.common.core.io;
 
 import java.io.IOException;

@@ -1,11 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
 import java.util.List;
 import java.util.Map;
-
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
-import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.utils.*;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
@@ -13,7 +13,6 @@ import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.service.*;
 import com.j2eefast.framework.utils.Constant;
-import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
 
@@ -38,17 +36,11 @@ public class SysRoleController extends BaseController {
 	@Autowired
 	private SysRoleService sysRoleService;
 	@Autowired
-	private SysRoleMenuService sysRoleMenuService;
-	@Autowired
-	private SysRoleDeptService sysRoleDeptService;
-	@Autowired
 	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysModuleService sysModuleService;
 	@Autowired
 	private SysRoleModuleService sysRoleModuleService;
-	@Autowired
-	private SysCompService sysCompService;
 	@Autowired
 	private SysUserService sysUserService;
 
@@ -308,7 +300,5 @@ public class SysRoleController extends BaseController {
 	public ResponseData changeStatus(SysRoleEntity role){
 		return sysRoleService.changeStatus(role) ? success() : error("角色状态修改失败!");
 	}
-
-
 
 }

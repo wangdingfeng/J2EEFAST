@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  *
  * example_testDAO接口
  * @author: ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 public interface ExampleTestMapper extends BaseMapper<ExampleTestEntity> {
 

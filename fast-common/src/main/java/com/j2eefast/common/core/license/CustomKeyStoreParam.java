@@ -1,18 +1,18 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.license;
+
 import cn.hutool.core.io.FileUtil;
 import de.schlichtherle.license.AbstractKeyStoreParam;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * <p>自定义读取证书路径</p>
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-16 17:04
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
@@ -36,7 +36,7 @@ public class CustomKeyStoreParam extends AbstractKeyStoreParam {
      */
     private String keyPwd;
 
-    public CustomKeyStoreParam(Class clazz, String resource, String alias, String storePwd, String keyPwd) {
+    public CustomKeyStoreParam(@SuppressWarnings("rawtypes") Class clazz, String resource, String alias, String storePwd, String keyPwd) {
         super(clazz, resource);
         this.storePath = resource;
         this.alias = alias;

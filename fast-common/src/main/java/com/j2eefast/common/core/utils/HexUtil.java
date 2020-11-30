@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 
 import java.math.BigInteger;
@@ -216,8 +220,7 @@ public class HexUtil extends cn.hutool.core.util.HexUtil{
 		 * @param bytes
 		 * @return
 		 */
-		public static int byteToInt(byte[] bytes)
-		{
+		public static int byteToInt(byte[] bytes){
 			int num = 0;
 
 			int temp = (0xFF & bytes[0]) << 0;
@@ -230,8 +233,8 @@ public class HexUtil extends cn.hutool.core.util.HexUtil{
 			num |= temp;
 			return num;
 		}
-		public static int byteHexToInt(byte[] bytes)
-		{
+		
+		public static int byteHexToInt(byte[] bytes){
 			int num = 0;
 			int temp = (0xFF & bytes[0]) << 0;
 			num |= temp;
@@ -245,8 +248,7 @@ public class HexUtil extends cn.hutool.core.util.HexUtil{
 		 * @param num
 		 * @return
 		 */
-		public static byte[] longToBytes(long num)
-		{
+		public static byte[] longToBytes(long num){
 			byte[] bytes = new byte[8];
 			for (int i = 0; i < 8; i++) {
 				bytes[i] = ((byte)(int)(0xFF & num >> i * 8));

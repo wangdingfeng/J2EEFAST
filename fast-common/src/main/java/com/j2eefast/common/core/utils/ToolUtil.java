@@ -4,31 +4,25 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.OshiUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
+import com.j2eefast.common.core.exception.RxcException;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
-import me.zhyd.oauth.model.AuthCallback;
-import me.zhyd.oauth.model.AuthResponse;
-import me.zhyd.oauth.model.AuthToken;
-import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.*;
-import me.zhyd.oauth.utils.AuthStateUtils;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import cn.hutool.core.util.NumberUtil;
@@ -40,6 +34,7 @@ import oshi.hardware.NetworkIF;
  * @author zhouzhou
  * @date 2020-03-11 15:02
  */
+@Slf4j
 public class ToolUtil{
 
 	private static int 							counter 							= 0;
@@ -61,6 +56,25 @@ public class ToolUtil{
         }
         return sb.toString();
     }
+    
+    public static void isBlank(String str, String message) {
+		if (ToolUtil.isEmpty(str)) {
+			throw new RxcException(message);
+		}
+	}
+
+	public static void isNull(Object object, String message) {
+		if (object == null) {
+			throw new RxcException(message);
+		}
+	}
+	
+	public static void isNull(Object object, String message, String code) {
+		if (object == null) {
+			throw new RxcException(message,code);
+		}
+	}
+
 	
 	/**
 	 * 判断对象是否为空  true 不为空
@@ -129,6 +143,19 @@ public class ToolUtil{
     }
 
     /**
+     * String[] 转换 Long[]
+     * @param strs
+     * @return
+     */
+    public  static Long[] StrToLong(String[] strs){
+        Long[] lon = new Long[strs.length];
+        for(int i=0; i< strs.length; i++){
+            lon[i] = Long.valueOf(strs[i]);
+        }
+        return lon;
+    }
+
+    /**
      * 对象组中是否全是空对象
      *
      * @author zhouzhou
@@ -166,7 +193,7 @@ public class ToolUtil{
 	 * <pre>
 	 * StrUtil.convertFileSize(1024)   			= 1kB
 	 * </pre>
-	 * @author zhouzhou 18774995071@163.com
+	 * @author zhouzhou loveingowp@163.com
 	 * @time 2019-04-03 12:29
 	 * @param size 字节大小
 	 * @return 转换后大小字符串
@@ -256,7 +283,8 @@ public class ToolUtil{
 	 */
 	public static void  getFastServerInfos(){
         if(ToolUtil.isEmpty(ConfigConstant.FAST_OS_SN)){
-			NetworkIF[] netwoeks = OshiUtil.getHardware().getNetworkIFs();
+            //NetworkIF[] netwoeks = OshiUtil.getHardware().getNetworkIFs();
+            List<NetworkIF> netwoeks = OshiUtil.getHardware().getNetworkIFs();
 			String macAddress = "";
 			List<String> IpList = new ArrayList<>();
 			for(NetworkIF net: netwoeks){
@@ -269,7 +297,7 @@ public class ToolUtil{
 			//序列号
 			String serialNumber = OshiUtil.getSystem().getSerialNumber();
 			//处理器ID
-			String processorID = OshiUtil.getProcessor().getProcessorID();
+			String processorID = OshiUtil.getProcessor().getProcessorIdentifier().getProcessorID();
 			//组装 系统机器码 mac串+序列号+处理器ID+程序系统路径+系统名称+主机名+系统架构+环境版本号  -->机器码  可以自行增加硬件信息确保唯一性
 			String temp = macAddress + serialNumber + processorID
 					+ SystemUtil.getUserInfo().getCurrentDir() + SystemUtil.getOsInfo().getName() + SystemUtil.getHostInfo().getName() +
@@ -392,7 +420,8 @@ public class ToolUtil{
             }
         }
     	if(value instanceof List){
-            List<String> a = (List) value;
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+			List<String> a = (List) value;
             for(int i=0; i< a.size(); i++){
                 src += a.get(i)+s;
             }
@@ -413,6 +442,7 @@ public class ToolUtil{
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static AuthRequest getAuthRequest(String source,String clientId,String clientSecret,String redirectUri, AuthStateCache authStateCache) {
         AuthRequest authRequest = null;
         switch (source.toLowerCase()) {
@@ -667,5 +697,77 @@ public class ToolUtil{
             throw new AuthException("未获取到有效的Auth配置");
         }
         return authRequest;
+    }
+
+
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     * @param fileName
+     * @param in
+     */
+    public static void fileDownload(HttpServletRequest request,
+                             HttpServletResponse response,
+                             String fileName,
+                             InputStream in) throws Exception {
+        //浏览器设置
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+            //IE浏览器处理
+            fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            // 非IE浏览器的处理：
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        //下载的文件携带这个名称
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        //文件下载类型--二进制文件
+        response.setContentType("application/octet-stream");
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(in.available());
+        int len = 0;
+        while (-1 != (len = in.read(buffer, 0, buffer.length))) {
+            bos.write(buffer,0,len);
+        }
+        log.info("==============================下载包长度:!" + bos.size() +"   ========================");
+        response.setHeader("Content-Length",bos.size()+ "");
+        in.close();
+        ServletOutputStream sos = response.getOutputStream();
+        sos.write(bos.toByteArray());
+        sos.flush();
+        sos.close();
+        log.info("==============================下载完成![" + fileName +"]   ========================");
+        return;
+    }
+
+    /**
+     * 文件视图下载
+     * @param response
+     * @param fileName
+     * @param in
+     * @throws IOException
+     */
+    public static void fileView(HttpServletResponse response,
+                                String fileName,
+                                InputStream in) throws IOException {
+
+        response.setContentType(HttpUtil.getMimeType(fileName));
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(in.available());
+        int len = 0;
+        while (-1 != (len = in.read(buffer, 0, buffer.length))) {
+            bos.write(buffer,0,len);
+        }
+        log.info("==============================下载包长度:!" + bos.size() +"   ========================");
+        response.setHeader("Content-Length",bos.size()+ "");
+        in.close();
+        ServletOutputStream sos = response.getOutputStream();
+        try{
+            sos.write(bos.toByteArray());
+            sos.flush();
+            sos.close();
+        }catch (Exception e){}
+        log.info("==============================下载完成![" + fileName +"]   ========================");
     }
 }

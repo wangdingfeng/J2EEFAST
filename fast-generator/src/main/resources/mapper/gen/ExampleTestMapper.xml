@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="exampleTestJoins">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         left join sys_comp comp001 ON comp001.id = a.comp_id                                                                                
-        left join sys_comp dept001 ON (dept001.type = 1 AND dept001.id = a.dept_id )                                                                                                                                                                                                                                                                                                                                                                        
+        left join sys_comp dept001 ON (dept001.type = '1' AND dept001.id = a.dept_id )                                                                                                                                                                                                                                                                                                                                                                        
     </sql>    
     
     
@@ -79,20 +79,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM example_test a
         <include refid="exampleTestJoins"/>
 		<where>
-                                                                    a.del_flag = '0'                                 <if test="code != null  and code != ''"> and a.code = #{code} </if>
+       a.del_flag = '0' 
+            <if test="code != null  and code != ''"> and a.code = #{code} </if>
    
             <if test="name != null  and name != ''">
-                     and a.name LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{name}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{name}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{name},'%')</if>
-			</if>
-			
-              <if test="email != null  and email != ''"> and a.email = #{email} </if>
-                                  <if test = "sql_filter !=null and sql_filter!=''">
-                   and ${sql_filter}
-               </if>    
-		</where>
+                     and a.name LIKE                                                               
+                         CONCAT('%',#{name},'%')
+                     			</if>			
+  
+            <if test="email != null  and email != ''"> and a.email = #{email} </if>
+                                  <if test = "sql_filter !=null and sql_filter!=''">                   and ${sql_filter}               </if>		</where>
 	 </select>
 
 	  <!--  根据获取实体 page   -->
@@ -106,10 +102,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                                       <if test="exampleTest.code != null  and exampleTest.code != ''"> and a.code = #{exampleTest.code} </if>
                <if test="exampleTest.name != null  and exampleTest.name != ''">
                      and a.name LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{exampleTest.name}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{exampleTest.name}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{exampleTest.name},'%')</if>
-			</if>
+                                                                                    CONCAT('%',#{exampleTest.name},'%')
+                    			</if>
                <if test="exampleTest.email != null  and exampleTest.email != ''"> and a.email = #{exampleTest.email} </if>
                                 <if test = "sql_filter !=null and sql_filter!=''">
                and ${sql_filter}

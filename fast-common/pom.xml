@@ -10,7 +10,7 @@
   
   <artifactId>fast-common</artifactId>
   <version>3.3.0</version>
-  <name>fast-common 公共工具</name>
+  <name>fast 公共工具</name>
   <url>http://www.j2eefast.com</url>
   
   <properties>
@@ -112,25 +112,12 @@
               <artifactId>shiro-spring</artifactId>
           </dependency>
 
-          <!-- Shiro使用EhCache缓存框架 -->
+          <!-- Shiro使用EhCache缓存框架
           <dependency>
               <groupId>org.apache.shiro</groupId>
               <artifactId>shiro-ehcache</artifactId>
-          </dependency>
-        
-        <!--feign远程调用，**注意可选**-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
+          </dependency> -->
+          
 		<!-- SpringWeb模块 -->
 		<dependency>
             <groupId>org.springframework</groupId>
@@ -153,30 +140,20 @@
               <artifactId>ojdbc6</artifactId>
           </dependency>
 
+          <dependency>
+              <groupId>org.postgresql</groupId>
+              <artifactId>postgresql</artifactId>
+              <version>42.2.14</version>
+          </dependency>
+
         <dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId> 
 		</dependency>
 
-<!--      <dependency>-->
-<!--          <groupId>org.mybatis.spring.boot</groupId>-->
-<!--          <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--      </dependency>-->
-        
-<!--         <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus</artifactId>-->
-<!--         </dependency>-->
-        
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
-<!--         </dependency>-->
-
           <dependency>
               <groupId>com.alibaba</groupId>
               <artifactId>druid</artifactId>
-              <version>1.1.21</version>
           </dependency>
 
           <!--多数据源控制-->

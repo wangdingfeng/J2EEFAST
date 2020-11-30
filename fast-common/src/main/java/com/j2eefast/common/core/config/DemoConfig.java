@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.config;
 
 import java.io.IOException;
-
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,16 +14,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import cn.hutool.core.util.StrUtil;
-import com.j2eefast.common.core.utils.HttpContextUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.j2eefast.common.core.constants.ConfigConstant;
+import com.j2eefast.common.core.utils.HttpContextUtil;
 import com.j2eefast.common.core.utils.ResponseData;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 
 /**
@@ -46,6 +45,8 @@ public class DemoConfig {
 	private String urlPatterns;
 	@Value("${fast.demoMode.ip: 192.168.1.1}")
 	private String ip;
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
     public FilterRegistrationBean demoFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -104,7 +105,6 @@ public class DemoConfig {
 					String[] filters = get.split(",");
 					//判断是否包含
 					for(String filter : filters){
-						int a = url.indexOf(filter);
 						if(url.indexOf(filter) != -1 && !(url.indexOf("model") != -1)){
 							ResponseData r = ResponseData.error("10001", ConfigConstant.DEOM_MODE_PROMPT);
 							String json = JSONUtil.toJsonStr(r);

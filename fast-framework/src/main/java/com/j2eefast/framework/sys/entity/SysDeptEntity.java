@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.entity;
 
 import java.util.List;
@@ -38,6 +42,7 @@ public class SysDeptEntity  extends BaseEntity {
 	private Integer orderNum;
 
 	@TableLogic
+	@TableField(value = "del_flag", fill = FieldFill.INSERT)
 	private String delFlag;
 
 	/**

@@ -6,22 +6,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
-/**
- *
- * @ClassName: GenConfig
- * @Package: com.j2eefast.generator.config
- * @Description: 读取代码生成相关配置
- * @author: zhouzhou Emall:18774995071@163.com
- * @time 2020/1/6 14:44
- * @version V1.0
- 
- *
+ * @author ruoyi
  */
 @Component
 @ConfigurationProperties(prefix = "gen")
 @PropertySource(value = { "classpath:generator.yml" })
-public class GenConfig
-{
+public class GenConfig{
     /** 作者 */
     public static String author;
 

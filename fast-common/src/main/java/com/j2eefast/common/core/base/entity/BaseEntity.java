@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.base.entity;
 
 import java.io.Serializable;
@@ -5,7 +9,6 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -16,7 +19,9 @@ import lombok.Data;
 @Data
 public class BaseEntity implements Serializable {
 
-    /** 创建者 */
+	private static final long serialVersionUID = 1L;
+
+	/** 创建者 */
     @TableField(value = "create_by", fill = FieldFill.INSERT)
     private String createBy;
 

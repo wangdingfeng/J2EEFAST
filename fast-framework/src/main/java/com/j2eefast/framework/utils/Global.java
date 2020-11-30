@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 
@@ -6,7 +10,7 @@ import java.io.File;
 import com.j2eefast.common.config.service.SysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.SpringUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
@@ -16,7 +20,7 @@ import cn.hutool.setting.Setting;
 
 /**
  * 获取系统配置参数
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @data 2019-04-05 19:44
  */
 public class Global {
@@ -47,7 +51,7 @@ public class Global {
     
     /**
      * @Description:样式JS 版本
-     * @author zhouzhou 18774995071@163.com
+     * @author zhouzhou loveingowp@163.com
      * @time 2019-04-28 22:17
      * @return
      *

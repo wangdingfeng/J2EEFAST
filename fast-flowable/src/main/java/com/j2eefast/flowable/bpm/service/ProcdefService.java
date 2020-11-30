@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service;
 
 import cn.hutool.core.io.IoUtil;
@@ -9,9 +13,7 @@ import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.flowable.bpm.cmd.processinstance.DeleteFlowableProcessInstanceCmd;
 import com.j2eefast.flowable.bpm.entity.BpmProcessDefinitionEntity;
-import com.j2eefast.flowable.bpm.entity.ProcdefEntity;
 import com.j2eefast.flowable.bpm.mapper.ProcessDefinitionMapper;
 import com.j2eefast.framework.utils.Constant;
 import org.apache.commons.io.IOUtils;
@@ -19,22 +21,16 @@ import org.flowable.engine.HistoryService;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
-import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
-import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.ui.modeler.domain.Model;
 import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.exception;
 
 import com.j2eefast.common.core.utils.ResponseData;
@@ -58,10 +62,10 @@ public class RxcExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseData ResponseDatahandleException(Exception e) {
-		logger.error(e.getMessage(),e);
 		if(("Request method 'GET' not supported").equals(e.getMessage())) {
 			return ResponseData.error("20000","请求不可用");
 		}
+		logger.error(e.getMessage(),e);
 		if(ToolUtil.isEmpty(e.getMessage())){
 			return ResponseData.error("服务器异常!");
 		}

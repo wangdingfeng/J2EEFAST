@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast;
 
 import com.j2eefast.common.core.io.PropertiesUtils;
@@ -14,7 +18,7 @@ import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * @Description:项目启动入口
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @date 2018-11-14 23:28
  */
 @EnableCaching
@@ -52,7 +56,6 @@ public class FastApplication extends SpringBootServletInitializer {
 		}catch (Exception e) {
 			log.error("项目启动异常:",e);
 		}
-		
 	}
 	
 

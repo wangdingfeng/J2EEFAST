@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -5,11 +9,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.flowable.bpm.entity.UserEntity;
 import com.j2eefast.flowable.bpm.mapper.UserMapper;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
 import org.flowable.ui.common.model.RemoteUser;
 import org.flowable.ui.common.model.UserRepresentation;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.controller;
 
 import cn.hutool.core.util.StrUtil;
@@ -6,7 +10,6 @@ import com.j2eefast.common.core.utils.HttpContextUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;

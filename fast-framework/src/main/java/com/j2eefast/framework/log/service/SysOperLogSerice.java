@@ -1,32 +1,35 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.log.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.annotation.DataFilter;
 import com.j2eefast.framework.log.entity.SysOperLogEntity;
 import com.j2eefast.framework.log.mapper.SysOperLogMapper;
 import com.j2eefast.framework.utils.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Map;
 
 /**
- *
- * @author: zhouzhou Emall:18774995071@163.com
- * @date: 2019-03-20 16:46
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
+ * 操作日志查询
+ * @author huanzhou
+ * @date 2019-03-20 16:46
  */
 @Service
 public class SysOperLogSerice extends ServiceImpl<SysOperLogMapper, SysOperLogEntity> {
 
 	/**
 	 * 页面展示查询翻页
+	 * @author ZhouZhou
+	 * @date 2019-03-20 17:46
+	 * @param params 页面参数
+	 * @return
 	 */
 	@DataFilter(deptAlias="d")
 	public PageUtil findPage(Map<String, Object> params) {

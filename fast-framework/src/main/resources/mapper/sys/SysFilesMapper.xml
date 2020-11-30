@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        <result property="filePath"    column="file_path"    />
        <result property="fileName"    column="file_name"    />
        <result property="fileSize"    column="file_size"    />
+       <result property="ossType"    column="oss_type"    />
         <result property="classify"    column="classify"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -29,11 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           a.file_size as "fileSize",
           a.classify as "classify",
           a.update_by as "updateBy",
+          a.oss_type as "ossType",
           a.create_time as "createTime",
           a.create_by as "createBy"
           , up.biz_type  as "fileUpload.bizType"
           , up.biz_id  as "fileUpload.bizId"
-          , CASE WHEN up.biz_type IS NULL  THEN  '1' WHEN up.del_flag = 1 THEN '2' ELSE  '0' END   as  "status"
+          , CASE WHEN up.biz_type IS NULL  THEN  '1' WHEN up.del_flag = '1' THEN '2' ELSE  '0' END   as  "status"
       </sql>
     
      <!-- 外联表  --> 
@@ -51,10 +53,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
             up.del_flag = '0'
             <if test="bizId != null  and bizId != ''">
-                     and up.biz_id = #{bizId}
+                AND up.biz_id = '${bizId}'
 			</if>
             <if test="bizType != null  and bizType != ''">
-                and up.biz_type = #{bizType}
+                AND up.biz_type = #{bizType}
             </if>
         </where>
 	 </select>
@@ -71,14 +73,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      and a.file_name LIKE
                      <if test="_databaseId == 'oracle'"> '%'||#{sysFiles.fileName}||'%'</if>
                      <if test="_databaseId == 'mssql'">'%'+#{sysFiles.fileName}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{sysFiles.fileName},'%')</if>
+                     <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">concat('%',#{sysFiles.fileName},'%')</if>
 			    </if>
 			      <if test="sysFiles.fileSize != null  and sysFiles.fileSize != ''">
                      and a.file_size > #{sysFiles.fileSize}
-                    
 			    </if>
-			    
-			   <if test="sysFiles.fileUpload !=null and sysFiles.fileUpload.delFlag != null  and sysFiles.fileUpload.delFlag != ''">   
+			   <if test="sysFiles.fileUpload !=null and sysFiles.fileUpload.delFlag != null  and sysFiles.fileUpload.delFlag != ''">
                  up.del_flag = '0'
                  </if>
             <if test="sysFiles.fileUpload !=null and  sysFiles.fileUpload.bizId != null  and sysFiles.fileUpload.bizId != ''">

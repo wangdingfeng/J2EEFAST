@@ -1,5 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-02-20
  *       2020-05-17 修复导出报表问题
@@ -26,6 +27,7 @@ if (typeof jQuery === "undefined") {
             pushMenu:null,
             version:'1.0.13',
             debug:true,
+            mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
             loadTip:true,
             // 表格类型
@@ -594,13 +596,19 @@ if (typeof jQuery === "undefined") {
              * ```
              */
             isEmpty: function (obj) {
-                if (obj == null) return true;
-                if (this.isArray(obj) || this.isString(obj)) return obj.length === 0;
-                if (this.isNumber(obj)) return false;
-                if (this.isFunction(obj)) return false;
-                if (typeof obj === 'boolean') return false;
-                for (var key in obj) if (obj.hasOwnProperty(key)) return false;
-                return true;
+                try{
+                    if (obj == null || obj == undefined) return true;
+                    if (this.isArray(obj) || this.isString(obj)) return obj.length === 0;
+                    if (this.isNumber(obj)) return false;
+                    if (this.isFunction(obj)) return false;
+                    if (typeof obj === 'boolean') return false;
+                    for (var key in obj) if (obj.hasOwnProperty(key)) return false;
+                    return true;
+                }catch (e) {
+                    if(window.console)console.error(e);
+                    return true;
+                }
+
             },
             /**
              * 检测值是否为 基本类型
@@ -1551,7 +1559,7 @@ if (typeof jQuery === "undefined") {
                     //取消或者清除
                     btn2: function(index, layero){
                         if(options.clear){
-                            options.clear(index, layero,opt.selfLayer);
+                            options.clear(index, layero,_sf);
                         }else{
                             if (!opt.common.isEmpty(options.cancel)) {
                                 options.cancel(index,layero);
@@ -1912,10 +1920,10 @@ if (typeof jQuery === "undefined") {
                     width: _width,
                     height: _height,
                     url: _url,
-                    skin: 'layui-layer-gray',
+                    //skin: 'layui-layer-gray',
                     btn: ['关闭'],
-                    yes: function (index, layero) {
-                        layer.close(index);
+                    yes: function (index,layero) {
+                    	opt.layer.close(index) || opt.selfLayer.close(index);
                     }
                 };
                 opt.modal.openOptions(options);
@@ -2747,26 +2755,6 @@ if (typeof jQuery === "undefined") {
             }).bind("input propertychange", $.tree.searchNode);
         };
 
-        // $.extend($.validator.messages, {
-        //     required: icon + $.i18n.prop("必填"),
-        //     remote: icon + $.i18n.prop("sys.msg.remote"),
-        //     email: icon + $.i18n.prop("sys.msg.email"),
-        //     url: icon + $.i18n.prop("sys.msg.url"),
-        //     date: icon + $.i18n.prop("sys.msg.date"),
-        //     dateISO: icon + $.i18n.prop("sys.msg.dateISO"),
-        //     number: icon + $.i18n.prop("sys.msg.number"),
-        //     digits: icon + $.i18n.prop("sys.msg.digits"),
-        //     creditcard: icon +$.i18n.prop("sys.msg.creditcard"),
-        //     equalTo: icon + $.i18n.prop("sys.msg.equalTo"),
-        //     extension: icon + $.i18n.prop("sys.msg.extension"),
-        //     maxlength: $.validator.format(icon + $.i18n.prop("sys.msg.maxlength")),
-        //     minlength: $.validator.format(icon + $.i18n.prop("sys.msg.minlength")),
-        //     rangelength: $.validator.format(icon +$.i18n.prop("sys.msg.rangelength")),
-        //     range: $.validator.format(icon + $.i18n.prop("sys.msg.range")),
-        //     max: $.validator.format(icon + $.i18n.prop("sys.msg.max")),
-        //     min: $.validator.format(icon + $.i18n.prop("sys.msg.min"))
-        // });
-
         // 按下ESC按钮关闭弹层
         $('body', document).on('keyup',this, function(e) {
             if (e.which === 27) {
@@ -2774,7 +2762,19 @@ if (typeof jQuery === "undefined") {
             }
         });
 
-        $('#scroll-up').toTop();
+        /* 回到顶部绑定 */
+        if ($.fn.toTop !== undefined) {
+            //判断是否
+            if($.fn.layout !== undefined && $('.ui-layout-center')){
+                var _opt = {
+                    win:$('.ui-layout-center'),
+                    doc:$('.ui-layout-center')
+                };
+                $('#scroll-up').toTop(_opt);
+            }else{
+                $('#scroll-up').toTop();
+            }
+        }
 
         //屏蔽鼠标右键
         //document.oncontextmenu = function() {
@@ -2792,8 +2792,9 @@ if (typeof jQuery === "undefined") {
     $.fn.toTop = function(opt){
         //variables
         var elem = this;
-        var win = $(window);
-        var doc = $('html, body');
+        //修复插件冲突导致失效问题
+        var win = (opt && opt.hasOwnProperty('win')) ? opt.win : $(window);
+        var doc = (opt && opt.hasOwnProperty('doc')) ? opt.doc : $('html, body');
         //Extended Options
         var options = $.extend({
             autohide: true,
@@ -2825,14 +2826,12 @@ if (typeof jQuery === "undefined") {
 
         win.scroll(function(){
             var scrolling = win.scrollTop();
-
             if(options.autohide){
                 if(scrolling > options.offset){
                     elem.fadeIn(options.speed);
                 }
                 else elem.fadeOut(options.speed);
             }
-
         });
 
     };
@@ -2869,6 +2868,7 @@ if (typeof jQuery === "undefined") {
                     showPageGo: true,
                     showRefresh: true,
                     showColumns: true,
+                    resizable: false,
                     showToggle: true,
                     showExport: false,
                     clickToSelect: true,
@@ -2891,6 +2891,17 @@ if (typeof jQuery === "undefined") {
                     rowStyle: {},
                 };
 
+                if(options.resizable){
+                    try{
+                        if(0 !== _ColResizable){
+                            opt.error("模板引擎缺少引入表格拖动Libs['resizable']")
+                            return;
+                        }
+                    }catch (e) {
+                        opt.error("模板引擎缺少引入表格拖动Libs['resizable']")
+                        return;
+                    }
+                }
                 var options = $.extend(defaults, options);
 
                 //兼容自动识别有删除按钮表格有checkbox 选项
@@ -2909,8 +2920,6 @@ if (typeof jQuery === "undefined") {
                         options.columns.splice(0,0,{checkbox: true, field: 'state'});
                     }
                 }
-
-
 
                 //
                 if(!opt.common.isEmpty(options.columns.length)){
@@ -2994,6 +3003,7 @@ if (typeof jQuery === "undefined") {
                     rememberSelected: options.rememberSelected,         // 启用翻页记住前面的选择
                     fixedColumns: options.fixedColumns,                 // 是否启用冻结列（左侧）
                     fixedNumber: options.fixedNumber,                   // 列冻结的个数（左侧）
+                    resizable: options.resizable,                       // 是否允许拉伸列宽
                     rightFixedColumns: options.rightFixedColumns,       // 是否启用冻结列（右侧）
                     rightFixedNumber: options.rightFixedNumber,         // 列冻结的个数（右侧）
                     onReorderRow: options.onReorderRow,                 // 当拖拽结束后处理函数
@@ -3123,8 +3133,10 @@ if (typeof jQuery === "undefined") {
                 $(optionsIds).on(TABLE_EVENTS, function () {
                     opt.table.set($(this).attr("id"));
                 });
+
                 // 选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
+                    console.log("e.type:"+e.type);
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
@@ -3200,10 +3212,7 @@ if (typeof jQuery === "undefined") {
                 $(optionsIds).on("click", '.tooltip-show', function() {
                     var target = $(this).data('target');
                     var input = $(this).prev();
-                    if (opt.common.equals("copy", target)) {
-                        input.select();
-                        document.execCommand("copy");
-                    } else if (opt.common.equals("open", target)) {
+                    if (opt.common.equals("open", target)) {
                         opt.selfLayer.alert(input.val(), {
                             title: "信息内容",
                             shadeClose: true,
@@ -3218,8 +3227,9 @@ if (typeof jQuery === "undefined") {
                 if (typeof opt.table.get(this.id).onLoadSuccess == "function") {
                     opt.table.get(this.id).onLoadSuccess(data);
                 }
+
                 // 浮动提示框特效
-                $("[data-toggle='tooltip']").tooltip();
+                $(".table [data-toggle='tooltip']").tooltip();
 
                 //加载合计统计
                 if(opt.common.isNotEmpty(opt.table.options._total) && opt.table.options._total){
@@ -3233,7 +3243,7 @@ if (typeof jQuery === "undefined") {
                     $("#_pageTotal").html(_p);
                 }
 
-                $('[data-toggle="popover"]').popover();
+                $('.table [data-toggle="popover"]').popover();
 
                 if ($.fn.iCheck !== undefined) {
                     $(".check-box:not(.noicheck),.radio-box:not(.noicheck)").each(function() {
@@ -3245,7 +3255,7 @@ if (typeof jQuery === "undefined") {
                 }
 
                 // laydate time-input 时间控件绑定
-                if ($(".time-input").length > 0) {
+                if ($(".table .time-input").length > 0) {
                     layui.use('laydate', function () {
                         var com = layui.laydate;
                         $(".time-input").each(function (index, item) {
@@ -3304,34 +3314,55 @@ if (typeof jQuery === "undefined") {
                     })
                 }
 
-                $(window).on('resize', function () {
-                    // 浮动提示框特效
-                    $("[data-toggle='tooltip']").tooltip();
-
-                    $('[data-toggle="popover"]').popover();
-
-                    if ($.fn.iCheck !== undefined) {
-                        $(".check-box:not(.noicheck),.radio-box:not(.noicheck)").each(function() {
-                            $(this).iCheck({
-                                checkboxClass: (typeof($(this).data("style")) == "undefined")?'icheckbox-blue':("icheckbox_" +($(this).data("style") || "square-blue")),
-                                radioClass:(typeof($(this).data("style")) == "undefined")? 'iradio-blue':("iradio_" +($(this).data("style") || "square-blue"))
-                            })
-                        })
-                    }
-
-                    //select2复选框事件绑定
-                    if ($.fn.select2 !== undefined) {
-                        $.fn.select2.defaults.set( "theme", "bootstrap" );
-                        $("select.form-control:not(.noselect2)").each(function () {
-                            if(typeof($(this).attr("multiple"))=="undefined"){
-                                $(this).select2();
-                            }else{
-                                $(this).select2({allowClear: true, placeholder: ""});
+                //设置溢出文本复制
+                $.contextMenu({
+                    selector: ".table a[data-target='copy']",
+                    trigger: 'right',
+                    autoHide: true,
+                    items: {
+                        "copy": {
+                            name: $.i18n.prop("复制文本"),
+                            icon: "fa-copy",
+                            callback: function(key, opt) {
+                                var input = $(this).prev();
+                                input.select();
+                                if(document.execCommand("copy")){
+                                    window.opt.modal.msg($.i18n.prop('复制成功')+'!');
+                                }
                             }
-                        })
+                        }
                     }
+                });
 
-                }).resize();
+
+                // $(window).on('resize', function () {
+                //     // 浮动提示框特效
+                //     //$(".table [data-toggle='tooltip']").tooltip();
+                //
+                //     $('[data-toggle="popover"]').popover();
+                //
+                //     if ($.fn.iCheck !== undefined) {
+                //         $(".check-box:not(.noicheck),.radio-box:not(.noicheck)").each(function() {
+                //             $(this).iCheck({
+                //                 checkboxClass: (typeof($(this).data("style")) == "undefined")?'icheckbox-blue':("icheckbox_" +($(this).data("style") || "square-blue")),
+                //                 radioClass:(typeof($(this).data("style")) == "undefined")? 'iradio-blue':("iradio_" +($(this).data("style") || "square-blue"))
+                //             })
+                //         })
+                //     }
+                //
+                //     //select2复选框事件绑定
+                //     if ($.fn.select2 !== undefined) {
+                //         $.fn.select2.defaults.set( "theme", "bootstrap" );
+                //         $("select.form-control:not(.noselect2)").each(function () {
+                //             if(typeof($(this).attr("multiple"))=="undefined"){
+                //                 $(this).select2();
+                //             }else{
+                //                 $(this).select2({allowClear: true, placeholder: ""});
+                //             }
+                //         })
+                //     }
+                //
+                // }).resize();
 
             },
             // 表格销毁
@@ -3352,7 +3383,7 @@ if (typeof jQuery === "undefined") {
              * @param value 需要控制的文本
              * @param length 超出多长显示
              * @param align 截取value文本显示缩略
-             * @param target copy单击复制文本 open弹窗打开文本
+             * @param target copy 双击弹出复制文本 open弹窗打开文本
              * @returns 返回处理过后DIV
              */
             tooltip: function (value, length,align, target) {
@@ -3605,10 +3636,10 @@ if (typeof jQuery === "undefined") {
                     rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                         return row;
                     });
-                    if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-                        opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
-                        opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
-                    }
+                    // if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                    //     opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
+                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
+                    // }
                     rows = $.table.affectedRowIds(rows);
                 }
                 return opt.common.uniqueFn(rows);
@@ -3629,10 +3660,10 @@ if (typeof jQuery === "undefined") {
                     rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                         return row;
                     });
-                    if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
-                        opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
-                        opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
-                    }
+                    // if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                    //     opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], rows,opt.table.options.uniqueId);
+                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], $.table.affectedRowIds(rows),opt.table.options.uniqueId);
+                    // }
                     return rows;
                 }
             },
@@ -3906,6 +3937,7 @@ if (typeof jQuery === "undefined") {
                     showColumns: true,
                     expandAll: true,
                     expandFirst: true,
+                    bordered: false,
                     asynUrl: null
                 };
                 var options = $.extend(defaults, options);
@@ -3950,7 +3982,7 @@ if (typeof jQuery === "undefined") {
                     pageList: options.pageList,                         // 页面列表
                     expandColumn: options.expandColumn,                 // 在哪一列上面显示展开按钮
                     striped: options.striped,                           // 是否显示行间隔色
-                    bordered: true,                                     // 是否显示边框
+                    bordered: options.bordered,                         // 是否显示边框
                     toolbar: '#' + options.toolbar + '-' + options.id,  // 指定工作栏
                     showSearch: options.showSearch,                     // 是否显示检索信息
                     showRefresh: options.showRefresh,                   // 是否显示刷新按钮

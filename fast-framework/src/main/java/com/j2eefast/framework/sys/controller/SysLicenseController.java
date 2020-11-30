@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
@@ -18,7 +22,6 @@ import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ import java.util.List;
 
 /**
  * <p>产品许可信息控制器</p>
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-18 09:50
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

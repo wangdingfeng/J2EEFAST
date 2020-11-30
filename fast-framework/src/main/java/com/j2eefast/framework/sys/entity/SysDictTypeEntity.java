@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -9,7 +13,7 @@ import lombok.Data;
 
 /**
  * 字典表
- * @Author: zhouzhou Emall:18774995071@163.com
+ * @Author: zhouzhou Emall:loveingowp@163.com
  * @Date: 2019/12/18 14:38
  * @Version: 1.0
  */

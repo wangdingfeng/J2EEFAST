@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.utils;
 
 
@@ -6,13 +10,11 @@ import com.j2eefast.framework.sys.entity.SysDictDataEntity;
 import com.j2eefast.framework.sys.service.SysDictDataService;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * @Author: zhouzhou Emall:18774995071@163.com
+ * @Author: zhouzhou Emall:loveingowp@163.com
  * @Description: html调用 Freemarker 实现字典读取
  * @Date: 2019/12/18 17:25
  * @Version: 1.0

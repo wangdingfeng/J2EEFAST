@@ -1,5 +1,8 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
-
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.j2eefast.common.core.utils.PageUtil;
@@ -16,19 +19,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @ProjectName: fast
- * @Package: com.j2eefast.modules.sys.controller
- * @ClassName: SysDictDataController
- * @Author: zhouzhou Emall:18774995071@163.com
- * @Description:
- * @Date: 2019/12/18 14:20
- * @Version: 1.0
+ * 字典管理控制类
+ * @author zhouzhou
+ * @date 2019/12/18 14:20
  */
 @Controller
 @RequestMapping("/sys/dict/data")
@@ -73,10 +70,10 @@ public class SysDictDataController extends BaseController {
     @RequiresPermissions("sys:dict:add")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData addSave(@Validated SysDictDataEntity dict)
-    {
+    public ResponseData addSave(@Validated SysDictDataEntity dict){
         if(sysDictDataService.save(dict)){
-            List<SysDictDataEntity> list = sysDictDataService.list(new QueryWrapper<SysDictDataEntity>().eq("dict_type",dict.getDictType()).
+            List<SysDictDataEntity> list = sysDictDataService.list(new QueryWrapper<SysDictDataEntity>().
+            		eq("dict_type",dict.getDictType()).
                     eq("status","0").orderBy(true, true, "dict_sort"));
             sysConfigRedis.saveOrUpdateDict(dict.getDictType(),list);
             return success();
@@ -89,8 +86,7 @@ public class SysDictDataController extends BaseController {
      * 修改字典类型
      */
     @GetMapping("/edit/{dictCode}")
-    public String edit(@PathVariable("dictCode") Long dictCode, ModelMap mmap)
-    {
+    public String edit(@PathVariable("dictCode") Long dictCode, ModelMap mmap){
         mmap.put("dictHtml", sysDictDataService.getById(dictCode));
         return urlPrefix + "/edit";
     }

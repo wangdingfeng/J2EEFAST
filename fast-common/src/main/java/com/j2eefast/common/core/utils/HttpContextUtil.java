@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 
 import cn.hutool.core.util.NumberUtil;
@@ -64,7 +68,8 @@ public class HttpContextUtil {
         if (request == null) {
             return values;
         }
-        Enumeration enums = request.getParameterNames();
+        @SuppressWarnings("rawtypes")
+		Enumeration enums = request.getParameterNames();
         while (enums.hasMoreElements()) {
             String paramName = (String) enums.nextElement();
             String paramValue = request.getParameter(paramName);

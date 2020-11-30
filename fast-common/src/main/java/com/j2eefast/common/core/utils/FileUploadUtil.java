@@ -3,13 +3,11 @@ package com.j2eefast.common.core.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-
 import com.j2eefast.common.core.exception.RxcException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.j2eefast.common.core.exception.InvalidExtensionException;
 import com.j2eefast.common.core.io.file.MimeType;
 
@@ -31,7 +29,6 @@ public class FileUploadUtil {
      * 默认上传的地址
      */
     private static String 						defaultBaseDir 						= "/";
-    private static int 							counter 							= 0;
 
     public static void setDefaultBaseDir(String defaultBaseDir)
     {
@@ -127,7 +124,7 @@ public class FileUploadUtil {
     public static final String extractFilename(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
-        fileName = DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + ToolUtil.encodingFilename(fileName) + "." + extension;
+        fileName = DateFormatUtils.format(new Date(), "yyyy/MM/dd")  + File.separator + ToolUtil.encodingFilename(fileName) + "." + extension;
         return fileName;
     }
 
@@ -205,8 +202,7 @@ public class FileUploadUtil {
      * @param allowedExtension
      * @return
      */
-    public static final boolean isAllowedExtension(String extension, String[] allowedExtension)
-    {
+    public static final boolean isAllowedExtension(String extension, String[] allowedExtension){
         for (String str : allowedExtension)
         {
             if (str.equalsIgnoreCase(extension))
@@ -223,8 +219,7 @@ public class FileUploadUtil {
      * @param file 表单文件
      * @return 后缀名
      */
-    public static final String getExtension(MultipartFile file)
-    {
+    public static final String getExtension(MultipartFile file){
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (ToolUtil.isEmpty(extension))
         {

@@ -48,15 +48,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      <select id="selectAreaList" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
 		SELECT
 			<include refid="sysAreaColumns"/>
-			-- ,(a.`level` != 3) AS "isTreeLeaf"
-            <if test="_databaseId == 'mysql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
+            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
         FROM sys_area a
 		<where>
             <if test="name != null  and name != ''">
                      and a.name LIKE
                      <if test="_databaseId == 'oracle'"> '%'||#{name}||'%'</if>
                      <if test="_databaseId == 'mssql'">'%'+#{name}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{name},'%')</if>
+                     <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{name},'%')</if>
 			</if>
             <if test="level != null "> and a.level = #{level} </if>
             <if test="parentId != null "> and a.parent_id = #{parentId} </if>
@@ -71,8 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
 		SELECT
          <include refid="sysAreaColumns"/>
-         -- ,(a.`level` != 3) AS "isTreeLeaf"
-         <if test="_databaseId == 'mysql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
+         <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
 		FROM sys_area a
 		<include refid="sysAreaJoins"/>
 		<where>
@@ -81,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      and a.name LIKE
                      <if test="_databaseId == 'oracle'"> '%'||#{sysArea.name}||'%'</if>
                      <if test="_databaseId == 'mssql'">'%'+#{sysArea.name}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{sysArea.name},'%')</if>
+                     <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{sysArea.name},'%')</if>
 			</if>
                <if test="sysArea.level != null "> and a.level = #{sysArea.level} </if>
             <if test="sysArea.parentId != null "> and a.parent_id = #{sysArea.parentId} </if>

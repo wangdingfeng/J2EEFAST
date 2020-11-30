@@ -1,4 +1,7 @@
-package com.fast.test;
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */package com.fast.test;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -49,7 +52,7 @@ public class RunTest {
 				//FileUtil.writeString(s, FileUtil.touch(new UserInfo().getCurrentDir() + File.separator+ "\\target\\classes\\runFAST.bat" ), "UTF-8");
 				path =  new UserInfo().getCurrentDir() + File.separator+ "\\target\\classes\\run\\runFASTOSLinux.txt";
 				s = FileUtil.readString(path, "UTF-8");
-				s = StrUtil.replace(s, "{$APP_NAME&}", jar);
+				s = StrUtil.replace(s, "{$APP_NAME&}","fast-$APP_VERSION.jar");
 				s = StrUtil.replace(s, "{$VERSION&}", XmlUtil.elementText(e, "version") + "-" + DatePattern.PURE_DATE_FORMAT.format(new Date()));
 
 				url  = new UserInfo().getCurrentDir() +File.separator+ "target\\classes\\application.yml";

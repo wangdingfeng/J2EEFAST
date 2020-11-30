@@ -1,28 +1,25 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
 import com.j2eefast.common.config.entity.SysConfigEntity;
 import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
 import com.j2eefast.framework.annotation.RepeatSubmit;
-import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
-import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.core.utils.ValidatorUtil;
 import com.j2eefast.common.core.controller.BaseController;
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * 
@@ -90,7 +87,7 @@ public class SysConfigController extends BaseController {
 		if (!sysConfigService.checkConfigKeyUnique(config)){
 			return error("新增参数'" + config.getParamName() + "'失败，参数键名已存在");
 		}
-		return sysConfigService.add(config)?success():error("新增失败!");
+		return sysConfigService.addSysConfig(config)?success():error("新增失败!");
 	}
 
 	/**
@@ -115,7 +112,7 @@ public class SysConfigController extends BaseController {
 		if (!sysConfigService.checkConfigKeyUnique(config)) {
 			return error("修改参数'" + config.getParamName() + "'失败，参数键名已存在");
 		}
-		return sysConfigService.update(config)?success():error("修改失败!");
+		return sysConfigService.updateSysConfigById(config)?success():error("修改失败!");
 	}
 
 	/**
@@ -126,9 +123,8 @@ public class SysConfigController extends BaseController {
 	@RequiresPermissions("sys:config:del")
 	@ResponseBody
 	public ResponseData delete(Long[] ids) {
-		List<SysConfigEntity> list= sysConfigService.list(new QueryWrapper<SysConfigEntity>().
-				eq("config_type","Y").in("id",ArrayUtil.join(ids, ",")));
-		if(ToolUtil.isNotEmpty(list)){
+		//检查是否有系统参数
+		if(sysConfigService.checkSysConfigKey(ids)) {
 			return error("删除参数失败，系统参数不能删除");
 		}
 		return sysConfigService.deleteBatchByIds(ids)?success():error("删除失败!");

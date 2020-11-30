@@ -440,6 +440,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean update(GenTableEntity genTable) {
     	//其它扩展设置
     	if (null != genTable.getOption()) { 
@@ -447,8 +448,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     	}    	
         int row = this.genTableMapper.updateGenTable(genTable);
         if (row > 0) {
-            for (GenTableColumnEntity cenTableColumn : genTable.getColumns())
-            {
+            for (GenTableColumnEntity cenTableColumn : genTable.getColumns()) {
                 genTableColumnService.updateGenTableColumn(cenTableColumn);
             }
             return  true;
@@ -513,6 +513,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteGenTableByIds(Long[] ids) {
        return this.genTableMapper.deleteGenTableByIds(ids)> 0 &&
                genTableColumnService.deleteGenTableColumnByIds(ids) >0;
@@ -596,9 +597,14 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
             if(ToolUtil.isNotEmpty(notList)){
                 names =  notList.stream().map(GenTableEntity :: getTableName).collect(Collectors.toList());
             }
+            //postgresql 数据库表无创建时间屏蔽前端排序请求
+            if(dbType.equals("postgresql")){
+                page.setOrders(null);
+            }
 			if (!DataSourceContext.MASTER_DATASOURCE_NAME.equals(dbName)) {
 				DataSourceContextHolder.setDataSourceType(db.getDbName());  //指定数据源
 				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment,names);
+                DataSourceContextHolder.clearDataSourceType();
 			} else {
 				list = genTableMapper.generateTablePage(page, dbType, schema, tableName, tableComment,names);
 			}
@@ -606,7 +612,6 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		DataSourceContextHolder.clearDataSourceType();
 		return new PageUtil(page);
 	}
   

@@ -1,3 +1,9 @@
+<!--
+* Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+* No deletion without permission
+* @author ZhouZhou
+* @version 2019-04-28
+-->
 <#include "/common/defaultEngine.html">
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <!DOCTYPE html>
@@ -8,7 +14,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>${config.getTitle()} - 锁屏</title>
     <!-- Tell the browser to be responsive to screen width -->
-    <meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta name="keywords" content="PoweredByJ2eeFast"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <#-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
@@ -56,7 +63,6 @@
 <div class="lockscreen-wrapper">
     <div id="time"></div>
     <div class="lockscreen-logo">
-<#--        <a href="../../index2.html"><b>Admin</b>LTE</a>-->
         <a href="#">${config.getTitle()}<small>V${config.getVersion()}</small></a>
     </div>
     <!-- User name -->

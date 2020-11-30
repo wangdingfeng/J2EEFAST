@@ -1,17 +1,6 @@
 package com.j2eefast.generator.gen.util;
-/**
- *
- * @ClassName: GenConstants
- * @Package: com.j2eefast.generator.gen.util
- * @Description: 代码生成常量
- * @author: zhouzhou Emall:18774995071@163.com
- * @time 2020/1/6 17:51
- * @version V1.0
- 
- *
- */
-public class GenConstants
-{
+
+public class GenConstants{
     /** 单表（增删改查） */
     public static final String TPL_CRUD = "crud";
 
@@ -53,14 +42,14 @@ public class GenConstants
     public static final String TREE_NAME = "treeName";
 
     /** 数据库字符串类型 */
-    public static final String[] COLUMNTYPE_STR = { "char", "varchar", "narchar", "varchar2", "tinytext", "text",
+    public static final String[] COLUMNTYPE_STR = { "bpchar","char", "varchar", "narchar", "varchar2", "tinytext", "text",
             "mediumtext", "longtext" };
 
     /** 数据库时间类型 */
     public static final String[] COLUMNTYPE_TIME = { "datetime", "time", "date", "timestamp" };
 
     /** 数据库数字类型 */
-    public static final String[] COLUMNTYPE_NUMBER = { "tinyint", "smallint", "mediumint", "int", "number", "integer",
+    public static final String[] COLUMNTYPE_NUMBER = { "int4","int2","int8","tinyint", "smallint", "mediumint", "int", "number", "integer",
             "bigint", "float", "float", "double", "decimal" };
 
     /** 页面不需要编辑字段 */

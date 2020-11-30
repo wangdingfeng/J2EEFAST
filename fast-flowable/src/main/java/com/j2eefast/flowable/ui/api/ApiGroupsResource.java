@@ -1,13 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.ui.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.flowable.bpm.service.GroupService;
 import com.j2eefast.flowable.bpm.service.UserService;
-import com.j2eefast.framework.sys.entity.SysRoleEntity;
-import com.j2eefast.framework.sys.entity.SysUserEntity;
-import com.j2eefast.framework.sys.service.SysRoleService;
-import com.j2eefast.framework.sys.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>候选组,职位</p>

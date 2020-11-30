@@ -1,9 +1,6 @@
 package com.j2eefast.generator.gen.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,7 +11,7 @@ import java.util.Date;
 /**
  * example_test_child
  * @author: ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 @Data
 @TableName("example_test_child")

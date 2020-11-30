@@ -105,13 +105,13 @@
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //启用自动保存
-        ,enableAutoSave: true
-        //自动保存间隔时间， 单位ms
-        ,saveInterval: 500
-
-        //,fullscreen : false //是否开启初始化时即全屏，默认关闭
-
-        ,imagePopup:true      //图片操作的浮层开关，默认打开
+        // ,enableAutoSave: true
+        // //自动保存间隔时间， 单位ms
+        // ,saveInterval: 500
+		//
+        // //,fullscreen : false //是否开启初始化时即全屏，默认关闭
+		//
+        // ,imagePopup:true      //图片操作的浮层开关，默认打开
 
         //,autoSyncData:true //自动同步编辑器要提交的数据
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹

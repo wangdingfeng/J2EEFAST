@@ -36,8 +36,12 @@
             listagg(l.role_name, ',') within GROUP( ORDER BY u.id) AS role_name
         </if>
         <if test="_databaseId == 'mysql'">
-            ifnull(c.name,"总公司") AS comp_name,
+            ifnull(c.name,'总公司') AS comp_name,
             GROUP_CONCAT(l.role_name) AS role_name
+        </if>
+        <if test=" _databaseId  == 'postgresql'">
+            COALESCE(c.name,'总公司') AS comp_name,
+            ARRAY_TO_STRING(ARRAY_AGG(l.role_name),',') AS role_name
         </if>
 		FROM sys_user u
 		LEFT JOIN sys_comp c ON u.comp_id = c.id
@@ -65,6 +69,9 @@
         </if>
         <if test="_databaseId == 'mysql'">
             ifnull(c.name,"总公司") AS comp_name
+        </if>
+        <if test=" _databaseId  == 'postgresql'">
+            COALESCE(c.name,'总公司') AS comp_name
         </if>
 		FROM sys_user u
 		LEFT JOIN sys_user_role r ON u.id = r.user_id
@@ -166,7 +173,7 @@
         <if test = "username !=null and username!=''">
             AND u.username LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{username}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{username}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{username}, '%')</if>
         </if>
         <if test = "status !=null and status!=''">
             AND u.status = #{status}
@@ -174,28 +181,42 @@
         <if test="mobile != null and mobile != ''">
             AND u.mobile LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{mobile}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{mobile}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{mobile}, '%')</if>
         </if>
         <if test="email != null and email != ''">
             AND u.email LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{email}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{email}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{email}, '%')</if>
         </if>
         <if test="name != null and name != ''">
             AND u.name LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{name}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{name}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{name}, '%')</if>
         </if>
-        <if test="compId != null and compId != ''">
-            AND FIND_IN_SET(#{compId},d.parent_ids) OR (u.dept_id = #{compId} AND u.del_flag = '0')
+        <if test="compId != null and compId !=''">
+            <if test="_databaseId == 'mysql'">
+                AND (FIND_IN_SET(#{compId},d.parent_ids)
+                OR (u.dept_id = #{compId} AND u.del_flag = '0'))
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                AND ('${compId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
+                OR (u.dept_id = '${compId}' AND u.del_flag = '0'))
+            </if>
         </if>
         <if test="deptId != null and deptId != ''">
-            AND u.dept_id  = #{deptId}
+            <choose>
+                <when test="_databaseId == 'postgresql'">
+                    AND u.dept_id  = '${deptId}'
+                </when>
+                <otherwise>
+                    AND u.dept_id  = #{deptId}
+                </otherwise>
+            </choose>
         </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
-        <if test="_databaseId == 'oracle'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name</if>
+        <if test="_databaseId == 'oracle' || _databaseId  == 'postgresql'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name, d.name</if>
         <if test="_databaseId == 'mysql'">GROUP BY u.id</if>
     </select>
 
@@ -232,7 +253,7 @@
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
-        <if test="_databaseId == 'oracle'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name</if>
+        <if test="_databaseId == 'oracle'  || _databaseId  == 'postgresql'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name</if>
         <if test="_databaseId == 'mysql'">GROUP BY u.id</if>
     </select>
 
@@ -240,11 +261,11 @@
         <include refid="sqlpage"/>
         WHERE
         u.del_flag = '0' AND
-        r.role_id = #{roleId}
+        r.role_id = '${roleId}'
         <if test = "username !=null and username!=''">
             AND u.username LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{username}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{username}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{username}, '%')</if>
         </if>
         <if test = "status !=null and status!=''">
             AND u.status = #{status}
@@ -252,50 +273,64 @@
         <if test = "mobile !=null and mobile!=''">
             AND u.mobile LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{mobile}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{mobile}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{mobile}, '%')</if>
         </if>
         <if test = "email !=null and email!=''">
             AND u.email LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{email}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{email}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{email}, '%')</if>
         </if>
-        <if test="compId != null and compId != ''">
-            AND FIND_IN_SET(#{compId},d.parent_ids) OR (u.dept_id = #{compId} AND u.del_flag = '0')
+        <if test="compId != null and compId !=''">
+            <if test="_databaseId == 'mysql'">
+                AND (FIND_IN_SET(#{compId},d.parent_ids)
+                OR (u.dept_id = #{compId} AND u.del_flag = '0'))
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                AND ('${compId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
+                OR (u.dept_id = '${compId}' AND u.del_flag = '0'))
+            </if>
         </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
-        <if test="_databaseId == 'oracle'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name</if>
+        <if test="_databaseId == 'oracle'  || _databaseId  == 'postgresql'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name,d.name</if>
         <if test="_databaseId == 'mysql'">GROUP BY u.id</if>
     </select>
 
     <!-- 角色授权用户 还没有授权的用户列表-->
     <select id="findUnallocatedList" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="sqlpage"/>
-        WHERE (l.id != #{roleId} or l.id IS NULL)
-        AND u.id NOT IN (SELECT u.id FROM sys_user u INNER JOIN sys_user_role ur ON u.id = ur.user_id AND ur.role_id = #{roleId})
+        WHERE (l.id != '${roleId}' or l.id IS NULL)
+        AND u.id NOT IN (SELECT u.id FROM sys_user u INNER JOIN sys_user_role ur ON u.id = ur.user_id AND ur.role_id = '${roleId}')
         AND u.del_flag = '0'
         <if test="username != null and username != ''">
             AND u.username LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{username}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{username}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{username}, '%')</if>
         </if>
         <if test="mobile != null and mobile != ''">
             AND u.mobile LIKE
             <if test="_databaseId == 'oracle'"> '%,'||#{mobile}||',%'</if>
-            <if test="_databaseId == 'mysql'"> CONCAT('%', #{mobile}, '%')</if>
+            <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{mobile}, '%')</if>
         </if>
         <if test="email != null and email != ''">
             AND u.email LIKE CONCAT('%', #{email}, '%')
         </if>
-        <if test="compId != null and compId != ''">
-            AND FIND_IN_SET(#{compId},d.parent_ids) OR (u.dept_id = #{compId} AND u.del_flag = '0')
+        <if test="compId != null and compId !=''">
+            <if test="_databaseId == 'mysql'">
+                AND (FIND_IN_SET(#{compId},d.parent_ids)
+                OR (u.dept_id = #{compId} AND u.del_flag = '0'))
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                AND ('${compId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
+                OR (u.dept_id = '${compId}' AND u.del_flag = '0'))
+            </if>
         </if>
         <!-- 数据范围过滤 -->
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
-        <if test="_databaseId == 'oracle'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name</if>
+        <if test="_databaseId == 'oracle'  || _databaseId  == 'postgresql'">GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name,d.name</if>
         <if test="_databaseId == 'mysql'">GROUP BY u.id</if>
     </select>
 
@@ -320,13 +355,12 @@
         SELECT u.id AS id,
         u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,
         u.dept_id,u.comp_id,d.name AS deptName,
-        <!-- sli.ipaddr AS ip,  sli.login_time AS loginTime,-->
         <if test="_databaseId == 'oracle'">NVL(c.name,'总公司') AS comp_name</if>
         <if test="_databaseId == 'mysql'">IFNULL(c.name,"总公司") AS comp_name</if>
+        <if test=" _databaseId  == 'postgresql'">COALESCE(c.name,'总公司') AS comp_name</if>
 		FROM sys_user u
         LEFT JOIN sys_comp c ON u.comp_id = c.id
         LEFT JOIN (SELECT id, name FROM sys_comp) d ON u.dept_id = d.id
-        <!-- LEFT JOIN sys_login_infor sli ON sli.username = u.username AND login_time = (SELECT MAX(login_time) FROM sys_login_infor tt WHERE tt.username = u.username) -->
         WHERE u.id = #{id} AND u.del_flag = '0'
     </select>
 

@@ -1,7 +1,7 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- *
- *   通用css样式
+ * No deletion without permission
+ * 通用css样式
  * @author ZhouHuan
  * @data 2020-02-20
  * @version 1.0.10
@@ -934,6 +934,7 @@ label {
 
 .select-list .select-time input {
 	width: 93px;
+	font-size: 13px;
 }
 
 .select-time label,.select-time span,.select-time input {
@@ -1160,8 +1161,7 @@ body .layui-layer-page .layui-layer-content .form-file {
 .form-header {
 	font-size:14px;
 	color:#6379bb;
-	font-style: oblique;
-	border-bottom:1px solid #ddd;
+	border-bottom:2px solid #ddd;
 	margin:8px 10px 25px 10px;
 	padding-bottom:5px
 }
@@ -1250,4 +1250,15 @@ body .layui-layer-page .layui-layer-content .form-file {
 	color: #fff;
 	font-size: 14px;
 	display: none;
+}
+
+.edui-default.edui-editor {
+	border-color: #e6e6e6 !important;
+	border-radius: .215rem !important;
+	z-index: 0!important;
+}
+.edui-default .edui-editor-toolbarbox {
+	-webkit-box-shadow: 0 1px 4px rgba(255,255,255,0)!important;
+	-moz-box-shadow: 0 1px 4px rgba(255,255,255,0)!important;
+	box-shadow: 0 1px 4px rgba(255,255,255,0)!important;
 }

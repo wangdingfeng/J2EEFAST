@@ -1,10 +1,12 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -13,7 +15,6 @@ import com.j2eefast.framework.sys.mapper.SysUserRoleMapper;
 import com.j2eefast.framework.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 
 /**

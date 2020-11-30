@@ -1,22 +1,24 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.framework.sys.entity.SysAreaEntity;
-import com.j2eefast.framework.sys.entity.SysDeptEntity;
 import com.j2eefast.framework.sys.mapper.SysAreaMapper;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.framework.utils.Constant;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,9 +82,9 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		String searchValue = (String) params.get("searchValue");
 
 		Page<SysAreaEntity> page = sysAreaMapper.selectPage(new Query<SysAreaEntity>(params).getPage(),
-				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"level",type)
-						.eq(ToolUtil.isNotEmpty(pId),"parent_id",pId)
-						.eq(ToolUtil.isNotEmpty(searchValue),"id",searchValue)
+				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"level", Convert.toInt(type))
+						.eq(ToolUtil.isNotEmpty(pId),"parent_id",Convert.toLong(pId))
+						.eq(ToolUtil.isNotEmpty(searchValue),"id",Convert.toLong(searchValue))
 						.like(ToolUtil.isNotEmpty(name),"name",name));
 		//数据转换
 		List<Ztree> list = new ArrayList<>();
@@ -143,7 +145,8 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		if(ToolUtil.isEmpty(ids)) {
 			return StrUtil.EMPTY;
 		}
-		List<SysAreaEntity> areaList = this.list(new QueryWrapper<SysAreaEntity>().in("id",ids.split(StrUtil.COMMA)));
+		List<SysAreaEntity> areaList = this.list(new QueryWrapper<SysAreaEntity>().
+				in("id",ToolUtil.StrToLong(ids.split(StrUtil.COMMA))));
 		StringBuffer sb = new StringBuffer("");
 		for(SysAreaEntity area: areaList){
 			sb.append(area.getName()).append(StrUtil.COMMA);

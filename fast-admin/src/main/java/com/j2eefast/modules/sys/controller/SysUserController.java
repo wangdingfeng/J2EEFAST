@@ -1,8 +1,11 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
 import java.io.File;
 import java.util.*;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.excel.EasyExcel;
@@ -67,8 +70,8 @@ public class SysUserController extends BaseController {
 	 * @author zhouzhou
 	 * @date 2020-03-07 13:31
 	 */
-	@RequestMapping("/list")
 	@RequiresPermissions("sys:user:list")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseData list(@RequestParam Map<String, Object> params) {
 		PageUtil page = sysUserService.findPage(params);
@@ -194,7 +197,7 @@ public class SysUserController extends BaseController {
 	@RepeatSubmit
 	@ResponseBody
 	public ResponseData password(String oldPassword, String newPassword) {
-		AssertUtil.isBlank(newPassword, ToolUtil.message("sys.user.newpassw.tips"));
+		ToolUtil.isBlank(newPassword, ToolUtil.message("sys.user.newpassw.tips"));
 		LoginUserEntity loginUser = UserUtils.getUserInfo();
 		// 原密码
 		oldPassword = UserUtils.sha256(oldPassword, loginUser.getSalt());

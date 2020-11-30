@@ -1,7 +1,5 @@
 package com.j2eefast.common.core.crypto;
 
-import java.util.HashMap;
-
 /**
  * ���ӿ�
  * @author chenhantao
@@ -49,5 +47,4 @@ public interface EncryptConst
 //
 //	public final static String ROOT_KEY = "8888888888888888";// ��ʼroot  keyֵ,����
 	
-	public static HashMap TermWorkKeyMap = new HashMap();
 }

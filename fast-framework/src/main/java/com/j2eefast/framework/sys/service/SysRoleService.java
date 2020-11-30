@@ -1,17 +1,19 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j2eefast.common.core.config.RabbitmqProducer;
 import com.j2eefast.common.core.exception.RxcException;
@@ -19,7 +21,6 @@ import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.common.rabbit.constant.RabbitBeanInfo;
 import com.j2eefast.common.rabbit.constant.RabbitInfo;
 import com.j2eefast.framework.annotation.DataFilter;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
@@ -27,10 +28,8 @@ import com.j2eefast.framework.sys.entity.SysRoleModuleEntity;
 import com.j2eefast.framework.sys.mapper.SysRoleMapper;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 
 /**
@@ -116,8 +115,6 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 	public boolean update(SysRoleEntity role) {
 
 		if(this.updateById(role)){
-
-
 
 			// 更新角色与菜单关系
 			sysRoleMenuService.saveOrUpdate(role.getId(), Arrays.asList(role.getMenuIds()));

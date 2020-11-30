@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.csrf;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.j2eefast.common.core.config.DemoConfig;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.utils.*;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,12 +44,13 @@ public class AntiFakeCsrfFilter {
     @Value("${fast.csrf.urlReferer: }")
     private String urlReferer;
 
-    @Bean
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
     public FilterRegistrationBean csrfFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new CsrfFilter());
-        registration.setOrder(Integer.MAX_VALUE -1);
+        registration.setOrder(Integer.MAX_VALUE -2);
         registration.addUrlPatterns("/*");
         registration.setName("csrfFilter");
         return registration;
@@ -138,7 +138,7 @@ public class AntiFakeCsrfFilter {
             filterMap.put("/profile/**","anon");
             filterMap.put("/druid","anon");
             for(String key:filterMap.keySet()){
-                String value = filterMap.get(key).toString();
+                String value = filterMap.get(key);
                 PathMatcher matcher = new AntPathMatcher();
                 if(value.equals("anon") && matcher.match(key,path)){
                     return true;

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service.impl;
 
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -7,8 +11,6 @@ import org.flowable.bpmn.model.BpmnModel;
 import  org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.Process;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 import java.util.Collection;
 
 /**

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -89,7 +93,8 @@ public class YamlUtil{
      * @param qualifiedKey Key
      * @param value value值
      */
-    public static void setProperty(Map<?, ?> map, Object qualifiedKey, Object value) {
+    @SuppressWarnings("unchecked")
+	public static void setProperty(Map<?, ?> map, Object qualifiedKey, Object value) {
         if (map != null && !map.isEmpty() && qualifiedKey != null) {
             String input = String.valueOf(qualifiedKey);
             if (!input.equals("")) {

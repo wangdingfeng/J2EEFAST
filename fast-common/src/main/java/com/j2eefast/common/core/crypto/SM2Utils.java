@@ -1,22 +1,16 @@
 package com.j2eefast.common.core.crypto;
+
 import java.io.IOException;
 import java.math.BigInteger;
-
 import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
-import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class SM2Utils
-{
-    private static final Logger logger = LoggerFactory.getLogger(SM2Utils.class);
+public class SM2Utils{
+	
     public static final int IS_C1C3C2 = 1;
     public static final int IS_C1C2C3 = 2;
     public static final int PUBLIC_KEY_SIZE = 64;

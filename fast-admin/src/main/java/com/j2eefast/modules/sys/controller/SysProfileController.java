@@ -1,6 +1,9 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.modules.sys.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.*;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Map;
 
 /**
@@ -114,8 +116,8 @@ public class SysProfileController extends BaseController {
     @PostMapping("/updateUser")
     @ResponseBody
     public ResponseData updateUser(SysUserEntity user) {
-        AssertUtil.isBlank(user.getName(), ToolUtil.message("sys.user.name.tips"));
-        AssertUtil.isBlank(user.getMobile(), ToolUtil.message("sys.user.phone.tips"));
+        ToolUtil.isBlank(user.getName(), ToolUtil.message("sys.user.name.tips"));
+        ToolUtil.isBlank(user.getMobile(), ToolUtil.message("sys.user.phone.tips"));
         
         if(!ReUtil.isMatch(Constant.MOBILE_PHONE_NUMBER_PATTERN, user.getMobile())){
             return error(ToolUtil.message("sys.user.phone.improper.format"));

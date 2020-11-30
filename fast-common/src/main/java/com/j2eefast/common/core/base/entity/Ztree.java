@@ -1,10 +1,10 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.base.entity;
 
 import java.io.Serializable;
-
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 树对象

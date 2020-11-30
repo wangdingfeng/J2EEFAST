@@ -48,12 +48,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="postName != null and postName != ''">
                 AND a.post_name LIKE
                 <if test="_databaseId  == 'oracle'"> '%,'||#{postName}||',%'</if>
-                <if test="_databaseId  == 'mysql'"> CONCAT('%', #{postName}, '%') </if>
+                <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postName}, '%') </if>
             </if>
             <if test = "postCode !=null and postCode!=''">
                 AND a.post_code like
                 <if test="_databaseId  == 'oracle'"> '%,'||#{postCode}||',%'</if>
-                <if test="_databaseId  == 'mysql'"> CONCAT('%', #{postCode}, '%') </if>
+                <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postCode}, '%') </if>
             </if>
             <if test = "postType !=null and postType!=''">
                 AND a.post_type = #{postType}
@@ -77,12 +77,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="postName != null and postName != ''">
             AND a.post_name LIKE
             <if test="_databaseId  == 'oracle'"> '%,'||#{postName}||',%'</if>
-            <if test="_databaseId  == 'mysql'"> CONCAT('%', #{postName}, '%') </if>
+            <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postName}, '%') </if>
         </if>
         <if test = "postCode !=null and postCode!=''">
             AND a.post_code like
             <if test="_databaseId  == 'oracle'"> '%,'||#{postCode}||',%'</if>
-            <if test="_databaseId  == 'mysql'"> CONCAT('%', #{postCode}, '%') </if>
+            <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postCode}, '%') </if>
         </if>
         <if test = "postType !=null and postType!=''">
             AND a.post_type = #{postType}

@@ -5,6 +5,7 @@
  * 1. 增强功能、
  * 2. 支持异步加载数据、增加排序
  * 3. 新增异步加载分页
+ * 4. 新增表格边框显示
  */
 (function($) {
     "use strict";
@@ -54,9 +55,14 @@
             autoTheadWidth(true);
             // 缓存target对象
             target.data('bootstrap.tree.table', target);
+
         }
         // 初始化容器
         var initContainer = function() {
+            if(options.bordered){
+                $('head').append("<style type='text/css'>.bootstrap-tree-table .treetable-thead th {border-left: 1px solid #e7eaec!important;}" +
+                    " .bootstrap-tree-table .treetable-tbody td {border-right: 1px solid #e7eaec!important;}</style>");
+            }
             // 在外层包装一下div，样式用的bootstrap-table的
             var $main_div = $("<div class='bootstrap-tree-table'></div>");
             var $treetable = $("<div class='treetable-table'></div>");
@@ -69,9 +75,9 @@
             if (options.striped) { //是否各行渐变色
                 target.addClass('table-striped');
             }
-            if (options.bordered) { //是否显示边框
-                target.addClass('table-bordered');
-            }
+            // if (options.bordered) { //是否显示边框
+            //     target.addClass('table-bordered');
+            // }
             if (options.hover) {//是否鼠标悬停
                 target.addClass('table-hover');
             }
@@ -568,7 +574,21 @@
         // 缓存并格式化数据
         var formatData = function(data) {
             var _root = options.rootIdValue ? options.rootIdValue : null;
-            var firstCode = data[0][options.parentCode];
+            var firstCode;
+            for(var i=0; i< data.length; i++){
+                var f = data[i][options.parentCode];
+                var flag = false;
+                for(var k=0; k<data.length; k++){
+                    if(data[k][options.code] == f){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag){
+                    firstCode = f;
+                    break;
+                }
+            }
             $.each(data, function(index, item) {
                 // 添加一个默认属性，用来判断当前节点有没有被显示
                 item.isShow = false;
@@ -589,7 +609,7 @@
                     item[options.parentCode] == null ||
                     item[options.parentCode] == firstCode ||
                     item[options.parentCode] == '';
-                if (!item[options.parentCode] || (_root ? (item[options.parentCode] == options.rootIdValue) : _defaultRootFlag)) {
+                if (!item[options.parentCode] || ((_root && _root == firstCode) ? (item[options.parentCode] == options.rootIdValue) : _defaultRootFlag)) {
                     if (!target.data_list["_root_"]) {
                         target.data_list["_root_"] = [];
                     }
@@ -1222,7 +1242,7 @@
         expandAll: false,          // 是否全部展开
         expandFirst: true,         // 是否默认第一级展开--expandAll为false时生效
         striped: false,            // 是否各行渐变色
-        bordered: true,            // 是否显示边框
+        bordered: false,            // 是否显示边框
         hover: true,               // 是否鼠标悬停
         condensed: false,          // 是否紧缩表格
         columns: [],               // 列
@@ -1233,8 +1253,8 @@
         sortOrder: "asc",          // 默认升序
         totalRows: 0,              // 总共条数
         pageNumber: 1,             // 当前页条数
-        pageSize: 6,              // 一页条数
-        pageList: [6, 12, 18],    // 分页数据库
+        pageSize: 6,               // 一页条数
+        pageList: [6, 12, 18],     // 分页数据库
         showTitle: true,           // 是否采用title属性显示字段内容（被formatter格式化的字段不会显示）
         showSearch: true,          // 是否显示检索信息
         showColumns: true,         // 是否显示内容列下拉框

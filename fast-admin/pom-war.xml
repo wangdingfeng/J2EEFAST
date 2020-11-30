@@ -8,7 +8,7 @@
 	<artifactId>fast-admin</artifactId>
 	<name>fast</name> <!--打包时war包名称 -->
 	<packaging>war</packaging>
-	<description>war包对应的pom，打war包，执行【mvn clean package -f pom-war.xml】</description>
+	<description>war包对应的pom文件, 打war包,确保系统maven环境无误,切换当前目录下执行【mvn clean package -f pom-war.xml】</description>
 
 	<dependencies>
 		<dependency>
@@ -16,7 +16,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- 配置servlet,打war包时放开 -->
+		<!-- 配置servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -40,12 +40,12 @@
 			<artifactId>fast-web</artifactId>
 		</dependency>
 
-		<!-- 不用工作流模块注解去掉-->
+		<!-- 不用工作流模块注解去掉
 		<dependency>
 			<groupId>com.j2eefast</groupId>
 			<artifactId>fast-flowable</artifactId>
 			<version>3.2.0</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>
@@ -103,13 +103,6 @@
 			</resource>
 			<!--/////////拷贝子项目资源-////////////// -->
 			<resource>
-				<directory>../fast-system/src/main/resources</directory>
-				<includes>
-					<include>**/**</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
 				<directory>../fast-web/src/main/resources</directory>
 				<includes>
 					<include>**/**</include>
@@ -117,14 +110,14 @@
 				<filtering>false</filtering>
 			</resource>
 
-			<!-- 不要工作流请注释掉-->
+			<!-- 不要工作流请注释掉
 			<resource>
 				<directory>../fast-flowable/src/main/resources</directory>
 				<includes>
 					<include>**/**</include>
 				</includes>
 				<filtering>false</filtering>
-			</resource>
+			</resource>-->
 
 			<resource>
 				<directory>../fast-generator/src/main/resources</directory>
@@ -135,10 +128,20 @@
 			</resource>
 			<resource>
 				<directory>../fast-framework/src/main/resources</directory>
-				<includes>
-					<include>**/**</include>
-				</includes>
 				<filtering>false</filtering>
+				<!-- Added packaging to filter uncompressed core JS(打包排除核心未压缩的文件)-->
+				<excludes>
+	                <exclude>static/libs/SM4.js</exclude>
+	                <exclude>static/plugins/captcha/ase.js</exclude>
+	                <exclude>static/plugins/captcha/crypto-js.js</exclude>
+	                <exclude>static/plugins/captcha/verify.js</exclude>
+	                <exclude>static/plugins/captcha/css/verify.css</exclude>
+	                <exclude>static/js/fastJS.js</exclude>
+	                <exclude>static/js/index.js</exclude>
+	                <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.js</exclude>
+	                <exclude>static/plugins/webuploader/0.1.5/webuploader.ex.css</exclude>
+	                <exclude>static/plugins/layer/layer.js</exclude>
+	            </excludes>
 			</resource>
 			<resource>
 				<directory>../fast-generator/src/main/resources</directory>

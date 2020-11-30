@@ -20,9 +20,9 @@
 				</li>
 				<li class="select-time">
 					<label>执行时间： </label>
-					<input type="text" class="form-control time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+					<@f.input id="startTime" name="beginTime" placeholder="开始时间"/>
 					<span>-</span>
-					<input type="text" class="form-control time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+					<@f.input id="endTime" name="endTime" placeholder="结束时间"/>
 				</li>
 				<li>
 					<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>

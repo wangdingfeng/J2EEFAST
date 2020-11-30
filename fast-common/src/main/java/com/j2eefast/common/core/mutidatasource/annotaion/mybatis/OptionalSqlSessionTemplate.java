@@ -16,13 +16,9 @@ import java.util.Map;
 import static java.lang.reflect.Proxy.newProxyInstance;
 import static org.apache.ibatis.reflection.ExceptionUtil.unwrapThrowable;
 import static org.mybatis.spring.SqlSessionUtils.*;
+
 /**
  * <p>DataSourceContextHolder 动态获取SqlSessionFactory</p>
- *
- * @author: zhouzhou
- * @date: 2020-04-15 14:34
- * @web: http://www.j2eefast.com
- * @version: 1.0.1
  */
 public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 
@@ -168,7 +164,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, ResultHandler handler) {
+	public void select(String statement, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, handler);
 	}
 
@@ -176,7 +172,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, Object parameter, ResultHandler handler) {
+	public void select(String statement, Object parameter, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, parameter, handler);
 	}
 
@@ -184,7 +180,7 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler) {
+	public void select(String statement, Object parameter, RowBounds rowBounds, @SuppressWarnings("rawtypes") ResultHandler handler) {
 		this.sqlSessionProxy.select(statement, parameter, rowBounds, handler);
 	}
 

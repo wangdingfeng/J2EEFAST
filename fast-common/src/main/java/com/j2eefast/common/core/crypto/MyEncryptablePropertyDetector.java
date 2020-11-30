@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.crypto;
 
@@ -7,9 +8,9 @@ import cn.hutool.core.util.StrUtil;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 
 /**
- * <p></p>
+ * <p>分割截取配置文件加密信息</p>
  *
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2019-03-24 20:37
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

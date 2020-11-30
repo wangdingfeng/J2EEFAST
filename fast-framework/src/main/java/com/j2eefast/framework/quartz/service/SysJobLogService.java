@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.quartz.service;
 
 import java.util.Arrays;
@@ -43,6 +47,12 @@ public class SysJobLogService extends ServiceImpl<SysJobLogMapper,SysJobLogEntit
 			    .apply(ToolUtil.isNotEmpty(endTime)," date_format(create_time,'%y%m%d') "
 			    		+ "<= date_format('"+endTime+"','%y%m%d')")
 		);
+		return new PageUtil(page);
+	}
+
+	public PageUtil findPage(Map<String, Object> params,SysJobLogEntity sysJobLog) {
+		Page<SysJobLogEntity> page = this.baseMapper.findPage(new Query<SysJobLogEntity>(params).getPage(),
+														      sysJobLog);
 		return new PageUtil(page);
 	}
 	

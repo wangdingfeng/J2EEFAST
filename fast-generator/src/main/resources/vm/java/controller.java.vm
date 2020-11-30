@@ -58,8 +58,8 @@ public class ${ClassName}Controller extends BaseController{##
 
     #if($table.crud || $table.r || $table.master)##
     #*有查询列表*#
-    @RequestMapping("/list")
     @RequiresPermissions("${permissionPrefix}:list")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {####
         #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
@@ -127,8 +127,8 @@ public class ${ClassName}Controller extends BaseController{##
     #if($table.master)####
     #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
 
-    @RequestMapping("/child/list")
     @RequiresPermissions("${permissionPrefix}:list")
+    @RequestMapping(value = "/child/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData childList(@RequestParam Map<String, Object> params) {####
 
@@ -175,12 +175,12 @@ public class ${ClassName}Controller extends BaseController{##
      * 删除
      */
     @RepeatSubmit
+    @RequiresPermissions("${permissionPrefix}:del")
     @BussinessLog(title = "${functionName}", businessType = BusinessType.DELETE)
     @RequestMapping(value = "/del", method = RequestMethod.POST)
-    @RequiresPermissions("${permissionPrefix}:del")
     @ResponseBody
     public ResponseData del(${pkColumn.javaType}[] ids) {
-      return ${className}Service.del${ClassName}ByIds(ids)? success(): error("删除失败!");
+      return ${className}Service.deleteBatchByIds(ids)? success(): error("删除失败!");
     }##
     #end
 

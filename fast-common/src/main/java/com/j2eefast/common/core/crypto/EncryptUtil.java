@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 
 package com.j2eefast.common.core.crypto;
 import java.security.Key;
@@ -8,15 +12,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.j2eefast.common.core.utils.HexUtil;
-
-
 
 
 public class EncryptUtil
@@ -59,6 +57,7 @@ public class EncryptUtil
      * @return byte[] ������Կֵ
      * @throws EncryptException
      */
+	@SuppressWarnings("restriction")
 	public static byte[] generateKey(byte keyLen) throws EncryptException
 	{
 		try
@@ -142,6 +141,7 @@ public class EncryptUtil
      * @return byte[] ���ܺ�����
      * @throws EncryptException
      */
+	@SuppressWarnings("unlikely-arg-type")
 	public static byte[] doEncrypt(byte mode, byte[] keyValue, byte[] data,
 			byte[] initIV) throws EncryptException
 	{
@@ -515,7 +515,7 @@ public class EncryptUtil
     /**
      *  SM4 反解PinBlock
      * @Description:TODO
-     * @author zhouzhou 18774995071@163.com
+     * @author zhouzhou loveingowp@163.com
      * @time 2019-05-24 11:05
      * @param accountNo 卡号
      * @param pin pin 密码密文
@@ -579,6 +579,7 @@ public class EncryptUtil
 //				accountNo.length() == 19)){
 //			return "1";
 //		}
+		@SuppressWarnings("unused")
 		byte[] JpinKey = null;
 		byte[] pinBlock = null;
 		//byte[] key = HexUtil.convertHexStrToByteArray(keyValue);

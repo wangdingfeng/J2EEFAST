@@ -7,7 +7,6 @@ import com.j2eefast.common.core.utils.ImageUtils;
 import com.j2eefast.common.core.utils.Md5Util;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
 import com.j2eefast.framework.sys.entity.SysFilesEntity;
 import com.j2eefast.framework.sys.service.SysFileService;
@@ -22,7 +21,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;

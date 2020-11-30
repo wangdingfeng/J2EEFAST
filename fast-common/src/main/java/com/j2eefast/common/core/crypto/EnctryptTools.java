@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.crypto;
 import cn.hutool.core.codec.Base64;
@@ -275,7 +276,7 @@ public class EnctryptTools {
     /**
      * 兴业VTM 网银加密方法
      * @Description:3DES 3倍KEY 加密
-     * @author zhouzhou 18774995071@163.com
+     * @author zhouzhou loveingowp@163.com
      * @time 2019-07-30 22:14
      * @param key 24字节key
      * @param pan 账号
@@ -384,7 +385,7 @@ public class EnctryptTools {
 	/**
 	 * 
 	 *  SM4密码解密
-	 * @author zhouzhou 18774995071@163.com
+	 * @author zhouzhou loveingowp@163.com
 	 * @time 2019-05-24 11:01
 	 * @param key 密钥
 	 * @param cardNo 卡号
@@ -402,7 +403,7 @@ public class EnctryptTools {
 	/**
 	 * 
 	 * @Description:网银密码加密
-	 * @author zhouzhou 18774995071@163.com
+	 * @author zhouzhou loveingowp@163.com
 	 * @time 2019-07-12 10:31
 	 * @param key 网银密钥
 	 * @param cardNo 卡号

@@ -1,18 +1,16 @@
 /**
  * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
  */
 package com.j2eefast.common.core.license;
 
 import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import de.schlichtherle.license.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +18,7 @@ import java.util.prefs.Preferences;
 
 /**
  * <p>License校验类</p>
- * @author: zhouzhou Emall:18774995071@163.com
+ * @author: zhouzhou Emall:loveingowp@163.com
  * @date: 2020-03-17 17:10
  * @web: http://www.j2eefast.com
  * @version: 1.0.1

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service.impl;
 
 import cn.hutool.core.date.DateUtil;
@@ -6,9 +10,7 @@ import com.j2eefast.flowable.bpm.entity.CommentEntity;
 import com.j2eefast.flowable.bpm.enums.CommentTypeEnum;
 import com.j2eefast.flowable.bpm.mapper.IFlowableCommentMapper;
 import com.j2eefast.flowable.bpm.service.FlowableCommentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 

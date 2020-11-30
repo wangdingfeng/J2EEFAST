@@ -1,7 +1,7 @@
 package com.j2eefast.common.db.collector;
 
 import cn.hutool.core.date.SystemClock;
-import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
+//import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.db.context.DataSourceContext;
 import lombok.Data;
@@ -48,7 +48,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Consumer;
 /**
  * <p>mybatis配置收集</p>
- *
+ * 本类copy自com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration
  * @author: zhouzhou
  * @date: 2020-04-15 14:12
  * @web: http://www.j2eefast.com
@@ -63,6 +63,7 @@ public class SqlSessionFactoryCreator {
 
 	private final Interceptor[] interceptors;
 
+	@SuppressWarnings("rawtypes")
 	private final TypeHandler[] typeHandlers;
 
 	private final LanguageDriver[] languageDrivers;
@@ -79,7 +80,7 @@ public class SqlSessionFactoryCreator {
 
 	public SqlSessionFactoryCreator(MybatisPlusProperties properties,
 									ObjectProvider<Interceptor[]> interceptorsProvider,
-									ObjectProvider<TypeHandler[]> typeHandlersProvider,
+									@SuppressWarnings("rawtypes") ObjectProvider<TypeHandler[]> typeHandlersProvider,
 									ObjectProvider<LanguageDriver[]> languageDriversProvider,
 									ResourceLoader resourceLoader,
 									ObjectProvider<DatabaseIdProvider> databaseIdProvider,
@@ -166,9 +167,7 @@ public class SqlSessionFactoryCreator {
 		MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setVfs(SpringBootVFS.class);
-//		factory.setTypeAliasesPackage("com.baomidou.springboot.entity");
-//		factory.setTypeEnumsPackage("com.baomidou.springboot.entity.enums");
-
+		factory.setConfiguration(mybatisConfiguration);
 		if (StringUtils.hasText(this.properties.getConfigLocation())) {
 			factory.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfigLocation()));
 		}
@@ -178,11 +177,6 @@ public class SqlSessionFactoryCreator {
 		}else{
 			properties = new Properties();
 		}
-//		try{
-//			properties.put("dbType",JdbcUtils.getDbType(dataSource.getConnection().getMetaData().getURL()).getDb());
-//		}catch (Exception e){
-//			log.error("获取数据库类型异常",e);
-//		}
 		if(dbName.equals(DataSourceContext.FLOWABLE_DATASOURCE_NAME)){
 			String databaseType = initDatabaseType(dataSource);
 			properties.put("prefix", "");
@@ -197,11 +191,9 @@ public class SqlSessionFactoryCreator {
 		}else{
 			factory.setConfigurationProperties(properties);
 		}
-
 		if (!ObjectUtils.isEmpty(this.interceptors)) {
 			factory.setPlugins(this.interceptors);
 		}
-
 		if (this.databaseIdProvider != null) {
 			factory.setDatabaseIdProvider(this.databaseIdProvider);
 		}else {
@@ -229,19 +221,20 @@ public class SqlSessionFactoryCreator {
 		}
 
 		if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
-			Resource[] resource= this.properties.resolveMapperLocations();
+			Resource[] resource = this.properties.resolveMapperLocations();
+			Resource[] resource1 = new Resource[0];
+//			Resource[] resource2 = new Resource[0];
 			if(dbName.equals(DataSourceContext.FLOWABLE_DATASOURCE_NAME)){
-				Resource[] resource1 = new Resource[0];
-				Resource[] resource2 = new Resource[0];
 //				Resource[] resource3 = new Resource[0];
 				try {
 					resource1 = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 							getResources("classpath*:/META-INF/modeler-mybatis-mappings/*.xml");
 //					resource2  = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
-//							getResources("classpath*:flowable-mapper/**/*.xml");
+//							getResources("classpath*:mapper/bpm/*.xml");
 //					resource3  = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 //							getResources("classpath*:mapper/generator/*.xml");
 					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource);
+//					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource2);
 //					Resource[] mapper = ArrayUtils.addAll(mapperLocations,resource2);
 					factory.setMapperLocations(mapperLocations);
 				} catch (IOException e) {
@@ -250,7 +243,6 @@ public class SqlSessionFactoryCreator {
 			}else{
 				factory.setMapperLocations(resource);
 			}
-
 			DataSourceContext.addMapperLocations(dbName,resource);
 			DataSourceContext.addBeforeTime(dbName, SystemClock.now());
 			//

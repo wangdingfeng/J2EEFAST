@@ -1,4 +1,7 @@
-package com.framework;
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */package com.framework;
 
 
 import com.framework.service.DataSourceTestService;

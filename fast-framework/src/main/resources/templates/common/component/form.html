@@ -161,7 +161,7 @@
                    template = false <#-- 控件是否做template用-->
                    tableInfo = "[{field:'username',title:'账号',query:true},{field:'name',title:'姓名'},{field:'compName',title:'归属公司'},
                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱',query:true},{field:'mobile',title:'手机号码',query:true},
-                   {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]" <#-- 显示表格信息-->
+                   {field:'status',title:'状态',dict:'sys_user_show_hide',query:true},{field:'createTime',title:'创建时间'}]" <#-- 显示表格信息-->
 				   >
 	<#local  Assname="${id}"/>
     <#if name != "">
@@ -239,8 +239,8 @@
             </#if>
 
             function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
-                if(typeof userCallback == 'function'){
-                    userCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
+                if(typeof tableCallback == 'function'){
+                    tableCallback('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
                 }
             }
         })
@@ -402,8 +402,9 @@
 <#macro input name
               id = "" <#-- ID 如果ID 不传则跟name一致-->
               value = ""
-              type = "text"
-              dataFormat = "" <#-- 格式化-->
+              type = "text" <#--多增加 date -->
+              dataFormat = "" <#-- 时间格式化-->
+              dataType = "date" <#-- 控件显示-->
               required=false <#-- 是否必输-->
               class = "form-control" <#-- 输入框样式-->
               placeholder=""
@@ -416,14 +417,14 @@
     <#compress>
     <#if butClass!="">
         <div class="input-group">
-        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+               type="<#if type == "date">text<#else>${type}</#if>" <#if type=="password">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
         </div>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     <#else>
-        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}"</#if><#rt>
-               type="${type}" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+        <input id="<#if id =="">${name}<#else>${id}</#if>" name="<#if name != "">${name}<#else>${id}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+               type="<#if type == "date">text<#else>${type}</#if>" value="${value}" <#if type=="password">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
         <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
     </#if>
     </#compress>
@@ -561,7 +562,7 @@
                id = ""
                value = "" <#-- 开关组件默认 0 1 值-->
                default = true <#-- 默认开-->
-               judgeVlue = "0" <#-- 判断值默认0 开-->
+               judgeValue = "0" <#-- 判断值默认0 开-->
 >
     <#local  Assname="${id}"/>
     <#if name != "">
@@ -575,7 +576,7 @@
     </#if>
     <label class="toggle-switch switch-solid">
         <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
-        <input type="checkbox" id="__${AssId?replace(".","_")}swh" <#if value == "" && default>checked="true"</#if> <#if value != "" && value == judgeVlue>checked="true"</#if>/>
+        <input type="checkbox" id="__${AssId?replace(".","_")}swh" <#if value == "" && default>checked="true"</#if> <#if value != "" && value == judgeValue>checked="true"</#if>/>
         <span></span>
     </label>
     <@compress single_line=true>
@@ -603,9 +604,10 @@
                 bizType=""
                 bizId=""
                 value = ""
-                readonly = "false" 	<#-- 是否只读模式 -->
+                readonly = false 	<#-- 是否只读模式 -->
                 maxlength =  10000 <#-- 最大输入长度默认不限-->
                 height = 300 <#-- 高度-->
+                toolbars = "all" <#--工具类 默认所有 -->
                 type = "content" <#--获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)-->
 >
     <#local  Assname="${id}"/>
@@ -627,37 +629,59 @@
                 opt.error("ueditor 插件未引入,请模板引擎header Lis中引入!!");
                 return;
             }
-            window.UEDITOR_CONFIG.serverUrl = window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}";
-            var remarksUE = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
-                maximumWords: ${maxlength},
-                readonly: ${readonly}, initialFrameHeight: ${height},
+            var remarksUE_${AssId?replace(".","_")} = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
+                serverUrl: window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}",
+                <#--maximumWords: ${maxlength},-->
+                readonly: ${readonly?string('true','false')},
+                initialFrameHeight: ${height}
+                <#if toolbars == "text" && !readonly>
+                ,toolbars: [[
+                    'undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                ]]
+                ,elementPathEnabled: false
+                ,wordCount: false
+                <#elseif readonly>
+                ,toolbars: []
+                ,elementPathEnabled: false
+                ,wordCount: false
+                ,enableContextMenu: false
+                <#elseif toolbars != "text" && toolbars!= "all" && !readonly >
+                ,toolbars: [[
+                    'undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                    ,'|',${toolbars}
+                ]]
+                ,elementPathEnabled: false
+                ,wordCount: false
+                </#if>
             });
             /* 更新编辑器内容  remarksUE.updateContent();*/
-            remarksUE.updateContent = function(){
+            remarksUE_${AssId?replace(".","_")}.updateContent = function(){
                 var ${AssId?replace(".","_")}_html = "";
-                if (!remarksUE.hasContents()){
+                if (!remarksUE_${AssId?replace(".","_")}.hasContents()){
                     $('#<#if id == "">${name}<#else>${id}</#if>').val("").change();
                 }else{
                     <#if type == "html">
-                    ${AssId?replace(".","_")}_html = remarksUE.getAllHtml().replace('<!--HTML-->','');
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getAllHtml().replace('<!--HTML-->','');
                     <#elseif type == "content">
-                    ${AssId?replace(".","_")}_html = remarksUE.getContent().replace('<!--HTML-->','');
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getContent().replace('<!--HTML-->','');
                     <#elseif type == "txt">
-                    ${AssId?replace(".","_")}_html = remarksUE.getContentTxt().replace('<!--HTML-->','');
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getContentTxt().replace('<!--HTML-->','');
                     <#elseif type == "plaintxt">
-                    ${AssId?replace(".","_")}_html = remarksUE.getPlainTxt().replace('<!--HTML-->','');
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getPlainTxt().replace('<!--HTML-->','');
                     </#if>
-                    $('#${AssId?replace(".","_")}').val("<!--HTML-->" + ${AssId?replace(".","_")}_html).change();
+                    $('#${AssId?replace(".","_")}').val(${AssId?replace(".","_")}_html).change();
                 }
                 if (typeof window.webuploaderRefresh == 'function'){
-                    window.webuploaderRefresh(${AssId?replace(".","_")}_html);
+                    window.webuploaderRefresh("${AssId?replace(".","_")}",${AssId?replace(".","_")}_html);
                 }
             };
             /* 编辑器加载完成事件*/
-            remarksUE.ready(function(){
-                remarksUE.execCommand('insertHtml', $("#${AssId?replace(".","_")}").val());
-                remarksUE.addListener('contentchange', function(){
-                    remarksUE.updateContent();
+            remarksUE_${AssId?replace(".","_")}.ready(function(){
+                remarksUE_${AssId?replace(".","_")}.execCommand('insertHtml', $("#${AssId?replace(".","_")}").val());
+                remarksUE_${AssId?replace(".","_")}.addListener('contentchange', function(){
+                    remarksUE_${AssId?replace(".","_")}.updateContent();
                 });
             });
         });
@@ -774,7 +798,7 @@
                         </#if>
                     <#else>
                         <#if value == "">
-                            <option value="${d['${itemValue}']}"><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                            <option value="${d['${itemValue}']?default('')}"><@ctx.i18n text = "${d['${itemLabel}']?default('')}"/></option>
                         <#else>
                             <#assign a=0 />
                             <#list value?split(",") as x>

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.adapter;
 
 import cn.hutool.core.util.IdUtil;
@@ -6,10 +10,8 @@ import com.j2eefast.common.core.utils.CookieUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * 安全key,多语言 拦截器

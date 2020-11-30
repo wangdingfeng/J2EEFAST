@@ -1,19 +1,20 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.exception.RxcException;
-import com.j2eefast.common.core.page.Query;
+import com.j2eefast.common.core.utils.MapUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.annotation.DataFilter;
@@ -22,15 +23,13 @@ import com.j2eefast.framework.sys.entity.SysUserEntity;
 import com.j2eefast.framework.sys.mapper.SysCompMapper;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
  * 公司名称
- * @author zhouzhou 18774995071@163.com
+ * @author zhouzhou loveingowp@163.com
  * @time 2018-12-05 08:58
  */
 @Service
@@ -38,6 +37,8 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 
 	@Resource
 	private SysCompDeptService sysCompDeptService;
+	@Resource
+	private SysUserService sysUserService;
 	@Resource
 	private SysCompMapper sysCompMapper;
 
@@ -140,6 +141,34 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 
 	public List<Long> findDetpIdList(Long parentId) {
 		return sysCompMapper.findDetpIdList(parentId);
+	}
+	
+	/**
+	 * 通过id删除
+	 * @param ids
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public boolean delSysCompById(Long id) {
+		
+		// 先判断是否有子公司
+		List<SysCompEntity> list = this.listByMap(new MapUtil().put("parent_id", id));
+		if (ToolUtil.isNotEmpty(list)) {
+			throw new RxcException("请先删除子部门","50001");
+		}
+		// 在判断公司是否有分配到用户上面如果改公司已经分配到用户上,先删除用户在删
+		List<SysUserEntity> users = sysUserService.listByMap(new MapUtil().put("comp_id", id));
+		if (ToolUtil.isNotEmpty(users)) {
+			throw new RxcException("请先删除关联用户","50001");
+		}
+		//删除关联地区
+		sysCompDeptService.removeByMap(new MapUtil().put("comp_id",id));
+
+		if(this.removeById(id)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public List<SysCompEntity> getSubCompEntitys(Long id){

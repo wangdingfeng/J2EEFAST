@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,8 +11,6 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.entity.SysUserPostEntity;
 import com.j2eefast.framework.sys.mapper.SysUserPostMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,12 +1,13 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.controller;
 
-import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.toolkit.Sequence;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.enums.BusinessType;
 import com.j2eefast.common.core.utils.*;
 import com.j2eefast.flowable.bpm.entity.BpmTaskFromEntity;
-import com.j2eefast.flowable.bpm.entity.StartProcessInstanceEntity;
 import com.j2eefast.flowable.bpm.service.BpmTaskFromService;
 import com.j2eefast.framework.annotation.RepeatSubmit;
 import com.j2eefast.common.core.controller.BaseController;
@@ -16,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.ui.ModelMap;
-
-import java.util.*;
-
 import org.springframework.web.bind.annotation.*;
 import com.j2eefast.flowable.bpm.entity.BpmOaFormEntity;
 import com.j2eefast.flowable.bpm.service.BpmOaFormService;

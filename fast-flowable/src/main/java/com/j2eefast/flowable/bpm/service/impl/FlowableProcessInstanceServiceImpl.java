@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service.impl;
 
 import cn.hutool.core.util.StrUtil;
@@ -11,20 +15,15 @@ import com.j2eefast.flowable.bpm.entity.ProcessInstanceEntity;
 import com.j2eefast.flowable.bpm.entity.RevokeProcessEntity;
 import com.j2eefast.flowable.bpm.entity.StartProcessInstanceEntity;
 import com.j2eefast.flowable.bpm.enums.CommentTypeEnum;
-import com.j2eefast.flowable.bpm.mapper.ProcessInstanceMapper;
 import com.j2eefast.flowable.bpm.service.FlowableProcessInstanceService;
 import com.j2eefast.flowable.bpm.service.IFlowableBpmnModelService;
 import com.j2eefast.framework.utils.Constant;
-import org.flowable.bpmn.model.Activity;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.flowable.engine.runtime.Execution;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

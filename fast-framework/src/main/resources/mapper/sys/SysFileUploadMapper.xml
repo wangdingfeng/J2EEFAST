@@ -40,34 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="sysFileUploadJoins"/>
 		WHERE a.id = #{id}
     </select>
-    
-     <!--  根据获取实体List   -->
-     <select id="selectListSysFileUpload" resultType="com.j2eefast.framework.sys.entity.SysFileUploadEntity">
-		SELECT 
-			<include refid="sysFileUploadColumns"/>
-		FROM sys_file_upload a
-        <include refid="sysFileUploadJoins"/>
-		<where>
-             <if test="fileId != null "> and a.file_id = #{fileId} </if>
-   
-            <if test="fileName != null  and fileName != ''">
-                     and a.file_name LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{fileName}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{fileName}+'%'</if>
-                     <if test="_databaseId == 'mysql'">concat('%',#{fileName},'%')</if>
-			</if>
-			
-              <if test="fileType != null  and fileType != ''"> and a.file_type = #{fileType} </if>
-              <if test="bizId != null "> and a.bizId = #{bizId} </if>
-              <if test="bizType != null  and bizType != ''"> and a.biz_type = #{bizType} </if>
-                        <if test = "sql_filter !=null and sql_filter!=''">
-                   and ${sql_filter}
-               </if>    
-		</where>
-	 </select>
-	 
-	 
-	 
+
 	  <!--  根据获取实体 page   -->
      <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysFileUploadEntity">
 		SELECT 
@@ -93,7 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 
 	 
 	 
-	 <select id="selectList"  resultType="com.j2eefast.framework.sys.entity.SysFileUploadEntity"  parameterType="com.j2eefast.framework.sys.entity.SysFileUploadEntity">
+	 <select id="findList"  resultType="com.j2eefast.framework.sys.entity.SysFileUploadEntity"
+             parameterType="com.j2eefast.framework.sys.entity.SysFileUploadEntity">
 	    SELECT 
 			<include refid="sysFileUploadColumns"/>
 		FROM  sys_file_upload a

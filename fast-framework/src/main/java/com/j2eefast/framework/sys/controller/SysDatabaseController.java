@@ -1,17 +1,15 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.sys.controller;
 
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
-import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.common.core.enums.BusinessType;
-import com.j2eefast.common.core.mutidatasource.annotaion.mybatis.OptionalSqlSessionTemplate;
 import com.j2eefast.common.core.utils.*;
-import com.j2eefast.common.db.context.DataSourceContext;
-import com.j2eefast.common.db.context.SqlSessionFactoryContext;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
 import com.j2eefast.framework.annotation.RepeatSubmit;
-import com.j2eefast.framework.sys.entity.SysMenuEntity;
 import com.j2eefast.framework.sys.service.SysDatabaseService;
 import com.j2eefast.framework.utils.Constant;
 import lombok.extern.log4j.Log4j;
@@ -19,11 +17,8 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Map;
 
 /**

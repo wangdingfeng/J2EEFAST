@@ -3,6 +3,7 @@ package com.j2eefast.generator.gen.service;
 
 import com.j2eefast.generator.gen.entity.ExampleTestChildEntity;
 import com.j2eefast.generator.gen.mapper.ExampleTestChildMapper;
+import cn.hutool.core.convert.Convert;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -20,7 +21,7 @@ import java.util.Arrays;
  *
  * 工作经历Service接口
  * @author: ZhouZhou
- * @date 2020-10-19 22:26
+ * @date 2020-11-24 20:40
  */
 @Service
 public class ExampleTestChildService extends ServiceImpl<ExampleTestChildMapper,ExampleTestChildEntity> {
@@ -32,7 +33,7 @@ public class ExampleTestChildService extends ServiceImpl<ExampleTestChildMapper,
      */
 	public PageUtil findPage(Map<String, Object> params) {
         QueryWrapper<ExampleTestChildEntity> queryWrapper = new QueryWrapper<ExampleTestChildEntity>();
-                  		String testId = (String) params.get("testId");
+                  		Long testId = Convert.toLong(params.get("testId"));
 		queryWrapper.eq(ToolUtil.isNotEmpty(testId), "test_id", testId);
 		Page<ExampleTestChildEntity> page = exampleTestChildMapper.selectPage(new Query<ExampleTestChildEntity>(params).getPage(), queryWrapper);
 				return new PageUtil(page);
@@ -63,7 +64,7 @@ public class ExampleTestChildService extends ServiceImpl<ExampleTestChildMapper,
      * 批量删除
      */
 	@Transactional(rollbackFor = Exception.class)
-	public boolean delExampleTestChildByIds(Long[] ids) {																										
+	public boolean deleteBatchByIds(Long[] ids) {																										
 return this.removeByIds(Arrays.asList(ids));
 
 	}

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.utils;
 
 import org.springframework.aop.framework.AopContext;
@@ -82,6 +86,7 @@ public class SpringUtil implements BeanFactoryPostProcessor{
 	 * @param <T>
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T getAopProxy(T invoker){
 		return (T) AopContext.currentProxy();
 	}

@@ -19,7 +19,7 @@
         <div class="col-sm-4">
             <h4>技术选型：</h4>
             <ol>
-                <li>核心框架：Spring Boot 2.2.5.RELEASE </li>
+                <li>核心框架：Spring Boot 2.X </li>
                 <li>安全框架：Apache Shiro</li>
                 <li>模板引擎：Freemarker</li>
                 <li>工作流引擎：Flowable 6.4.2</li>
@@ -28,7 +28,7 @@
                 <li>定时任务: Quartz</li>
                 <li>数据库连接池：Druid 1.10.1</li>
                 <li>工具类：Hutool 4.5.8</li>
-                <li>更多……</li> 
+                <li>更多……</li>
             </ol>
         </div>
 
@@ -46,10 +46,48 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#version" href="#v11" aria-expanded="true">v2.1.1<code class="pull-right">2020.12.XX</code></a>
+                                        </h5>
+                                    </div>
+                                    <div id="v11" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ol>
+                                                <li>1. 系统核心功能全面支持PostgreSql数据库.</li>
+                                                <li>2. 修复表格选择组件查询不能下拉问题</li>
+                                                <li>3. 升级阿里云OSS依赖</li>
+                                                <li>4. 组件支持阿里云OSS</li>
+                                               	<li>5. 调整项目结构移除system模块</li>
+												<li>6. 修复多选表格组件回显勾选问题</li>
+												<li>7. 增强输入组件支持日期时间选择</li>
+												<li>8. 细化前端模板引擎libs引入JS,按需引入减少无关JS引入</li>
+												<li>9. 优化表格边框设置、允许表格列拉伸、支持通过参数配置是否需要显示边框</li>
+												<li>10.新增表单单元格过长使用隐藏函数可以复制单元格内容</li>
+												<li>11.升级Spring Boot 2.2.10.RELEASE 版本阻止安全漏洞(CVE-2020-5421)</li>
+												<li>12.修复日志查询业务表格字段过长显示不友好问题</li>
+												<li>13.修复安全认证关闭，登录异常问题</li>
+												<li>14.修复树表父子节点错乱问题</li>
+												<li>15.修改登录图片修改成base64</li>
+												<li>16.修复角色管理序号字段排序问题</li>
+												<li>17.优化登录安全认证</li>
+												<li>18.新增文件预览器支持gif预览</li>
+												<li>19.移除多余文件</li>
+												<li>20.优化数据库自动填充delFlag字段</li>
+												<li>21.修复mybatis-plus配置无效问题</li>
+												<li>22.优化Shiro 密钥问题</li>
+                                                <li>23.升级Oshi到最新版本 5.2.5</li>
+                                                <li>24.升级Shiro到最新版 1.7.0,阻止权限绕过漏洞</li>
+                                                <li>25.优化其他细节</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#version" href="#v10" aria-expanded="true">v2.1.0<code class="pull-right">2020.10.20</code></a>
                                         </h5>
                                     </div>
-                                    <div id="v10" class="panel-collapse collapse in">
+                                    <div id="v10" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <ol>
                                                 <li>1. 增加core中的分步式锁注解，实现业务id方式的注解锁.</li>
@@ -379,11 +417,11 @@
                         <p class="mt5"><i class="fa fa-qq"></i> 官方技术交流QQ群：<a href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank">805468934</a>
                         </p>
                         <p class="mt5"><i class="fa fa-envelope-open-o"></i> <strong>免责声明：</strong>
-                        <li style="color: red;"><strong>1. 本项目代码全部开源，无需任何费用。如果有人向你贩卖本系统都是骗子!</strong></li>
+                        <li style="color: red;"><strong>1. 本项目代码全部开源，免费。但请遵循开源协议!</strong></li>
                         <li>2. 不得将 J2eeFAST于危害国家安全、荣誉和利益的行为，不能以任何形式用于非法为目的的行为,否则后果自负.</li>
                         <li>3. J2eeFAST前身主要用于银行项目,本身很注重安全因素,可以从项目登陆可以看出。再者本身项目100%开源，但是您任需了解是软件皆有漏洞，任何人都无法保证软件100%没有漏洞。所以由本软件漏洞造成损失不予赔偿，同时也不承担任何因使用本软件而产生的相关法律责任。也请在软件上线前进行必要的安全检测，避免安全问题发生.</li>
                         </p>
-                        <p class="mt10"><i class="fa fa-heartbeat" style="color: red"></i><strong><mark><a href="https://www.yuque.com/u1174484/j2eefast/exlton" target="_blank">捐赠通道</a></mark></strong>
+                        <p class="mt10"><i class="fa fa-heartbeat" style="color: red"></i><strong><mark><a href="javascript:pay();" >捐赠-支持作者</a></mark></strong>
                         <p class="mt20">
                             <a class="btn btn-success btn-outline" href="https://gitee.com/zhouhuanOGP/J2EEFAST" target="_blank">
                                 <i class="fa fa-cloud"> </i> 访问码云
@@ -400,7 +438,11 @@
 <@footer>
 <script type="text/javascript">
     function show() {
-        opt.modal.openView("collect.png","${ctxStatic}/static/img/collect.png",800,700);
+        opt.modal.openView("collect.png","${ctxStatic}/static/img/collect.png",800,600);
+    }
+
+    function pay() {
+        opt.modal.openView("pay.png","${ctxStatic}/static/img/pay.png",800,500);
     }
 </script>
 </@footer>

@@ -11,6 +11,9 @@
         <if test="_databaseId  == 'mysql'">
             ifnull(perms,'') as perms,
         </if>
+        <if test="_databaseId  == 'postgresql'">
+            COALESCE(perms,'') as perms,
+        </if>
         target, icon,module_codes, create_by, create_time
 		from sys_menu
     </sql>
@@ -26,9 +29,16 @@
 
     <sql id="selectMenuVo1_Orcale">
         select m.id, m.parent_id,
-        m.name, m.url, m.hide, nvl(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time from
+        m.name, m.url, m.hide, nvl(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
         (SELECT distinct REGEXP_SUBSTR(t.module_codes, '[^,]+', 1, level) as cs,t.*
         from sys_menu t connect by level   <![CDATA[ <=  ]]> regexp_count(t.module_codes, ',') + 1 )   m
+    </sql>
+
+    <sql id="selectMenuVo1_Postgresql">
+        SELECT m.id, m.parent_id,
+        m.name, m.url, m.hide, COALESCE(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
+        (SELECT unnest(string_to_array(t.module_codes,',')) AS cs,t.*
+        FROM sys_menu t )   m
     </sql>
 
     <select id="selectMenuByMenId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
@@ -37,10 +47,13 @@
         m.target as target,m.module_codes as moduleCodes,
         m.icon as icon,
         <if test="_databaseId  == 'oracle'">
-            nvl(m.perms,'') as perms,
+            NVL(m.perms,'') as perms,
         </if>
-        <if test="_databaseId  == 'mysql'">
-            ifnull(m.perms,'') as perms,
+        <if test="_databaseId  == 'mysql' ">
+            IFNULL(m.perms,'') as perms,
+        </if>
+        <if test="_databaseId  == 'postgresql'">
+            COALESCE(m.perms,'') as perms,
         </if>
         rm.name as parentName
         from sys_menu as m
@@ -67,6 +80,9 @@
         <if test="_databaseId  == 'mysql'">
             <include refid="selectMenuVo1_Mysql"/>
         </if>
+        <if test="_databaseId  == 'postgresql'">
+            <include refid="selectMenuVo1_Postgresql"/>
+        </if>
         <if test="moduleCodes != null and moduleCodes != ''">
             WHERE m.cs in
             <foreach item="code" collection="moduleCodes.split(',')" open="(" separator="," close=")">
@@ -83,6 +99,9 @@
         <if test="_databaseId  == 'mysql'">
             <include refid="selectMenuVo1_Mysql"/>
         </if>
+        <if test="_databaseId  == 'postgresql'">
+            <include refid="selectMenuVo1_Postgresql"/>
+        </if>
         where m.parent_id = #{parentId} and m.hide = 0
         and m.cs = #{modules}
         order by m.order_num asc
@@ -94,6 +113,9 @@
         </if>
         <if test="_databaseId  == 'mysql'">
             <include refid="selectMenuVo1_Mysql"/>
+        </if>
+        <if test="_databaseId  == 'postgresql'">
+            <include refid="selectMenuVo1_Postgresql"/>
         </if>
         left join sys_role_menu rm on m.id = rm.menu_id
         left join sys_user_role ur on rm.role_id = ur.role_id
@@ -118,8 +140,9 @@
 
     <select id="findMenuTree" parameterType="Long" resultType="String">
 		select concat(m.id,
-        <if test="_databaseId  == 'oracle'"> nvl(m.perms,'') </if>
-        <if test="_databaseId  == 'mysql'">ifnull(m.perms,'') </if>
+        <if test="_databaseId  == 'oracle'"> NVL(m.perms,'') </if>
+        <if test="_databaseId  == 'mysql'">IFNULL(m.perms,'') </if>
+        <if test="_databaseId  == 'postgresql'">COALESCE(m.perms,'') </if>
 		) as perms
 		from sys_menu m
 		left join sys_role_menu rm on m.id = rm.menu_id
@@ -133,7 +156,7 @@
             <if test="name != null and name != ''">
                 AND name like
                 <if test="_databaseId  == 'oracle'"> '%,'||#{name}||',%'</if>
-                <if test="_databaseId  == 'mysql'"> concat('%', #{name}, '%') </if>
+                <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> concat('%', #{name}, '%') </if>
             </if>
             <if test="hide != null">
                 AND hide = #{hide}
@@ -150,6 +173,9 @@
         <if test="_databaseId  == 'mysql'">
             ifnull(m.perms,'') as perms,
         </if>
+        <if test="_databaseId  == 'postgresql'">
+            COALESCE(m.perms,'') as perms,
+        </if>
         m.target,m.type, m.icon, m.order_num, m.create_time
         from sys_menu m
         left join sys_role_menu rm on m.id = rm.menu_id
@@ -159,7 +185,7 @@
         <if test="name != null and name != ''">
             AND m.name like
             <if test="_databaseId  == 'oracle'"> '%,'||#{name}||',%'</if>
-            <if test="_databaseId  == 'mysql'"> concat('%', #{name}, '%') </if>
+            <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> concat('%', #{name}, '%') </if>
         </if>
         <if test="hide != null">
             AND m.hide = #{hide}
@@ -179,6 +205,9 @@
         </if>
         <if test="_databaseId  == 'mysql'">
             ifnull(perms,'') as perms,
+        </if>
+        <if test="_databaseId  == 'postgresql'">
+            COALESCE(m.perms,'') as perms,
         </if>
 		m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time
 		from sys_menu m

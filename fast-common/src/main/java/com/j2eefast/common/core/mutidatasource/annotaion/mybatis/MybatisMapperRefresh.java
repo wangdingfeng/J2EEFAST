@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.mutidatasource.annotaion.mybatis;
 
 import cn.hutool.core.date.SystemClock;
@@ -151,6 +155,7 @@ public class MybatisMapperRefresh {
 	 * @param list
 	 * @param namespace
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	private void cleanParameterMap(List<XNode> list, String namespace) {
 		for (XNode parameterMapNode : list) {
 			String id = parameterMapNode.getStringAttribute("id");

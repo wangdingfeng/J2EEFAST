@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2eefast.flowable.bpm.enums.CommentTypeEnum;
@@ -7,6 +11,9 @@ import java.util.Date;
 
 /**
  *
+ * @author: zhouzhou
+ * @date: 2020-04-27 17:35
+ * @version: 1.0.1
  */
 public class CommentEntity implements Serializable {
     /**

@@ -1,6 +1,6 @@
 /*!
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
- *
+ * No deletion without permission
  * navtab 定义Tab
  * @author ZhouHuan
  * @data 2020-02-20
@@ -40,7 +40,6 @@ layui.define(['element'], function(exports){
 	     var $container;
 	     if(typeof(_config.elem) === 'string') {
 		     $container = $('' + _config.elem + '');
-		     //console.log($container);
 	     }
 	     if(typeof(_config.elem) === 'object') {
 		     $container = _config.elem;
@@ -87,7 +86,11 @@ layui.define(['element'], function(exports){
 	    // 若不存在
 	    if(tabIndex === -1){
 			opt.block('','#content-main');
-	    	var content = '<iframe width="100%" height="100%" src="' + data.href + '" data-id="' + data.id + '" data-module="'+data.module+'" class="larry-iframe"></iframe>';
+	    	var content = '<iframe width="100%" height="100%" src="' + data.href + '" data-id="' + data.id +'"';
+			if(typeof(data.module) !== "undefined"){
+				content += ' data-module="'+data.module+'"';
+			}
+			content += ' class="larry-iframe"></iframe>';
 		    var title = '';
 		    // 若icon有定义
 		    if(typeof(data.icon) !== "undefined"){
@@ -145,7 +148,6 @@ layui.define(['element'], function(exports){
 
 	        //添加TBA关闭事件
 			ELEM.titleBox.find('li').children('i.layui-tab-close[data-id="' + data.id + '"]').on('click', function() {
-
 				var menus =  opt.storage.get("menu");
 				if(menus){
 					menus = JSON.parse(menus);
@@ -161,8 +163,6 @@ layui.define(['element'], function(exports){
 				// 		myMenu.splice(i, 1);
 				// 	}
 				// }
-
-				//store("menu",JSON.stringify(myMenu));
 
 				//删除的窗口是否有父窗口有父窗口跳转父窗口
 				var $f = false, $index;
@@ -263,8 +263,14 @@ layui.define(['element'], function(exports){
 					, 30);
 			});
 
+			var tempUrl = opt.storage.get("nowPath");
+
 			//切换到当前打开的选项卡
 			element.tabChange(ELEM.tabFilter, data.id);
+
+			if(data.id == '0'){
+				opt.storage.set("nowPath",tempUrl);
+			}
 
 			if((typeof(data.panel) == "undefined") && data.id !== '0'){
 				//保存用户操作菜单

@@ -1,5 +1,8 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.service;
-
 
 import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.core.utils.ResponseData;

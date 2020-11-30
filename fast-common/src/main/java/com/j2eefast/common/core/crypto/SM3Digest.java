@@ -1,13 +1,9 @@
 package com.j2eefast.common.core.crypto;
 
 import java.math.BigInteger;
-
 import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
-
 import org.bouncycastle.math.ec.ECPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SM3Digest
 {

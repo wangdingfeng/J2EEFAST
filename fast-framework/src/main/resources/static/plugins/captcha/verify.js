@@ -53,7 +53,7 @@
         	mode : 'fixed',	//弹出式pop，固定fixed
         	vOffset: 5,
             vSpace : 5,
-            explain : '向右滑动完成验证',
+            explain : '向右拖动滑块填充拼图',
             imgSize : {
 	        	width: '360px',
 	        	height: '155px',
@@ -134,6 +134,22 @@
             
             //刷新
             _this.$element.find('.verify-refresh').on('click', function() {
+				var ele = $(this).find('img');
+				var css = ele.css('transform');
+				var deg;
+				var step=90;
+				if(css === 'none'){
+					deg = 90;
+				} else {
+					var values = css.split('(')[1].split(')')[0].split(',');
+					var a = values[0];
+					var b = values[1];
+					var c = values[2];
+					var d = values[3];
+					deg = _this.getmatrix(a,b,c,d);
+					deg = deg+step;
+				}
+				ele.css({'transform':'rotate('+deg+'deg)'});
 				_this.refresh();
             });
         },
@@ -159,7 +175,7 @@
 											<i class="iconfont icon-close"></i>
 										</span>
 									</div>
-									<div class="verifybox-bottom" style="padding:15px">
+									<div class="verifybox-bottom" style="padding:10px 15px 15px 15px">
 										<div style="position: relative;">`
 
 			if (this.options.mode == 'pop') {
@@ -168,7 +184,8 @@
 			panelHtml += `<div class="verify-img-out">
 							<div class="verify-img-panel">
 								<div class="verify-refresh" style="z-index:3">
-									<i class="iconfont icon-refresh"></i>
+								<img src="data:image/png;base64,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">
+<!--									<i class="iconfont icon-refresh"></i>-->
 								</div>
 								<span class="verify-tips"  class="suc-bg"></span>
 								<img src="" class="backImg" style="width:100%;height:100%;display:block">
@@ -387,7 +404,6 @@
         	this.htmlDoms.move_block.animate({'left':'0px'}, 'fast');
 			this.htmlDoms.left_bar.animate({'width': parseInt(this.setSize.bar_height)}, 'fast');
 			this.htmlDoms.left_bar.css({'border-color': '#ddd'});
-			
 			this.htmlDoms.move_block.css('background-color', '#fff');
 			this.htmlDoms.icon.css('color', '#000');
 			this.htmlDoms.icon.removeClass('icon-close');
@@ -404,6 +420,33 @@
 			});
 			this.htmlDoms.sub_block.css('left', "0px");
         },
+
+			/*
+			* 解析matrix矩阵，0°-360°，返回旋转角度
+			* 当a=b||-a=b,0<=deg<=180
+			* 当-a+b=180,180<=deg<=270
+			* 当a+b=180,270<=deg<=360
+			*
+			* 当0<=deg<=180,deg=d;
+			* 当180<deg<=270,deg=180+c;
+			* 当270<deg<=360,deg=360-(c||d);
+			* */
+		getmatrix: function(a,b,c,d){
+			var aa=Math.round(180*Math.asin(a)/ Math.PI);
+			var bb=Math.round(180*Math.acos(b)/ Math.PI);
+			var cc=Math.round(180*Math.asin(c)/ Math.PI);
+			var dd=Math.round(180*Math.acos(d)/ Math.PI);
+			var deg=0;
+			if(aa==bb||-aa==bb){
+				deg=dd;
+			}else if(-aa+bb==180){
+				deg=180+cc;
+			}else if(aa+bb==180){
+				deg=360-cc||360-dd;
+			}
+			return deg>=360?0:deg;
+			//return (aa+','+bb+','+cc+','+dd);
+		}
     };
     
     
@@ -510,6 +553,22 @@
         	
         	 //刷新
             _this.$element.find('.verify-refresh').on('click', function() {
+				var ele = $(this).find('img');
+				var css = ele.css('transform');
+				var deg;
+				var step=90;
+				if(css === 'none'){
+					deg = 90;
+				} else {
+					var values = css.split('(')[1].split(')')[0].split(',');
+					var a = values[0];
+					var b = values[1];
+					var c = values[2];
+					var d = values[3];
+					deg = _this.getmatrix(a,b,c,d);
+					deg = deg+step;
+				}
+				ele.css({'transform':'rotate('+deg+'deg)'});
             	_this.refresh();
             });
         	
@@ -535,7 +594,7 @@
 											<i class="iconfont icon-close"></i>
 										</span>
 									</div>
-									<div class="verifybox-bottom" style="padding:15px">
+									<div class="verifybox-bottom" style="padding:10px 15px 15px 15px">
 										<div style="position: relative;">`
 
 			if (this.options.mode == 'pop') {
@@ -545,7 +604,8 @@
 			panelHtml += `<div class="verify-img-out">
 							<div class="verify-img-panel">
 								<div class="verify-refresh" style="z-index:3">
-									<i class="iconfont icon-refresh"></i>
+								<img src="data:image/png;base64,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">
+<!--									<i class="iconfont icon-refresh"></i>-->
 								</div>
 								<img src='' class="back-img" width="${this.setSize.img_width}" height="${this.setSize.img_height}">
 							</div>
@@ -613,6 +673,23 @@
 				}
 			})
         
+		},
+
+		getmatrix: function(a,b,c,d){
+			var aa=Math.round(180*Math.asin(a)/ Math.PI);
+			var bb=Math.round(180*Math.acos(b)/ Math.PI);
+			var cc=Math.round(180*Math.asin(c)/ Math.PI);
+			var dd=Math.round(180*Math.acos(d)/ Math.PI);
+			var deg=0;
+			if(aa==bb||-aa==bb){
+				deg=dd;
+			}else if(-aa+bb==180){
+				deg=180+cc;
+			}else if(aa+bb==180){
+				deg=360-cc||360-dd;
+			}
+			return deg>=360?0:deg;
+			//return (aa+','+bb+','+cc+','+dd);
 		},
 		pointTransfrom:function(pointArr,imgSize){
 			var newPointArr = pointArr.map(p=>{

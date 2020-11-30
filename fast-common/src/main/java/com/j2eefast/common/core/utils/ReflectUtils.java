@@ -297,7 +297,6 @@ public class ReflectUtils extends ReflectUtil {
 			if(!srcValue.equals(targetValue)) {
 				modifyContent.append(srcName + ": form" + targetValue + " 'to' " + srcValue + "';");
 			}
-			
 		}
 		return modifyContent.toString();
 	}

@@ -1,14 +1,4 @@
-/** 
-* @Project : fast-generator
-* @Title : Options.java
-* @Package com.j2eefast.generator.gen.entity
-* @author mfksn001@163.com
-* @date 2020年6月10日 上午9:04:21
-* @Copyright : 2020 
-* @version V1.0 
-*/
 package com.j2eefast.generator.gen.util;
-
 
 /**
   * @ClassName Options
@@ -29,6 +19,9 @@ public class Option {
     /** 树名称字段 */
     private String treeName;
 
+    /** 是否异步加载 1 异步 0 同步*/
+    private String async;
+
 	public String getTreeCode() {
 		return treeCode;
 	}
@@ -37,6 +30,13 @@ public class Option {
 		this.treeCode = treeCode;
 	}
 
+	public String getAsync() {
+		return async;
+	}
+
+	public void setAsync(String async) {
+		this.async = async;
+	}
 
 	public String getTreeParentCode() {
 		return treeParentCode;
