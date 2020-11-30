@@ -14,8 +14,8 @@ J2eeFAST 是一个 Java EE 企业级快速开发平台， **致力于打造中�
 
 #### 软件架构 
 
-1.  _核心框架：Spring Boot 2.2.5.RELEASE_ 
-2.   _安全框架：Apache Shiro 1.4.2_ 
+1.  _核心框架：Spring Boot 2.X
+2.   _安全框架：Apache Shiro 1.X
 3.   _模板引擎：Freemarker_ 
 4.   _前端：AdminLTE 2.3.8, Bootstrap 3.3.7, Bootstrap-Table 1.11.0, JQuery 3.3.1_ 
 5.   _持久层框架：MyBatis-Plus 3.3.1_ 
@@ -33,35 +33,8 @@ J2eeFAST 是一个 Java EE 企业级快速开发平台， **致力于打造中�
 
 #### [内置功能](https://www.yuque.com/u1174484/j2eefast/wtakf0)
 
-**common 模块中crypto包下有关于银行加密算法 DES 3DES 国密，怎么算MAC 银行密码加密、都是通过项目实践的。 对这块感兴趣的可以学习下** 
- 
-**产品许可生成数字证书 保护个人与企业的软件作品权益，降低盗版造成的损失**
 
- **项目配置文件yml对于敏感字段如数据库密码，证书密码，等重要敏感信息加密。防止敏感信息直接暴露！#注意 数据加密安全性其实是相对的,什么加密如果私钥或者key泄露都是无用,这个世界上没有一种加密方法是绝对安全的。这种加密方法只能做到：防君子不防小人！！**
-```
-写法需要加密的参数 ENC{} DES{} 包裹 或者 SM4{} 包裹 系统会自动识别，其他正常参数不加即可
-例如:
-spring:
-    datasource:
-        #默认(主)数据库配置
-        default:
-            driverClassName: com.mysql.cj.jdbc.Driver
-            url: SM4(YPS0KwUcR6ZETrk1CkHPQydzrGO0WEGKb23G4SYdxRHfCqpDI+CrZfEhdxrjkLrH8TlmyqsC50mP/q4ZJzyJfauQIZ3AbsgQ3k/XzDwsrvSI+58c1UuMKaZW3zdIPj1wg+dUmfldaW4i3CQOfHGXwXL+hpVTIjpUBPZFewkPcnk=)
-```
-#### 安装教程
-
-1.  需要准备环境 Mysql5.7以上、 JDK 1.8、 Maven 3.3 、Redis4.X 以上 、开发工具 eclipse 或者 IEDA
-2.  下载源码 git clone https://gitee.com/zhouhuanOGP/J2EEFAST.git
-3.  编译代码
-    找到根目录下 pom.xml，执行 mvn clean install 命令编译一键打包。
-    一般来说不会有什么问题，如果还是编译不成功，可以按照优先级逐个编译试一试。
-4.  导入数据库
-    db目录里initDb.sql 有建库建表语句按步骤执行即可
-5.  将代码导入开发工具fast-admin启动模块- 执行 FastApplication 类即可
-注意:
-    fast-admin模块 资源目录 application-Test.yml 中修改连接数据库 链接地址 如果你是按照initDb.sql 建库，test.sql导入初始数据 则账号密码用户名都不需要修改
-
-6. ****[搭建文档](https://www.yuque.com/u1174484/j2eefast/kt0nbi)**** 
+#### ****[搭建文档](https://www.yuque.com/u1174484/j2eefast/kt0nbi)**** 
 #### 参与贡献
 
 1.  本项目设计思路借鉴了当前Gitee中 开源项目中后台管理框架众多优秀项目的设计思路
@@ -70,38 +43,33 @@ spring:
 
 ####  版本更新
 * 本次更新
-    * `2020-10-20 v2.1.0 ` 
-    - 增加core中的分步式锁注解，实现业务id方式的注解锁.
-    - 增加User View页面的权限树，显示该用户已获取的权限
-    - 将Shiro的自己定义url filter移动配置application.yml
-    - 优化shiro权限,优化session管理
-    - 增加select组件的view方式
-    - 增加了fastJS.js中获取菜单的函数，用于打开指定的页面
-    - 优化项目启动配置
-    - 优化登录页面样式
-    - 修复SM4加密jar包引用冲突问题
-    - 修复表格主子表子表编辑数据更新问题
-    - 修复checkbox组件字典表回显问题
-    - 新增树状表支持异步加载及分页显示
-    - 优化树表UI细节
-    - 扩增表格行titel提示 修复转义问题
-    - 优化重写admin-LTE、Gitee登录页面去除多余样式
-    - 新增表单导向插件
-    - 新增表单导向组件、演示示例
-    - 新增信息通知演示示例
-    - 新增主页面加载动画
-    - 修复图片剪切组件上传大小限制问题
-    - 优化主要样式、与便签样式
-    - 屏蔽登录提示音
-    - 新增一套Ionicons 系统图标. 完全融合系统方便使用
-    - 升级fastjson到最新版1.2.74
-    - 新增系统防护请求伪造（CSRF）攻击、通过配置文件控制
-    - 去除系统include.html模板引用
-    - 修复title提示问题
-    - 删除多余js
-    - 其他细节优化
-        
-        
+    * `2020-11-30 v2.1.1 ` 
+    - 系统核心功能全面支持PostgreSql数据库.
+    - 修复表格选择组件查询不能下拉问题
+    - 升级阿里云OSS依赖
+    - 组件支持阿里云OSS
+    - 调整项目结构移除system模块
+    - 修复多选表格组件回显勾选问题
+    - 增强输入组件支持日期时间选择
+    - 细化前端模板引擎libs引入JS,按需引入减少无关JS引入
+    - 优化表格边框设置、允许表格列拉伸、支持通过参数配置是否需要显示边框
+    - 新增表单单元格过长使用隐藏函数可以复制单元格内容
+    - 升级Spring Boot 2.2.10.RELEASE 版本阻止安全漏洞(CVE-2020-5421)
+    - 修复日志查询业务表格字段过长显示不友好问题
+    - 修复安全认证关闭，登录异常问题
+    - 修复树表父子节点错乱问题
+    - 修改登录图片修改成base64
+    - 修复角色管理序号字段排序问题
+    - 优化登录安全认证
+    - 新增文件预览器支持gif预览
+    - 移除多余文件
+    - 优化数据库自动填充delFlag字段
+    - 修复mybatis-plus配置无效问题
+    - 优化Shiro 密钥问题
+    - 升级Oshi到最新版本 5.2.5
+    - 升级Shiro到最新版 1.7.0,阻止权限绕过漏洞
+    - 优化其他细节
+    
 2. [更新日志](https://www.yuque.com/u1174484/j2eefast/yscyux) 
 
 #### 关于系统
@@ -112,7 +80,7 @@ spring:
 * 关于更新：项目现在会放缓更新优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
 * QQ群：[805468934](https://jq.qq.com/?_wv=1027&k=5xTlnN6)
 #### 免责声明：
- 1. **本项目代码全部开源，无需任何费用。如果有人向你贩卖本系统都是骗子!** 
+ 1. **本项目代码全部开源，免费。但请遵循开源协议** 
 1. 不得将 J2eeFAST于危害国家安全、荣誉和利益的行为，不能以任何形式用于非法为目的的行为,否则后果自负
 1. J2eeFAST前身主要用于银行项目,本身很注重安全因素,可以从项目登陆可以看出。再者本身项目100%开源，但是您任需了解是软件皆有漏洞，任何人都无法保证软件100%没有漏洞。所以由本软件漏洞造成损失不予赔偿，同时也不承担任何因使用本软件而产生的相关法律责任。也请在软件上线前进行必要的安全监测，避免安全问题发生。
 
