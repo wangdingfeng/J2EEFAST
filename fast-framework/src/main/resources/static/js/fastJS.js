@@ -2,15 +2,8 @@
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
- * @date 2020-02-20
- *       2020-05-17 修复导出报表问题
- *       2020-06-24 修复表格控件 页面多表格 回调函数错乱问题
- *       2020-07-22 修复表格首列多选勾选☑️ 字段名称必须state
- *       2020-08-05 新增常用方法
- *       2020-08-19 新增表格动态增减行数据
- *       2020-08-20 新增加载遮罩默认提示语控制
- *       2020-08-23 优化表格记住我功能、新增右侧滑出窗口
- * @version v1.0.13
+ * @date 2020-12-03
+ * @version v1.0.14
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -25,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.13',
+            version:'1.0.14',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -2327,13 +2320,13 @@ if (typeof jQuery === "undefined") {
         },
         // 校验封装处理
         validate: {
-            // 判断返回标识是否唯一 false 不存在 true 存在
+            // 判断返回标识是否唯一 true 存在 其他返回则显示错误提示
             unique: function (o) {
                 var obj = $.parseJSON(o);
                 if (obj.code === opt.variable.web_status.SUCCESS) {
                     return true;
                 }
-                return false;
+                return "<i class='fa fa-times-circle'></i>  " + obj.msg;
             },
             // 表单验证
             /**
@@ -2690,6 +2683,7 @@ if (typeof jQuery === "undefined") {
                     var type = time.attr("data-type") || 'date';
                     // 控制回显格式
                     var format = time.attr("data-format") || 'yyyy-MM-dd';
+
                     // 控制日期控件按钮
                     var buttons = time.attr("data-btn") || 'clear|now|confirm', newBtnArr = [];
                     // 日期控件选择完成后回调处理
@@ -3938,7 +3932,7 @@ if (typeof jQuery === "undefined") {
                     expandAll: true,
                     expandFirst: true,
                     bordered: false,
-                    asynUrl: null
+                    asynUrl: null,
                 };
                 var options = $.extend(defaults, options);
 
@@ -3990,6 +3984,7 @@ if (typeof jQuery === "undefined") {
                     expandAll: options.expandAll,                       // 是否全部展开
                     expandFirst: options.expandFirst,                   // 是否默认第一级展开--expandAll为false时生效
                     columns: options.columns,                           // 显示列信息（*）
+                    onClickRow: $.treeTable.onClickRow,                                   // 单击某行事件
                     responseHandler: $.treeTable.responseHandler        // 当所有数据被加载时触发处理函数
                 });
             },
@@ -4011,6 +4006,15 @@ if (typeof jQuery === "undefined") {
                     return row[column];
                 });
                 return opt.common.uniqueFn(rows);
+            },
+            //单击某行回调事件
+            onClickRow: function(data){
+                var toolbar = 'toolbar-'+ opt.table.get(this.id).id ;
+                $('#' + toolbar + ' .multiple').toggleClass('disabled', false);
+                $('#' + toolbar + ' .single').toggleClass('disabled', false);
+                if (typeof opt.table.get(this.id).onClickRow == "function") {
+                    opt.table.get(this.id).onClickRow(data);
+                }
             },
             // 请求获取数据后处理回调函数，校验异常状态提醒
             responseHandler: function(data) {
