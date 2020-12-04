@@ -2897,36 +2897,67 @@ if (typeof jQuery === "undefined") {
                     }
                 }
                 var options = $.extend(defaults, options);
-
                 //兼容自动识别有删除按钮表格有checkbox 选项
                 if(options.outcheckbox && (!opt.common.isEmpty($('#' + options.toolbar+'-'+options.id + ' .multiple').html())
                     || !opt.common.isEmpty($('#' + options.toolbar +'-'+options.id+ ' .single').html()))){
                     var _flag = false;
                     if(!opt.common.isEmpty(options.columns.length)){
                         for(var i=0; i<options.columns.length; i++ ){
-                            if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
-                                _flag = true;
-                                break;
+                            if(options.columns[0] instanceof Array){
+                                for(var j=0; j<options.columns[i].length; j++) {
+                                    if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
+                                        _flag = true;
+                                        break;
+                                    }
+                                }
+                                if(_flag){
+                                    break;
+                                }
+                            }else{
+                                if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
+                                    _flag = true;
+                                    break;
+                                }
                             }
+
                         }
                     }
                     if (!_flag){
-                        options.columns.splice(0,0,{checkbox: true, field: 'state'});
+                        if(options.columns[0] instanceof Array){
+                            options.columns[1].splice(0,0,{checkbox: true, field: 'state'});
+                        }else{
+                            options.columns.splice(0,0,{checkbox: true, field: 'state'});
+                        }
                     }
                 }
 
                 //
                 if(!opt.common.isEmpty(options.columns.length)){
                     for(var i=0; i<options.columns.length; i++ ){
-                        if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"align"))){
-                            options.columns[i].align = 'center';
-                        }
-                        if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"halign"))){
-                            options.columns[i].halign = 'center';
-                        }
-                        // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
-                        if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
-                            options.columns[i].field = 'state';
+                        if(options.columns[0] instanceof Array){
+                            for(var j=0; j<options.columns[i].length; j++) {
+                                if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"align"))){
+                                    options.columns[i][j].align = 'center';
+                                }
+                                if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"halign"))){
+                                    options.columns[i][j].halign = 'center';
+                                }
+                                // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
+                                if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
+                                    options.columns[i][j].field = 'state';
+                                }
+                            }
+                        }else {
+                            if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"align"))){
+                                options.columns[i].align = 'center';
+                            }
+                            if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"halign"))){
+                                options.columns[i].halign = 'center';
+                            }
+                            // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
+                            if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
+                                options.columns[i].field = 'state';
+                            }
                         }
                     }
                     // if(row['checked']){
