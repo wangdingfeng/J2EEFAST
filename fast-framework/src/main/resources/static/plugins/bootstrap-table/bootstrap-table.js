@@ -7,7 +7,7 @@
 /*!
  * 基于源码修改
  * @author ZhouHuan
- * @version 2020-06-21
+ * @version 2020-12-04
  * --------------------------------------------------
  * 1.后台分页时前台删除最后一页所有数据refresh刷新后无数据问题
  * 2.新增表格头自动居中适配问题
@@ -18,6 +18,7 @@
  * 7.新增表格行title提示
  * 8.新增id 对象标识,修复页面多表格 回调函数问题
  * 9.修复表格行title提示列转义显示问题
+ * 10.修复页面同时多个表格属性firstLoad=false 异常情况
  * --------------------------------------------------
  */
 (function ($) {
@@ -2050,8 +2051,8 @@
             params.pageNumber = this.options.pageNumber;
         }
 
-        if (!this.options.firstLoad && isFirstLoad) {
-            isFirstLoad = false;
+        if (!this.options.firstLoad && !_isFirstLoad.includes(this.options.id)) {
+            _isFirstLoad.push(this.options.id);
             return
         }
 
@@ -3195,7 +3196,7 @@
 })(jQuery);
 
 var TABLE_EVENTS = "all.bs.table click-cell.bs.table dbl-click-cell.bs.table click-row.bs.table dbl-click-row.bs.table sort.bs.table check.bs.table uncheck.bs.table onUncheck check-all.bs.table uncheck-all.bs.table check-some.bs.table uncheck-some.bs.table load-success.bs.table load-error.bs.table column-switch.bs.table page-change.bs.table search.bs.table toggle.bs.table show-search.bs.table expand-row.bs.table collapse-row.bs.table refresh-options.bs.table reset-view.bs.table refresh.bs.table";
-var isFirstLoad = true;
+var _isFirstLoad = [];
 //TODO 修改记住我删除BUG
 var union = function (b, a,k) {
     if ($.isArray(a)) {
