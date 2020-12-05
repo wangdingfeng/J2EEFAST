@@ -1,3 +1,4 @@
+## 下个版本2.2.0 更新预告，主要完善代码生成器 (单表 主子表 树表/同步/异步) 一键生成 解放繁琐重复工作节省80%工作、以后版本都会同时兼容Mysql与PostgreSql. 请持续关注，点个Star！！！
 <p align="center">
 <img width="280" height="280" src="https://images.gitee.com/uploads/images/2020/0927/225746_1bb32a4b_1816537.png">
 </p>
