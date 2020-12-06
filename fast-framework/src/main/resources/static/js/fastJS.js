@@ -1257,8 +1257,8 @@ if (typeof jQuery === "undefined") {
             msgReload: function(msg, type) {
                 opt.selfLayer.msg(msg, {
                         icon: opt.modal.icon(type),
-                        time: 500,
-                        shade: [0.1, '#8F8F8F']
+                        time: 500
+                        //,shade: [0.4, '#8F8F8F']
                     },
                     function() {
                         opt.modal.reload();
@@ -1353,11 +1353,11 @@ if (typeof jQuery === "undefined") {
                 }
                 opt.layer.open({
                     type: 2,
-                    shade: false,
+                    //shade: false,
                     scrollbar:false,
                     anim:-1,
                     closeBtn: 0,
-                    shade: 0.3,
+                    //shade: 0.3,
                     move: false,
                     title: title,
                     shadeClose: true,
@@ -1460,7 +1460,7 @@ if (typeof jQuery === "undefined") {
                     fix: false,
                     //不固定
                     maxmin: true,
-                    shade: 0.3,
+                    //shade: 0.3,
                     title: $.i18n.prop(title),
                     content: url,
                     btn: ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")],
@@ -1539,7 +1539,7 @@ if (typeof jQuery === "undefined") {
                 _sf.open({
                     type: _type,
                     maxmin: true,
-                    shade: 0.3,
+                    //shade: 0.3,
                     title: _title,
                     fix: false,
                     area: [_width + 'px', _height + 'px'],
@@ -1709,7 +1709,7 @@ if (typeof jQuery === "undefined") {
                     fix: false,
                     //不固定
                     maxmin: true,
-                    shade: 0.3,
+                    //shade: 0.3,
                     title: title,
                     content: url,
                     btn: ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")],
@@ -2960,21 +2960,6 @@ if (typeof jQuery === "undefined") {
                             }
                         }
                     }
-                    // if(row['checked']){
-                    //
-                    // }
-                    // var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
-                    // if(opt.common.isNotEmpty(selectedIds)) {
-                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _[func](selectedIds, rowIds);
-                    // } else {
-                    //     opt.table.rememberSelectedIds[opt.table.options.id] = _[func]([], rowIds);
-                    // }
-                    // var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-                    // if(opt.common.isNotEmpty(selectedRows)) {
-                    //     opt.table.rememberSelecteds[opt.table.options.id] = _[func](selectedRows, rows);
-                    // } else {
-                    //     opt.table.rememberSelecteds[opt.table.options.id] = _[func]([], rows);
-                    // }
                 }
                 opt.table.options = options;
                 opt.table.config[options.id] = options;
@@ -3550,7 +3535,7 @@ if (typeof jQuery === "undefined") {
                     fix: false,
                     //不固定
                     maxmin: true,
-                    shade: 0.3,
+                    //shade: 0.3,
                     title: '导入' + table.options.modalName + '数据',
                     content: $('#' + currentId).html(),
                     btn: ['<i class="fa fa-check"></i> 导入', '<i class="fa fa-remove"></i> 取消'],
