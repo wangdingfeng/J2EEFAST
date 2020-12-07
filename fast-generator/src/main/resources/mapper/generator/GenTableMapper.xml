@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="target"         column="target"          />
 		<result property="childId"         column="child_id"          />
 		<result property="childFieldId"         column="child_field_id"          />
+		<result property="menuNew"         column="menu_new"          />
 	<!-- 	<collection  property="columns"  javaType="java.util.List"  resultMap="GenTableColumnResult" /> -->
 	</resultMap>
 	
@@ -90,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		,t.parent_id as parentId
 		,t.parent_name as parentName
 		,t.menu_name as menuName
+		,t.menu_id as menuId
 		,t.module_codes as moduleCodes
 		,t.menu_icon as  menuIcon
 		,t.menu_target as   menuTarget
@@ -101,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		,t.target  as target
 		,t.child_id  as childId
 		,t.child_field_id  as childFieldId
+		,t.menu_new as menuNew
 	</sql>
 
 <!-- 
@@ -145,7 +148,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<select id="findGenTableMenuById" parameterType="Long" resultMap="GenTableResult">
-	    SELECT t.id, t.table_name,t.parent_id,t.parent_name,t.menu_name,t.module_codes,t.menu_icon,t.menu_target,t.menu_order
+	    SELECT t.id, t.table_name,t.parent_id,t.parent_name,t.menu_name,
+	    t.module_codes,t.menu_icon,t.menu_target,t.menu_order, t.menu_id, t.menu_new
 		FROM gen_table t
 		where t.id = #{id}
 	</select>
@@ -176,6 +180,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="menuOrder != null">menu_order = #{menuOrder},</if>
 			<if test="parentName != null and parentName != ''">parent_name = #{parentName},</if>
 			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
+			<if test="menuNew != null and menuNew != ''">menu_new = #{menuNew},</if>
 			<if test="moduleCodes != null and moduleCodes != ''">module_codes = #{moduleCodes},</if>
 			<if test="menuIcon != null and menuIcon != ''">menu_icon = #{menuIcon},</if>
 			<if test="menuTarget != null and menuTarget != ''">menu_target = #{menuTarget},</if>
@@ -189,11 +194,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test=" _databaseId  == 'postgresql'">
 			update_time = now()
 			</if>
-
 		</set>
 		where id = #{id}
 	</update>
 
+
+	<update id="updateGenTableMenuId">
+		UPDATE gen_table
+		<set>
+			<if test="menuId != null">menu_id = #{menuId},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
 
 
 
@@ -226,22 +238,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </if>
 
 		<if test="dbType == 'postgresql'">
-			SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment
-			from pg_tables as p
-			LEFT JOIN pg_class  as c on p.tablename = c.relname
+			SELECT t.table_name, t.table_comment from( SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment, p.tableowner
+			from pg_tables as p LEFT JOIN pg_class  as c on p.tablename = c.relname) as t
 			<where>
 				<if test="schema != null and schema != ''">
-					AND  p.tableowner = '${schema}'
+					AND  t.tableowner = '${schema}'
 				</if>
-				AND p.tablename NOT LIKE 'qrtz_%'
+				AND t.table_name NOT LIKE 'qrtz_%'
 				<if test="tableName != null and tableName != ''">
-					AND p.tablename like concat('%', #{tableName}, '%')
+					AND t.table_name like concat('%', #{tableName}, '%')
 				</if>
 				<if test="tableComment != null and tableComment != ''">
-					AND table_comment like concat('%', #{tableComment}, '%')
+					AND t.table_comment like concat('%', #{tableComment}, '%')
 				</if>
 				<if test="notList != null">
-					AND p.tablename NOT IN
+					AND t.table_name NOT IN
 					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
 						#{item}
 					</foreach>
@@ -346,28 +357,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </if>
 
 		<if test="dbType == 'postgresql'">
-			SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment
-			from pg_tables as p
-			LEFT JOIN pg_class  as c on p.tablename = c.relname
+			SELECT t.table_name, t.table_comment from( SELECT  p.tablename as table_name, cast(obj_description(relfilenode,'pg_class') as varchar) as table_comment, p.tableowner
+			from pg_tables as p LEFT JOIN pg_class  as c on p.tablename = c.relname) as t
 			<where>
 				<if test="schema != null and schema != ''">
-					AND  p.tableowner = '${schema}'
+					AND  t.tableowner = '${schema}'
 				</if>
-				AND p.tablename NOT LIKE 'qrtz_%'
+				AND t.table_name NOT LIKE 'qrtz_%'
 				<if test="tableName != null and tableName != ''">
-					AND p.tablename like concat('%', #{tableName}, '%')
+					AND t.table_name like concat('%', #{tableName}, '%')
 				</if>
 				<if test="tableComment != null and tableComment != ''">
-					AND table_comment like concat('%', #{tableComment}, '%')
+					AND t.table_comment like concat('%', #{tableComment}, '%')
 				</if>
 				<if test="notList != null">
-					AND p.tablename NOT IN
+					AND t.table_name NOT IN
 					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
 						#{item}
 					</foreach>
 				</if>
 			</where>
 		</if>
+
        <if test="dbType == 'oracle'">
          	SELECT 
 				t.TABLE_NAME AS table_name, 

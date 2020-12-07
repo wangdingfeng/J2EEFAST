@@ -11,6 +11,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.toolkit.Sequence;
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.utils.SpringUtil;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.framework.utils.UserUtils;
 import com.j2eefast.generator.gen.config.GenConfig;
@@ -76,7 +77,7 @@ public class VelocityUtils{
         velocityContext.put("menuName", genTable.getMenuName());
         velocityContext.put("menuOrder", genTable.getMenuOrder());
         velocityContext.put("moduleCodes", genTable.getModuleCodes());
-
+        velocityContext.put("menuId",genTable.getMenuId());
         velocityContext.put("menuIcon", genTable.getMenuIcon());
         velocityContext.put("menuTarget", genTable.getMenuTarget());
         velocityContext.put("createBy", UserUtils.getLoginName());
@@ -84,8 +85,12 @@ public class VelocityUtils{
         velocityContext.put("dbTypeTb", genTable.isDbTypeTb());
         velocityContext.put("dbTypeName", JdbcUtils.getDbType(DataSourceContext.getDataSourcesConfs().get(genTable.getDbName()).getUrl()).getDb());
         velocityContext.put("importList", getImportList(genTable.getColumns()));
+        velocityContext.put("gen_copyright","<!-- 系统自动生成 Date:"+DateUtil.format(new Date(),DatePattern.NORM_DATETIME_MINUTE_PATTERN)+" -->");
         Sequence n =  new Sequence();
-        for(int i=0; i< 5; i++){
+        if(ToolUtil.isEmpty(genTable.getMenuId())){
+            velocityContext.put("menuId",n.nextId());
+        }
+        for(int i=0; i< 4; i++){
             velocityContext.put("mId"+i, n.nextId());
         }
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
@@ -127,13 +132,14 @@ public class VelocityUtils{
         String treeCode = options.getTreeCode();
         String treeParentCode = options.getTreeParentCode();
         String treeName = options.getTreeName();
-      
-        context.put("treeCode", treeCode);
-        context.put("treeParentCode", treeParentCode);
-        context.put("treeName", treeName);
+        String async = options.getAsync();
+        context.put("treeCode", StrUtil.toCamelCase(treeCode));
+        context.put("treeParentCode", StrUtil.toCamelCase(treeParentCode));
+        context.put("treeName", StrUtil.toCamelCase(treeName));
         context.put("tree_name",treeName);
         context.put("tree_parent_code", treeParentCode);
-        
+        //树表 是否异步 0 同步 1异步
+        context.put("async",async);
         context.put("expandColumn", getExpandColumn(genTable));
     }
 
@@ -162,8 +168,13 @@ public class VelocityUtils{
             templates.add("vm/java/service.java.vm");
             templates.add("vm/java/controller.java.vm");
             templates.add("vm/xml/mapper.xml.vm");
-            templates.add("vm/html/tree.html.vm");
             templates.add("vm/html/list-tree.html.vm");
+            templates.add("vm/html/add-tree.html.vm");
+            if(target.equals(GenConstants.TARGET)){
+                templates.add("vm/html/tabEdit.html.vm");
+            }else{
+                templates.add("vm/html/edit.html.vm");
+            }
         }
         if (isCrud(tplCategory,GenConstants.TPL_CRUD) || isCrud(tplCategory,GenConstants.TPL_C) || isCrud(tplCategory,GenConstants.TPL_MASTER)) {
             if(target.equals(GenConstants.TARGET)){
@@ -260,6 +271,10 @@ public class VelocityUtils{
         {
             fileName = StrUtil.format("{}/{}.html", htmlPath, businessName);
         }
+        else if (template.contains("add-tree.html.vm"))
+        {
+            fileName = StrUtil.format("{}/add.html", htmlPath);
+        }
         else if (template.contains("tree.html.vm"))
         {
             fileName = StrUtil.format("{}/tree.html", htmlPath);
@@ -274,7 +289,7 @@ public class VelocityUtils{
         }
         else if (template.contains("sql.vm"))
         {
-            fileName = businessName + "Menu.sql";
+            fileName = StrUtil.format("{}/menu.sql", htmlPath);
         }
         return fileName;
     }

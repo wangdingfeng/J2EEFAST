@@ -67,7 +67,7 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 	* @Title: generateTablePage 
 	* @Description: 获取数库的表名列表page
 	* @param dbType 数据类型： mysql,oracle...
-	* @param dbTableName  表名用名收索
+	* @param tableName  表名用名收索
 	* @param schema mysql:database Name  , oracle: 用户名(大写)
 	* @return  List<GenTableEntity> 
 	* @author mfksn001@163.com
@@ -79,9 +79,13 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 								            @Param("tableName")  String tableName,  
 								            @Param("tableComment") String tableComment,
 										    @Param("notList") List<String> notList);
-	
-	
 
-	
+	/**
+	 * 更新菜单Id
+	 * @param id
+	 * @param menuId
+	 * @return
+	 */
+	int updateGenTableMenuId(@Param("id") Long id,@Param("menuId") Long menuId);
 
 }

@@ -82,8 +82,8 @@ public class GenTableColumnEntity{
     /** 字典类型 */
     private String dictType;
 
-    /** 列表排序*/
-//    private Integer listOrder;
+    /** 字段验证码 */
+    private String validation;
 
     /** 排序 */
     private Integer sort;
@@ -383,6 +383,10 @@ public class GenTableColumnEntity{
         return isInsert(this.isInsert);
     }
 
-    
-    
+    public String getValidation() {
+        return validation;
+    }
+    public void setValidation(String validation) {
+        this.validation = validation;
+    }
 }

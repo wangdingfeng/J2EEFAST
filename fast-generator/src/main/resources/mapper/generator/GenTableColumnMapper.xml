@@ -59,13 +59,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        html_type  as  htmlType ,
        dict_type  as  dictType ,
        is_table_sort as isTableSort,
-       sort  as  sort
+       sort  as  sort,
+       validation as validation
     </sql>
     
  
     <select id="findListByTableId" parameterType="Long"  resultType="GenTableColumnEntity">
-       select 
-         <include refid="genTableColumns"/>
+       select
+       <include refid="genTableColumns"/>
        from gen_table_column
        where table_id = '${tableId}'
        order by sort
@@ -87,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             html_type = #{htmlType},
             dict_type = #{dictType},
             is_table_sort = #{isTableSort},
+            <if test="validation != null and validation != ''">validation = #{validation},</if>
             <if test="editInfo != null">edit_info = #{editInfo},</if>
             <if test="circleType != null and circleType != ''">circle_type = #{circleType},</if>
             sort = #{sort}

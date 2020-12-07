@@ -1,108 +1,122 @@
-<!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-<head>
-    <th:block th:include="include :: header('${functionName}列表')" />
-</head>
-<body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
+${gen_copyright}
+<<@>include "/common/defaultEngine.html"/>
+${pageTheme}
+<@header title="${functionName}列表" libs=["treeTable"]/>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <@f.form id="${businessName}-form" class="form-inline">
+                <div class="select-list">
+                    <ul>
 #foreach($column in $columns)
 #if($column.query)
-#set($dictType=$column.dictType)
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
 #set($comment=$column.columnComment.substring(0, $parentheseIndex))
-#else  
+#else
 #set($comment=$column.columnComment)
-#end  
+#end
 #if($column.htmlType == "input")
-                            <li>
-                                <p>${comment}：</p>
-                                <input type="text" name="${column.javaField}"/>
-                            </li>
+                        <li>
+                            <label> <@ctx.i18n text = "${comment}"/>：</label>
+#if($column.queryType == "BETWEEN")
+                            <input type="text"  placeholder="begin" name="begin${AttrName}"/><span>-</span> <input type="text"  placeholder="${comment}" name="end${AttrName}"/>
+#else
+                            <@f.input placeholder="${comment}" name="${column.javaField}"/>
+#end
+                        </li>
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)
-                            <li>
-                                <p>${comment}：</p>
-                                <select name="${column.javaField}" th:with="type=${@dict.getType('${dictType}')}">
-                                    <option value="">所有</option>
-                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-                                </select>
-                            </li>
+                        <li>
+                            <label> <@ctx.i18n text = "${comment}"/>： </label>
+                            <@f.select name="${column.javaField}" dictType="${column.dictType}" blankValue="" blankLabel="所有"/>
+                        </li>
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && $dictType)
-                            <li>
-                                <p>${comment}：</p>
-                                <select name="${column.javaField}">
-                                    <option value="">所有</option>
-                                </select>
-                            </li>
+                        <li>
+                            <label> <@ctx.i18n text = "${comment}"/>： </label>
+                            <select name="${column.javaField}">
+                            <option value="">所有</option>
+                            </select>
+                        </li>
 #elseif($column.htmlType == "datetime")
-                            <li class="select-time">
-                                <p>${comment}：</p>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[begin${AttrName}]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[end${AttrName}]"/>
-                            </li>                
+                        <li class="select-time">
+                            <label> <@ctx.i18n text = "${comment}"/>： </label>
+#if($column.queryType == "BETWEEN")
+                            <input type="text" class="form-control time-input" placeholder="开始时间" name="begin${AttrName}"/>
+                            <span>-</span>
+                            <input type="text" class="form-control time-input" placeholder="结束时间" name="end${AttrName}"/>
+#else
+                            <input type="text" class="form-control time-input" placeholder="" name="${AttrName}"/>
+#end
+                        </li>
+#elseif($column.htmlType == "comp")
+                        <li>
+                            <label> <@ctx.i18n text = "${comment}"/>：</label>
+                            <@f.treeselect name = "${column.javaField}"  boxTitle="选择归属公司" url="sys/comp/treeData" expandLevel=true  placeholder="请选择归属公司"/>
+                        </li>
 #end
 #end
 #end
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
-
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="opt.operate.add()" shiro:hasPermission="${permissionPrefix}:add">
-                    <i class="fa fa-plus"></i> 新增
-                </a>
-                <a class="btn btn-primary" onclick="opt.operate.edit()" shiro:hasPermission="${permissionPrefix}:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-info" id="expandAllBtn">
-                    <i class="fa fa-exchange"></i> <@ctx.i18n text = "展开/折叠"/>
-                </a>
-            </div>
-            <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-tree-table"></table>
-            </div>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </@f.form>
         </div>
-    </div>
-    <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
-        var addFlag = [[${@permission.hasPermi('${permissionPrefix}:add')}]];
-        var editFlag = [[${@permission.hasPermi('${permissionPrefix}:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('${permissionPrefix}:remove')}]];
+        <@table id="bootstrap-tree-table">
+            <@shiro.hasPermission name="${permissionPrefix}:add">
+                <a class="btn btn-success" onclick="#if($table.target == "tab")opt.operate.addTab(0)#else opt.operate.add(0)#end"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="${permissionPrefix}:edit">
+                <a class="btn btn-primary single disabled" onclick="#if($table.target == "tab")opt.operate.editTab()#else opt.operate.edit()#end"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="${permissionPrefix}:del">
+                <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>
+            </@shiro.hasPermission>
+                <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i> <@ctx.i18n text = "展开/折叠"/></a>
+        </@table>
+    <div>
+</div>
+<@footer>
+<script type="text/javascript">
+    var addFlag = "<$>{permission.hasPermi("${permissionPrefix}:add")}";
+    var editFlag = "<$>{permission.hasPermi("${permissionPrefix}:edit")}";
+    var listFlag = "<$>{permission.hasPermi("${permissionPrefix}:add")}";
+    var delFlag = "<$>{permission.hasPermi("${permissionPrefix}:del")}";
+    var visible = <$>{permission.isPermitteds("${permissionPrefix}:edit,${permissionPrefix}:del,${permissionPrefix}:add")?string('true', 'false')};
 #foreach($column in $columns)
 #if(${column.dictType} != '')
-        var ${column.javaField}Datas = [[${@dict.getType('${column.dictType}')}]];
+    var ${column.javaField}Datas = <$>{dict.getDictListJson('${column.dictType}')};
 #end
 #end
-        var prefix = ctx + "${moduleName}/${businessName}";
+    var prefix = baseURL + "${moduleName}/${businessName}";
 
-        $(function() {
-            var options = {
-                code: "${treeCode}",
-                parentCode: "${treeParentCode}",
-                expandColumn: "${expandColumn}",
-                uniqueId: "${pkColumn.javaField}",
-                url: prefix + "/list",
-                createUrl: prefix + "/add/{id}",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove/{id}",
-                exportUrl: prefix + "/export",
-                modalName: "${functionName}",
-                columns: [{
-                    field: 'selectItem', 
-                    radio: true
-                },
+    $(function() {
+        var options = {
+            code: "${treeCode}",
+            parentCode: "${treeParentCode}",
+            uniqueId: "${pkColumn.javaField}",
+            url: prefix + "/list",
+            addUrl: prefix + "/add/{id}",
+            editUrl: prefix + "/edit/{id}",
+            delUrl: prefix + "/del/{id}",
+            modalName: "${functionName}",
+            expandAll: false,
+#foreach($column in $columns)
+#if($column.tableSort)
+            sortName: '${column.javaField}',
+#break
+#end
+#end
+            expandFirst: false,
+#if($async == '1')
+            async: true,                    /* 开启异步 */
+            asynUrl: prefix + "/listChild", /* 点击异步请求 */
+#end
+            columns:[
+                {field: 'selectItem',radio: true}
 #foreach($column in $columns)
 #set($dictType=$column.dictType)
 #set($javaField=$column.javaField)
@@ -114,37 +128,47 @@
 #end
 #if($column.pk)
 #elseif($column.list && "" != $dictType)
-                {
-                    field : '${javaField}', 
-                    title : '${comment}',
-                    align: 'left',
-                    formatter: function(value, row, index) {
-                        return $.table.selectDictLabel(${javaField}Datas, value);
-                    }
-                },
+                ,{field : '${javaField}',title : '${comment}'#if($javaField == $treeName),align: "left",halign:"left"#end,formatter: function(value, row, index) {
+                    return $.table.selectDictLabel(${javaField}Datas, value);
+                }}
 #elseif($column.list && "" != $javaField)
-                {
-                    field : '${javaField}', 
-                    title : '${comment}',
-                    align: 'left'
-                },
+#if($async == '0' && $javaField == $treeName)
+                ,{field : '${javaField}',title : '${comment}',align: "left",halign:"left"}
+#elseif($async == '1' && $javaField == $treeName)
+                ,{field : '${javaField}',title : '${comment}',align: "left",halign:"center"}
+#else
+                ,{field : '${javaField}',title : '${comment}'}
+#end
 #end                
 #end
-                {
-                    title:"<@ctx.i18n text = "操作"/>",
-                    align: 'center',
-                    align: 'left',
-                    formatter: function(value, row, index) {
-                        var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="opt.operate.edit(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="opt.operate.add(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-plus"></i>新增</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
-                        return actions.join('');
-                    }
-                }]
-            };
-            $.treeTable.init(options);
-        });
-    </script>
-</body>
-</html>
+#if($table.tree)
+                ,{title:"<@ctx.i18n text = "操作"/>",visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
+                    var actions = [];
+#if(${table.actionsType} == "default")
+                    actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="opt.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i> <@ctx.i18n text = "新增"/></a> ');
+                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+#elseif(${table.actionsType} == "icon")
+                    actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "编辑"/>" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i></a> ');
+                    actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
+#end
+                    return actions.join('');
+                }}
+#elseif($table.r && $table.rDel)
+                ,{title:"<@ctx.i18n text = "操作"/>",visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
+                    var actions = [];
+#if($table.actionsType == "default")
+                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+#elseif($table.actionsType == "icon")
+                    actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
+#end
+                    return actions.join('');
+                }}
+#end
+            ]
+        };
+        $.treeTable.init(options);
+    });
+</script>
+</@footer>
+</@pageTheme>

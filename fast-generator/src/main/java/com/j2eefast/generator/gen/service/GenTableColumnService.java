@@ -60,7 +60,7 @@ public class GenTableColumnService extends ServiceImpl<GenTableColumnMapper,GenT
         Page<GenTableColumnEntity> page = this.baseMapper.selectPage(new Query<GenTableColumnEntity>(params).getPage(),
                 new QueryWrapper<GenTableColumnEntity>()
                         .eq(StringUtils.isNotBlank(pId), "table_id", pId)
-                        .eq(StringUtils.isNotBlank(searchValue), "id", searchValue)
+                        .eq(StringUtils.isNotBlank(searchValue), "id",ToolUtil.isNotEmpty(searchValue)? Long.parseLong(searchValue):null)
                         .like(StringUtils.isNotBlank(name), "column_name", name));
         //数据转换
         List<Ztree> list = new ArrayList<>();
@@ -81,8 +81,7 @@ public class GenTableColumnService extends ServiceImpl<GenTableColumnMapper,GenT
     /** 
 	* @Title: findListByTableId 
 	* @Description: 获取columns
-	* @param id
-	* @return  List<GenTableColumnEntity> 
+	* @return  List<GenTableColumnEntity>
 	* @author mfksn001@163.com
 	* @Date: 2020年6月2日
 	*/

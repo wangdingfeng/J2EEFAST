@@ -1,13 +1,13 @@
 ${gen_copyright}
 <<@>include "/common/defaultEngine.html"/>
 ${pageTheme}
-<@header title="修改${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end]/>
+<@header title="新增${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end]/>
 <div class="wrapper wrapper-content ibox-content">
-<@f.form id="form-${businessName}-edit"  class="form-horizontal">
-    <@f.hidden name="${pkColumn.javaField}" value="${${className}.${pkColumn.javaField}?default('')}"/>
+<@f.form id="form-${businessName}-add"  class="form-horizontal">
 #set($compId_="")
 #foreach($column in $columns)
-#if($column.edit && !$column.pk)
+#set($field=$column.javaField)
+#if($column.insert && !$column.pk)
 #if(($column.usableColumn) || (!$column.superColumn))
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
@@ -15,7 +15,6 @@ ${pageTheme}
 #else
 #set($comment=$column.columnComment)
 #end
-#set($field=$column.javaField)
 #set($dictType=$column.dictType)
 #if("" != $treeParentCode && $column.javaField == $treeParentCode)
     <div class="form-group">
@@ -36,8 +35,8 @@ ${pageTheme}
         </label>
         <div class="col-sm-8">
             <@f.treeselect id="${treeParentCode}" name="${treeParentCode}" boxTitle="选择${comment}" url="${moduleName}/${businessName}/treeData"
-             value="${${className}.${treeParentCode}}" labelValue="${${className}.parentName?default('根节点')}"
-             placeholder="请选择${comment}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            value="${${className}.${pkColumn.javaField}}" labelValue="${${className}.${treeName}?default('根节点')}"
+            placeholder="请选择${comment}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "input")
@@ -58,7 +57,7 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <@f.input name="${field}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "icon")
@@ -79,7 +78,9 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <div class="input-group">
+                <@f.iconselect name="${field}" placeholder="选择图标" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            </div>
         </div>
     </div>
 #elseif($column.htmlType == "imgcup")
@@ -101,7 +102,7 @@ ${pageTheme}
         </label>
         <div class="col-sm-8">
             <div class="input-group">
-                <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+                <@f.imageclip name="${field}"/>
             </div>
         </div>
     </div>
@@ -123,7 +124,7 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end  multiple="true" #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "select" && $dictType)
@@ -168,7 +169,7 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <@f.select name="${field}" dictType="${dictType}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "dselect" && $dictType)
@@ -213,7 +214,7 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <@f.radio name="${field}" dictType="${dictType}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -234,12 +235,18 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <div class="radio-box">
-                <input type="radio" name="${field}" value=""#if($column.required) required#end/><span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-            </div>
+              <<@>list dict.getType('${dictType}')>
+                <<@>items as d>
+                    <div class="radio-box">
+                        <input type="radio" id="${field}" name="${field}" value="${d.dictValue}"
+                               <<@>if d.dictValue == ${className}.${field}?default("") >checked</<@>if> #if($column.required) required#end/>
+                        <label for="${(d.id)?default('')}">${d.dictLabel}</label>
+                    </div>
+                </<@>items>
+            </<@>list>
         </div>
     </div>
- #elseif($column.htmlType == "checkbox" && "" != $dictType)
+#elseif($column.htmlType == "checkbox" && "" != $dictType)
     <div class="form-group">
         <label class="col-sm-3 control-label">
 #if($column.info && $column.info !="")
@@ -257,10 +264,10 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+           <@f.checkbox name="${field}" dictType="${dictType}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
- #elseif($column.htmlType == "checkbox" && $dictType)
+#elseif($column.htmlType == "checkbox" && $dictType)
     <div class="form-group">
         <label class="col-sm-3 control-label">
 #if($column.info && $column.info !="")
@@ -278,9 +285,16 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <label><input type="checkbox" name="${field}" value=""#if($column.required) required#end>
-            <label th:for="${field}" th:text="未知"></label></label>
-            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+              <<@>list dict.getType('${dictType}')>
+              <#assign ${field}List = ${className}.${field}?default("")?split(",") />
+                <<@>items as d>
+                   <<@>if d.status =='0' >
+                            <label><input type="checkbox" id="${field}_${(d.id)?default('')}" name="${field}"
+                                   value="${d.dictValue}" <<@>if ${field}List?seq_contains(d.dictValue) >checked</<@>if>>
+                            <label for="${(d.id)?default('')}" text="${d.dictLabel}">${d.dictLabel}</label></label>
+                    </<@>if>
+                </<@>items>
+           </<@>list>
         </div>
     </div>
 #elseif($column.htmlType == "datetime")
@@ -301,8 +315,8 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.input name="${field}" type="date" dataType="date" dataFormat="yyyy-MM-dd" value="${(${className}.${field}?string('yyyy-MM-dd'))!}"
-                   butClass="fa fa-fw fa-calendar" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+            <@f.input name="${field}" type="date" dataType="date" dataFormat="yyyy-MM-dd"
+                 butClass="fa fa-fw fa-calendar" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #elseif($column.htmlType == "textarea")
@@ -323,12 +337,12 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.textarea name="${field}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
+            <@f.textarea name="${field}" #if($column.required) required=true#end/>
         </div>
     </div>
 #elseif($column.htmlType == "dept")
-    <div class="form-group">
-        <label class="col-sm-3 control-label">
+ <div class="form-group">
+    <label class="col-sm-3 control-label">
 #if($column.info && $column.info !="")
 #if($column.circleType == "Q")
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
@@ -344,8 +358,7 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.treeselect name="${field}" value="${${className}.${field}?default('')}"
-            labelValue="${${className}.deptName?default('')}" boxTitle="请选择管理地区" url="sys/dept/selectZtree"
+            <@f.treeselect name="${field}" boxTitle="请选择管理地区" url="sys/dept/selectZtree"
             correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
@@ -368,9 +381,8 @@ ${pageTheme}
             <@ctx.i18n text = "${comment}"/>：
         </label>
         <div class="col-sm-8">
-            <@f.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-            labelValue="${${className}.compName?default('')}" boxTitle="选择归属公司"
-            url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+              <@f.treeselect  name="${field}" boxTitle="选择归属公司" url="sys/comp/treeData?type=0"
+               expandLevel=true  placeholder="请选择归属公司" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
         </div>
     </div>
 #else
@@ -392,7 +404,7 @@ ${pageTheme}
         </label>
         <div class="col-sm-8">
             <input name="${field}" class="form-control" type="text"#if($column.required) required#end>
-#if($column.required && $column.info)
+#if($column.info && $column.info !="")
 #if($column.circleType == "R")
             <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${column.editInfo}</span>
 #end
@@ -404,7 +416,7 @@ ${pageTheme}
 #end
 #end
 #if($table.rImg)
-    <div class="form-group">
+   <div class="form-group">
         <label class="col-sm-3 control-label">
 #if($column.info && $column.info !="")
 #if($column.circleType == "Q")
@@ -421,9 +433,9 @@ ${pageTheme}
             <@ctx.i18n text = "附件图片上传"/>：
         </label>
         <div class="col-sm-8">
-            <@f.fileupload name="upload_img" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
+            <@f.fileupload name="upload_img" bizType="${tableName}_img" isLazy=true preview="true" uploadType="image"/>
         </div>
-    </div>
+   </div>
 #end
 #if($table.rFile)
     <div class="form-group">
@@ -443,7 +455,7 @@ ${pageTheme}
             <@ctx.i18n text = "附件上传"/>：
         </label>
         <div class="col-sm-8">
-            <@f.fileupload name="upload_file" bizId="${${className}.${pkColumn.javaField}}" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
+            <@f.fileupload name="upload_file" bizType="${tableName}_file" isLazy=true preview="true" uploadType="all"/>
         </div>
     </div>
 #end
@@ -451,7 +463,8 @@ ${pageTheme}
 </div>
 <@footer>
 <script type="text/javascript">
-    var prefix = baseURL + "${moduleName}/${businessName}";
+    var prefix = baseURL + "${moduleName}/${businessName}"
+
     /**表单验证*/
     <@compress single_line=true>
     $("#form-${businessName}-add").validate({
@@ -472,7 +485,7 @@ ${pageTheme}
         onkeyup: false,
         rules:{
 #foreach ($column in $columns)
-#if($column.validation && $column.edit)
+#if($column.validation && $column.insert)
 #set($field = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
 #if($column.validation.indexOf("V") != -1 || $column.validation.indexOf("P") != -1
 ||$column.validation.indexOf("N") != -1 || $column.validation.indexOf("R") != -1
@@ -538,11 +551,11 @@ ${pageTheme}
     </@compress>
 
     /**
-     * 点击确定回调事件
+     * 窗口点击确定回调事件
      */
     function submitHandler() {
         if (opt.validate.form()) {
-            opt.operate.save(prefix + "/edit", $('#form-${businessName}-edit').serialize());
+            opt.operate.save(prefix + "/add", $('#form-${businessName}-add').serialize());
         }
     }
 </script>

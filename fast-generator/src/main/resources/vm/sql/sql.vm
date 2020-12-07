@@ -1,16 +1,24 @@
--- 菜单 SQL
+#if($menuName && $menuName != '' && $menuId)
+-- 清理菜单数据
+DELETE FROM sys_menu WHERE id = ${menuId};
+DELETE FROM sys_menu WHERE parent_id = ${menuId};
+-- 新增菜单 SQL
 insert into sys_menu (id, name, parent_id, order_num, url,type,  perms, icon,module_codes,target, create_by, create_time, update_by, update_time, remark)
-values(${mId0},'${menuName}', '${parentId}', '${menuOrder}', '${moduleName}/${businessName}', '1', '${permissionPrefix}:view', '${menuIcon}','${moduleCodes}','${menuTarget}', '${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${functionName}菜单');
+values(${menuId},'${menuName}', '${parentId}', '${menuOrder}', '${moduleName}/${businessName}', '1', '${permissionPrefix}:view', '${menuIcon}','${moduleCodes}','${menuTarget}', '${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${functionName}菜单');
 
--- 按钮 SQL
+-- 新增权限 SQL
 insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId1},'查询', ${mId0}, '0',  '#',  '2',  '${permissionPrefix}:list','${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${moduleCodes}','');
+values(${mId0},'查询', ${menuId}, '0',  '#',  '2',  '${permissionPrefix}:list','${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${moduleCodes}','');
 
 insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId2},'新增', ${mId0}, '1',  '#',  '2','${permissionPrefix}:add',  '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+values(${mId1},'新增', ${menuId}, '1',  '#',  '2','${permissionPrefix}:add',  '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
 
 insert into sys_menu   (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId3},'修改', ${mId0}, '2',  '#',  '2', '${permissionPrefix}:edit', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+values(${mId2},'修改', ${menuId}, '2',  '#',  '2', '${permissionPrefix}:edit', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
 
 insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId4},'删除', ${mId0}, '3',  '#',  '2', '${permissionPrefix}:del', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+values(${mId3},'删除', ${menuId}, '3',  '#',  '2', '${permissionPrefix}:del', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+#else
+-- 无菜单信息,若需要请设置菜单信息!!!!
+#end
+

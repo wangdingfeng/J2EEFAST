@@ -71,11 +71,19 @@ public class GenTableEntity extends BaseEntity {
 
     private int menuOrder;
 
+    /**
+     * 菜单ID
+     */
+    private Long menuId;
+
     /**菜单名称*/
     private String menuName;
 
     /**所属模块*/
     private String moduleCodes;
+
+    /**菜单初建是否显示新*/
+    private String menuNew;
 
     /**菜单图标*/
     private String menuIcon;
@@ -472,5 +480,20 @@ public class GenTableEntity extends BaseEntity {
 
     public void setChildFieldId(Long childFieldId) {
         this.childFieldId = childFieldId;
+    }
+    public Long getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getMenuNew() {
+        return menuNew;
+    }
+
+    public void setMenuNew(String menuNew) {
+        this.menuNew = menuNew;
     }
 }
