@@ -39,6 +39,12 @@ public class SysMenuEntity extends BaseEntity {
 	private boolean mNew;
 
 	/**
+	 * 初创菜单是否需要显示为新
+	 */
+	private String isNew;
+
+
+	/**
 	 * 父菜单ID，一级菜单为0
 	 */
 	private Long parentId;
@@ -91,9 +97,6 @@ public class SysMenuEntity extends BaseEntity {
 	 */
 	private Integer orderNum;
 
-
-//	@TableLogic
-//	private Integer delFlag;
 	/**
 	 * 是否隐藏
 	 */

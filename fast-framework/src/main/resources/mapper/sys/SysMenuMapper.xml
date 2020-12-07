@@ -4,7 +4,7 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysMenuMapper">
 
     <sql id="selectMenuVo">
-        select id, name, parent_id, order_num, url,  type, hide,
+        select id, name, parent_id, order_num, url,  type, hide, is_new,
         <if test="_databaseId  == 'oracle'">
             nvl(perms,'') as perms,
         </if>
@@ -19,7 +19,7 @@
     </sql>
 
     <sql id="selectMenuVo1_Mysql">
-		SELECT DISTINCT m.id, m.parent_id, m.name, m.url, m.hide, IFNULL(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM(SELECT
+		SELECT DISTINCT m.id, m.parent_id, m.name, m.url, m.hide, m.is_new, IFNULL(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM(SELECT
 		a.*,SUBSTRING_INDEX( SUBSTRING_INDEX( a.module_codes, ',', b.help_topic_id + 1 ), ',',- 1 ) AS cs
 		FROM
 		sys_menu a
@@ -29,14 +29,14 @@
 
     <sql id="selectMenuVo1_Orcale">
         select m.id, m.parent_id,
-        m.name, m.url, m.hide, nvl(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
+        m.name, m.url, m.hide, m.is_new, nvl(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
         (SELECT distinct REGEXP_SUBSTR(t.module_codes, '[^,]+', 1, level) as cs,t.*
         from sys_menu t connect by level   <![CDATA[ <=  ]]> regexp_count(t.module_codes, ',') + 1 )   m
     </sql>
 
     <sql id="selectMenuVo1_Postgresql">
         SELECT m.id, m.parent_id,
-        m.name, m.url, m.hide, COALESCE(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
+        m.name, m.url, m.is_new, m.hide, COALESCE(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
         (SELECT unnest(string_to_array(t.module_codes,',')) AS cs,t.*
         FROM sys_menu t )   m
     </sql>
@@ -44,7 +44,7 @@
     <select id="selectMenuByMenId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
         select m.id as id, m.name as name, m.parent_id as parentId,
         m.order_num as orderNum, m.url as url,  m.type as type, m.hide as hide,
-        m.target as target,m.module_codes as moduleCodes,
+        m.target as target,m.module_codes as moduleCodes, m.is_new as isNew,
         m.icon as icon,
         <if test="_databaseId  == 'oracle'">
             NVL(m.perms,'') as perms,
@@ -166,7 +166,7 @@
     </select>
 
     <select id="findMenuListByUserId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
-        select distinct m.id, m.parent_id, m.name, m.url, m.hide,
+        select distinct m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
         <if test="_databaseId  == 'oracle'">
             nvl(m.perms,'') as perms,
         </if>
@@ -199,7 +199,7 @@
     </select>
 
     <select id="findMenuAllByUserId" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
-		select distinct m.id, m.parent_id, m.name, m.url, m.hide,
+		select distinct m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
         <if test="_databaseId  == 'oracle'">
             nvl(perms,'') as perms,
         </if>

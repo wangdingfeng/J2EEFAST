@@ -63,7 +63,7 @@ public class WebConfig implements WebMvcConfigurer {
         /**工作流资源拦截 若不用可以屏蔽*/
 		registry.addResourceHandler("/flowable/**").addResourceLocations("classpath:/flowable/");
         /** 本地文件上传路径 */
-        registry.addResourceHandler(Constant.RESOURCE_urlPrefix + "/**").addResourceLocations("file:" + Global.getRootPath());
+        registry.addResourceHandler(Constant.RESOURCE_URLPREFIX + "/**").addResourceLocations("file:" + Global.getRootPath());
 	}
 
 //    /**
@@ -128,6 +128,10 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 	
 	protected static class NativeLocaleResolver implements LocaleResolver{
+		
+		/**
+		 * 默认配置
+		 */
 		private String defaultLocale;
 
 		public NativeLocaleResolver(String defaultLocale){
@@ -155,12 +159,8 @@ public class WebConfig implements WebMvcConfigurer {
         }
 
         @Override
-        public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
-//        	Cookie c1 = new Cookie("_lang",locale.getLanguage()); 
-//        	c1.setMaxAge(60*60*24*7);
-//            response.addCookie(c1);
-        	
-//        	System.out.println("//////////////////////////////////language:");
+        public void setLocale(HttpServletRequest request,
+        		HttpServletResponse response, Locale locale) {
         }
     }
 }

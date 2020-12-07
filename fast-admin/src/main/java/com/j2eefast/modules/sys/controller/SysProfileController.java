@@ -123,7 +123,8 @@ public class SysProfileController extends BaseController {
             return error(ToolUtil.message("sys.user.phone.improper.format"));
         }
         LoginUserEntity loginUser = UserUtils.getUserInfo();
-        if(ToolUtil.isNotEmpty(user.getEmail()) && !ReUtil.isMatch(Constant.EMAIL_PATTERN, user.getEmail())){
+        if(ToolUtil.isNotEmpty(user.getEmail()) &&
+                !ReUtil.isMatch(Constant.EMAIL_PATTERN, user.getEmail())){
             loginUser.setEmail(user.getEmail());
             return error(ToolUtil.message("sys.user.email.improper.format"));
         }

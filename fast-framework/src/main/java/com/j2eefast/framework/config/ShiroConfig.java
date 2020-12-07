@@ -84,9 +84,12 @@ public class ShiroConfig {
 	 */
 	@Value("${shiro.cookie.maxAge: 30}")
 	private int maxAge;
-
-	 @Value("#{${shiro.filterMap}}")
-	 private LinkedHashMap<String, String> filterMap ;
+	
+	/**
+	 * Shiro授权认证配置
+	 */
+	@Value("#{${shiro.filterMap}}")
+	private LinkedHashMap<String, String> filterMap ;
 	 
 	/**
 	 * 设置session cookie属性
@@ -118,13 +121,10 @@ public class ShiroConfig {
 		// 去掉 JSESSIONID
 		sessionManager.setSessionIdUrlRewritingEnabled(false);
 		sessionManager.setSessionIdCookie(cookieDAO());
-
 		// 是否开启删除无效的session对象 默认为true
 		sessionManager.setDeleteInvalidSessions(true);
-
 		// 是否开启定时调度器进行检测过期session 默认为true
 		sessionManager.setSessionValidationSchedulerEnabled(true);
-
 		// 设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
 		sessionManager.setSessionValidationInterval(1000 * 60 * validationTime);
 
@@ -217,8 +217,6 @@ public class ShiroConfig {
 		return modularRealmAuthenticator;
 	}
 
-
-
 	/**
      * cookie 属性设置
      */
@@ -231,7 +229,7 @@ public class ShiroConfig {
         return cookie;
     }
 	
-	 /**
+	/**
      * 记住我
      */
     public CookieRememberMeManager rememberMeManager(){
@@ -241,7 +239,9 @@ public class ShiroConfig {
         return cookieRememberMeManager;
     }
 
-	// Shiro连接约束配置,即过滤链的定义
+	/** 
+	 * Shiro连接约束配置,即过滤链的定义
+	 */
 	@Bean("shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager securityManager) {
 		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
@@ -253,9 +253,7 @@ public class ShiroConfig {
 		LinkedHashMap<String, Filter> filtersMap = new LinkedHashMap<>();
 		//限制同一帐号同时在线的个数
 		filtersMap.put("kickout", kickoutSessionControlFilter());
-
 		shiroFilter.setFilters(filtersMap);
-
 		// 权限认证失败，则跳转到指定页面
 		shiroFilter.setUnauthorizedUrl("/");
 		//授权认证配置

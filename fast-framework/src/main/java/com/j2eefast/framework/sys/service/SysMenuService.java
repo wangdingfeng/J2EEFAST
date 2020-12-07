@@ -141,7 +141,8 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 				/*
 				 *判断是否市新的
 				 */
-				if(ToolUtil.isNotEmpty(menu.getCreateTime())){
+				if(ToolUtil.isNotEmpty(menu.getIsNew()) && menu.getIsNew().equals(Constant.SYS_DEFAULT_VALUE_YES)
+						&& ToolUtil.isNotEmpty(menu.getCreateTime())){
 					menu.setMNew(DateUtil.betweenDay(menu.getCreateTime(),new Date(),true) <= 7);
 				}else{
 					menu.setMNew(false);

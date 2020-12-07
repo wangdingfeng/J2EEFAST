@@ -47,7 +47,7 @@ public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 				}
 				LoginUserEntity loginUser = UserUtils.getUserInfo();
 				Map<String, String> filterMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-				filterMap.put(Constant.RESOURCE_urlPrefix + "/**","anon");
+				filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
 				filterMap.put("/logout","anon");
 				filterMap.put("/error","anon");
 				filterMap.put("/Account/login","anon");
@@ -58,7 +58,8 @@ public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 						return super.preHandle(request,response,handler);
 					}
 				}
-				if(ToolUtil.isNotEmpty(loginUser.getLoginStatus()) && loginUser.getLoginStatus().equals(-1) && !requestUrl.equals(outLock)){
+				if(ToolUtil.isNotEmpty(loginUser.getLoginStatus()) && 
+						loginUser.getLoginStatus().equals(-1) && !requestUrl.equals(outLock)){
 					response.sendRedirect( request.getContextPath() +outLock);
 					return false;
 				}

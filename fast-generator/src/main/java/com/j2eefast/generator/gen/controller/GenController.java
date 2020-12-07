@@ -199,6 +199,7 @@ public class GenController extends BaseController {
             }else{
                 map.put(mapKey,mapValue);
             }
+
         }
         mmap.put("gen_code", map);
         return urlPrefix + "/codeView";

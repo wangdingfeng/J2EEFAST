@@ -24,6 +24,21 @@ public interface SysOperLogMapper extends BaseMapper<SysOperLogEntity> {
 	 */
 	int cleanLog();
 
+	/**
+	 * 翻页查询
+	 * @author ZhouZhou
+	 * @date 2020-12-06 23:29
+	 * @param params
+	 * @param title
+	 * @param operName
+	 * @param status
+	 * @param beginTime
+	 * @param endTime
+	 * @param businessTypes
+	 * @param deptId
+	 * @param sql_filter
+	 * @return
+	 */
 	Page<SysOperLogEntity> findPage(IPage<?> params,
 									  @Param("title") String title,
 									  @Param("operName") String operName,
