@@ -1,6 +1,7 @@
 package com.j2eefast.common.core.utils;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -20,6 +21,9 @@ import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
 import me.zhyd.oauth.request.*;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -773,5 +777,24 @@ public class ToolUtil{
             sos.close();
         }catch (Exception e){}
         log.info("==============================下载完成![" + fileName +"]   ========================");
+    }
+
+
+    /**
+     * 随机生成秘钥，参考org.apache.shiro.crypto.AbstractSymmetricCipherService#generateNewKey(int)
+     * @return
+     */
+    public static byte[] generateNewKey() {
+        KeyGenerator kg;
+        try {
+            kg = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException var5) {
+            String msg = "Unable to acquire AES algorithm.  This is required to function.";
+            throw new IllegalStateException(msg, var5);
+        }
+        kg.init(128);
+        SecretKey key = kg.generateKey();
+        byte[] encoded = key.getEncoded();
+        return encoded;
     }
 }

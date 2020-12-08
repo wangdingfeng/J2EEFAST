@@ -10,6 +10,7 @@ import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.core.shiro.RedisCacheManager;
 import com.j2eefast.common.core.shiro.RedisSessionDAO;
 import com.j2eefast.common.core.shiro.ShiroSessionManager;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.shiro.KickoutSessionControlFilter;
 import com.j2eefast.framework.shiro.realm.FreeRealm;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
@@ -72,12 +73,6 @@ public class ShiroConfig {
 	 */
 	@Value("${shiro.cookie.httpOnly: true}")
 	private boolean httpOnly;
-
-	/**
-	 * 设置cipherKey密钥
-	 */
-	@Value("${shiro.cookie.cipherKey}")
-	private String cipherKey;
 
 	/**
 	 * 设置Cookie的过期时间，秒为单位
@@ -235,7 +230,7 @@ public class ShiroConfig {
     public CookieRememberMeManager rememberMeManager(){
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(Base64.decode(cipherKey));
+        cookieRememberMeManager.setCipherKey(ToolUtil.generateNewKey());
         return cookieRememberMeManager;
     }
 
