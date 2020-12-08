@@ -91,7 +91,9 @@ public final class ConfigConstant {
 	/**
 	 * 版本号
 	 */
-	public final static String SYS_CONFIG_VERSION = "SYS_CONFIG_VERSION";
+	public final static String SYS_VERSION = "version";
+
+	public final static String CONFIG_KEY  = "sys:cfg:version";
 	
 	/**
 	 * JS CSS版本
