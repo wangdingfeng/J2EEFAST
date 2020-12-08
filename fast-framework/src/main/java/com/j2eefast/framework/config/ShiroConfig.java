@@ -191,13 +191,15 @@ public class ShiroConfig {
 		securityManager.setRealms(realms);
 		
 		// 记住我
-        securityManager.setRememberMeManager(rememberMeManager());
+        //securityManager.setRememberMeManager(rememberMeManager());
 
         securityManager.setCacheManager(getcacheManager());
 
         securityManager.setSessionManager(sessionManager());
-		
-		//securityManager.setRememberMeManager(null); //取消记住我
+
+		//取消记住我
+		securityManager.setRememberMeManager(null);
+
 		return securityManager;
 	}
 
