@@ -2,7 +2,7 @@
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
- * @date 2020-12-03
+ * @date 2020-12-09
  * @version v1.0.14
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
@@ -2924,9 +2924,9 @@ if (typeof jQuery === "undefined") {
                     }
                     if (!_flag){
                         if(options.columns[0] instanceof Array){
-                            options.columns[1].splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns[1].splice(0,0,{checkbox: true});
                         }else{
-                            options.columns.splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns.splice(0,0,{checkbox: true});
                         }
                     }
                 }
@@ -2944,7 +2944,7 @@ if (typeof jQuery === "undefined") {
                                 }
                                 // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                                 if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
-                                    options.columns[i][j].field = 'state';
+                                    options.columns[i][j].field = '__state';
                                 }
                             }
                         }else {
@@ -2956,7 +2956,7 @@ if (typeof jQuery === "undefined") {
                             }
                             // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                             if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
-                                options.columns[i].field = 'state';
+                                options.columns[i].field = '__state';
                             }
                         }
                     }
@@ -3037,24 +3037,6 @@ if (typeof jQuery === "undefined") {
             },
             // 查询条件
             queryParams: function(params) {
-                /*
-                pageSize: 10
-                pageNum: 1
-                orderByColumn: createTime
-                isAsc: desc
-                dictName:
-                dictType:
-                status:
-                params[beginTime]:
-                params[endTime]:
-
-                _search: false
-                nd: 1576836627600
-                limit: 50
-                page: 1
-                sidx: roleId
-                order: asc
-                * */
                 var curParams = {
                     // 传递参数查询参数
                     __limit:       params.limit,
@@ -3113,16 +3095,16 @@ if (typeof jQuery === "undefined") {
                                             }
                                         }
                                     }
-
-                                    row.state = _flag;
+                                    row.__state = _flag;
                                 }else{
-                                    row.state = false;
+                                    row.__state = false;
                                 }
                             })
                         }
                         if(opt.common.isNotEmpty(opt.table.options._total) && opt.table.options._total){
                             opt.table.options.totalData = res.pageTotal; //服务返回合计对象
                         }
+                        console.log("-->:" + JSON.stringify(res.data.list));
                         return { rows: res.data.list, total: res.data.totalCount };
                     }
                 } else {
@@ -3146,7 +3128,6 @@ if (typeof jQuery === "undefined") {
 
                 // 选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
-                    console.log("e.type:"+e.type);
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
@@ -3498,18 +3479,32 @@ if (typeof jQuery === "undefined") {
                 opt.table.set();
                 opt.modal.confirm("确定导出所有" + opt.table.options.modalName + "吗？", function() {
                     var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
-                    opt.modal.loading("正在导出数据，请稍后...");
-
-                    $.post(opt.table.options.exportUrl, $("#" + currentId).serializeArray(), function(result) {
-                        if (result.code ==opt.variable.web_status.SUCCESS) {
-                            window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
-                        } else if (result.code == opt.variable.web_status.WARNING) {
-                            opt.modal.alertWarning(result.msg)
-                        } else {
-                            opt.modal.alertError(result.msg);
+                    var config = {
+                        url: opt.table.options.exportUrl,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: $("#" + currentId).serializeArray(),
+                        beforeSend: function () {
+                            opt.modal.loading($.i18n.prop("正在导出数据，请稍后..."));
+                        },
+                        success: function(result) {
+                            if (result.code ==opt.variable.web_status.SUCCESS) {
+                                window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
+                            } else if (result.code == opt.variable.web_status.WARNING) {
+                                opt.modal.alertWarning(result.msg)
+                            } else {
+                                opt.modal.alertError(result.msg);
+                            }
+                            opt.modal.closeLoading();
                         }
-                        opt.modal.closeLoading();
-                    });
+                    };
+                    //防CSRF攻击
+                    if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
+                        config = opt.common.extend(config,{headers: {
+                                "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+                            }});
+                    }
+                    $.ajax(config)
                 });
             },
             // 下载模板
