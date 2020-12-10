@@ -4,18 +4,18 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysMenuMapper">
 
     <sql id="selectMenuVo">
-        select id, name, parent_id, order_num, url,  type, hide, is_new,
+        SELECT id, name, parent_id, order_num, url,  type, hide, is_new,
         <if test="_databaseId  == 'oracle'">
-            nvl(perms,'') as perms,
+            NVL(perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'mysql'">
-            ifnull(perms,'') as perms,
+            IFNULL(perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'postgresql'">
-            COALESCE(perms,'') as perms,
+            COALESCE(perms,'') AS perms,
         </if>
         target, icon,module_codes, create_by, create_time
-		from sys_menu
+		FROM sys_menu
     </sql>
 
     <sql id="selectMenuVo1_Mysql">
@@ -28,10 +28,10 @@
 
 
     <sql id="selectMenuVo1_Orcale">
-        select m.id, m.parent_id,
+        SELECT m.id, m.parent_id,
         m.name, m.url, m.hide, m.is_new, nvl(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
-        (SELECT distinct REGEXP_SUBSTR(t.module_codes, '[^,]+', 1, level) as cs,t.*
-        from sys_menu t connect by level   <![CDATA[ <=  ]]> regexp_count(t.module_codes, ',') + 1 )   m
+        (SELECT DISTINCT REGEXP_SUBSTR(t.module_codes, '[^,]+', 1, level) AS cs,t.*
+        FROM sys_menu t connect by level   <![CDATA[ <=  ]]> regexp_count(t.module_codes, ',') + 1 )   m
     </sql>
 
     <sql id="selectMenuVo1_Postgresql">
@@ -42,35 +42,35 @@
     </sql>
 
     <select id="selectMenuByMenId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
-        select m.id as id, m.name as name, m.parent_id as parentId,
-        m.order_num as orderNum, m.url as url,  m.type as type, m.hide as hide,
-        m.target as target,m.module_codes as moduleCodes, m.is_new as isNew,
-        m.icon as icon,
+        SELECT m.id AS id, m.name AS name, m.parent_id AS parentId,
+        m.order_num AS orderNum, m.url AS url,  m.type AS type, m.hide AS hide,
+        m.target AS target,m.module_codes AS moduleCodes, m.is_new AS isNew,
+        m.icon AS icon,
         <if test="_databaseId  == 'oracle'">
-            NVL(m.perms,'') as perms,
+            NVL(m.perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'mysql' ">
-            IFNULL(m.perms,'') as perms,
+            IFNULL(m.perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'postgresql'">
-            COALESCE(m.perms,'') as perms,
+            COALESCE(m.perms,'') AS perms,
         </if>
-        rm.name as parentName
-        from sys_menu as m
+        rm.name AS parentName
+        FROM sys_menu AS m
         LEFT JOIN (SELECT id,name FROM sys_menu) AS rm ON m.parent_id = rm.id
         WHERE m.id = #{menuId}
     </select>
 
     <select id="findNotButtonList" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
         <include refid="selectMenuVo"/>
-		where type != 2 order by order_num asc
+		WHERE type != 2 ORDER BY order_num ASC
 	</select>
 
 
 
     <select id="findListParentId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
         <include refid="selectMenuVo"/>
-		where parent_id = #{parentId} and sys_menu.hide = 0 order by order_num asc
+		WHERE parent_id = #{parentId} AND sys_menu.hide = 0 ORDER BY order_num ASC
 	</select>
 
     <select id="findModuleMenuAll"  parameterType="String"  resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
@@ -84,12 +84,12 @@
             <include refid="selectMenuVo1_Postgresql"/>
         </if>
         <if test="moduleCodes != null and moduleCodes != ''">
-            WHERE m.cs in
+            WHERE m.cs IN
             <foreach item="code" collection="moduleCodes.split(',')" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
-        order by m.parent_id, m.order_num
+        ORDER BY m.parent_id, m.order_num
     </select>
 
     <select id="findListmoduleParentId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
@@ -102,9 +102,9 @@
         <if test="_databaseId  == 'postgresql'">
             <include refid="selectMenuVo1_Postgresql"/>
         </if>
-        where m.parent_id = #{parentId} and m.hide = 0
-        and m.cs = #{modules}
-        order by m.order_num asc
+        WHERE m.parent_id = #{parentId} AND m.hide = 0
+        AND m.cs = #{modules}
+        ORDER BY m.order_num ASC
     </select>
 
     <select id="findMenuAllByUserIdModelId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
@@ -117,44 +117,44 @@
         <if test="_databaseId  == 'postgresql'">
             <include refid="selectMenuVo1_Postgresql"/>
         </if>
-        left join sys_role_menu rm on m.id = rm.menu_id
-        left join sys_user_role ur on rm.role_id = ur.role_id
-        LEFT JOIN sys_role ro on ur.role_id = ro.id
-        where
+        LEFT JOIN sys_role_menu rm ON m.id = rm.menu_id
+        LEFT JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        LEFT JOIN sys_role ro ON ur.role_id = ro.id
+        WHERE
         ur.user_id = #{userId}
         <if test="moduleCodes != null and moduleCodes != ''">
-            and m.cs in
+            AND m.cs IN
             <foreach item="code" collection="moduleCodes.split(',')" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
-        order by m.parent_id, m.order_num
+        ORDER BY m.parent_id, m.order_num
     </select>
 
 	<select id="findPermsByRoleId" resultType="string">
-        select perms from
+        SELECT perms FROM
         sys_role_menu rel
-        inner join sys_menu m on rel.menu_id = m.id
-        where perms IS NOT NULL AND perms != '' AND rel.role_id = #{roleId}
+        INNER JOIN sys_menu m ON rel.menu_id = m.id
+        WHERE perms IS NOT NULL AND perms != '' AND rel.role_id = #{roleId}
     </select>
 
     <select id="findMenuTree" parameterType="Long" resultType="String">
-		select concat(m.id,
+		SELECT concat(m.id,
         <if test="_databaseId  == 'oracle'"> NVL(m.perms,'') </if>
         <if test="_databaseId  == 'mysql'">IFNULL(m.perms,'') </if>
         <if test="_databaseId  == 'postgresql'">COALESCE(m.perms,'') </if>
-		) as perms
-		from sys_menu m
-		left join sys_role_menu rm on m.id = rm.menu_id
-		where rm.role_id = #{roleId}
-		order by m.parent_id, m.order_num
+		) AS perms
+		FROM sys_menu m
+		LEFT JOIN sys_role_menu rm ON m.id = rm.menu_id
+		WHERE rm.role_id = #{roleId}
+		ORDER BY m.parent_id, m.order_num
 	</select>
 
     <select id="findMenuList" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
         <include refid="selectMenuVo"/>
         <where>
             <if test="name != null and name != ''">
-                AND name like
+                AND name LIKE
                 <if test="_databaseId  == 'oracle'"> '%,'||#{name}||',%'</if>
                 <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> concat('%', #{name}, '%') </if>
             </if>
@@ -162,59 +162,60 @@
                 AND hide = #{hide}
             </if>
         </where>
-        order by parent_id, order_num
+        ORDER BY parent_id, order_num
     </select>
 
     <select id="findMenuListByUserId" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
-        select distinct m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
+        SELECT DISTINCT m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
         <if test="_databaseId  == 'oracle'">
-            nvl(m.perms,'') as perms,
+            nvl(m.perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'mysql'">
-            ifnull(m.perms,'') as perms,
+            ifnull(m.perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'postgresql'">
-            COALESCE(m.perms,'') as perms,
+            COALESCE(m.perms,'') AS perms,
         </if>
         m.target,m.type, m.icon, m.order_num, m.create_time
-        from sys_menu m
-        left join sys_role_menu rm on m.id = rm.menu_id
-        left join sys_user_role ur on rm.role_id = ur.role_id
-        LEFT JOIN sys_role ro on ur.role_id = ro.id
-        where ur.user_id = #{userId}
+        FROM sys_menu m
+        LEFT JOIN sys_role_menu rm ON m.id = rm.menu_id
+        LEFT JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        LEFT JOIN sys_role ro ON ur.role_id = ro.id
+        WHERE ur.user_id = #{userId}
         <if test="name != null and name != ''">
-            AND m.name like
+            AND m.name LIKE
             <if test="_databaseId  == 'oracle'"> '%,'||#{name}||',%'</if>
             <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> concat('%', #{name}, '%') </if>
         </if>
         <if test="hide != null">
             AND m.hide = #{hide}
         </if>
-        order by m.parent_id, m.order_num
+        ORDER BY m.parent_id, m.order_num
     </select>
 
     <select id="checkMenuNameUnique" parameterType="com.j2eefast.framework.sys.entity.SysMenuEntity" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
         <include refid="selectMenuVo"/>
-        where name=#{name} and parent_id = #{parentId}
+        WHERE NAME=#{name} AND parent_id = #{parentId}
     </select>
 
     <select id="findMenuAllByUserId" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysMenuEntity">
-		select distinct m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
+        SELECT DISTINCT m.id, m.parent_id, m.name, m.url, m.hide, m.is_new,
         <if test="_databaseId  == 'oracle'">
-            nvl(perms,'') as perms,
+            nvl(perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'mysql'">
-            ifnull(perms,'') as perms,
+            ifnull(perms,'') AS perms,
         </if>
         <if test="_databaseId  == 'postgresql'">
-            COALESCE(m.perms,'') as perms,
+            COALESCE(m.perms,'') AS perms,
         </if>
-		m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time
-		from sys_menu m
-			 left join sys_role_menu rm on m.id = rm.menu_id
-			 left join sys_user_role ur on rm.role_id = ur.role_id
-			 LEFT JOIN sys_role ro on ur.role_id = ro.id
-		where ur.user_id = #{userId}
-		order by m.parent_id, m.order_num
-	</select>
+        m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time
+        FROM sys_menu m
+        LEFT JOIN sys_role_menu rm ON m.id = rm.menu_id
+        LEFT JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        LEFT JOIN sys_role ro ON ur.role_id = ro.id
+        WHERE ur.user_id = #{userId}
+        ORDER BY m.parent_id, m.order_num
+    </select>
+
 </mapper>

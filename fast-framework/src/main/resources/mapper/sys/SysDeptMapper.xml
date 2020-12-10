@@ -4,35 +4,34 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysDeptMapper">
 	
 	<select id="findDetpIdList" resultType="long">
-		select id from sys_dept where parent_id = #{parentId}
+		SELECT id FROM sys_dept WHERE parent_id = #{parentId}
 	</select>
 
 	<sql id="selectDeptVo">
         SELECT d.id, d.parent_id, d.name, d.order_num,d.status,d.type,d.create_time,
-		(SELECT NAME FROM sys_dept WHERE id = d.parent_id and del_flag = '0') parent_name
+		(SELECT NAME FROM sys_dept WHERE id = d.parent_id AND del_flag = '0') parent_name
 		FROM sys_dept d
     </sql>
 
 	<select id="findDeptById" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysDeptEntity">
 		<include refid="selectDeptVo"/>
-		where  d.del_flag = '0' and d.id = #{deptId}
+		WHERE  d.del_flag = '0' AND d.id = #{deptId}
 	</select>
 
 	<select id="findByDeptNameId" resultType="com.j2eefast.framework.sys.entity.SysDeptEntity">
-		select s.id,s.name,s.type,s.status,s.parent_id from sys_comp_dept u
-		LEFT JOIN sys_dept s ON u.dept_id =s.id  WHERE s.del_flag = 0 and u.comp_id = #{compId}
+		SELECT s.id,s.name,s.type,s.status,s.parent_id FROM sys_comp_dept u
+		LEFT JOIN sys_dept s ON u.dept_id =s.id  WHERE s.del_flag = 0 AND u.comp_id = #{compId}
 		<!-- 数据范围过滤 -->
 		<if test = "sql_file !=null and sql_file!=''">
-			and ${sql_file}
+			AND ${sql_file}
 		</if>
 	</select>
 
-
 	<select id="findDeptList" resultType="com.j2eefast.framework.sys.entity.SysDeptEntity">
 		<include refid="selectDeptVo"/>
-		where 1 = 1 and d.del_flag = '0'
+		WHERE 1 = 1 AND d.del_flag = '0'
 		<if test="name != null and name != ''">
-			AND d.name like
+			AND d.name LIKE
 			<if test="_databaseId == 'oracle'"> '%,'||#{name}||',%'</if>
 			<if test="_databaseId == 'mysql'"> concat('%', #{name}, '%')</if>
 		</if>
@@ -41,11 +40,9 @@
 		</if>
 		<!-- 数据范围过滤 -->
 		<if test = "sql_file !=null and sql_file!=''">
-			and ${sql_file}
+			AND ${sql_file}
 		</if>
-		order by d.parent_id, d.order_num
+		ORDER BY d.parent_id, d.order_num
 	</select>
-
-
 
 </mapper>

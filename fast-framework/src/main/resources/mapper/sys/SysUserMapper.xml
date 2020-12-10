@@ -125,7 +125,7 @@
     </select>
 
     <select id="findAuthByUuid" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
-        SELECT b.id AS "id", b.username AS "username",b.password AS "password" FROM sys_auth_user a LEFT JOIN sys_user b on a.user_id = b.id
+        SELECT b.id AS "id", b.username AS "username",b.password AS "password" FROM sys_auth_user a LEFT JOIN sys_user b ON a.user_id = b.id
         WHERE a.uuid = #{uuid} AND b.del_flag = '0'
     </select>
 
@@ -134,7 +134,7 @@
         b.salt AS "salt", b.email AS "email", b.mobile AS "mobile", b.status AS "status", b.pwd_security_level AS "pwdSecurityLevel",
         b.pwd_update_date AS "pwdUpdateDate", b.comp_id AS "compId", b.dept_id AS "deptId",
         b.create_time AS "createTime", b.card_id AS "cardId", b.avatar AS "avatar", b.update_time AS "updateTime", a.source AS "source",
-        b.update_by AS "updateBy", b.create_by AS "createBy", b.remark AS "remark" FROM sys_auth_user a LEFT JOIN sys_user b on a.user_id = b.id
+        b.update_by AS "updateBy", b.create_by AS "createBy", b.remark AS "remark" FROM sys_auth_user a LEFT JOIN sys_user b ON a.user_id = b.id
         WHERE b.username = #{username} AND b.del_flag = '0'
     </select>
 
@@ -162,7 +162,7 @@
     <!-- 查询用户的所有菜单ID -->
     <select id="findAllMenuId" resultType="long">
 		SELECT DISTINCT rm.menu_id FROM sys_user_role ur
-			LEFT JOIN sys_role_menu rm ON ur.role_id = rm.role_id
+        LEFT JOIN sys_role_menu rm ON ur.role_id = rm.role_id
 		WHERE ur.user_id = #{id}
 	</select>
 
@@ -245,7 +245,7 @@
             AND u.comp_id  = #{compId}
         </if>
         <if test="ids !=null and ids.length > 0">
-            and u.id in
+            AND u.id IN
           <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
             #{id}
            </foreach>
@@ -300,7 +300,7 @@
     <!-- 角色授权用户 还没有授权的用户列表-->
     <select id="findUnallocatedList" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="sqlpage"/>
-        WHERE (l.id != '${roleId}' or l.id IS NULL)
+        WHERE (l.id != '${roleId}' OR l.id IS NULL)
         AND u.id NOT IN (SELECT u.id FROM sys_user u INNER JOIN sys_user_role ur ON u.id = ur.user_id AND ur.role_id = '${roleId}')
         AND u.del_flag = '0'
         <if test="username != null and username != ''">

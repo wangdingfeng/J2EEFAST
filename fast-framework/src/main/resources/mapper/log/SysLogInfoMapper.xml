@@ -5,24 +5,24 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-         id as "id", username as "username",ipaddr as "ipaddr", login_location as "loginLocation", browser as "browser", os as "os",
-         mobile as "mobile", status as "status", msg as "msg", login_time as "loginTime", comp_id as "compId"
+         id AS "id", username AS "username",ipaddr AS "ipaddr", login_location AS "loginLocation", browser AS "browser", os AS "os",
+         mobile AS "mobile", status AS "status", msg AS "msg", login_time AS "loginTime", comp_id AS "compId"
     </sql>
 
     <!--  实体栏位  -->
     <sql id="sysLoginInfoColumns">
-          a.id as "id"   ,
-          a.username as "username"   ,
-          a.ipaddr as "ipaddr"   ,
-          a.login_location as "loginLocation"   ,
-          a.browser as "browser"   ,
-          a.os as "os"   ,
-          a.mobile as "mobile"   ,
-          a.status as "status"   ,
-          a.msg as "msg"   ,
-          a.login_time as "loginTime"   ,
-          c.name as "compName"   ,
-          a.dept_id as "deptId"
+          a.id AS "id"   ,
+          a.username AS "username"   ,
+          a.ipaddr AS "ipaddr"   ,
+          a.login_location AS "loginLocation"   ,
+          a.browser AS "browser"   ,
+          a.os AS "os"   ,
+          a.mobile AS "mobile"   ,
+          a.status AS "status"   ,
+          a.msg AS "msg"   ,
+          a.login_time AS "loginTime"   ,
+          c.name AS "compName"   ,
+          a.dept_id AS "deptId"
       </sql>
 
     <!-- 外联表  -->
@@ -36,15 +36,15 @@
     </update>
 
     <select id="findFirstLoginInfo"  resultType="com.j2eefast.framework.log.entity.SysLoginInfoEntity">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
         <if test="_databaseId  == 'oracle'">
-            from (select * FROM sys_login_infor WHERE username = #{username}
-            AND status = '00000' ORDER BY login_time ) where rownum=1
+            FROM (SELECT * FROM sys_login_infor WHERE username = #{username}
+            AND status = '00000' ORDER BY login_time ) WHERE rownum=1
         </if>
         <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'">
-            from sys_login_infor
-            where username = #{username}  AND status = '00000' ORDER BY login_time
+            FROM sys_login_infor
+            WHERE username = #{username}  AND status = '00000' ORDER BY login_time
             DESC LIMIT 1
         </if>
     </select>
@@ -92,10 +92,10 @@
             </if>
             <if test="_databaseId == 'postgresql'">
                 <if test="beginTime != null and beginTime != ''">
-                    AND a.login_time <![CDATA[ >= ]]> '${beginTime}'::timestamp
+                    AND a.login_time <![CDATA[ >= ]]> '${beginTime}'::TIMESTAMP
                 </if>
                 <if test="endTime != null  and endTime != ''">
-                    AND a.login_time <![CDATA[ < ]]> ('${endTime}'::timestamp + '1 day')
+                    AND a.login_time <![CDATA[ < ]]> ('${endTime}'::TIMESTAMP + '1 day')
                 </if>
             </if>
             <!-- 数据范围过滤 -->

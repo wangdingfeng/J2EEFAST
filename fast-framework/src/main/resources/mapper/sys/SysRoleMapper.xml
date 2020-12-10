@@ -4,17 +4,17 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysRoleMapper">
 
     <sql id="selectRoleVo">
-		select r.id, r.role_name, r.role_key, r.role_sort, r.status, r.del_flag, r.create_time, r.remark
-        from sys_role r
+		SELECT r.id, r.role_name, r.role_key, r.role_sort, r.status, r.del_flag, r.create_time, r.remark
+        FROM sys_role r
 	</sql>
 
     <sql id="selectRoleContactVo">
-        select distinct r.id, r.role_name, r.role_key, r.role_sort,
-            r.status, r.del_flag, r.create_time, r.remark,r.data_scope
-        from sys_role r
-	        left join sys_user_role ur on ur.role_id = r.id
-	        left join sys_user u on u.id = ur.user_id
-	        left join sys_comp c on u.dept_id = c.id
+        SELECT DISTINCT r.id, r.role_name, r.role_key, r.role_sort,
+        r.status, r.del_flag, r.create_time, r.remark,r.data_scope
+        FROM sys_role r
+        LEFT JOIN sys_user_role ur ON ur.role_id = r.id
+        LEFT JOIN sys_user u ON u.id = ur.user_id
+        LEFT JOIN sys_comp c ON u.dept_id = c.id
     </sql>
 
     <select id="getRolesByUserId" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
@@ -24,12 +24,12 @@
 
     <select id="checkRoleNameUnique" parameterType="String" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
         <include refid="selectRoleVo"/>
-        where r.del_flag = '0' and r.role_name=#{roleName}
+        WHERE r.del_flag = '0' AND r.role_name=#{roleName}
     </select>
 
     <select id="checkRoleKeyUnique" parameterType="String" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
         <include refid="selectRoleVo"/>
-        where r.del_flag = '0' and r.role_key=#{roleKey}
+        WHERE r.del_flag = '0' AND r.role_key=#{roleKey}
     </select>
 
     <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
@@ -68,11 +68,10 @@
         </if>
     </select>
 
-
     <select id="findRoleByIds" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysRoleEntity">
         <include refid="selectRoleContactVo"/>
-        where r.del_flag = '0' and
-        ur.role_id in
+        WHERE r.del_flag = '0' AND
+        ur.role_id IN
         <foreach collection="array" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>

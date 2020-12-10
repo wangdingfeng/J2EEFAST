@@ -4,7 +4,7 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysCompDeptMapper">
 	
 	<select id="findDeptIdList" resultType="long">
-		select dept_id from sys_comp_dept where comp_id in
+		SELECT dept_id FROM sys_comp_dept WHERE comp_id IN
 		<foreach item="compId" collection="array" open="(" separator="," close=")">
 			#{compId}
 		</foreach>

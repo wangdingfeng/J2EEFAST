@@ -4,15 +4,15 @@
 <mapper namespace="com.j2eefast.framework.quartz.mapper.SysJobLogMapper">
 
     <sql id="sysJobLogColumns">
-         a.id as "id" ,
-         a.job_id as "jobId" ,
-         a.job_name as "jobName" ,
-         a.job_group as "jobGroup" ,
-         a.invoke_target as "invokeTarget" ,
-         a.status as "status" ,
-         a.error as "error" ,
-         a.times as "times" ,
-         a.create_time as "createTime"
+         a.id AS "id" ,
+         a.job_id AS "jobId" ,
+         a.job_name AS "jobName" ,
+         a.job_group AS "jobGroup" ,
+         a.invoke_target AS "invokeTarget" ,
+         a.status AS "status" ,
+         a.error AS "error" ,
+         a.times AS "times" ,
+         a.create_time AS "createTime"
      </sql>
 
 	<update id="cleanJobLog">

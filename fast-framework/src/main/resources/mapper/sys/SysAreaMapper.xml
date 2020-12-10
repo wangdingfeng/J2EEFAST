@@ -4,8 +4,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysAreaMapper">
 
-
-    
     <resultMap type="SysAreaEntity" id="SysAreaResult">
        <result property="id"    column="id"    />
        <result property="parentId"    column="parent_id"    />
@@ -24,24 +22,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <!--  实体栏位  --> 
     <sql id="sysAreaColumns">
-          a.id as "id"   ,
-          a.parent_id as "parentId"   ,                 
-          a.name as "name"   ,                 
-          a.level as "level"   ,                 
-          a.whole_name as "wholeName"   ,                 
-          a.lon as "lon"   ,                 
-          a.lat as "lat"   ,                 
-          a.city_code as "cityCode"   ,                 
-          a.zip_code as "zipCode"   ,                 
-          a.area_code as "areaCode"   ,                 
-          a.pin_yin as "pinYin"   ,                 
-          a.simple_py as "simplePy"   ,                 
-          a.per_pin_yin as "perPinYin"                   
+          a.id AS "id"   ,
+          a.parent_id AS "parentId"   ,
+          a.name AS "name"   ,
+          a.level AS "level"   ,
+          a.whole_name AS "wholeName"   ,
+          a.lon AS "lon"   ,
+          a.lat AS "lat"   ,
+          a.city_code AS "cityCode"   ,
+          a.zip_code AS "zipCode"   ,
+          a.area_code AS "areaCode"   ,
+          a.pin_yin AS "pinYin"   ,
+          a.simple_py AS "simplePy"   ,
+          a.per_pin_yin AS "perPinYin"
       </sql>
-    
-     <!-- 外联表  --> 
+
+     <!-- 外联表  -->
 	<sql id="sysAreaJoins">
-		<!--  left join sys_comp c ON c.id = a.$c.columnName   关联查询后，需手动修改 sysAreaColumns 中属性值      -->
     </sql>
 
      <!--  根据获取实体List   -->
@@ -57,14 +54,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                      <if test="_databaseId == 'mssql'">'%'+#{name}+'%'</if>
                      <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{name},'%')</if>
 			</if>
-            <if test="level != null "> and a.level = #{level} </if>
-            <if test="parentId != null "> and a.parent_id = #{parentId} </if>
-            <if test="zipCode != null  and zipCode != ''"> and a.zip_code = #{zipCode} </if>
-            <if test="areaCode != null  and areaCode != ''"> and a.area_code = #{areaCode} </if>
+            <if test="level != null "> AND a.level = #{level} </if>
+            <if test="parentId != null "> AND a.parent_id = #{parentId} </if>
+            <if test="zipCode != null  and zipCode != ''"> AND a.zip_code = #{zipCode} </if>
+            <if test="areaCode != null  and areaCode != ''"> AND a.area_code = #{areaCode} </if>
         </where>
 	 </select>
-	 
-	 
 	 
 	  <!--  根据获取实体 page   -->
      <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
@@ -73,19 +68,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
 		FROM sys_area a
 		<include refid="sysAreaJoins"/>
-		<where>
-        
-               <if test="sysArea.name != null  and sysArea.name != ''">
-                     and a.name LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{sysArea.name}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{sysArea.name}+'%'</if>
-                     <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{sysArea.name},'%')</if>
-			</if>
-               <if test="sysArea.level != null "> and a.level = #{sysArea.level} </if>
-            <if test="sysArea.parentId != null "> and a.parent_id = #{sysArea.parentId} </if>
-                   <if test="sysArea.zipCode != null  and sysArea.zipCode != ''"> and a.zip_code = #{sysArea.zipCode} </if>
-               <if test="sysArea.areaCode != null  and sysArea.areaCode != ''"> and a.area_code = #{sysArea.areaCode} </if>
-      		</where>
+        <where>
+            <if test="sysArea.name != null  and sysArea.name != ''">
+                AND a.name LIKE
+                <if test="_databaseId == 'oracle'"> '%'||#{sysArea.name}||'%'</if>
+                <if test="_databaseId == 'mssql'">'%'+#{sysArea.name}+'%'</if>
+                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{sysArea.name},'%')</if>
+            </if>
+            <if test="sysArea.level != null "> AND a.level = #{sysArea.level} </if>
+            <if test="sysArea.parentId != null "> AND a.parent_id = #{sysArea.parentId} </if>
+            <if test="sysArea.zipCode != null  and sysArea.zipCode != ''"> AND a.zip_code = #{sysArea.zipCode} </if>
+            <if test="sysArea.areaCode != null  and sysArea.areaCode != ''"> AND a.area_code = #{sysArea.areaCode} </if>
+        </where>
 	 </select>
 	   
 </mapper>
