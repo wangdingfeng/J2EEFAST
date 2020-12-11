@@ -89,10 +89,11 @@ public class GenUtils
                 column.setJavaType(GenConstants.TYPE_LONG);
             }
         }
-
-        // 插入字段（默认所有字段都需要插入）
-        column.setIsInsert(GenConstants.REQUIRE);
-
+        // 插入字段 主键 系统自带字段默认不插入
+        if (!arraysContains(GenConstants.COLUMNNAME_NOT_EDIT, columnName) && !column.isPk())
+        {
+            column.setIsInsert(GenConstants.REQUIRE);
+        }
         // 编辑字段
         if (!arraysContains(GenConstants.COLUMNNAME_NOT_EDIT, columnName) && !column.isPk())
         {
@@ -108,7 +109,6 @@ public class GenUtils
         {
             column.setIsQuery(GenConstants.REQUIRE);
         }
-
         // 查询字段类型
         if (StrUtil.endWithIgnoreCase(columnName, "name"))
         {

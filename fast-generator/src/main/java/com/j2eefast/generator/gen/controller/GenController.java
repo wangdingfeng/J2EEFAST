@@ -185,8 +185,7 @@ public class GenController extends BaseController {
      */
     @RequiresPermissions("tool:gen:preview")
     @GetMapping("/preview/{tableId}")
-    public String preview(@PathVariable("tableId") Long tableId, ModelMap mmap) throws IOException
-    {
+    public String preview(@PathVariable("tableId") Long tableId, ModelMap mmap){
         Map<String, String> dataMap = genTableService.previewCode(tableId);
         Map <String,String> map = new LinkedHashMap<>();
         for(Map.Entry<String, String> entry : dataMap.entrySet()){

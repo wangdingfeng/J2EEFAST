@@ -4,77 +4,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.generator.gen.mapper.GenTableColumnMapper">
     
-<!--     <resultMap type="GenTableColumnEntity" id="GenTableColumnResult">
-        <id     property="id"       column="id"      />
-        <result property="tableId"        column="table_id"       />
-        <result property="columnName"     column="column_name"    />
-        <result property="columnComment"  column="column_comment" />
-        <result property="columnType"     column="column_type"    />
-        <result property="javaType"       column="java_type"      />
-        <result property="javaField"      column="java_field"     />
-        <result property="isPk"           column="is_pk"          />
-        <result property="isIncrement"    column="is_increment"   />
-        <result property="isRequired"     column="is_required"    />
-        <result property="isInsert"       column="is_insert"      />
-        <result property="isEdit"         column="is_edit"        />
-        <result property="isList"         column="is_list"        />
-        <result property="isQuery"        column="is_query"       />
-        <result property="queryType"      column="query_type"     />
-        <result property="htmlType"       column="html_type"      />
-        <result property="dictType"       column="dict_type"      />
-        <result property="isTableSort"    column="is_table_sort"/>
-        <result property="editInfo"    column="edit_info"/>
-        <result property="circleType"    column="circle_type"/>
-        <result property="sort"           column="sort"           />
-        <result property="createBy"       column="create_by"      />
-        <result property="createTime"     column="create_time"    />
-        <result property="updateBy"       column="update_by"      />
-        <result property="updateTime"     column="update_time"    />
-    </resultMap>
-	
-	<sql id="selectGenTableColumnVo">
-        select id, table_id, column_name, column_comment, column_type, java_type, java_field, is_pk, is_increment, is_required, is_insert,edit_info,circle_type,
-         is_edit, is_list, is_query, query_type, html_type, dict_type, is_table_sort,sort, create_by, create_time, update_by, update_time from gen_table_column
-    </sql> -->
-    
-    
     <sql id="genTableColumns">
-       id as id, 
-       table_id as tableId, 
-       column_name  as   column_name,
-       column_comment  as  columnComment ,
-       column_type  as  columnType ,
-       java_type  as  javaType ,
-       java_field  as   javaField,
-       is_pk  as   isPk,
-       is_increment  as  isIncrement ,
-       is_required  as   isRequired,
-       is_insert as isInsert,
-       edit_info as editInfo,
-       circle_type as circleType,
-       is_edit  as    isEdit,
-       is_list  as   isList ,
-       is_query  as   isQuery  ,
-       query_type  as   queryType,
-       html_type  as  htmlType ,
-       dict_type  as  dictType ,
-       is_table_sort as isTableSort,
-       sort  as  sort,
-       validation as validation
+       id AS id,
+       table_id AS tableId,
+       column_name  AS   column_name,
+       column_comment  AS  columnComment ,
+       column_type  AS  columnType ,
+       java_type  AS  javaType ,
+       java_field  AS   javaField,
+       is_pk  AS   isPk,
+       is_increment  AS  isIncrement ,
+       is_required  AS   isRequired,
+       is_insert AS isInsert,
+       edit_info AS editInfo,
+       circle_type AS circleType,
+       is_edit  AS    isEdit,
+       is_list  AS   isList ,
+       is_query  AS   isQuery  ,
+       query_type  AS   queryType,
+       html_type  AS  htmlType ,
+       dict_type  AS  dictType ,
+       is_table_sort AS isTableSort,
+       sort  AS  sort,
+       validation AS validation
     </sql>
-    
- 
+
     <select id="findListByTableId" parameterType="Long"  resultType="GenTableColumnEntity">
-       select
+       SELECT
        <include refid="genTableColumns"/>
-       from gen_table_column
-       where table_id = '${tableId}'
-       order by sort
+       FROM gen_table_column
+       WHERE table_id = '${tableId}'
+       ORDER BY sort
     </select>
     
-
     <update id="updateGenTableColumn" parameterType="GenTableColumnEntity">
-        update gen_table_column
+        UPDATE gen_table_column
         <set>
             column_comment = #{columnComment},
             java_type = #{javaType},
@@ -89,72 +53,66 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             dict_type = #{dictType},
             is_table_sort = #{isTableSort},
             <if test="validation != null and validation != ''">validation = #{validation},</if>
+            <if test="validation == null or validation == ''">validation = '',</if>
             <if test="editInfo != null">edit_info = #{editInfo},</if>
             <if test="circleType != null and circleType != ''">circle_type = #{circleType},</if>
             sort = #{sort}
         </set>
-        where id = #{id}
+        WHERE id = #{id}
     </update>
 
-   <!--  <select id="selectDbTableColumnsByName" parameterType="String" resultMap="GenTableColumnResult">
-		select column_name, (case when (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type
-		from information_schema.columns where table_schema = (select database()) and table_name = (#{tableName})
-		order by ordinal_position
-	</select> -->
-	
-	
 	<select id="generateDbTableColumnsByName"  resultType="GenTableColumnEntity" >
+        <if test="dbType == 'mysql'">
+            SELECT column_name AS columnName,
+            (CASE WHEN (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') THEN '1' ELSE NULL END) AS isRequired,
+            (CASE WHEN column_key = 'PRI' THEN '1' ELSE '0' END) AS isPk,
+            ordinal_position AS sort,
+            column_comment AS columnComment,
+            (CASE WHEN extra = 'auto_increment' THEN '1' ELSE '0' END) AS isIncrement,
+            column_type AS columnType
+            FROM information_schema.columns WHERE table_schema = <choose><when test="schema != null and schema !=''"> #{schema}</when><otherwise>(SELECT database())</otherwise></choose>
+            AND table_name = (#{tableName})
+            ORDER BY ordinal_position
+        </if>
 
-	    <if test="dbType == 'mysql'">
-	    select column_name as columnName, 
-	    (case when (is_nullable = 'no' <![CDATA[ && ]]> column_key != 'PRI') then '1' else null end) as isRequired, 
-	    (case when column_key = 'PRI' then '1' else '0' end) as isPk, 
-	    ordinal_position as sort, 
-	    column_comment as columnComment, 
-	    (case when extra = 'auto_increment' then '1' else '0' end) as isIncrement, 
-	    column_type as columnType
-		from information_schema.columns where table_schema = <choose><when test="schema != null and schema !=''"> #{schema}</when><otherwise>(select database())</otherwise></choose>
-		 and table_name = (#{tableName})
-		 order by ordinal_position
-	    </if>
         <if test="dbType == 'postgresql'">
-           select a.attnum as sort,a.attname as columnName,
-           concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as columnType,
-           d.description as columnComment
-           ,(case when a.attnotnull = 't'  then '1' else '0' end) as isRequired
-           , (case when position(CAST( a.attnum as VARCHAR) in k.pik) > 0 then '1' else '0' end) as isPk
-           from pg_class c, pg_attribute a , pg_type t, pg_description d, (SELECT p.conrelid,p.conkey::text as pik from pg_constraint as p) as k
-           where  c.relname = '${tableName}' and a.attnum>0 and a.attrelid = c.oid and a.atttypid = t.oid and  d.objoid=a.attrelid and d.objsubid=a.attnum
-           and c.oid = k.conrelid
-       </if>
-	   <if test="dbType == 'oracle'">
-	      SELECT
-				t.COLUMN_NAME AS columnName,
-				(CASE WHEN t.NULLABLE = 'Y' THEN '1' ELSE '0' END) AS isRequired,
-				(select count(*) from all_constraints con, all_cons_columns col 
-                  where con.constraint_name = col.constraint_name  and con.constraint_type='P' 
-                  and col.table_name = t.table_name  and col.COLUMN_NAME = t.COLUMN_NAME ) AS isPk ,
-				(t.COLUMN_ID) AS sort,
-				c.COMMENTS AS columnComment,
-				decode(t.DATA_TYPE,'DATE',t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
-					'VARCHAR2', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
-					'VARCHAR', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
-					'NVARCHAR2', t.DATA_TYPE || '(' || t.DATA_LENGTH/2 || ')',
-					'CHAR', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
-					'NUMBER',t.DATA_TYPE || (nvl2(t.DATA_PRECISION,nvl2(decode(t.DATA_SCALE,0,null,t.DATA_SCALE),
-						'(' || t.DATA_PRECISION || ',' || t.DATA_SCALE || ')', 
-						'(' || t.DATA_PRECISION || ')'),'(18)')),t.DATA_TYPE) AS columnType 
-			FROM 
-			ALL_TAB_COLUMNS t, ALL_COL_COMMENTS c 
-			WHERE t.TABLE_NAME = c.table_name 	AND t.COLUMN_NAME = c.column_name
-				AND t.TABLE_NAME = upper(#{tableName})
-			ORDER BY t.COLUMN_ID
-	   </if>
+            SELECT a.attnum AS sort,a.attname AS columnName,
+            concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) FROM '\(.*\)')) AS columnType,
+            d.description AS columnComment
+            ,(CASE WHEN a.attnotnull = 't'  THEN '1' ELSE '0' END) AS isRequired
+            , (CASE WHEN POSITION(CAST( a.attnum AS VARCHAR) IN k.pik) > 0 THEN '1' ELSE '0' END) AS isPk
+            FROM pg_class c, pg_attribute a , pg_type t, pg_description d, (SELECT p.conrelid,p.conkey::text AS pik FROM pg_constraint AS p) AS k
+            WHERE  c.relname = '${tableName}' AND a.attnum>0 AND a.attrelid = c.oid AND a.atttypid = t.oid AND  d.objoid=a.attrelid AND d.objsubid=a.attnum
+            AND c.oid = k.conrelid
+        </if>
+
+        <if test="dbType == 'oracle'">
+            SELECT
+            t.COLUMN_NAME AS columnName,
+            (CASE WHEN t.NULLABLE = 'Y' THEN '1' ELSE '0' END) AS isRequired,
+            (SELECT COUNT(*) FROM all_constraints con, all_cons_columns col
+            WHERE con.constraint_name = col.constraint_name  AND con.constraint_type='P'
+            AND col.table_name = t.table_name  AND col.COLUMN_NAME = t.COLUMN_NAME ) AS isPk ,
+            (t.COLUMN_ID) AS sort,
+            c.COMMENTS AS columnComment,
+            decode(t.DATA_TYPE,'DATE',t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
+            'VARCHAR2', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
+            'VARCHAR', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
+            'NVARCHAR2', t.DATA_TYPE || '(' || t.DATA_LENGTH/2 || ')',
+            'CHAR', t.DATA_TYPE || '(' || t.DATA_LENGTH || ')',
+            'NUMBER',t.DATA_TYPE || (nvl2(t.DATA_PRECISION,nvl2(decode(t.DATA_SCALE,0,NULL,t.DATA_SCALE),
+            '(' || t.DATA_PRECISION || ',' || t.DATA_SCALE || ')',
+            '(' || t.DATA_PRECISION || ')'),'(18)')),t.DATA_TYPE) AS columnType
+            FROM
+            ALL_TAB_COLUMNS t, ALL_COL_COMMENTS c
+            WHERE t.TABLE_NAME = c.table_name 	AND t.COLUMN_NAME = c.column_name
+            AND t.TABLE_NAME = UPPER(#{tableName})
+            ORDER BY t.COLUMN_ID
+        </if>
 	</select>
-	
 
     <delete id="deleteGenTableColumnByIds" parameterType="Long">
-        delete from gen_table_column where table_id in
+        DELETE FROM gen_table_column WHERE table_id IN
         <foreach collection="array" item="tableId" open="(" separator="," close=")">
             '${tableId}'
         </foreach>

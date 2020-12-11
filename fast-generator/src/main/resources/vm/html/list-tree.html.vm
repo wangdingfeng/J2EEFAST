@@ -102,7 +102,7 @@ ${pageTheme}
             addUrl: prefix + "/add/{id}",
             editUrl: prefix + "/edit/{id}",
             delUrl: prefix + "/del/{id}",
-            modalName: "${functionName}",
+            modalName: '<@ctx.i18n text="${functionName}"/>',
             expandAll: false,
 #foreach($column in $columns)
 #if($column.tableSort)
@@ -128,16 +128,16 @@ ${pageTheme}
 #end
 #if($column.pk)
 #elseif($column.list && "" != $dictType)
-                ,{field : '${javaField}',title : '${comment}'#if($javaField == $treeName),align: "left",halign:"left"#end,formatter: function(value, row, index) {
+                ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>'#if($javaField == $treeName),align: "left",halign:"left"#end,formatter: function(value, row, index) {
                     return $.table.selectDictLabel(${javaField}Datas, value);
                 }}
 #elseif($column.list && "" != $javaField)
 #if($async == '0' && $javaField == $treeName)
-                ,{field : '${javaField}',title : '${comment}',align: "left",halign:"left"}
+                ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>',align: "left",halign:"left"}
 #elseif($async == '1' && $javaField == $treeName)
-                ,{field : '${javaField}',title : '${comment}',align: "left",halign:"center"}
+                ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>',align: "left",halign:"center"}
 #else
-                ,{field : '${javaField}',title : '${comment}'}
+                ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>'}
 #end
 #end                
 #end
@@ -146,8 +146,8 @@ ${pageTheme}
                     var actions = [];
 #if(${table.actionsType} == "default")
                     actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="opt.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i> <@ctx.i18n text = "新增"/></a> ');
-                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i><@ctx.i18n text = "编辑"/></a> ');
+                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>');
 #elseif(${table.actionsType} == "icon")
                     actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "编辑"/>" onclick="#if($table.target == "tab")opt.operate.editTab#else opt.operate.edit#end(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-edit"></i></a> ');
                     actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
@@ -158,7 +158,7 @@ ${pageTheme}
                 ,{title:"<@ctx.i18n text = "操作"/>",visible:visible#if($table.actionsType == "icon"),class:'action'#end,formatter: function(value, row, index) {
                     var actions = [];
 #if($table.actionsType == "default")
-                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>');
 #elseif($table.actionsType == "icon")
                     actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.${pkColumn.javaField} + '\')"><i class="fa fa-trash-o"></i></a> ');
 #end

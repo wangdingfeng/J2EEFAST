@@ -20,19 +20,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="${className}Columns">
 #foreach($c in $columns)
 #if($c.htmlType == "comp")
-         comp001.name as "company.name",
+         comp001.name AS "company.name",
 #elseif($c.htmlType == "dept")
-         dept001.name as "organization.name",
+         dept001.name AS "organization.name",
 #elseif($c.htmlType == "user" )
-         user001.name as "sysUser.name",
+         user001.name AS "sysUser.name",
 #end
-         a.$c.columnName as "${c.javaField}" #if($velocityCount != $columns.size()),#end
+         a.$c.columnName AS "${c.javaField}" #if($velocityCount != $columns.size()),#end
 
 #end
 #if($table.tree)
 #foreach($c in $columns)
 #if($c.pk)
-        ,(SELECT ${tree_name} FROM ${tableName} WHERE $c.javaField = a.${tree_parent_code}) as parentName
+        ,(SELECT ${tree_name} FROM ${tableName} WHERE $c.javaField = a.${tree_parent_code}) AS parentName
 #break
 #end
 #end
@@ -59,13 +59,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="${className}Joins">
 #foreach($c in $columns)
 #if($c.htmlType == "comp")
-        left join sys_comp comp001 ON comp001.id = a.$c.columnName
+        LEFT JOIN sys_comp comp001 ON comp001.id = a.$c.columnName
 #end
 #if($c.htmlType == "user")
-        left join sys_user user001 ON user001.id = a.$c.columnName
+        LEFT JOIN sys_user user001 ON user001.id = a.$c.columnName
 #end
 #if($c.htmlType == "dept")
-        left join sys_comp dept001 ON (dept001.type = '1' AND dept001.id = a.$c.columnName )
+        LEFT JOIN sys_comp dept001 ON (dept001.type = '1' AND dept001.id = a.$c.columnName )
 #end
 #end
     </sql>
@@ -116,16 +116,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="${className}.${c.javaField} != null #if(${c.javaType}=="String") and ${className}.${c.javaField} != ''#end">
                 AND a.${c.columnName} LIKE
 #if($dbTypeName == 'mssql')
-                '%'+#{${className}.${c.javaField}}+'%'
+                    '%'+#{${className}.${c.javaField}}+'%'
 #end
 #if($dbTypeName == 'oracle')
-                '%'||#{${className}.${c.javaField}}||'%'
+                    '%'||#{${className}.${c.javaField}}||'%'
 #end
 #if($dbTypeName == 'mysql' || $dbTypeName == 'postgresql')
-                CONCAT('%',#{${className}.${c.javaField}},'%')
+                    CONCAT('%',#{${className}.${c.javaField}},'%')
 #end
             </if>
-#elseif($c.queryType == 'BETWEEN')##
+#elseif($c.queryType == 'BETWEEN')
 #set($AttrName=$c.javaField.substring(0,1).toUpperCase() + ${c.javaField.substring(1)})##
             <if test="${className}.begin${AttrName} != null and ${className}.end${AttrName} != null #if(${c.javaType}=="String") and ${className}.begin${AttrName} != '' and ${className}.end${AttrName} != '' #end">
                 AND a.${c.columnName} between #{${className}.begin${AttrName}}  AND  #{${className}.end${AttrName}}
@@ -232,9 +232,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #end
 #foreach($c in $columns)
+#if($async == '1' && ($c.columnName == $tree_parent_code))
+            <if test="${className}.${c.javaField} != null #if(${c.javaType}=="String") and ${className}.${c.javaField} != ''#end"> AND a.${c.columnName} = #{${className}.${c.javaField}} </if>
+#else
 #if($c.isQuery == "1" )
 #if($c.queryType == 'EQ')
-#if($c.javaType == "SysCompEntity" || $c.javaType == "SysDeptEntity" || $c.javaType == "SysUserEntity") 
+#if($c.javaType == "SysCompEntity" || $c.javaType == "SysDeptEntity" || $c.javaType == "SysUserEntity")
             <if test="${className}.${c.javaField} != null and ${className}.${c.javaField}.id !=null and ${className}.${c.javaField}.id != '' "> AND a.${c.columnName} = #{${className}.${c.javaField}.id} </if>
 #else
             <if test="${className}.${c.javaField} != null #if(${c.javaType}=="String") and ${className}.${c.javaField} != ''#end"> AND a.${c.columnName} = #{${className}.${c.javaField}} </if>
@@ -263,6 +266,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="${className}.begin${AttrName} != null and ${className}.end${AttrName} != null #if(${c.javaType}=="String") and ${className}.begin${AttrName} != '' and ${className}.end${AttrName} != '' #end">
                 AND a.${c.columnName} between #{${className}.begin${AttrName}}  AND  #{${className}.end${AttrName}}
             </if>
+#end
 #end
 #end
 #end

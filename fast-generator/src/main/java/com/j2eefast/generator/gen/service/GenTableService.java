@@ -5,7 +5,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,14 +13,14 @@ import com.google.common.collect.Lists;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
+import com.j2eefast.common.core.mutidatasource.annotaion.mybatis.MybatisMapperRefresh;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
+import com.j2eefast.common.db.context.SqlSessionFactoryContext;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
 import com.j2eefast.common.db.utils.SqlExe;
-import com.j2eefast.framework.sys.entity.SysAreaEntity;
 import com.j2eefast.framework.sys.mapper.SysDatabaseMapper;
 import com.j2eefast.framework.sys.service.SysMenuService;
 import com.j2eefast.framework.utils.Global;
@@ -32,6 +31,7 @@ import com.j2eefast.generator.gen.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -39,13 +39,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +105,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         if(searchTable.equals("gen_table")){
             Page<GenTableEntity> page = this.baseMapper.selectPage(new Query<GenTableEntity>(params).getPage(),
                     new QueryWrapper<GenTableEntity>().eq("tpl_category","child")
-                            .eq(StringUtils.isNotBlank(pId), "id", searchValue)
+                            .eq(StringUtils.isNotBlank(searchValue), "id", searchValue)
                             .like(StringUtils.isNotBlank(name), "table_name", name));
             //数据转换
             List<Ztree> list = new ArrayList<>();
@@ -212,7 +212,8 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         }
         //菜单ID
         Long menuId = (Long) context.get("menuId");
-        List<String> templaList = templates;
+        @SuppressWarnings("unused")
+		List<String> templaList = templates;
         //预执行菜单SQL
         String runMenuSqlPath = "";
         boolean isMenu = false;
@@ -237,9 +238,9 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
                 throw  new RxcException("文件生成失败","99991");
             }
         }
-
+        @SuppressWarnings("unused")
         GenTableEntity tableEntity = table;
-
+        // 若是主子表
         if(GenConstants.TPL_MASTER.equals(table.getTplCategory())){
             // 包路径
             String packageName = table.getPackageName(); //com.j2eefast.bcs.tbc
@@ -288,6 +289,13 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         }
 
         FileUtil.del(runMenuSqlPath);
+        
+        //刷新更新生成业务的mapperXML
+        Iterator<Map.Entry<Object, SqlSessionFactory>> entries = SqlSessionFactoryContext.getSqlSessionFactorys().entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Object, SqlSessionFactory> entry = entries.next();
+           new MybatisMapperRefresh((String) entry.getKey(),entry.getValue()).loadRefresh();
+        }
 
         return true;
     }
@@ -463,10 +471,11 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     	//其它扩展设置
     	if (null != genTable.getOption()) { 
     		genTable.setOptions(JSONObject.toJSONString(genTable.getOption()));
-    	}    	
+    	}
         int row = this.genTableMapper.updateGenTable(genTable);
         if (row > 0) {
             for (GenTableColumnEntity cenTableColumn : genTable.getColumns()) {
+            	
                 genTableColumnService.updateGenTableColumn(cenTableColumn);
             }
             return  true;

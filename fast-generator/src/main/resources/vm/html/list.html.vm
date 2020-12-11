@@ -112,7 +112,7 @@ ${pageTheme}
             modalName: "${functionName}",
 #elseif($table.r && $table.rDel)
             delUrl: prefix + "/del",
-            modalName: "${functionName}",
+            modalName: '<@ctx.i18n text="${functionName}"/>',
 #end
             uniqueId:  #foreach($column in $columns)#if($column.pk)'${column.javaField}',#end#end/* 唯一ID */
             escape: true,/* 分页设置 */
