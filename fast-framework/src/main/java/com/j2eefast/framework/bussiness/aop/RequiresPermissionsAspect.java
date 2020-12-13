@@ -1,8 +1,10 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.framework.bussiness.aop;
 
 import com.j2eefast.framework.utils.Constant;
-import com.j2eefast.framework.utils.UserUtils;
-import lombok.extern.java.Log;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,12 +13,18 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import java.util.Map;
 
+/**
+ * 处理请求权限控制字符保存请求Map
+ * @author zhouzhou
+ * @date 2020-12-09 14:53
+ */
 @Order(4)
 @Aspect
 @Component
-@Log
 public class RequiresPermissionsAspect {
+	
     @Pointcut("@annotation(org.apache.shiro.authz.annotation.RequiresPermissions)")
     public void dataFilterCut() {
 
@@ -25,9 +33,15 @@ public class RequiresPermissionsAspect {
     @SuppressWarnings("unchecked")
     @Before("dataFilterCut()")
     public void dataFilter(JoinPoint point) throws Throwable {
-
         MethodSignature signature = (MethodSignature) point.getSignature();
         RequiresPermissions dataFilter = signature.getMethod().getAnnotation(RequiresPermissions.class);
-        UserUtils.setSessionAttribute(Constant.REQUIRES_PERMISSIONS,dataFilter.value());
+        Object[] params = point.getArgs();
+        for(Object o:  params){
+            if (o != null && o instanceof Map) {
+                Map map = (Map) o;
+                map.put(Constant.REQUIRES_PERMISSIONS,dataFilter.value());
+                break;
+            }
+        }
     }
 }
