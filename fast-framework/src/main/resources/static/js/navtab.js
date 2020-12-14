@@ -81,6 +81,7 @@ layui.define(['element'], function(exports){
      * @return {[type]}      [description]
      */
     LarryTab.prototype.tabAdd = function(data){
+    	if(opt.common.isEmpty(data)) return;
         var _this = this;
 	    var tabIndex = _this.exists(data.id,data.href,data.module);
 	    // 若不存在
