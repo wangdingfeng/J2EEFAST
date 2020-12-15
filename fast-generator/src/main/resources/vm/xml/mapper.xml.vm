@@ -169,6 +169,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #end
 #foreach($c in $columns)
+#if($async == '1' && ($c.columnName == $tree_parent_code))
+            <if test="${c.javaField} != null #if(${c.javaType}=="String") and ${c.javaField} != ''#end"> AND a.${c.columnName} = #{${c.javaField}} </if>
+#else
 #if($c.isQuery == "1" )
 #if($c.queryType == 'EQ')
 #if($c.javaType == "SysCompEntity" || $c.javaType == "SysDeptEntity" || $c.javaType == "SysUserEntity")
@@ -200,6 +203,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="begin${AttrName} != null and end${AttrName} != null #if(${c.javaType}=="String") and begin${AttrName} != '' and end${AttrName} != '' #end">
                 AND a.${c.columnName} between #{begin${AttrName}}  AND  #{end${AttrName}}
             </if>
+#end
 #end
 #end
 #end
