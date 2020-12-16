@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.config.properties;
@@ -41,10 +42,10 @@ public class DruidProperties {
     private Integer maxWait 										   = 60000;
     private Integer timeBetweenEvictionRunsMillis 					   = 60000;
     private Integer minEvictableIdleTimeMillis 						   = 300000;
-    private String  validationQuery									   = "select 1";
+    private String  validationQuery									   = "SELECT 1 FROM DUAL";
     private Boolean testWhileIdle 									   = true;
-    private Boolean testOnBorrow 									   = true;
-    private Boolean testOnReturn 									   = true;
+    private Boolean testOnBorrow 									   = false;
+    private Boolean testOnReturn 									   = false;
     private Boolean poolPreparedStatements 							   = true;
 
     private Integer maxPoolPreparedStatementPerConnectionSize 		   = 20;
@@ -118,13 +119,13 @@ public class DruidProperties {
     	String sqlserver = "sqlserver";
     	
         if (url.contains(oracle)) {
-            return "select 1 from dual";
+            return "SELECT 1 FROM DUAL";
         } else if (url.contains(postgresql)) {
-            return "select version()";
+            return "SELECT VERSION()";
         } else if (url.contains(sqlserver)) {
-            return "select 1";
+            return "SELECT 1";
         } else {
-            return "select 1";
+            return "SELECT 1";
         }
     }
 }

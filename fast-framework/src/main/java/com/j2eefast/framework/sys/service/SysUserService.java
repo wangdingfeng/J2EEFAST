@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.service;
@@ -48,8 +49,6 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	private SysUserRoleService sysUserRoleService;
 	@Resource
 	private SysRoleService sysRoleService;
-	@Autowired
-	private SysUserDeptService sysUserDeptService;
 	@Autowired
 	private SysUserPostService sysUserPostService;
 	@Autowired

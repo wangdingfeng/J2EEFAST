@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 
@@ -62,7 +63,8 @@ public class Constant {
 	public static final String DATA_SCOPE_COMP = "2";
 	/** 数据权限过滤 */
 	public static final String SQL_FILTER = "sql_filter";
-	public static final String REQUIRES_PERMISSIONS = "REQUIRESPERMISSIONS";
+	/** 请求权限字符Key*/
+	public static final String REQUIRES_PERMISSIONS = "__REQUIRESPERMISSIONS";
 	public static final String BANNER = "spring.main.banner-mode";
 	public static final String FALSE = "false";
 	/** 公司正常状态 */

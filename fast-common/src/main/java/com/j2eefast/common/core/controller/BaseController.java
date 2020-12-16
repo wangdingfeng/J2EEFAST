@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.controller;
@@ -13,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
+
 /**
  * <p>控制器基础类</p>
  *

@@ -1,14 +1,12 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.utils;
-
 import java.io.Serializable;
 import java.util.List;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
 import lombok.Data;
 
 /**

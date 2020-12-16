@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
@@ -14,8 +15,6 @@ import com.j2eefast.framework.quartz.utils.ScheduleUtils;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
 import org.quartz.Scheduler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -30,7 +29,6 @@ import java.util.List;
  * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/14 18:32
  * @version V1.0
- *
  */
 @Component
 public class BaseInitialze  implements ApplicationRunner {
