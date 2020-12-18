@@ -2141,8 +2141,9 @@
                 that.trigger('load-success', res);
                 if (!silent) that.$tableLoading.hide();
             },
-            error: function (res) {
-                that.trigger('load-error', res.status, res);
+            error: function (xhr, textStatus) {
+                opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                that.trigger('load-error', JSON.parse(xhr.responseText).msg || xhr.responseText, xhr);
                 if (!silent) that.$tableLoading.hide();
             }
         });
