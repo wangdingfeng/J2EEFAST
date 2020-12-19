@@ -2,24 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<artifactId>fast</artifactId>
 		<groupId>com.j2eefast</groupId>
-		<version>3.2.0</version>
+		<version>2.2.0</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
+
 	<packaging>jar</packaging>
 	<artifactId>fast-admin</artifactId>
 	<name>fast 服务入口</name>
 	<description>
 		fast 服务入口
 	</description>
+
 	<!-- 打包编码, 版本号, 日期-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version>2.1.1</version>
+		<version>2.2.0</version>
 		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
 	</properties>
+
 	<dependencies>
 	
 	     <dependency>
@@ -39,7 +43,8 @@
 			<groupId>com.j2eefast</groupId>
 			<artifactId>fast-flowable</artifactId>
 			<version>3.2.0</version>
-		</dependency>-->
+		</dependency>
+		-->
 
 <!--		<dependency>-->
 <!--		  <groupId>p6spy</groupId>-->
@@ -77,65 +82,65 @@
 				</configuration>
 			</plugin>
 
-		<!-- 打jar包的插件 -->
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-jar-plugin</artifactId>
-			<configuration>
-				<archive>
-					<manifest>
-						<addClasspath>true</addClasspath>
-						<classpathPrefix>lib</classpathPrefix>
-						<!-- 程序启动入口 -->
-						<mainClass>com.j2eefast.FastApplication</mainClass>
-					</manifest>
-					<manifestEntries>
-						<Class-Path>./</Class-Path>
-					</manifestEntries>
-				</archive>
-
-				<!-- 不打包资源文件（配置文件和依赖包分开） -->
-				<excludes>
-					<exclude>config/**</exclude>
-					<exclude>static/**</exclude>
-					<exclude>public/**</exclude>
-					<exclude>mapper/**</exclude>
-					<exclude>templates/**</exclude>
-					<exclude>i18n/**</exclude>
-					<exclude>*.yml</exclude>
-					<exclude>*.txt</exclude>
-					<exclude>*.xml</exclude>
-					<exclude>*.pfx</exclude>
-					<exclude>*.bat</exclude>
-					<exclude>*.sh</exclude>
-					<exclude>build/**</exclude>
-					<exclude>*.properties</exclude>
-					<exclude>license/**</exclude>
-					<exclude>ehcache/**</exclude>
-					<exclude>run/**</exclude>
-				</excludes>
-			</configuration>
-		</plugin>
-		<!-- 需要打成完整gz包放开注解
-		<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+			<!-- 打jar包的插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>src/main/build/package.xml</descriptor>
-					</descriptors>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib</classpathPrefix>
+							<!-- 程序启动入口 -->
+							<mainClass>com.j2eefast.FastApplication</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>./</Class-Path>
+						</manifestEntries>
+					</archive>
+
+					<!-- 不打包资源文件（配置文件和依赖包分开） -->
+					<excludes>
+						<exclude>config/**</exclude>
+						<exclude>static/**</exclude>
+						<exclude>public/**</exclude>
+						<exclude>mapper/**</exclude>
+						<exclude>templates/**</exclude>
+						<exclude>i18n/**</exclude>
+						<exclude>*.yml</exclude>
+						<exclude>*.txt</exclude>
+						<exclude>*.xml</exclude>
+						<exclude>*.pfx</exclude>
+						<exclude>*.bat</exclude>
+						<exclude>*.sh</exclude>
+						<exclude>build/**</exclude>
+						<exclude>*.properties</exclude>
+						<exclude>license/**</exclude>
+						<exclude>ehcache/**</exclude>
+						<exclude>run/**</exclude>
+					</excludes>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-		 </plugin>
-		 -->
-		</plugins>
+			</plugin>
+			<!-- 需要打成完整gz包放开注解
+			<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<descriptors>
+							<descriptor>src/main/build/package.xml</descriptor>
+						</descriptors>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+			 </plugin>
+			 -->
+			</plugins>
     </build>
 </project>

@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>fast</artifactId>
 		<groupId>com.j2eefast</groupId>
-		<version>3.2.0</version>
+		<version>2.2.0</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
@@ -33,6 +33,7 @@
 			<artifactId>easy-captcha</artifactId>
 		</dependency>
 
+		<!--Shiro与Freemarker整合 -->
 		<dependency>
 			<groupId>net.mingsoft</groupId>
 			<artifactId>shiro-freemarker-tags</artifactId>
@@ -116,7 +117,39 @@
 
 	<build>
 		<plugins>
-			<!-- 打jar包的插件 -->
+			<!-- YUI Compressor Maven压缩JS/CSS插件
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skip>false</skip>
+					<encoding>UTF-8</encoding>
+					<jswarn>false</jswarn>
+					<force>true</force>
+					<suffix>-min</suffix>
+					<sourceDirectory>src/main/resources/static/js</sourceDirectory>
+					<outputDirectory>src/main/resources/static/js</outputDirectory>
+					压缩js和css文件
+					<includes>
+						<include>*.js</include>
+					</includes>
+					<excludes>
+						<exclude>**/*.min.js</exclude>
+						<exclude>**/*.min.css</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+	        -->
+			<!-- 打jar包的插件-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -129,6 +162,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 		</plugins>
 
 	</build>
