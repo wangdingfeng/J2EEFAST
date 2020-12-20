@@ -21,10 +21,10 @@
     <#-- Font Awesome -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
     <#--animate 样式-->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
+    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
     <link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
     <link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
-    <link href="${ctxStatic}/static/css/login2.min.css" media="screen" rel="stylesheet">
+    <link href="${ctxStatic}/static/css/login2.css" media="screen" rel="stylesheet">
     <#-- iCheck -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
     <#if verification>
@@ -118,11 +118,10 @@
                                             <div class="ui right labeled input captcha-labeled">
                                                 <input v-model="captcha" placeholder="<@ctx.i18n text = "验证码"/>" type="text">
                                                 <div class="ui basic orange button login__captcha-button" copyright="J2eeFAST" :style="src"  @click="refreshCode">
-<#--                                                    <img alt="<@ctx.i18n text = "如果看不清楚，请单击图片刷新!"/>"  :src="src" @click="refreshCode">-->
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="two field">
+                                        <div class="fields">
                                             <div class="field">
                                                 <div class="checkbox">
                                                     <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
@@ -131,15 +130,16 @@
                                                 </div>
                                             </div>
                                             <div class="field">
-<#--                                                <a class="login__toggle-button" data-control="phone" href="https://gitee.com/login">短信验证登录</a>-->
-                                                <div class="checkbox icheck hide">
-                                                    <label>
-                                                        <input type="checkbox" name="rememberme" v-model="rememberme" data-style="square-blue"> <@ctx.i18n text = "免登录"/>
-                                                    </label>
-                                                </div>
+<#--                                            <a class="login__toggle-button" data-control="phone" href="https://gitee.com/login">短信验证登录</a>-->
+                                                <#if rememberMe>
+                                                    <div class="checkbox">
+                                                        <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号、密码"/>">
+                                                            <input type="checkbox" name="rememberme" v-model="rememberme" data-style="minimal-grey"> <@ctx.i18n text = "自动登录"/>
+                                                        </label>
+                                                    </div>
+                                                </#if>
                                             </div>
                                         </div>
-
                                         <div class="field">
                                             <input class="ui fluid orange submit button large" @click="login" data-loading="正在验证登录，请稍后..." type="button" value="<@ctx.i18n text = "登 录"/>">
                                         </div>
@@ -380,8 +380,7 @@
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
-                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue"),
-                    radioClass: "iradio_" + ($(this).data("style") || "square-blue")
+                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue")
                 }).on('ifChanged', function(event){
                     if($(this).attr("name") == "rememberme"){
                         if($(this).is(':checked')){
@@ -391,7 +390,6 @@
                         }
                     }
                 });
-
             });
 
             /*设置tooltip*/

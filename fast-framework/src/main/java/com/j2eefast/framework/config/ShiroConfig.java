@@ -1,11 +1,14 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
 
 import java.io.Serializable;
 import java.util.*;
+
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
 import com.j2eefast.common.core.shiro.RedisCacheManager;
 import com.j2eefast.common.core.shiro.RedisSessionDAO;
@@ -15,7 +18,6 @@ import com.j2eefast.framework.shiro.KickoutSessionControlFilter;
 import com.j2eefast.framework.shiro.realm.FreeRealm;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
-import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
@@ -75,6 +77,18 @@ public class ShiroConfig {
 	private boolean httpOnly;
 
 	/**
+	 * 是否开启记住我功能
+	 */
+	@Value("${shiro.rememberMe.enabled: false}")
+	private boolean rememberMe;
+
+	/**
+	 * 密钥
+	 */
+	@Value("${shiro.rememberMe.cipherKey: ~}")
+	private String cipherKey;
+
+	/**
 	 * 设置Cookie的过期时间，秒为单位
 	 */
 	@Value("${shiro.cookie.maxAge: 30}")
@@ -85,45 +99,37 @@ public class ShiroConfig {
 	 */
 	@Value("#{${shiro.filterMap}}")
 	private LinkedHashMap<String, String> filterMap ;
-	 
+
 	/**
-	 * 设置session cookie属性
+	 * shiro缓存管理器;
+	 * 需要添加到securityManager中
 	 * @return
 	 */
 	@Bean
-    public Cookie cookieDAO() {
-       Cookie cookie= new org.apache.shiro.web.servlet.SimpleCookie();
-       cookie.setName("fast.session.id");
-		cookie.setDomain(domain);
-		cookie.setPath(path);
-		cookie.setHttpOnly(httpOnly);
-		cookie.setMaxAge(-1);
-       return cookie;
-    }
+	public RedisCacheManager getRedisCacheManager() {
+		RedisCacheManager redisCacheManager = new RedisCacheManager();
+		//redis中针对不同用户缓存
+		redisCacheManager.setPrincipalIdFieldName("username");
+		//用户权限信息缓存时间
+		redisCacheManager.setExpire(200000);
+		return redisCacheManager;
+	}
 
-	@Bean("sessionManager")
-	public SessionManager sessionManager() {
-		ShiroSessionManager sessionManager = new ShiroSessionManager();
-		Collection<SessionListener> listeners = new ArrayList<SessionListener>();
-		// 配置监听
-		listeners.add(sessionListener());
-		sessionManager.setSessionListeners(listeners);
-		//redis缓存
-		sessionManager.setSessionDAO(sessionDAO());
-		sessionManager.setCacheManager(getcacheManager());
-		// 设置session过期时间为1小时(单位：毫秒)，默认为30分钟
-		sessionManager.setGlobalSessionTimeout(1000 * 60 * expireTime);
-		// 去掉 JSESSIONID
-		sessionManager.setSessionIdUrlRewritingEnabled(false);
-		sessionManager.setSessionIdCookie(cookieDAO());
-		// 是否开启删除无效的session对象 默认为true
-		sessionManager.setDeleteInvalidSessions(true);
-		// 是否开启定时调度器进行检测过期session 默认为true
-		sessionManager.setSessionValidationSchedulerEnabled(true);
-		// 设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
-		sessionManager.setSessionValidationInterval(1000 * 60 * validationTime);
+	/**
+	 * 自定义Realm
+	 */
+	@Bean
+	public UserRealm userRealm() {
+		UserRealm userRealm = new UserRealm();
+		userRealm.setCacheManager(getRedisCacheManager());
+		return userRealm;
+	}
 
-		return sessionManager;
+	@Bean
+	public FreeRealm freeRealm() {
+		FreeRealm freeRealm = new FreeRealm();
+		freeRealm.setCacheManager(getRedisCacheManager());
+		return freeRealm;
 	}
 
 	/**
@@ -142,39 +148,64 @@ public class ShiroConfig {
 	}
 
 	/**
-	 * shiro缓存管理器;
-	 * 需要添加到securityManager中
+	 * 设置session cookie属性
 	 * @return
 	 */
 	@Bean
-	public RedisCacheManager getcacheManager() {
-		RedisCacheManager redisCacheManager = new RedisCacheManager();
-		//redis中针对不同用户缓存
-		redisCacheManager.setPrincipalIdFieldName("username");
-		//用户权限信息缓存时间
-		redisCacheManager.setExpire(200000);
-		return redisCacheManager;
+    public Cookie cookieDAO() {
+		Cookie cookie= new org.apache.shiro.web.servlet.SimpleCookie();
+		cookie.setName("fast.session.id");
+		cookie.setDomain(domain);
+		cookie.setPath(path);
+		cookie.setHttpOnly(httpOnly);
+		cookie.setMaxAge(-1);
+		return cookie;
+    }
+
+	@Bean("sessionListener")
+	public ShiroSessionListener sessionListener() {
+		ShiroSessionListener sessionListener = new ShiroSessionListener();
+		return sessionListener;
 	}
+
+	@Bean("sessionManager")
+	public SessionManager sessionManager() {
+		ShiroSessionManager sessionManager = new ShiroSessionManager();
+		Collection<SessionListener> listeners = new ArrayList<SessionListener>();
+		// 配置监听
+		listeners.add(sessionListener());
+		sessionManager.setSessionListeners(listeners);
+		//redis缓存
+		sessionManager.setSessionDAO(sessionDAO());
+		sessionManager.setCacheManager(getRedisCacheManager());
+		// 设置session过期时间为1小时(单位：毫秒)，默认为30分钟
+		sessionManager.setGlobalSessionTimeout(1000 * 60 * expireTime);
+		// 去掉 JSESSIONID
+		sessionManager.setSessionIdUrlRewritingEnabled(false);
+		sessionManager.setSessionIdCookie(cookieDAO());
+		// 是否开启删除无效的session对象 默认为true
+		sessionManager.setDeleteInvalidSessions(true);
+		// 是否开启定时调度器进行检测过期session 默认为true
+		sessionManager.setSessionValidationSchedulerEnabled(true);
+		// 设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 默认为 1个小时
+		sessionManager.setSessionValidationInterval(1000 * 60 * validationTime);
+
+		return sessionManager;
+	}
+
 
 	/**
-	 * 自定义Realm
+	 * 系统自带的Realm管理，主要针对多realm
 	 */
 	@Bean
-	public UserRealm userRealm() {
-		UserRealm userRealm = new UserRealm();
-		userRealm.setCacheManager(getcacheManager());
-		return userRealm;
+	public ModularRealmAuthenticator modularRealmAuthenticator(){
+		//自己重写的ModularRealmAuthenticator
+		UserModularRealmAuthenticator modularRealmAuthenticator = new UserModularRealmAuthenticator();
+		modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+		return modularRealmAuthenticator;
 	}
 
 	@Bean
-	public FreeRealm freeRealm() {
-		FreeRealm freeRealm = new FreeRealm();
-		freeRealm.setCacheManager(getcacheManager());
-		return freeRealm;
-	}
-
-
-	@Bean("securityManager")
 	public SecurityManager securityManager() {
 		
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -186,33 +217,24 @@ public class ShiroConfig {
 		realms.add(userRealm());
 		//免密登录realm
 		realms.add(freeRealm());
-
 		// 设置realm.
 		securityManager.setRealms(realms);
 		
 		// 记住我
-        //securityManager.setRememberMeManager(rememberMeManager());
+		if(rememberMe){
+			securityManager.setRememberMeManager(rememberMeManager());
+		}else{
+			securityManager.setRememberMeManager(null);
+		}
 
-        securityManager.setCacheManager(getcacheManager());
+        securityManager.setCacheManager(getRedisCacheManager());
 
         securityManager.setSessionManager(sessionManager());
-
-		//取消记住我
-		securityManager.setRememberMeManager(null);
 
 		return securityManager;
 	}
 
-	/**
-	 * 系统自带的Realm管理，主要针对多realm
-	 * */
-	@Bean()
-	public ModularRealmAuthenticator modularRealmAuthenticator(){
-		//自己重写的ModularRealmAuthenticator
-		UserModularRealmAuthenticator modularRealmAuthenticator = new UserModularRealmAuthenticator();
-		modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
-		return modularRealmAuthenticator;
-	}
+
 
 	/**
      * cookie 属性设置
@@ -227,20 +249,26 @@ public class ShiroConfig {
     }
 	
 	/**
-     * 记住我
+     * 记住我 设置密钥
      */
     public CookieRememberMeManager rememberMeManager(){
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(ToolUtil.generateNewKey());
+		if(ToolUtil.isEmpty(cipherKey)){
+			cookieRememberMeManager.setCipherKey(ToolUtil.generateNewKey());
+		}else{
+			cookieRememberMeManager.setCipherKey(Base64.decode(cipherKey));
+		}
         return cookieRememberMeManager;
     }
+
+
 
 	/** 
 	 * Shiro连接约束配置,即过滤链的定义
 	 */
-	@Bean("shiroFilter")
-	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager securityManager) {
+	@Bean
+	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
 		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 		shiroFilter.setSecurityManager(securityManager);
 		shiroFilter.setLoginUrl("/login");
@@ -278,13 +306,6 @@ public class ShiroConfig {
 		return kickoutSessionControlFilter;
 	}
 
-
-	@Bean("sessionListener")
-	public ShiroSessionListener sessionListener() {
-		ShiroSessionListener sessionListener = new ShiroSessionListener();
-		return sessionListener;
-	}
-
 	@Bean("lifecycleBeanPostProcessor")
 	public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
 		return new LifecycleBeanPostProcessor();
@@ -298,14 +319,14 @@ public class ShiroConfig {
 	}
 
 	@Bean
-	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor( @Qualifier("securityManager")SecurityManager securityManager) {
+	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+			@Qualifier("securityManager") SecurityManager securityManager) {
 		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
 		advisor.setSecurityManager(securityManager);
 		return advisor;
 	}
 
 	class CustomSessionIdGenerator implements SessionIdGenerator{
-
 		@Override
 		public Serializable generateId(Session session) {
 			return IdUtil.fastSimpleUUID();

@@ -22,7 +22,7 @@
 <#-- Theme style -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
 <#--animate 样式-->
-<link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
 <#-- iCheck -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
 <#-- jQuery toast 提示框  -->
@@ -94,11 +94,13 @@
                                         </div>
                                     </div>
                                     <div class="box-fr">
-                                        <div class="checkbox icheck hide">
-                                            <label>
-                                                <input type="checkbox" name="rememberme" v-model="rememberme" data-style="square-blue"> <@ctx.i18n text = "免登录"/>
+                                        <#if rememberMe>
+                                        <div class="checkbox">
+                                            <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号、密码"/>">
+                                                <input type="checkbox" name="rememberme" v-model="rememberme" data-style="minimal-grey"> <@ctx.i18n text = "自动登录"/>
                                             </label>
                                         </div>
+                                        </#if>
                                     </div>
                                 </div>
                                 <div class="form-item form-button">
@@ -336,8 +338,7 @@
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
-                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue"),
-                    radioClass: "iradio_" + ($(this).data("style") || "square-blue")
+                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue")
                 }).on('ifChanged', function(event){
                     if($(this).attr("name") == "rememberme"){
                         if($(this).is(':checked')){

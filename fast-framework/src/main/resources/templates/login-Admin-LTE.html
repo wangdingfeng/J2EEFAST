@@ -23,7 +23,7 @@
 <#-- Font Awesome -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
 <#--animate 样式-->
-<link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
 <#-- Theme style -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css">
 <#-- iCheck -->
@@ -94,20 +94,21 @@
       </div>
       <div class="form-group row">
         <div class="col-xs-6">
-          <div class="checkbox icheck">
-              <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
-                <input type="checkbox" name="rememberUserCode" data-style="square-blue" /><@ctx.i18n text = "记住账号"/>
-              </label>
-          </div>
+            <div class="checkbox icheck">
+                <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
+                    <input type="checkbox" name="rememberUserCode" data-style="minimal-blue" /><@ctx.i18n text = "记住账号"/>
+                </label>
+            </div>
         </div>
         <!-- /.col -->
         <div class="col-xs-6">
-<#--            屏蔽记住我-->
-            <div class="checkbox icheck hide">
-                <label>
-                    <input type="checkbox" name="rememberme" v-model="rememberme" data-style="square-blue"> <@ctx.i18n text = "免登录"/>
+            <#if rememberMe>
+            <div class="checkbox icheck">
+                <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号、密码"/>" data-toggle="tooltip" data-placement="bottom">
+                    <input type="checkbox" name="rememberme" v-model="rememberme" data-style="minimal-blue"> <@ctx.i18n text = "自动登录"/>
                 </label>
             </div>
+            </#if>
         </div>
         <!-- /.col -->
       </div>
@@ -349,8 +350,7 @@
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
-                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue"),
-                    radioClass: "iradio_" + ($(this).data("style") || "square-blue")
+                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue")
                 }).on('ifChanged', function(event){
                     if($(this).attr("name") == "rememberme"){
                         if($(this).is(':checked')){

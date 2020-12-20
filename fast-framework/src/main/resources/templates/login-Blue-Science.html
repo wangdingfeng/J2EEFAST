@@ -22,7 +22,7 @@
     <#-- iCheck -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
     <#--animate 样式-->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css"/>
+    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
     <#-- jQuery toast 提示框  -->
     <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
     <link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
@@ -124,13 +124,24 @@
                                             </span>
                                             <a id="TANGRAM__PSP_4__verifyCodeChange" href="javascript:;" @click="refreshCode" class="pass-change-verifyCode"><@ctx.i18n text = "点击刷新"/></a>
                                         </p>
-                                        <p id="TANGRAM__PSP_4__memberPassWrapper" class="pass-form-item pass-form-item-memberPass">
-                                                <div class="checkbox icheck">
+                                        <div id="TANGRAM__PSP_4__memberPassWrapper" class="pass-form-item pass-form-item-memberPass">
+                                            <div class="field">
+                                                <div class="checkbox">
                                                     <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
-                                                        <input type="checkbox" name="rememberUserCode" data-style="minimal-grey" />&nbsp;<@ctx.i18n text = "记住账号"/>
+                                                        <input type="checkbox" name="rememberUserCode" data-style="grey" />&nbsp;<@ctx.i18n text = "记住账号"/>
                                                     </label>
                                                 </div>
-                                        </p>
+                                            </div>
+                                            <div class="field">
+                                                <#if rememberMe>
+                                                <div class="checkbox">
+                                                    <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号、密码"/>">
+                                                        <input type="checkbox" name="rememberme" v-model="rememberme" data-style="grey"> <@ctx.i18n text = "自动登录"/>
+                                                    </label>
+                                                </div>
+                                                </#if>
+                                            </div>
+                                        </div>
                                         <p id="TANGRAM__PSP_4__submitWrapper" class="pass-form-item pass-form-item-submit">
                                             <input  type="button" class="pass-button pass-button-submit" @click="login" data-loading="正在验证登录，请稍后..." value="<@ctx.i18n text = "登 录"/>">
 <#--                                            <a class="pass-reglink pass-link" href="#" target="_blank" id="passport-reg">立即注册</a>-->
@@ -343,8 +354,7 @@
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
-                    checkboxClass: "icheckbox_" + ($(this).data("style") || "square-blue"),
-                    radioClass: "iradio_" + ($(this).data("style") || "square-blue")
+                    checkboxClass: "icheckbox_minimal-" + ($(this).data("style") || "blue")
                 }).on('ifChanged', function(event){
                     if($(this).attr("name") == "rememberme"){
                         if($(this).is(':checked')){

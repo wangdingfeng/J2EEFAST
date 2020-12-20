@@ -201,6 +201,19 @@ body {
     clear: both;
     margin: 0em 0em 1em;
 }
+.ui.form .fields:after {
+    content: ' ';
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+.ui.form .fields>.field {
+    clear: none;
+    float: left;
+    padding-right: 1em;
+}
 .ui.custom.form .ui.labeled.input>input {
     padding-right: 1em !important;
 }

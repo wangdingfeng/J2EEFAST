@@ -143,7 +143,7 @@ h3 {
     display: inline-block;
     width: 166px;
     height: 178px;
-    background: url(https://bce.bdstatic.com/login/decoration1@2x.png) no-repeat 0 0;
+    background: url(img/decoration1.png) no-repeat 0 0;
     background-size: 166px 178px;
     position: absolute;
     top: 0;
@@ -192,7 +192,7 @@ footer a:hover {
     display: inline-block;
     width: 125px;
     height: 42px;
-    background: url(https://bce.bdstatic.com/login/decoration2@2x.png) no-repeat 0 0;
+    background: url(img/decoration.png) no-repeat 0 0;
     background-size: 125px 42px;
     position: absolute;
     right: 143px;
@@ -381,6 +381,12 @@ footer a:hover {
     font-size: 12px;
     margin: 12px 0 8px 0;
     display: inline-block;
+}
+
+#TANGRAM__PSP_4__memberPassWrapper >.field{
+    clear: none;
+    float: left;
+    padding-right: 3em;
 }
 
 #login a#TANGRAM__PSP_4__sms_btn_back,
@@ -668,4 +674,8 @@ footer a:hover {
     font-size: 12px;
     cursor: pointer;
     display: inline;
+}
+
+.checkbox label{
+    padding-left: 0px !important;
 }
