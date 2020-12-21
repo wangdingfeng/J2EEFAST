@@ -11,7 +11,7 @@
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
 <#--<script src="${ctxStatic}/static/libs/bootstrap.js"></script>-->
-<script src="${ctxStatic}/static/plugins/select2/select2.js"></script>
+<script src="${ctxStatic}/static/plugins/select2/select2.min.js"></script>
 <#--全局遮罩-->
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.min.js"></script>
 <#-- layui-->
@@ -120,7 +120,7 @@
             </#if>
             <#--表格列拖动 -->
             <#if  x == "resizable">
-                <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/resizable/colResizable-1.6.js"></script>
+                <script src="${ctxStatic}/static/plugins/bootstrap-table/extensions/resizable/colResizable-1.6.min.js"></script>
             </#if>
             <#-- 可自行扩展, 如果插件有CSS样式请在 cssLibs 相应添加-->
         </#list>
@@ -128,9 +128,18 @@
 <#--<script src="${ctxStatic}/static/js/fastJS.js?V=${config.getDvVersion()}"></script>-->
 <script src="${ctxStatic}/static/js/fastJS.min.js?V=${config.getDvVersion()}"></script>
 <#-- jquery-validate 表单验证插件 -->
-<script src="${ctxStatic}/static/plugins/validate/jquery.validate.js"></script>
-<script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.js"></script>
+<script src="${ctxStatic}/static/plugins/validate/jquery.validate.min.js"></script>
+<script src="${ctxStatic}/static/plugins/validate/jquery.validate.extend.min.js"></script>
 <#--VUE-->
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
+<#if !(Libs?is_string) && Libs?? && (Libs?size > 0) >
+    <#list Libs as x>
+        <#if  x == "monaco-editor">
+            <script src="${ctxStatic}/static/plugins/monaco-editor/0.21.2/vs/loader.js"></script>
+            <script>require.config({ paths: { 'vs': '${ctxStatic}/static/plugins/monaco-editor/0.21.2/vs' } });</script>
+            <#break/>
+        </#if>
+    </#list>
+</#if>
 </#compress>
 </#macro>
