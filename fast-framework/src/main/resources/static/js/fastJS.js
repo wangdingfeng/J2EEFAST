@@ -2,8 +2,8 @@
  * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
- * @date 2020-12-03
- * @version v1.0.14
+ * @date 2020-12-21
+ * @version v1.0.15
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -18,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.14',
+            version:'1.0.15',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -1051,6 +1051,15 @@ if (typeof jQuery === "undefined") {
                             "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
                         }});
                 }
+                if(opt.common.isEmpty(config.error) || typeof config.error != "function"){
+                    config = opt.common.extend(config,{error:
+                        function(xhr, textStatus) {
+                            opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                            opt.modal.closeLoading();
+                            return;
+                        }
+                    });
+                }
                 $.ajax(config);
             },
 
@@ -1821,7 +1830,7 @@ if (typeof jQuery === "undefined") {
                     url: url,
                     type: type,
                     dataType: dataType,
-                    data: data,//{ids:value}
+                    data: data,
                     beforeSend: function () {
                         opt.modal.loading("正在处理中，请稍后...");
                     },
@@ -1866,13 +1875,7 @@ if (typeof jQuery === "undefined") {
                         opt.operate.ajaxSuccess(result);
                     }
                 };
-                //防CSRF攻击
-                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
-                    config = opt.common.extend(config,{headers: {
-                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-                        }});
-                }
-                $.ajax(config)
+                opt.common.sendAjax(config);
             },
             //删除单独调用post删除
             delPost:function(url, data, callback) {
@@ -1938,12 +1941,23 @@ if (typeof jQuery === "undefined") {
             },
             // 删除信息
             del: function(id) {
+                if (opt.common.isEmpty( opt.table.options.delUrl)){
+                    opt.modal.msgError("delUrl 未传!");
+                    return;
+                }
                 opt.table.set();
                 opt.modal.confirm("确定删除该条" + opt.table.options.modalName + "信息吗？", function() {
-                    var url = opt.common.isEmpty(id) ? opt.table.options.delUrl : opt.table.options.delUrl.replace("{id}", id);
                     if(opt.table.options.type == opt.variable.table_type.bootstrapTreeTable) {
+                        var row = $("#" + opt.table.options.id).bootstrapTreeTable('getSelections')[0];
+                        var url;
+                        if (opt.common.isEmpty(row)) {
+                            url = opt.table.options.delUrl;
+                        }else{
+                            url = opt.table.options.delUrl.replace("{id}",  row[opt.table.options.uniqueId]);
+                        }
                         opt.operate.get(url);
                     } else {
+                        var url = opt.common.isEmpty(id) ? opt.table.options.delUrl : opt.table.options.delUrl.replace("{id}", id);
                         var data = { "ids": id };
                         opt.operate.submit(url, "POST", "json", data,"",true);
                     }
@@ -1955,8 +1969,8 @@ if (typeof jQuery === "undefined") {
              */
             exe:function(id){
                 opt.table.set();
-                opt.modal.confirm("确定处理该条" + table.options.modalName + "信息吗？", function() {
-                    var url = opt.common.isEmpty(id) ? table.options.exeUrl : table.options.exeUrl.replace("{id}", id);
+                opt.modal.confirm("确定处理该条" + opt.table.options.modalName + "信息吗？", function() {
+                    var url = opt.common.isEmpty(id) ? opt.table.options.exeUrl : opt.table.options.exeUrl.replace("{id}", id);
                     if(opt.table.options.type == opt.variable.table_type.bootstrapTreeTable) {
                         opt.operate.get(url);
                     } else {
@@ -1967,19 +1981,13 @@ if (typeof jQuery === "undefined") {
             },
             // 批量删除信息
             delAll: function() {
+                if (opt.common.isEmpty( opt.table.options.delUrl)){
+                    opt.modal.msgError("delUrl 未传!");
+                    return;
+                }
                 opt.table.set();
-                // var datas = $.table.getSelectedRows();
-                // opt.modal.confirm("确认要删除选中的" + datas.length + "条数据吗?", function() {
-                //     var url = table.options.delUrl;
-                //     var _p = [];
-                //     for(var i=0; i<datas.length; i++){
-                //         _p.push(opt.common.getJsonValue(datas[i],table.options._index));
-                //     }
-                //     var data = { "ids": _p.join() };
-                //     opt.operate.submit(url, "POST", "json", data);
-                // });
-                var rows = opt.common.isEmpty(opt.table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(opt.table.options.uniqueId);
-                if (rows.length == 0) {
+                var rows  = opt.common.isEmpty(opt.table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(opt.table.options.uniqueId);
+                if (opt.common.isEmpty(rows)) {
                     opt.modal.error("请至少选择一条记录");
                     return;
                 }
@@ -2138,13 +2146,7 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
-                //防CSRF攻击
-                if(opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
-                    config = opt.common.extend(config,{headers: {
-                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-                        }});
-                }
-                $.ajax(config)
+                opt.common.sendAjax(config);
             },
             // 保存信息 弹出提示框
             saveModal: function(url, data, callback) {
@@ -2171,13 +2173,7 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
-                //防CSRF攻击
-                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
-                    config = opt.common.extend(config,{headers: {
-                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-                        }});
-                }
-                $.ajax(config)
+                opt.common.sendAjax(config);
             },
             // 保存选项卡信息
             saveTab: function(url, data, callback) {
@@ -2201,13 +2197,7 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
-                //防CSRF攻击
-                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
-                    config = opt.common.extend(config,{headers: {
-                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-                        }});
-                }
-                $.ajax(config)
+                opt.common.sendAjax(config);
             },
             // 保存结果弹出msg刷新table表格
             ajaxSuccess: function (result) {
@@ -4014,7 +4004,7 @@ if (typeof jQuery === "undefined") {
             },
             // 刷新
             refresh: function() {
-                $.bttTable.bootstrapTreeTable('refresh');
+                $.bttTable.bootstrapTreeTable('refresh', {'__refre':true});
             },
             // 查询表格树指定列值
             selectColumns: function(column) {
@@ -4206,16 +4196,7 @@ if (typeof jQuery === "undefined") {
                         }
                     }
                 };
-                //防CSRF攻击
-                if(opt.common.equalsIgnoreCase(config.type,'POST') && opt.common.isNotEmpty($('meta[name="csrf-token"]').attr("content"))){
-                    config = opt.common.extend(config,{headers: {
-                            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-                        }});
-                }
-                $.ajax(config);
-                // $.get(options.url, function(data) {
-                //
-                // });
+                opt.common.sendAjax(config);
             },
             expandAll: function(){
                 $._tree.expandAll(true);
