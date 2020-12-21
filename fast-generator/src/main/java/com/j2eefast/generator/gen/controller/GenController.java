@@ -212,7 +212,7 @@ public class GenController extends BaseController {
     /**
      *
      */
-    @RequestMapping("/edit/childLoad")
+    @RequestMapping("/childLoad")
     @ResponseBody
     public ResponseData load(@RequestParam Map<String, Object> params) {
         PageUtil page =  genTableService.findChildPage(params);
