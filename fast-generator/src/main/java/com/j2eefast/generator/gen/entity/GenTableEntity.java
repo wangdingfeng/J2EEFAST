@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.generator.gen.entity;
@@ -10,9 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 import com.j2eefast.generator.gen.util.GenConstants;
 import com.j2eefast.generator.gen.util.Option;
-
 import org.apache.commons.lang3.StringUtils;
-
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -24,7 +23,9 @@ import java.util.List;
 @TableName("gen_table")
 public class GenTableEntity extends BaseEntity {
 
-    /** 编号 */
+	private static final long serialVersionUID = 1L;
+
+	/** 编号 */
     @TableId
     private Long id;
 

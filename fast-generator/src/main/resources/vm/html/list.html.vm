@@ -26,12 +26,12 @@ ${pageTheme}
                             <@f.input placeholder="${comment}" name="${column.javaField}"/>
 #end
                         </li>
-#elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)
+#elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $column.dictType)
                         <li>
                             <label> <@ctx.i18n text = "${comment}"/>： </label>
                             <@f.select name="${column.javaField}" dictType="${column.dictType}" blankValue="" blankLabel="所有"/>
                         </li>
-#elseif($column.htmlType == "select" || $column.htmlType == "radio" && $dictType)
+#elseif($column.htmlType == "select" || $column.htmlType == "radio" && $column.dictType)
                         <li>
                             <label> <@ctx.i18n text = "${comment}"/>： </label>
                             <select name="${column.javaField}">
@@ -96,7 +96,7 @@ ${pageTheme}
     var visible = <$>{permission.isPermitteds("${permissionPrefix}:del")?string('true', 'false')};
 #end
 #foreach($column in $columns)
-#if(${column.dictType} != '')
+#if(${column.dictType} && ${column.dictType} != '')
     var ${column.javaField}Datas = <$>{dict.getDictListJson('${column.dictType}')};
 #end
 #end
@@ -143,7 +143,7 @@ ${pageTheme}
                 ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>',visible: false}
 #end
 #if($c.list)
-#if($c.list && "" != $c.dictType)
+#if($c.list && $c.dictType &&"" != $c.dictType)
                 ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) {
                     return $.table.selectDictLabels(${c.javaField}Datas, value);
                 }}
@@ -228,7 +228,7 @@ ${pageTheme}
                 ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>',visible: false}
 #end
 #if($c.list)
-#if($c.list && "" != $c.dictType)
+#if($c.list && $c.dictType && "" != $c.dictType)
                 ,{field : '${c.javaField}',align: "center",title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) {
                     return $.table.selectDictLabels(${c.javaField}Datas, value); }}
 #elseif($c.list && "" != ${c.javaField})

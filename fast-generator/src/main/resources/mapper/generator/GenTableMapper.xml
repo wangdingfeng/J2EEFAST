@@ -101,42 +101,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateGenTable" parameterType="GenTableEntity">
 		UPDATE gen_table
 		<set>
-			<if test="tableName != null">table_name = #{tableName},</if>
-			<if test="tableComment != null and tableComment != ''">table_comment = #{tableComment},</if>
-			<if test="className != null and className != ''">class_name = #{className},</if>
-			<if test="functionAuthor != null and functionAuthor != ''">function_author = #{functionAuthor},</if>
-			<if test="tplCategory != null and tplCategory != ''">tpl_category = #{tplCategory},</if>
-			<if test="packageName != null and packageName != ''">package_name = #{packageName},</if>
-			<if test="moduleName != null and moduleName != ''">module_name = #{moduleName},</if>
-			<if test="businessName != null and businessName != ''">business_name = #{businessName},</if>
-			<if test="functionName != null and functionName != ''">function_name = #{functionName},</if>
-			<if test="runPath != null and runPath != ''">run_path = #{runPath},</if>
-			<if test="isDel != null and isDel != ''">is_del = #{isDel},</if>
-			<if test="isImg != null and isImg != ''">is_img = #{isImg},</if>
-			<if test="isFile != null and isFile != ''">is_file = #{isFile},</if>
-			<if test="dbName != null and dbName != ''">db_name = #{dbName},</if>
-			<if test="actionsType != null and actionsType != ''">actions_type = #{actionsType},</if>
-			<if test="isCover != null and isCover != ''">is_cover = #{isCover},</if>
-			<if test="options != null and options != ''">options = #{options},</if>
-			<if test="parentId != null">parent_id = #{parentId},</if>
-			<if test="target != null">target = #{target},</if>
-			<if test="menuOrder != null">menu_order = #{menuOrder},</if>
-			<if test="parentName != null and parentName != ''">parent_name = #{parentName},</if>
-			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
-			<if test="menuNew != null and menuNew != ''">menu_new = #{menuNew},</if>
-			<if test="moduleCodes != null and moduleCodes != ''">module_codes = #{moduleCodes},</if>
-			<if test="menuIcon != null and menuIcon != ''">menu_icon = #{menuIcon},</if>
-			<if test="menuTarget != null and menuTarget != ''">menu_target = #{menuTarget},</if>
-			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-			<if test="remark != null">remark = #{remark},</if>
-			<if test="childId != null">child_id = #{childId},</if>
-			<if test="childFieldId != null">child_field_id = #{childFieldId},</if>
-			<if test=" _databaseId  == 'mysql'">
-				update_time = SYSDATE()
-			</if>
-			<if test=" _databaseId  == 'postgresql'">
-				update_time = NOW()
-			</if>
+		<if test="tableName != null">table_name = #{tableName},</if>
+		<if test="tableComment != null and tableComment != ''">table_comment = #{tableComment},</if>
+		<if test="className != null and className != ''">class_name = #{className},</if>
+		<if test="functionAuthor != null and functionAuthor != ''">function_author = #{functionAuthor},</if>
+		<if test="tplCategory != null and tplCategory != ''">tpl_category = #{tplCategory},</if>
+		<if test="packageName != null and packageName != ''">package_name = #{packageName},</if>
+		<if test="moduleName != null and moduleName != ''">module_name = #{moduleName},</if>
+		<if test="businessName != null and businessName != ''">business_name = #{businessName},</if>
+		<if test="functionName != null and functionName != ''">function_name = #{functionName},</if>
+		<if test="runPath != null and runPath != ''">run_path = #{runPath},</if>
+		<if test="isDel != null and isDel != ''">is_del = #{isDel},</if>
+		<if test="isImg != null and isImg != ''">is_img = #{isImg},</if>
+		<if test="isFile != null and isFile != ''">is_file = #{isFile},</if>
+		<if test="dbName != null and dbName != ''">db_name = #{dbName},</if>
+		<if test="actionsType != null and actionsType != ''">actions_type = #{actionsType},</if>
+		<if test="isCover != null and isCover != ''">is_cover = #{isCover},</if>
+		<if test="options != null and options != ''">options = #{options},</if>
+		<if test="parentId != null">parent_id = #{parentId},</if>
+		<if test="target != null">target = #{target},</if>
+		<if test="menuOrder != null">menu_order = #{menuOrder},</if>
+		<if test="parentName != null and parentName != ''">parent_name = #{parentName},</if>
+		<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
+		<if test="menuNew != null and menuNew != ''">menu_new = #{menuNew},</if>
+		<if test="moduleCodes != null and moduleCodes != ''">module_codes = #{moduleCodes},</if>
+		<if test="menuIcon != null and menuIcon != ''">menu_icon = #{menuIcon},</if>
+		<if test="menuTarget != null and menuTarget != ''">menu_target = #{menuTarget},</if>
+		<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+		<if test="remark != null">remark = #{remark},</if>
+		<if test="childId != null">child_id = #{childId},</if>
+		<if test="childFieldId != null">child_field_id = #{childFieldId},</if>
+		<if test="_databaseId == 'mysql'">update_time = SYSDATE()</if>
+		<if test=" _databaseId  == 'postgresql'">update_time = CLOCK_TIMESTAMP()</if>
+		<if test=" _databaseId  == 'sqlserver'">update_time = GETDATE()</if>
+		<if test=" _databaseId  == 'oracle'">update_time = TO_TIMESTAMP(TO_CHAR(SYSDATE,'YYYY-MM-DD')||TO_CHAR(SYSDATE,'hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')</if>
 		</set>
 		WHERE id = #{id}
 	</update>
@@ -224,6 +222,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</where>
 			ORDER BY t.TABLE_NAME
 		</if>
+
+		<if test="dbType == 'sqlserver'">
+			SELECT
+			a.name AS table_name,
+			ISNULL(k.t_comment,'-') AS table_comment,
+			a.create_date AS create_time,
+			a.modify_date AS update_time
+			FROM
+			sys.tables a
+			LEFT JOIN (SELECT g.major_id,CONVERT(NVARCHAR(100),ISNULL(g.[value],'-')) AS t_comment,g.minor_id FROM sys.extended_properties g) k
+			ON (a.object_id = k.major_id AND k.minor_id = 0)
+			<where>
+				AND a.name NOT LIKE 'qrtz_%'   <!-- 不显示 计划任务的表-->
+				<if test="tableName != null and tableName != ''">
+					AND a.name LIKE CONCAT('%', #{tableName}, '%')
+				</if>
+				<if test="tableComment != null and tableComment != ''">
+					AND k.t_comment LIKE CONCAT('%', #{tableComment}, '%')
+				</if>
+				<if test="notList != null">
+					AND a.name NOT IN
+					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+		</if>
+
 	</select>
 	
 	<select id="generateTableListByNames" resultMap="GenTableResult">
@@ -269,6 +295,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>
 			</where>
 			ORDER BY t.TABLE_NAME
+		</if>
+		<if test="dbType == 'sqlserver'">
+			SELECT
+			a.name AS table_name,
+			ISNULL(k.t_comment,'-') AS table_comment,
+			a.create_date AS create_time,
+			a.modify_date AS update_time
+			FROM
+			sys.tables a
+			LEFT JOIN (SELECT g.major_id,CONVERT(NVARCHAR(100),ISNULL(g.[value],'-')) AS t_comment,g.minor_id FROM sys.extended_properties g) k
+			ON (a.object_id = k.major_id AND k.minor_id = 0)
+			<where>
+				AND a.name NOT LIKE 'qrtz_%' AND a.name NOT LIKE 'gen_%'   <!-- 不显示 计划任务的表-->
+				AND a.name IN
+				<foreach collection="tableNames" item="tableName" open="(" separator="," close=")">
+					#{tableName}
+				</foreach>
+			</where>
 		</if>
 	</select>
 	
@@ -339,6 +383,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</if>
 			</where>
 			ORDER BY t.TABLE_NAME
+		</if>
+		<if test="dbType == 'sqlserver'">
+			SELECT
+			a.name AS table_name,
+			ISNULL(k.t_comment,'-') AS table_comment,
+			a.create_date AS create_time,
+			a.modify_date AS update_time
+			FROM
+			sys.tables a
+			LEFT JOIN (SELECT g.major_id,CONVERT(NVARCHAR(100),ISNULL(g.[value],'-')) AS t_comment,g.minor_id FROM sys.extended_properties g) k
+			ON (a.object_id = k.major_id AND k.minor_id = 0)
+			<where>
+				AND a.name NOT LIKE 'qrtz_%'   <!-- 不显示 计划任务的表-->
+				<if test="tableName != null and tableName != ''">
+					AND a.name LIKE CONCAT('%', #{tableName}, '%')
+				</if>
+				<if test="tableComment != null and tableComment != ''">
+					AND k.t_comment LIKE CONCAT('%', #{tableComment}, '%')
+				</if>
+				<if test="notList != null">
+					AND a.name NOT IN
+					<foreach collection="notList" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</where>
 		</if>
 	</select>
 	

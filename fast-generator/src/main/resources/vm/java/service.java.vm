@@ -62,7 +62,6 @@ import com.j2eefast.framework.utils.FileUploadUtils;
 #end
 
 /**
- *
  * ${functionName}Service接口
  * @author: ${author}
  * @date ${datetime}
@@ -408,12 +407,23 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
      * 页面树查询
      */
 	public List<${ClassName}Entity> findTreeList(Map<String, Object> params,${ClassName}Entity ${className}Entity){
+#set($sort_=0)
+#foreach($column in $columns)
+#if($column.tableSort)
+#set($sort_=1)
+#break
+#end
+#end
+#if($sort_== 1)
 		String sidx = SQLFilter.sqlInject((String) params.get("__sidx"));
 		String order = SQLFilter.sqlInject((String) params.get("__order"));
+#end
 		List<${ClassName}Entity>  list = ${className}Mapper.findTreeList(${className}Entity,
-																	   StrUtil.toUnderlineCase(sidx),
-															           order.toUpperCase(),
-																	   (String) params.get(Constant.SQL_FILTER));
+#if($sort_== 1)
+																	   	StrUtil.toUnderlineCase(sidx),
+															           	order.toUpperCase(),
+#end
+																	   	(String) params.get(Constant.SQL_FILTER));
 		return list;
 	}
 #end
@@ -443,12 +453,21 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	 * 唯一性校验
 	 * @return
 	 */
-	public boolean check${field}Unique(${column.javaType} ${column.javaField}) {
-		int count = this.count(new QueryWrapper<${ClassName}Entity>().eq("${column.columnName}",${column.javaField}));
-		if(count > 0){
-			return false;
+	public boolean check${field}Unique(${ClassName}Entity ${className}) {
+#set($id = "")
+#foreach ($column in $columns)
+#if($column.pk)
+#set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+		${column.javaType} pkId =  ToolUtil.isEmpty(${className}.get${id}()) ? null : ${className}.get${id}();
+#break
+#end
+#end
+		${ClassName}Entity entity = this.getOne(new QueryWrapper<${ClassName}Entity>()
+				.eq("${column.columnName}",${className}.get${field}()));
+		if (!ToolUtil.isEmpty(entity) && !entity.get${id}().equals(pkId)){
+			return  false;
 		}
-		return  true;
+		return true;
 	}
 #end
 #end

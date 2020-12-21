@@ -165,7 +165,11 @@ public class GenController extends BaseController {
                 success(): error("删除失败!");
     }
 
-
+    /**
+     * 生成到开发工具
+     * @param tableId
+     * @return
+     */
     @RequiresPermissions("tool:gen:code")
     @BussinessLog(title = "代码生成", businessType = BusinessType.DELETE)
     @PostMapping("/genCode")

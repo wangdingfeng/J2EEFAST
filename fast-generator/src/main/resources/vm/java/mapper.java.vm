@@ -15,15 +15,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 #end
 
 /**
- *
  * ${tableName} Mapper接口
  * @author: ${author}
  * @date ${datetime}
  */
 public interface ${ClassName}Mapper extends BaseMapper<${ClassName}Entity> {
 #set($className=$ClassName.substring(0,1).toLowerCase() + ${ClassName.substring(1)})
-
 #if(($table.tree && $async == '1') || !$table.tree)
+
     /**
      * 自定义分页查询
      * @param  page
@@ -34,16 +33,44 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}Entity> {
                                       @Param("sql_filter") String sql_filter);
 #end
 
+    /**
+     * 通过ID查询
+     * @param ${pkColumn.javaField} 查询ID
+     * @return
+     */
     ${ClassName}Entity find${ClassName}ById(@Param("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField});
 
+    /**
+     * 查询列表
+     * @param ${className}Entity 查询条件对象
+     * @return
+     */
     List<${ClassName}Entity> findList(${ClassName}Entity ${className}Entity);
 #if($table.tree)
 #if($async == '0')
 
+#set($sort_=0)
+#foreach($column in $columns)
+#if($column.tableSort)
+#set($sort_=1)
+#break
+#end
+#end
+    /**
+     * @param ${className}Entity  查询条件对象
+#if($sort_== 1)
+     * @param sidx 排序字段
+     * @param asc 排序方式
+#end
+     * @param sql_filter 权限过滤
+     * @return
+     */
     List<${ClassName}Entity> findTreeList(@Param("${className}") ${ClassName}Entity ${className}Entity,
-                                          @Param("sidx") String sidx,
-                                          @Param("order") String asc,
-                                          @Param("sql_filter") String sql_filter);
+#if($sort_== 1)
+                                              @Param("sidx") String sidx,
+                                              @Param("order") String asc,
+#end
+                                              @Param("sql_filter") String sql_filter);
 #end
 #end
 

@@ -71,7 +71,7 @@ public class VelocityUtils{
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);
         velocityContext.put("author", genTable.getFunctionAuthor());
-        velocityContext.put("datetime", DateUtil.format(new Date(),DatePattern.NORM_DATETIME_MINUTE_PATTERN));
+        velocityContext.put("datetime", DateUtil.format(new Date(),DatePattern.NORM_DATETIME_PATTERN));
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("parentId", genTable.getParentId());
         velocityContext.put("parentName", genTable.getParentName());
@@ -80,6 +80,7 @@ public class VelocityUtils{
         velocityContext.put("moduleCodes", genTable.getModuleCodes());
         velocityContext.put("menuId",genTable.getMenuId());
         velocityContext.put("menuIcon", genTable.getMenuIcon());
+        velocityContext.put("menuMenuNew", genTable.getMenuNew());
         velocityContext.put("menuTarget", genTable.getMenuTarget());
         velocityContext.put("createBy", UserUtils.getLoginName());
         velocityContext.put("updateBy", UserUtils.getLoginName());

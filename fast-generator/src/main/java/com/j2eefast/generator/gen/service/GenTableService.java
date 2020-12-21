@@ -475,7 +475,13 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         int row = this.genTableMapper.updateGenTable(genTable);
         if (row > 0) {
             for (GenTableColumnEntity cenTableColumn : genTable.getColumns()) {
-            	
+                cenTableColumn.setIsRequired(StrUtil.emptyToDefault(cenTableColumn.getIsRequired(),"0"));
+                cenTableColumn.setIsEdit(StrUtil.emptyToDefault(cenTableColumn.getIsEdit(),"0"));
+                cenTableColumn.setIsQuery(StrUtil.emptyToDefault(cenTableColumn.getIsQuery(),"0"));
+                cenTableColumn.setIsList(StrUtil.emptyToDefault(cenTableColumn.getIsList(),"0"));
+                cenTableColumn.setIsTableSort(StrUtil.emptyToDefault(cenTableColumn.getIsTableSort(),"0"));
+                cenTableColumn.setDictType(StrUtil.emptyToDefault(cenTableColumn.getDictType(),""));
+                cenTableColumn.setEditInfo(StrUtil.emptyToDefault(cenTableColumn.getEditInfo(),""));
                 genTableColumnService.updateGenTableColumn(cenTableColumn);
             }
             return  true;
@@ -493,38 +499,9 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
                 table.setDbName(dbName);
                 boolean row = this.save(table);
                 if (row) {
-                    // 保存列信息
-                //    List<GenTableColumnEntity> genTableColumns = genTableColumnService.selectDbTableColumnsByName(dbName,tableName);
+                     // 保存列信息
                 	 List<GenTableColumnEntity> genTableColumns = genTableColumnService.generateDbTableColumnsByName(dbName,tableName);
-                     
-                    for (GenTableColumnEntity column : genTableColumns) {
-                        GenUtils.initColumnField(column, table);
-                        //如果comment为空 设置comment 为JavaField
-                        if (StringUtils.isBlank(column.getColumnComment())){ 
-                        	column.setColumnComment(column.getJavaField());
-                        }
-                        genTableColumnService.save(column);
-                    }
-                }
-            }
-            catch (Exception e) {
-                log.error("表名 " + table.getTableName() + " 导入失败：", e);
-            }
-        }
-    }
-    
-    public void importGenTable(List<GenTableEntity> tableList, String operName,SysDatabaseEntity db) {
-        for (GenTableEntity table : tableList) {
-            try {
-
-                String tableName = table.getTableName();
-                GenUtils.initTable(table, operName);
-                boolean row = this.save(table);
-                if (row) {
-                    // 保存列信息
-                    List<GenTableColumnEntity> genTableColumns = genTableColumnService.generateDbTableColumnsByName(db.getDbType(), db.getSchema(), tableName);
-
-                    for (GenTableColumnEntity column : genTableColumns) {
+                     for (GenTableColumnEntity column : genTableColumns) {
                         GenUtils.initColumnField(column, table);
                         //如果comment为空 设置comment 为JavaField
                         if (StringUtils.isBlank(column.getColumnComment())){ 

@@ -43,10 +43,10 @@ public class GenConstants{
 
     /** 数据库字符串类型 */
     public static final String[] COLUMNTYPE_STR = { "bpchar","char", "varchar", "narchar", "varchar2", "tinytext", "text",
-            "mediumtext", "longtext" };
+            "mediumtext", "longtext" ,"nvarchar","nvarchar2","nchar"};
 
     /** 数据库时间类型 */
-    public static final String[] COLUMNTYPE_TIME = { "datetime", "time", "date", "timestamp" };
+    public static final String[] COLUMNTYPE_TIME = { "datetime","datetime2", "time", "date", "timestamp","timestamptz" };
 
     /** 数据库数字类型 */
     public static final String[] COLUMNTYPE_NUMBER = { "int4","int2","int8","tinyint", "smallint", "mediumint", "int", "number", "integer",

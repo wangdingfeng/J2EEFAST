@@ -73,7 +73,7 @@ ${pageTheme}
                 <a class="btn btn-primary single disabled" onclick="#if($table.target == "tab")opt.operate.editTab()#else opt.operate.edit()#end"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="${permissionPrefix}:del">
-                <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>
+                <a class="btn btn-danger multiple disabled" onclick="opt.operate.del()"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>
             </@shiro.hasPermission>
                 <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i> <@ctx.i18n text = "展开/折叠"/></a>
         </@table>
@@ -87,7 +87,7 @@ ${pageTheme}
     var delFlag = "<$>{permission.hasPermi("${permissionPrefix}:del")}";
     var visible = <$>{permission.isPermitteds("${permissionPrefix}:edit,${permissionPrefix}:del,${permissionPrefix}:add")?string('true', 'false')};
 #foreach($column in $columns)
-#if(${column.dictType} != '')
+#if(${column.dictType} && ${column.dictType} != '')
     var ${column.javaField}Datas = <$>{dict.getDictListJson('${column.dictType}')};
 #end
 #end
@@ -127,10 +127,11 @@ ${pageTheme}
 #set($comment=$column.columnComment)
 #end
 #if($column.pk)
-#elseif($column.list && "" != $dictType)
+#elseif($column.list && $dictType && "" != $dictType)
                 ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>'#if($javaField == $treeName),align: "left",halign:"left"#end,formatter: function(value, row, index) {
                     return $.table.selectDictLabel(${javaField}Datas, value);
                 }}
+#set($dictType="")
 #elseif($column.list && "" != $javaField)
 #if($async == '0' && $javaField == $treeName)
                 ,{field : '${javaField}',title : '<@ctx.i18n text="${comment}"/>',align: "left",halign:"left"}

@@ -1,23 +1,24 @@
 #if($menuName && $menuName != '' && $menuId)
--- 清理菜单数据
+-- %特别注意: 若你是代码生成器-直接生成到开发工具 以下菜单脚本系统已经帮你执行无需再次执行,刷新系统以下菜单就可出现%
+-- 清除残留菜单数据
 DELETE FROM sys_menu WHERE id = ${menuId};
 DELETE FROM sys_menu WHERE parent_id = ${menuId};
 -- 新增菜单 SQL
-insert into sys_menu (id, name, parent_id, order_num, url,type,  perms, icon,module_codes,target, create_by, create_time, update_by, update_time, remark)
-values(${menuId},'${menuName}', '${parentId}', '${menuOrder}', '${moduleName}/${businessName}', '1', '${permissionPrefix}:view', '${menuIcon}','${moduleCodes}','${menuTarget}', '${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${functionName}菜单');
+INSERT INTO sys_menu (id, name, parent_id, order_num, url,type,  perms, icon,module_codes,target, create_by, create_time, update_by, update_time, is_new,remark,hide)
+VALUES(${menuId},'${menuName}', '${parentId}', '${menuOrder}', '${moduleName}/${businessName}', '1', '${permissionPrefix}:view', '${menuIcon}','${moduleCodes}','${menuTarget}', '${createBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${updateBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end,'${menuMenuNew}', '${functionName}菜单',0);
 
 -- 新增权限 SQL
-insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId0},'查询', ${menuId}, '0',  '#',  '2',  '${permissionPrefix}:list','${createBy}', '${datetime}', '${updateBy}', '${datetime}', '${moduleCodes}','');
+INSERT INTO sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark,hide)
+VALUES(${mId0},'查询', ${menuId}, '0',  '#',  '2',  '${permissionPrefix}:list','${createBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${updateBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${moduleCodes}','',0);
 
-insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId1},'新增', ${menuId}, '1',  '#',  '2','${permissionPrefix}:add',  '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+INSERT INTO sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark,hide)
+VALUES(${mId1},'新增', ${menuId}, '1',  '#',  '2','${permissionPrefix}:add',  '${createBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${updateBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${moduleCodes}','',0);
 
-insert into sys_menu   (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId2},'修改', ${menuId}, '2',  '#',  '2', '${permissionPrefix}:edit', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+INSERT INTO sys_menu   (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark,hide)
+VALUES(${mId2},'修改', ${menuId}, '2',  '#',  '2', '${permissionPrefix}:edit', '${createBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${updateBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${moduleCodes}','',0);
 
-insert into sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark)
-values(${mId3},'删除', ${menuId}, '3',  '#',  '2', '${permissionPrefix}:del', '${createBy}', '${datetime}', '${updateBy}', '2018-03-01', '${moduleCodes}','');
+INSERT INTO sys_menu  (id, name, parent_id, order_num, url,type, perms, create_by, create_time, update_by, update_time,module_codes, remark,hide)
+VALUES(${mId3},'删除', ${menuId}, '3',  '#',  '2', '${permissionPrefix}:del', '${createBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${updateBy}', #if($dbTypeName == 'oracle')TO_DATE('${datetime}' , 'yyyy-mm-dd hh24:mi:ss')#else'${datetime}'#end, '${moduleCodes}','',0);
 #else
 -- 无菜单信息,若需要请设置菜单信息!!!!
 #end

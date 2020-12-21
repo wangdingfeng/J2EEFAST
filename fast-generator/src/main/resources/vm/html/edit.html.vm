@@ -454,7 +454,7 @@ ${pageTheme}
     var prefix = baseURL + "${moduleName}/${businessName}";
     /**表单验证*/
     <@compress single_line=true>
-    $("#form-${businessName}-add").validate({
+    $("#form-${businessName}-edit").validate({
 #set($fFlag = -1)
 #foreach ($column in $columns)
 #if($column.validation && ($column.validation.indexOf("V") != -1 || $column.validation.indexOf("P") != -1
@@ -514,17 +514,20 @@ ${pageTheme}
 #end
 #if($column.validation.indexOf("V") != -1)
                 remote: {
-                        url: prefix + "/check${field}Unique",
-                        type: "POST",
-                        dataType: "html",
-                        data: {
-                            "$column.javaField": function() {
-                                return opt.common.trim($("#$column.javaField").val());
-                            }
+                    url: prefix + "/check${field}Unique",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        "$pkColumn.javaField": function(){
+                            return opt.common.trim($("#$pkColumn.javaField").val());
                         },
-                        dataFilter: function(data, type) {
-                            return opt.validate.unique(data);
+                        "$column.javaField": function() {
+                            return opt.common.trim($("#$column.javaField").val());
                         }
+                    },
+                    dataFilter: function(data, type) {
+                        return opt.validate.unique(data);
+                    }
                 }
 #end
             },

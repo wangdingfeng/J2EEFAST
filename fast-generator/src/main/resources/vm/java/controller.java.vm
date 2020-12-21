@@ -284,8 +284,8 @@ public class ${ClassName}Controller extends BaseController{
     @RequestMapping(value = "/check${field}Unique", method = RequestMethod.POST)
     @RequiresPermissions(value = {"${permissionPrefix}:add", "${permissionPrefix}:edit"}, logical = Logical.OR)
     @ResponseBody
-    public ResponseData check${field}Unique(${column.javaType} ${column.javaField}) {
-        if(${className}Service.check${field}Unique(${column.javaField})){
+    public ResponseData check${field}Unique(${ClassName}Entity ${className}) {
+        if(${className}Service.check${field}Unique(${className})){
             return success();
         }
         return error("${column.columnComment}已经存在!");

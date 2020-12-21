@@ -40,18 +40,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateGenTableColumn" parameterType="GenTableColumnEntity">
         UPDATE gen_table_column
         <set>
-            column_comment = #{columnComment},
-            java_type = #{javaType},
-            java_field = #{javaField},
-            is_insert = #{isInsert},
-            is_edit = #{isEdit},
-            is_list = #{isList},
-            is_query = #{isQuery},
-            is_required = #{isRequired},
-            query_type = #{queryType},
-            html_type = #{htmlType},
-            dict_type = #{dictType},
-            is_table_sort = #{isTableSort},
+            <if test="columnComment != null and columnComment != ''">column_comment = #{columnComment},</if>
+            <if test="javaType != null and javaType != ''">java_type = #{javaType},</if>
+            <if test="javaField != null and javaField != ''">java_field = #{javaField},</if>
+            <if test="isInsert != null and isInsert != ''">is_insert = #{isInsert},</if>
+            <if test="isEdit != null and isEdit != ''">is_edit = #{isEdit},</if>
+            <if test="isList != null and isList != ''">is_list = #{isList},</if>
+            <if test="isQuery != null and isQuery != ''">is_query = #{isQuery},</if>
+            <if test="isRequired != null and isRequired != ''">is_required = #{isRequired},</if>
+            <if test="queryType != null and queryType != ''">query_type = #{queryType},</if>
+            <if test="htmlType != null and htmlType != ''">html_type = #{htmlType},</if>
+            <if test="dictType != null">dict_type = #{dictType},</if>
+            <if test="isTableSort != null and isTableSort != ''">is_table_sort = #{isTableSort},</if>
             <if test="validation != null and validation != ''">validation = #{validation},</if>
             <if test="validation == null or validation == ''">validation = '',</if>
             <if test="editInfo != null">edit_info = #{editInfo},</if>
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="dbType == 'oracle'">
             SELECT
             t.COLUMN_NAME AS columnName,
-            (CASE WHEN t.NULLABLE = 'Y' THEN '1' ELSE '0' END) AS isRequired,
+            (CASE WHEN t.NULLABLE = 'Y' THEN '0' ELSE '1' END) AS isRequired,
             (SELECT COUNT(*) FROM all_constraints con, all_cons_columns col
             WHERE con.constraint_name = col.constraint_name  AND con.constraint_type='P'
             AND col.table_name = t.table_name  AND col.COLUMN_NAME = t.COLUMN_NAME ) AS isPk ,
@@ -108,6 +108,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             WHERE t.TABLE_NAME = c.table_name 	AND t.COLUMN_NAME = c.column_name
             AND t.TABLE_NAME = UPPER(#{tableName})
             ORDER BY t.COLUMN_ID
+        </if>
+
+        <if test="dbType == 'sqlserver'">
+            SELECT
+            a.name AS columnName,
+            (CASE WHEN a.isnullable=1 THEN '0'ELSE '1' END) AS isRequired,
+            (CASE WHEN EXISTS(SELECT 1 FROM sysobjects WHERE xtype='PK' AND parent_obj=a.id AND name IN (
+            SELECT name FROM sysindexes WHERE indid in(
+            SELECT indid FROM sysindexkeys WHERE id = a.id AND colid=a.colid))) THEN '1' ELSE '0' END) AS isPk,
+            a.colorder AS sort,
+            isnull(g.[value],'') AS columnComment,
+            CONCAT(b.name,'(',COLUMNPROPERTY(a.id,a.name,'PRECISION'),')')AS columnType
+            FROM
+            syscolumns a
+            LEFT JOIN systypes b ON a.xusertype=b.xusertype
+            INNER JOIN sysobjects d ON a.id=d.id  AND d.xtype='U' AND  d.name <![CDATA[ <> ]]> 'dtproperties'
+            LEFT JOIN syscomments e ON a.cdefault=e.id
+            LEFT JOIN sys.extended_properties g ON a.id=g.major_id AND a.colid=g.minor_id
+            LEFT JOIN sys.extended_properties f ON d.id=f.major_id AND f.minor_id=0
+            WHERE d.name = '${tableName}'
+            ORDER BY
+            a.id,a.colorder
         </if>
 	</select>
 
