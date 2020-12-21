@@ -112,6 +112,14 @@ public class DruidProperties {
         return properties;
     }
 
+    public Properties createMSSProperties() {
+        Properties properties = new Properties();
+        properties.put("url", this.url);
+        properties.put("user", this.username);
+        properties.put("password", this.password);
+        return properties;
+    }
+
     private String getValidateQueryByUrl(String url) {
     	
     	String oracle = "oracle";

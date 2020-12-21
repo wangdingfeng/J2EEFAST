@@ -32,7 +32,7 @@ import org.springframework.core.io.Resource;
  */
 @Slf4j
 public class PropertiesUtils {
-	
+
 	/**
 	 * 系统默认加载文件(可覆盖配置文件参数)
 	 */
@@ -133,7 +133,7 @@ public class PropertiesUtils {
     			log.error("Load " + location + " failure. ", e);
 			}
 		}
-		//赋值系统加密数据
+		// J2eeFAST 赋值系统加密数据
 		properties.put("machineCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
 				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
 		properties.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
@@ -141,8 +141,12 @@ public class PropertiesUtils {
 		properties.put("pCIp",StrUtil.cleanBlank(StrUtil.join(StrUtil.COMMA,ConfigConstant.FAST_IPS)));
 
 		try{
-			if(properties.getProperty("fast.flowable.enabled").equals("false")){
-				properties.put("management.health.rabbit.enabled","false");
+			// J2eeFAST 2020-12-18 23:05:53 动态设置系统环境
+			if(properties.getProperty(ConfigConstant.FLOWABLE_ENABLED_YML).equals("false")){
+				properties.put("management.health.rabbit.enabled",false);
+			}
+			if(!properties.getProperty(ConfigConstant.JTA_ENABLED_YML).equals("true")){
+				properties.put("spring.jta.enabled",false);
 			}
 		}catch (Exception e){}
 	}

@@ -5,10 +5,12 @@
  */
 package com.j2eefast.common.core.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.j2eefast.common.core.config.properties.DruidProperties;
 import com.j2eefast.common.core.mutidatasource.annotaion.aop.MultiSourceAop;
 import com.j2eefast.common.db.context.DataSourceContext;
 import com.j2eefast.common.db.factory.AtomikosFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,9 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
+	@Value("${fast.jta.enabled}")
+	private boolean enabled;
+
 	/**
 	 * 默认数据库配置
 	 */
@@ -46,7 +51,13 @@ public class DataSourceConfig {
 	@Primary
 	@Bean("dataSourcePrimary")
 	public DataSource dataSourcePrimary(@Qualifier("defaultProperties") DruidProperties druidProperties) {
-		return AtomikosFactory.create(DataSourceContext.MASTER_DATASOURCE_NAME, druidProperties);
+		if(enabled){
+			return AtomikosFactory.create(DataSourceContext.MASTER_DATASOURCE_NAME, druidProperties);
+		}else {
+			DruidDataSource dataSource = new DruidDataSource();
+			druidProperties.config(dataSource);
+			return dataSource;
+		}
 	}
 
 
@@ -68,7 +79,13 @@ public class DataSourceConfig {
 	@Bean("flowableSourcePrimary")
 	@ConditionalOnProperty(prefix = "fast.flowable", name = "enabled", havingValue = "true")
 	public DataSource flowableSourcePrimary(@Qualifier("flowableProperties") DruidProperties flowableProperties) {
-		return AtomikosFactory.create(DataSourceContext.FLOWABLE_DATASOURCE_NAME, flowableProperties);
+		if(enabled){
+			return AtomikosFactory.create(DataSourceContext.FLOWABLE_DATASOURCE_NAME, flowableProperties);
+		}else{
+			DruidDataSource dataSource = new DruidDataSource();
+			flowableProperties.config(dataSource);
+			return dataSource;
+		}
 	}
 
 
