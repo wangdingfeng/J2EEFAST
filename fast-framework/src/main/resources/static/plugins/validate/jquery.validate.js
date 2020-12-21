@@ -1559,12 +1559,14 @@ $.extend( $.validator, {
 			var previous = this.previousValue( element, method ),
 				validator, data, optionDataString;
 
+			var flag = false;
 			if ( !this.settings.messages[ element.name ] ) {
 				this.settings.messages[ element.name ] = {};
+				flag = true;
 			}
 			previous.originalMessage = previous.originalMessage || this.settings.messages[ element.name ][ method ];
 			this.settings.messages[ element.name ][ method ] = previous.message;
-
+			this.settings.messages[ element.name ][ "ATG" ] = flag;
 			param = typeof param === "string" && { url: param } || param;
 			optionDataString = $.param( $.extend( { data: value }, param.data ) );
 			if ( previous.old === optionDataString ) {
@@ -1597,13 +1599,25 @@ $.extend( $.validator, {
 						validator.showErrors();
 					} else {
 						errors = {};
-						message = response || validator.defaultMessage( element, { method: method, parameters: value } );
+						var m = validator.settings.messages[ element.name ][ "ATG" ];
+						if(!m){
+							message =  validator.defaultMessage( element, { method: method, parameters: value } )
+						}else{
+							message = response;
+						}
+						if(message.indexOf("</i>") ==  -1){
+							message = "<i class='fa fa-times-circle'></i> " + message;
+						}
 						errors[ element.name ] = previous.message = message;
 						validator.invalid[ element.name ] = true;
 						validator.showErrors( errors );
 					}
 					previous.valid = valid;
 					validator.stopRequest( element, valid );
+				},
+				error: function(xhr, textStatus) {
+					opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+					return;
 				}
 			};
 			if($('meta[name="csrf-token"]').attr("content")){
