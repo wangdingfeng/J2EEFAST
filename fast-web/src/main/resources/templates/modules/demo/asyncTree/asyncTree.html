@@ -1,0 +1,88 @@
+<!-- 系统自动生成 Date:2020-12-21 11:03 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="测试异步树列表" libs=["treeTable"]/>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <@f.form id="asyncTree-form" class="form-inline">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label> <@ctx.i18n text = "节点名称"/>：</label>
+                            <@f.input placeholder="节点名称" name="name"/>
+                        </li>
+                        <li>
+                            <label> <@ctx.i18n text = "状态"/>： </label>
+                            <@f.select name="status" dictType="sys_status" blankValue="" blankLabel="所有"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;&nbsp;<@ctx.i18n text = "查询"/></a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </@f.form>
+        </div>
+        <@table id="bootstrap-tree-table">
+            <@shiro.hasPermission name="demo:asyncTree:add">
+                <a class="btn btn-success" onclick=" opt.operate.add(0)"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="demo:asyncTree:edit">
+                <a class="btn btn-primary single disabled" onclick=" opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="demo:asyncTree:del">
+                <a class="btn btn-danger multiple disabled" onclick="opt.operate.del()"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>
+            </@shiro.hasPermission>
+                <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i> <@ctx.i18n text = "展开/折叠"/></a>
+        </@table>
+    <div>
+</div>
+<@footer>
+<script type="text/javascript">
+    var addFlag = "${permission.hasPermi("demo:asyncTree:add")}";
+    var editFlag = "${permission.hasPermi("demo:asyncTree:edit")}";
+    var listFlag = "${permission.hasPermi("demo:asyncTree:add")}";
+    var delFlag = "${permission.hasPermi("demo:asyncTree:del")}";
+    var visible = ${permission.isPermitteds("demo:asyncTree:edit,demo:asyncTree:del,demo:asyncTree:add")?string('true', 'false')};
+    var statusDatas = ${dict.getDictListJson('sys_status')};
+    var prefix = baseURL + "demo/asyncTree";
+
+    $(function() {
+        var options = {
+            code: "id",
+            parentCode: "parentId",
+            uniqueId: "id",
+            url: prefix + "/list",
+            addUrl: prefix + "/add/{id}",
+            editUrl: prefix + "/edit/{id}",
+            delUrl: prefix + "/del/{id}",
+            modalName: '<@ctx.i18n text="测试异步树"/>',
+            expandAll: false,
+            sortName: 'createTime',
+            expandFirst: false,
+            async: true,                    /* 开启异步 */
+            asynUrl: prefix + "/listChild", /* 点击异步请求 */
+            columns:[
+                {field: 'selectItem',radio: true}
+                ,{field : 'name',title : '<@ctx.i18n text="节点名称"/>',align: "left",halign:"center"}
+                ,{field : 'fullName',title : '<@ctx.i18n text="节点全称"/>'}
+                ,{field : 'status',title : '<@ctx.i18n text="状态"/>',formatter: function(value, row, index) {
+                    return $.table.selectDictLabel(statusDatas, value);
+                }}
+                ,{field : 'createTime',title : '<@ctx.i18n text="创建时间"/>'}
+                ,{field : 'remark',title : '<@ctx.i18n text="备注信息"/>'}
+                ,{title:"<@ctx.i18n text = "操作"/>",visible:visible,formatter: function(value, row, index) {
+                    var actions = [];
+                    actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="opt.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i> <@ctx.i18n text = "新增"/></a> ');
+                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick=" opt.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i><@ctx.i18n text = "编辑"/></a> ');
+                    actions.push('<a class="btn btn-danger btn-xs ' + delFlag + '" href="javascript:void(0)" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/></a>');
+                    return actions.join('');
+                }}
+            ]
+        };
+        $.treeTable.init(options);
+    });
+</script>
+</@footer>
+</@pageTheme>

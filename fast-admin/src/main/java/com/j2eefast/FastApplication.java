@@ -39,7 +39,7 @@ public class FastApplication extends SpringBootServletInitializer {
 			//启动成功打印
 			if(!PropertiesUtils.getInstance().
 					getProperty(Constant.BANNER).equals(Constant.FALSE)){
-				System.out.println("-----------------------------------------------------\n"
+				System.out.println("-------------------------------------------------------------------\n"
 						+ "//             ┏┓   ┏┓					//\n"
 						+ "//            ┏┛┻━━━┛┻┓                  //\n"
 						+ "//            ┃   ☃   ┃				//\n"
