@@ -26,17 +26,18 @@
             AND c.parent_id = #{parentId}
         </if>
         <if test="id != null and id != ''">
-            <if test="_databaseId == 'mysql'">
-                AND (FIND_IN_SET(#{id},c.parent_ids)
-                OR (c.id = #{id} AND c.del_flag = '0'))
-            </if>
-            <if test="_databaseId == 'postgresql'">
-                AND ('${id}' = ANY(STRING_TO_ARRAY(c.parent_ids, ','))
-                OR (c.id = '${id}' AND c.del_flag = '0'))
-            </if>
+            <if test="_databaseId == 'mysql'">AND ((FIND_IN_SET(#{id},c.parent_ids))</if>
+            <if test="_databaseId == 'postgresql'">AND (('${id}' = ANY(STRING_TO_ARRAY(c.parent_ids, ',')))</if>
+            <if test="_databaseId == 'oracle'">AND (INSTR(','||c.parent_ids||',',',${id},') > 0</if>
+            <if test="_databaseId == 'sqlserver'">AND (CHARINDEX(','+'${id}'+',', ','+c.parent_ids+',') > 0</if>
+            OR (c.id = '${id}' AND c.del_flag = '0'))
         </if>
         <if test="name != null and name != ''">
-            AND c.name LIKE concat('%', #{name}, '%')
+            AND c.name LIKE
+            <choose>
+                <when test="_databaseId == 'oracle'">'%,'||#{name}||',%'</when>
+                <otherwise>CONCAT('%', #{name}, '%')</otherwise>
+            </choose>
         </if>
         <if test="status != null and status != ''">
             AND c.status = #{status}
@@ -50,7 +51,6 @@
               #{id}
            </foreach>
         </if>
-        
         <!-- 数据范围过滤 -->
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
@@ -58,7 +58,7 @@
     </select>
 
     <select id="selectRoleDeptTree" parameterType="Long" resultType="String">
-		SELECT concat(d.id, d.name) AS name
+		SELECT CONCAT(d.id, d.name) AS name
 		FROM sys_comp d
 		LEFT JOIN sys_role_dept rd ON d.id = rd.dept_id
 		WHERE d.del_flag = '0' AND rd.role_id = #{roleId}

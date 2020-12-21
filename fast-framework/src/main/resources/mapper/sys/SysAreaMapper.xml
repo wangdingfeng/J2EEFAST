@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        <result property="id"    column="id"    />
        <result property="parentId"    column="parent_id"    />
        <result property="name"    column="name"    />
-       <result property="level"    column="level"    />
+       <result property="areaLevel"    column="area_level"    />
        <result property="wholeName"    column="whole_name"    />
        <result property="lon"    column="lon"    />
        <result property="lat"    column="lat"    />
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           a.id AS "id"   ,
           a.parent_id AS "parentId"   ,
           a.name AS "name"   ,
-          a.level AS "level"   ,
+          a.area_level AS "areaLevel"   ,
           a.whole_name AS "wholeName"   ,
           a.lon AS "lon"   ,
           a.lat AS "lat"   ,
@@ -45,16 +45,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      <select id="selectAreaList" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
 		SELECT
 			<include refid="sysAreaColumns"/>
-            <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
+            ,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"
         FROM sys_area a
 		<where>
             <if test="name != null  and name != ''">
-                     and a.name LIKE
-                     <if test="_databaseId == 'oracle'"> '%'||#{name}||'%'</if>
-                     <if test="_databaseId == 'mssql'">'%'+#{name}+'%'</if>
-                     <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{name},'%')</if>
+                and a.name LIKE
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{name}||',%'</when>
+                    <otherwise>CONCAT('%', #{name}, '%')</otherwise>
+                </choose>
 			</if>
-            <if test="level != null "> AND a.level = #{level} </if>
+            <if test="areaLevel != null "> AND a.area_level = #{areaLevel} </if>
             <if test="parentId != null "> AND a.parent_id = #{parentId} </if>
             <if test="zipCode != null  and zipCode != ''"> AND a.zip_code = #{zipCode} </if>
             <if test="areaCode != null  and areaCode != ''"> AND a.area_code = #{areaCode} </if>
@@ -64,18 +65,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  <!--  根据获取实体 page   -->
      <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysAreaEntity">
 		SELECT
-         <include refid="sysAreaColumns"/>
-         <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"</if>
+		<include refid="sysAreaColumns"/>
+        ,(CASE  WHEN (SELECT COUNT(1) FROM sys_area WHERE parent_id = a.id) >0 THEN 1 ELSE 0 END) AS "isTreeLeaf"
 		FROM sys_area a
 		<include refid="sysAreaJoins"/>
         <where>
             <if test="sysArea.name != null  and sysArea.name != ''">
                 AND a.name LIKE
-                <if test="_databaseId == 'oracle'"> '%'||#{sysArea.name}||'%'</if>
-                <if test="_databaseId == 'mssql'">'%'+#{sysArea.name}+'%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'">concat('%',#{sysArea.name},'%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{sysArea.name}||',%'</when>
+                    <otherwise>CONCAT('%', #{sysArea.name}, '%')</otherwise>
+                </choose>
             </if>
-            <if test="sysArea.level != null "> AND a.level = #{sysArea.level} </if>
+            <if test="sysArea.areaLevel != null "> AND a.area_level = #{sysArea.areaLevel} </if>
             <if test="sysArea.parentId != null "> AND a.parent_id = #{sysArea.parentId} </if>
             <if test="sysArea.zipCode != null  and sysArea.zipCode != ''"> AND a.zip_code = #{sysArea.zipCode} </if>
             <if test="sysArea.areaCode != null  and sysArea.areaCode != ''"> AND a.area_code = #{sysArea.areaCode} </if>

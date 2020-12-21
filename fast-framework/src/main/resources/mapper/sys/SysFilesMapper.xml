@@ -67,9 +67,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="sysFiles.fileName != null  and sysFiles.fileName != ''">
                 AND a.file_name LIKE
-                <if test="_databaseId == 'oracle'"> '%'||#{sysFiles.fileName}||'%'</if>
-                <if test="_databaseId == 'mssql'">'%'+#{sysFiles.fileName}+'%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">concat('%',#{sysFiles.fileName},'%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{sysFiles.fileName}||',%'</when>
+                    <otherwise>CONCAT('%', #{sysFiles.fileName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="sysFiles.fileSize != null  and sysFiles.fileSize != ''">
                 AND a.file_size > #{sysFiles.fileSize}

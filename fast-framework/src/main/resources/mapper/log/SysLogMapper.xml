@@ -39,29 +39,32 @@
     <select id="findPage"  resultType="com.j2eefast.framework.log.entity.SysOperLogEntity">
         SELECT
         <include refid="sysOperLogColumns"/>
-        FROM sys_oper_log AS a
+        FROM sys_oper_log a
         <include refid="sysOperLogJoins"/>
         <where>
             <if test="title != null and title != ''">
                 AND a.title LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{title}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{title}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{title}||',%'</when>
+                    <otherwise>CONCAT('%', #{title}, '%')</otherwise>
+                </choose>
             </if>
             <if test="operName != null and operName != ''">
                 AND a.oper_name LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{operName}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{operName}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{operName}||',%'</when>
+                    <otherwise>CONCAT('%', #{operName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="status != null and status != ''">
                 AND a.status = '${status}'
             </if>
             <if test="deptId != null and deptId !=''">
-                <if test="_databaseId == 'mysql'">
-                    AND (FIND_IN_SET(#{deptId},d.parent_ids)
-                </if>
-                <if test="_databaseId == 'postgresql'">
-                    AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
-                </if>
+                <if test="_databaseId == 'mysql'">AND (FIND_IN_SET(#{deptId},d.parent_ids)</if>
+                <if test="_databaseId == 'postgresql'">AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))</if>
+                <if test="_databaseId == 'oracle'">AND (INSTR(','||d.parent_ids||',',',${deptId},') > 0</if>
+                <if test="_databaseId == 'sqlserver'">AND (CHARINDEX(','+'${deptId}'+',', ','+d.parent_ids+',') > 0</if>
+                OR a.dept_id = '${deptId}')
             </if>
             <if test="businessTypes != null and businessTypes != ''">
                 AND  a.business_type IN(${businessTypes})

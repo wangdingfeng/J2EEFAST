@@ -48,9 +48,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sysFileUpload.fileId != null "> AND a.file_id = #{sysFileUpload.fileId} </if>
             <if test="sysFileUpload.fileName != null  and sysFileUpload.fileName != ''">
                 AND a.file_name LIKE
-                <if test="_databaseId == 'oracle'"> '%'||#{sysFileUpload.fileName}||'%'</if>
-                <if test="_databaseId == 'mssql'">'%'+#{sysFileUpload.fileName}+'%'</if>
-                <if test="_databaseId == 'mysql'">concat('%',#{sysFileUpload.fileName},'%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{sysFileUpload.fileName}||',%'</when>
+                    <otherwise>CONCAT('%', #{sysFileUpload.fileName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="sysFileUpload.fileType != null  and sysFileUpload.fileType != ''"> AND a.file_type = #{sysFileUpload.fileType} </if>
             <if test="sysFileUpload.bizId != null "> AND a.biz_id = #{sysFileUpload.bizId} </if>

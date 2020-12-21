@@ -32,8 +32,10 @@
 		WHERE 1 = 1 AND d.del_flag = '0'
 		<if test="name != null and name != ''">
 			AND d.name LIKE
-			<if test="_databaseId == 'oracle'"> '%,'||#{name}||',%'</if>
-			<if test="_databaseId == 'mysql'"> concat('%', #{name}, '%')</if>
+			<choose>
+				<when test="_databaseId == 'oracle'">'%,'||#{name}||',%'</when>
+				<otherwise>CONCAT('%', #{name}, '%')</otherwise>
+			</choose>
 		</if>
 		<if test="type != null and type != ''">
 			AND d.type = #{type}

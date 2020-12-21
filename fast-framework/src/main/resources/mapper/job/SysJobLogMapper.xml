@@ -27,9 +27,10 @@
         <where>
             <if test="sysJobLog.jobName != null  and sysJobLog.jobName != ''">
                 AND a.job_name LIKE
-                <if test="_databaseId == 'oracle'"> '%'||#{sysJobLog.jobName}||'%'</if>
-                <if test="_databaseId == 'mssql'">'%'+#{sysJobLog.jobName}+'%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">concat('%',#{sysJobLog.jobName},'%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{sysJobLog.jobName}||',%'</when>
+                    <otherwise>CONCAT('%', #{sysJobLog.jobName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="sysJobLog.jobGroup != null  and sysJobLog.jobGroup != ''"> AND a.job_group = #{sysJobLog.jobGroup} </if>
             <if test="sysJobLog.status != null  and sysJobLog.status != ''"> AND a.status = #{sysJobLog.status} </if>

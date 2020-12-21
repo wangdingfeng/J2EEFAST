@@ -18,22 +18,5 @@
 	<delete id="deleteJobById" parameterType="Long">
  		DELETE FROM sys_job WHERE id = #{id}
  	</delete>
-	
-<!-- 	<update id="updateSysJob" parameterType="SysJobEntity">
-		UPDATE schedule_job
-		<set>
-			<if test="jobName != null and jobName != ''">job_name = #{jobName},</if>
-			<if test="jobGroup != null and jobGroup != ''">job_group = #{jobGroup},</if>
-			<if test="beanName != null and beanName != ''">bean_name = #{beanName},</if>
-			<if test="cronExpression != null and cronExpression != ''">cron_expression = #{cronExpression},</if>
-			<if test="params != null and params != ''">params = #{params},</if>
-			<if test="methodName != null and methodName != ''">method_name = #{methodName},</if>
-			<if test="status !=null">status = #{status},</if>
-			<if test="remark != null and remark != ''">remark = #{remark},</if>
-			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-			update_time = sysdate()
-		</set>
-		WHERE job_id = #{jobId}
-	</update> -->
 
 </mapper>

@@ -37,14 +37,21 @@
 
     <select id="findFirstLoginInfo"  resultType="com.j2eefast.framework.log.entity.SysLoginInfoEntity">
         SELECT
-        <include refid="Base_Column_List"/>
-        <if test="_databaseId  == 'oracle'">
-            FROM (SELECT * FROM sys_login_infor WHERE username = #{username}
-            AND status = '00000' ORDER BY login_time ) WHERE rownum=1
+        <if test="_databaseId  == 'sqlserver'">
+            TOP 1
         </if>
+        <include refid="Base_Column_List"/>
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                FROM (SELECT * FROM sys_login_infor WHERE username = #{username}
+                AND status = '00000' ORDER BY login_time ) WHERE rownum=1
+            </when>
+            <otherwise>
+                FROM sys_login_infor
+                WHERE username = #{username}  AND status = '00000' ORDER BY login_time
+            </otherwise>
+        </choose>
         <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'">
-            FROM sys_login_infor
-            WHERE username = #{username}  AND status = '00000' ORDER BY login_time
             DESC LIMIT 1
         </if>
     </select>
@@ -52,18 +59,22 @@
     <select id="findPage"  resultType="com.j2eefast.framework.log.entity.SysLoginInfoEntity">
         SELECT
         <include refid="sysLoginInfoColumns"/>
-        FROM sys_login_infor AS a
+        FROM sys_login_infor a
         <include refid="sysLoginInfoJoins"/>
         <where>
             <if test="username != null and username != ''">
                 AND a.username LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{username}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{username}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{username}||',%'</when>
+                    <otherwise>CONCAT('%', #{username}, '%')</otherwise>
+                </choose>
             </if>
             <if test="ipaddr != null and ipaddr != ''">
                 AND a.ipaddr LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{ipaddr}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{ipaddr}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{ipaddr}||',%'</when>
+                    <otherwise>CONCAT('%', #{ipaddr}, '%')</otherwise>
+                </choose>
             </if>
             <if test="status != null and status != ''">
                 <if test="status == '-1'">
@@ -74,13 +85,11 @@
                 </if>
             </if>
             <if test="deptId != null and deptId !=''">
-                <if test="_databaseId == 'mysql'">
-                    AND (FIND_IN_SET(#{deptId},d.parent_ids) OR a.dept_id = #{deptId})
-                </if>
-                <if test="_databaseId == 'postgresql'">
-                    AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
-                    OR a.dept_id = '${deptId}')
-                </if>
+                <if test="_databaseId == 'mysql'">AND (FIND_IN_SET(#{deptId},d.parent_ids)</if>
+                <if test="_databaseId == 'postgresql'">AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))</if>
+                <if test="_databaseId == 'oracle'">AND (INSTR(','||d.parent_ids||',',',${deptId},') > 0</if>
+                <if test="_databaseId == 'sqlserver'">AND (CHARINDEX(','+'${deptId}'+',', ','+d.parent_ids+',') > 0</if>
+                OR a.dept_id = '${deptId}')
             </if>
             <if test="_databaseId == 'mysql'">
                 <if test="beginTime != null and beginTime != ''">

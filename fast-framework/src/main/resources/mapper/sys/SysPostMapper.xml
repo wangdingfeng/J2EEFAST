@@ -19,24 +19,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!--  实体栏位  -->
     <sql id="sysPostColumns">
-          DISTINCT a.id AS "id",
-          a.post_code AS "postCode",
-          a.post_name AS "postName",
-          a.post_sort AS "postSort",
-          a.post_type AS "postType",
-          a.status AS "status",
-          a.create_by AS "createBy",
-          a.create_time AS "createTime",
-          a.update_by AS "updateBy",
-          a.create_time AS "updateTime",
-          a.remark AS "remark"
-      </sql>
+        <choose>
+            <when test="_databaseId == 'sqlserver'"></when>
+            <otherwise>DISTINCT</otherwise>
+        </choose>
+        a.id AS "id",
+        a.post_code AS "postCode",
+        a.post_name AS "postName",
+        a.post_sort AS "postSort",
+        a.post_type AS "postType",
+        a.status AS "status",
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy",
+        a.create_time AS "updateTime",
+        a.remark AS "remark"
+    </sql>
 
     <!-- 外联表  -->
     <sql id="sysPostJoins">
-        LEFT JOIN sys_user_post up ON up.post_code = a.post_code
-        LEFT JOIN sys_user u ON up.user_id = u.id
-        LEFT JOIN sys_comp c ON c.id = u.dept_id
+        LEFT JOIN (SELECT user_id, post_code FROM sys_user_post) up ON up.post_code = a.post_code
+        LEFT JOIN (SELECT id, dept_id FROM sys_user) u ON up.user_id = u.id
+        LEFT JOIN (SELECT id,name FROM sys_comp) c ON c.id = u.dept_id
+    </sql>
+
+    <!-- 条件语句-->
+    <sql id="selectConditions">
+        <if test="postName != null and postName != ''">
+            AND a.post_name LIKE
+            <choose>
+                <when test="_databaseId == 'oracle'">'%,'||#{postName}||',%'</when>
+                <otherwise>CONCAT('%', #{postName}, '%')</otherwise>
+            </choose>
+        </if>
+        <if test = "postCode !=null and postCode!=''">
+            AND r.post_code LIKE
+            <choose>
+                <when test="_databaseId == 'oracle'">'%,'||#{postCode}||',%'</when>
+                <otherwise>CONCAT('%', #{postCode}, '%')</otherwise>
+            </choose>
+        </if>
     </sql>
 
     <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysPostEntity">
@@ -45,16 +67,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sys_post a
         <include refid="sysPostJoins"/>
         <where>
-            <if test="postName != null and postName != ''">
-                AND a.post_name LIKE
-                <if test="_databaseId  == 'oracle'"> '%,'||#{postName}||',%'</if>
-                <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postName}, '%') </if>
-            </if>
-            <if test = "postCode !=null and postCode!=''">
-                AND a.post_code like
-                <if test="_databaseId  == 'oracle'"> '%,'||#{postCode}||',%'</if>
-                <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postCode}, '%') </if>
-            </if>
+            1 = 1
+            <include refid="selectConditions"/>
             <if test = "postType !=null and postType!=''">
                 AND a.post_type = #{postType}
             </if>
@@ -64,6 +78,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test = "sql_filter !=null and sql_filter!=''">
                 AND ${sql_filter}
             </if>
+            <choose>
+                <when test="_databaseId == 'sqlserver'">
+                    GROUP BY a.id ,a.post_code ,a.post_name ,a.post_sort ,a.post_type , a.status,
+                    a.create_by ,a.create_time ,a.update_by ,a.create_time, a.remark
+                </when>
+                <otherwise></otherwise>
+            </choose>
         </where>
     </select>
 
@@ -74,22 +95,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sys_post a
         <include refid="sysPostJoins"/>
         WHERE a.status = '0'
-        <if test="postName != null and postName != ''">
-            AND a.post_name LIKE
-            <if test="_databaseId  == 'oracle'"> '%,'||#{postName}||',%'</if>
-            <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postName}, '%') </if>
-        </if>
-        <if test = "postCode !=null and postCode!=''">
-            AND a.post_code like
-            <if test="_databaseId  == 'oracle'"> '%,'||#{postCode}||',%'</if>
-            <if test="_databaseId  == 'mysql' || _databaseId  == 'postgresql'"> CONCAT('%', #{postCode}, '%') </if>
-        </if>
+        <include refid="selectConditions"/>
         <if test = "postType !=null and postType!=''">
             AND a.post_type = #{postType}
         </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
+        <choose>
+            <when test="_databaseId == 'sqlserver'">
+                GROUP BY a.id ,a.post_code ,a.post_name ,a.post_sort ,a.post_type , a.status,
+                a.create_by ,a.create_time ,a.update_by ,a.create_time, a.remark
+            </when>
+            <otherwise></otherwise>
+        </choose>
     </select>
 
     <select id="getPostByUserId" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysPostEntity">
