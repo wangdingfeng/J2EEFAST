@@ -1,17 +1,15 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.controller;
 
-import com.j2eefast.common.config.service.SysConfigService;
 import com.j2eefast.framework.ueditor.ActionEnter;
 import com.j2eefast.framework.utils.Global;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -27,9 +25,6 @@ import java.io.PrintWriter;
 @Controller
 @RequestMapping({"/file/ueditor/"})
 public class SysUeditorController {
-
-    @Autowired
-    private SysConfigService sysConfigService;
 
     @RequestMapping({"/config"})
     @ResponseBody

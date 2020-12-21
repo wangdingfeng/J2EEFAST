@@ -11,6 +11,7 @@ import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
@@ -28,8 +29,8 @@ import java.util.Map;
 public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 
 	@Autowired
+	@Lazy
 	private ShiroFilterFactoryBean shiroFilterFactoryBean;
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

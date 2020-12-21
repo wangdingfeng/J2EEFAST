@@ -1,13 +1,12 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
 
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import com.j2eefast.common.db.utils.DbUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +50,11 @@ public class ScheduleConfig {
 		if(DbUtil.getDbType(jdbcUrl).equals("postgresql")){
 			prop.put("org.quartz.jobStore.driverDelegateClass",
 			 "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+		}
+		//MSSQL 数据库驱动代理
+		if(DbUtil.getDbType(jdbcUrl).equals("sqlserver")){
+			prop.put("org.quartz.jobStore.driverDelegateClass",
+					"org.quartz.impl.jdbcjobstore.MSSQLDelegate");
 		}
 
 		factory.setQuartzProperties(prop);

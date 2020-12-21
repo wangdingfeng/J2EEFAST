@@ -9,6 +9,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.exception.RxcException;
+import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.shiro.service.SysLoginService;
 import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
@@ -26,6 +27,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
 import javax.annotation.Resource;
 import java.util.*;
 
@@ -35,12 +38,15 @@ import java.util.*;
 @Slf4j
 public class FreeRealm extends AuthorizingRealm {
 
-    @Autowired
-    private SysLoginService sysLoginService;
-    @Resource
-    private SysModuleMapper sysModuleMapper;
-    @Resource
-    private SysMenuMapper sysMenuMapper;
+//    @Autowired
+//    @Lazy
+//    private SysLoginService sysLoginService;
+//    @Resource
+//    @Lazy
+//    private SysModuleMapper sysModuleMapper;
+//    @Resource
+//    @Lazy
+//    private SysMenuMapper sysMenuMapper;
     /**
      * 免密授权授权认证
      * @param principals
@@ -73,7 +79,7 @@ public class FreeRealm extends AuthorizingRealm {
         // 查询用户信息
         LoginUserEntity user = new LoginUserEntity();
         try {
-            user = this.sysLoginService.freeLoginVerify(username);
+            user = SpringUtil.getBean(SysLoginService.class).freeLoginVerify(username);
         }catch (RxcException e) {
             //不同异常不同抛出
             if(e.getCode().equals("50001")) {
@@ -114,7 +120,7 @@ public class FreeRealm extends AuthorizingRealm {
             List<String> roleNameList = new ArrayList<>();
             List<String> roleKeyList = new ArrayList<>();
             // 根居角色ID获取模块列表
-            List<SysModuleEntity> modules = this.sysModuleMapper.findModuleByRoleIds(roleList);
+            List<SysModuleEntity> modules = SpringUtil.getBean(SysModuleMapper.class).findModuleByRoleIds(roleList);
             List<Map<String, Object>>  results = new ArrayList<>(modules.size());
             modules.forEach(module->{
                 Map<String, Object> map = BeanUtil.beanToMap(module);
@@ -126,7 +132,7 @@ public class FreeRealm extends AuthorizingRealm {
             List<Map<Object,Object>> xzz = new ArrayList<>(roleList.size());
             for (Long roleId : roleList) {
                 SysRoleEntity role = ConstantFactory.me().getRoleById(roleId);
-                List<String> permissions = this.sysMenuMapper.findPermsByRoleId(roleId);
+                List<String> permissions = SpringUtil.getBean(SysMenuMapper.class).findPermsByRoleId(roleId);
                 if (permissions != null) {
                     Map<Object, Object> map = new HashMap<>();
                     Set<String> tempSet = new HashSet<>();

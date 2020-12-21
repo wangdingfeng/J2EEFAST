@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.controller;
@@ -33,23 +34,19 @@ import java.util.Map;
 @Controller
 public class SystemController extends BaseController {
 
-	@Autowired
-	private SysModuleService sysModuleService;
-	@Autowired
-	private SysMenuService sysMenuService;
-
 	/**
 	 * 主页
 	 * @param mmap
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "index","index.html" })
+	@RequestMapping(value = { "/", "/index","/index.html" })
 	public String index(ModelMap mmap) {
 		LoginUserEntity user = UserUtils.getUserInfo();
 		List<Map<String, Object>> modules = user.getModules();
 		Map<String, List<SysMenuEntity>> menuList = new HashMap<>();
 		for(Map<String, Object> s: modules){
-			List<SysMenuEntity> menu = ConstantFactory.me().getMenuByUserIdModuleCode(user.getId(), (String) s.get("moduleCode"),user);
+			List<SysMenuEntity> menu = ConstantFactory.me().getMenuByUserIdModuleCode(user.getId(),
+					(String) s.get("moduleCode"),user);
 			menuList.put((String) s.get("moduleCode"),menu);
 		}
 		mmap.put("modules",modules);

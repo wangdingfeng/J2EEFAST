@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
-@Configuration
 public class EncryptConfig {
 	
     @Bean(name = "encryptablePropertyDetector")

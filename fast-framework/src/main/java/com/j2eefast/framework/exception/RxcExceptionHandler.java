@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.exception;
@@ -8,10 +9,12 @@ import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.ToolUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
+import org.mybatis.spring.MyBatisSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,7 +22,7 @@ import com.j2eefast.common.core.exception.RxcException;
 import freemarker.core.InvalidReferenceException;
 
 /**
- * 异常处理器
+ * 项目全局异常处理器
  * @author zhouzhou
  */
 @RestControllerAdvice
@@ -30,7 +33,7 @@ public class RxcExceptionHandler {
 	 * 处理自定义异常
 	 */
 	@ExceptionHandler(RxcException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseData handleRxcException(RxcException e) {
 		logger.error("异常 代码[{}] 异常信息[{}]",e.getCode(),e.getMessage());
 		ResponseData r = new ResponseData();
@@ -75,7 +78,7 @@ public class RxcExceptionHandler {
 	}
 
 	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseData ResponseDatahandleException(Exception e) {
 		if(("Request method 'GET' not supported").equals(e.getMessage())) {
 			return ResponseData.error("20000","请求不可用");
@@ -87,4 +90,17 @@ public class RxcExceptionHandler {
 		return ResponseData.error(e.getMessage());
 	}
 
+	@ExceptionHandler(BadSqlGrammarException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseData ResponseDatahandleSQLSyntaxErrorException(Exception e) {
+		logger.error("操作数据库异常:",e);
+		return ResponseData.error("数据库异常请检查服务器");
+	}
+
+	@ExceptionHandler(MyBatisSystemException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseData ResponseDatahandleSQLMyBatisSystemException(Exception e) {
+		logger.error("操作数据库异常:",e);
+		return ResponseData.error("数据库异常请检查服务器");
+	}
 }

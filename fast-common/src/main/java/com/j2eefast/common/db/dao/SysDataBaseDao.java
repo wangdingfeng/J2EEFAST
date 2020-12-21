@@ -6,6 +6,8 @@
 package com.j2eefast.common.db.dao;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.db.DbUtil;
+
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.j2eefast.common.core.config.properties.DruidProperties;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -51,15 +53,14 @@ public class SysDataBaseDao {
 	public Map<String, DruidProperties> getAllDataBaseInfo() {
 
 		Map<String, DruidProperties> dataSourceList = new HashMap<>();
-
+		Connection conn = null;
 		try {
 			Class.forName(druidProperties.getDriverClassName());
-			Connection conn = DriverManager.getConnection(
+			conn = DriverManager.getConnection(
 					druidProperties.getUrl(), druidProperties.getUsername(), druidProperties.getPassword());
 
 			PreparedStatement preparedStatement = conn.prepareStatement(new SysDatabaseListSql().getSql(druidProperties.getUrl()));
 			ResultSet resultSet = preparedStatement.executeQuery();
-
 			while (resultSet.next()) {
 				DruidProperties druidProperties = createDruidProperties(resultSet);
 				String dbName = resultSet.getString("db_name");
@@ -68,7 +69,9 @@ public class SysDataBaseDao {
 			return dataSourceList;
 		} catch (Exception ex) {
 			throw new RxcException("查询数据库中数据源信息错误","60000");
-		}
+		}finally {
+            DbUtil.close(conn);
+        }
 	}
 
 	/**
@@ -76,9 +79,10 @@ public class SysDataBaseDao {
 	 * 主数据库固定已ENC 存储数据库
 	 */
 	public void createMasterDatabaseInfo(DruidProperties properties ,String name) {
+		Connection conn = null;
 		try {
 			Class.forName(druidProperties.getDriverClassName());
-			Connection conn = DriverManager.getConnection(
+			conn = DriverManager.getConnection(
 					druidProperties.getUrl(), druidProperties.getUsername(), druidProperties.getPassword());
 
 			PreparedStatement preparedStatement = conn.prepareStatement(new AddSysDatabaseSql().getSql(druidProperties.getUrl()));
@@ -103,16 +107,19 @@ public class SysDataBaseDao {
 		} catch (Exception ex) {
 			log.error("初始化master的databaseInfo信息错误！", ex);
 			throw new RxcException("查询数据库中数据源信息错误","60000");
-		}
+		}finally {
+            DbUtil.close(conn);
+        }
 	}
 
 	/**
 	 * 删除master的数据源信息
 	 */
 	public void deleteDatabaseInfo(String name) {
+		Connection conn = null;
 		try {
 			Class.forName(druidProperties.getDriverClassName());
-			Connection conn = DriverManager.getConnection(
+		    conn = DriverManager.getConnection(
 					druidProperties.getUrl(), druidProperties.getUsername(), druidProperties.getPassword());
 
 			PreparedStatement preparedStatement = conn.prepareStatement(new DelSysDatabaseSql().getSql(druidProperties.getUrl()));
@@ -122,7 +129,9 @@ public class SysDataBaseDao {
 		} catch (Exception ex) {
 			log.info("删除 default 的databaseInfo信息失败！", ex);
 			throw new RxcException("查询数据库中数据源信息错误","60000");
-		}
+		}finally {
+            DbUtil.close(conn);
+        }
 	}
 
 	/**
