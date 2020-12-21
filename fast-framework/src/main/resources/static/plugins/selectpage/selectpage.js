@@ -789,7 +789,6 @@
 						self.ajaxErrorNotify(self);
 					}
 				};
-				console.log('-------->>>>>>>>');
 				if($('meta[name="csrf-token"]').attr("content")){
 					config = $.extend(config,{headers: {
 							"X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
