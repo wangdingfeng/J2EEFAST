@@ -331,7 +331,6 @@
                 <version>${fast.version}</version>
             </dependency>
 
-
 			<dependency>
                 <groupId>com.j2eefast</groupId>
                 <artifactId>fast-web</artifactId>
@@ -356,11 +355,11 @@
     <!-- 项目来整合各子模块 -->
     <modules>
     	<module>fast-admin</module><!-- 后台入口模块 -->
-        <module>fast-common</module><!-- 公共模块 -->
-        <module>fast-generator</module><!-- 代码生成器模块 -->
-        <module>fast-framework</module><!-- 核心框架 -->
-        <module>fast-flowable</module><!-- 工作流模块 -->
         <module>fast-web</module> <!--二次开发  -->
+        <module>fast-framework</module><!-- 核心框架 -->
+        <module>fast-generator</module><!-- 代码生成器模块 -->
+        <module>fast-common</module><!-- 公共模块 -->
+        <module>fast-flowable</module><!-- 工作流模块 -->
     </modules>
 
     <build>
