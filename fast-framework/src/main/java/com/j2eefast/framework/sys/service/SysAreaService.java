@@ -83,7 +83,7 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		String searchValue = (String) params.get("searchValue");
 
 		Page<SysAreaEntity> page = sysAreaMapper.selectPage(new Query<SysAreaEntity>(params).getPage(),
-				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"level", Convert.toInt(type))
+				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"area_level", Convert.toInt(type))
 						.eq(ToolUtil.isNotEmpty(pId),"parent_id",Convert.toLong(pId))
 						.eq(ToolUtil.isNotEmpty(searchValue),"id",Convert.toLong(searchValue))
 						.like(ToolUtil.isNotEmpty(name),"name",name));

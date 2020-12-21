@@ -36,7 +36,7 @@ public class SysAreaEntity implements Serializable{
     private String name;
 
   /** 行政区域等级 1-省 2-市 3-区县 4-街道镇 */
-    private Integer level;
+    private Integer areaLevel;
 
 
   /** 完整名称 */

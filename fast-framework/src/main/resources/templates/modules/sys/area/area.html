@@ -51,7 +51,7 @@
                     }
                 }
                ,{field : 'wholeName',title : '<@ctx.i18n text = "区域全称"/>',width:'350px', align: 'left', formatter: function(value, row, index) {return $.table.tooltip(value,30);}}
-               ,{field : 'level',title : '<@ctx.i18n text = "区域等级"/>', align: 'center', formatter: function(value, row, index) {return $.table.selectDictLabel(datas_type, value);}}
+               ,{field : 'areaLevel',title : '<@ctx.i18n text = "区域等级"/>', align: 'center', formatter: function(value, row, index) {return $.table.selectDictLabel(datas_type, value);}}
                ,{field : 'cityCode',title : '<@ctx.i18n text = "电话区号"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
                ,{field : 'zipCode',title : '<@ctx.i18n text = "邮政编码"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}
                ,{field : 'lon',title : '<@ctx.i18n text = "本区域经度"/>', align: 'center', formatter: function(value, row, index) {return $.table.tooltip(value,10);}}

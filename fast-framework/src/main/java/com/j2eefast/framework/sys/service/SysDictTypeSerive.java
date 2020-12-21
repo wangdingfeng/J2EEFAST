@@ -55,7 +55,7 @@ public class SysDictTypeSerive extends ServiceImpl<SysDictTypeMapper,SysDictType
         Long dictId = ToolUtil.isEmpty(dict.getId()) ? -1L : dict.getId();
         SysDictTypeEntity dictType = this.getOne(new QueryWrapper<SysDictTypeEntity>()
                 .eq("dict_type",dict.getDictType()));
-        if (!ToolUtil.isEmpty(dictType) && dictType.getId().longValue() != dictId.longValue()){
+        if (!ToolUtil.isEmpty(dictType) && !dictType.getId().equals(dictId)){
             return  false;
         }
         return true;
