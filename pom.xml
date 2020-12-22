@@ -2,18 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- Maven模块版本 -->
     <modelVersion>4.0.0</modelVersion>
+
     <!-- 整个系统的名称 -->
     <groupId>com.j2eefast</groupId>
-    <!-- 子模块名称 -->
     <artifactId>fast</artifactId>
-    <!-- 依赖项的版本 -->
-    <version>3.2.0</version>
+    <version>2.2.0</version>
+
     <!-- 打包类型 -->
     <packaging>pom</packaging>
 
-    <name>J2eeFast</name>
+    <name>J2eeFAST</name>
     <url>http://www.j2eefast.com</url>
     <description>J2eeFast</description>
+
+    <!-- Inherit defaults from Spring Boot -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -21,22 +23,22 @@
     </parent>
     <!-- 用户可以在maven中定义一些属性，然后在其他地方用${xxx}进行引用 -->
     <properties>
-        <fast.version>3.2.0</fast.version>
+        <fast.version>2.2.0</fast.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
         <shiro.version>1.7.0</shiro.version>
         <jedis.version>2.9.0</jedis.version>
-        <druid.version>1.1.21</druid.version>
+        <druid.version>1.1.22</druid.version>
         <mysql.version>8.0.11</mysql.version> 
         <mybatisplus.spring.boot.version>3.3.1</mybatisplus.spring.boot.version>
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version>
         <fastjson.version>1.2.74</fastjson.version>
-        <oshi.version>5.2.5</oshi.version>
-        <jna.version>5.5.0</jna.version>
+        <oshi.version>5.3.6</oshi.version>
+        <jna.version>5.6.0</jna.version>
         <swagger.version>2.9.2</swagger.version>
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <aliyun.oss.version>3.10.2</aliyun.oss.version>
@@ -58,7 +60,6 @@
     <dependencyManagement>
         <!--项目引入插件所需要的额外依赖-->
         <dependencies>
-           
             <!-- Logs -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -110,14 +111,14 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
-                <version>${jedis.version}</version><!--$NO-MVN-MAN-VER$-->
+                <version>${jedis.version}</version>
             </dependency>
 
 			<dependency>
@@ -139,8 +140,6 @@
                 <artifactId>ojdbc6</artifactId>
                 <version>${oracle.version}</version>
             </dependency>
-
-
 
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -292,7 +291,7 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>1.23</version>
             </dependency>
-
+			
             <dependency>
                 <groupId>net.mingsoft</groupId>
                 <artifactId>shiro-freemarker-tags</artifactId>
@@ -332,7 +331,6 @@
                 <version>${fast.version}</version>
             </dependency>
 
-
 			<dependency>
                 <groupId>com.j2eefast</groupId>
                 <artifactId>fast-web</artifactId>
@@ -348,7 +346,7 @@
             <dependency>
                 <groupId>com.j2eefast</groupId>
                 <artifactId>fast-common</artifactId>
-                <version>3.3.0</version>
+                <version>${fast.version}</version>
             </dependency>
         </dependencies>
 
@@ -356,13 +354,13 @@
 
     <!-- 项目来整合各子模块 -->
     <modules>
-        <module>fast-common</module><!-- 公共模块 -->
-        <module>fast-admin</module><!-- 后台模块 -->
-        <module>fast-generator</module><!-- 代码生成器模块 -->
+    	<module>fast-admin</module><!-- 后台入口模块 -->
+        <module>fast-web</module> <!--二次开发  -->
         <module>fast-framework</module><!-- 核心框架 -->
-    	<module>fast-web</module>
-        <module>fast-flowable</module>
-  </modules>
+        <module>fast-generator</module><!-- 代码生成器模块 -->
+        <module>fast-common</module><!-- 公共模块 -->
+        <module>fast-flowable</module><!-- 工作流模块 -->
+    </modules>
 
     <build>
         <plugins>

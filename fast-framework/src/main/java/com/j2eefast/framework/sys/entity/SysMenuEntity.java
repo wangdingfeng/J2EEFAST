@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.entity;
@@ -37,6 +38,12 @@ public class SysMenuEntity extends BaseEntity {
 	 */
 	@TableField(exist = false)
 	private boolean mNew;
+
+	/**
+	 * 初创菜单是否需要显示为新
+	 */
+	private String isNew;
+
 
 	/**
 	 * 父菜单ID，一级菜单为0
@@ -91,9 +98,6 @@ public class SysMenuEntity extends BaseEntity {
 	 */
 	private Integer orderNum;
 
-
-//	@TableLogic
-//	private Integer delFlag;
 	/**
 	 * 是否隐藏
 	 */

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
@@ -10,6 +11,7 @@ import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
@@ -27,8 +29,8 @@ import java.util.Map;
 public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 
 	@Autowired
+	@Lazy
 	private ShiroFilterFactoryBean shiroFilterFactoryBean;
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -47,7 +49,7 @@ public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 				}
 				LoginUserEntity loginUser = UserUtils.getUserInfo();
 				Map<String, String> filterMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-				filterMap.put(Constant.RESOURCE_urlPrefix + "/**","anon");
+				filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
 				filterMap.put("/logout","anon");
 				filterMap.put("/error","anon");
 				filterMap.put("/Account/login","anon");
@@ -58,7 +60,8 @@ public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 						return super.preHandle(request,response,handler);
 					}
 				}
-				if(ToolUtil.isNotEmpty(loginUser.getLoginStatus()) && loginUser.getLoginStatus().equals(-1) && !requestUrl.equals(outLock)){
+				if(ToolUtil.isNotEmpty(loginUser.getLoginStatus()) && 
+						loginUser.getLoginStatus().equals(-1) && !requestUrl.equals(outLock)){
 					response.sendRedirect( request.getContextPath() +outLock);
 					return false;
 				}

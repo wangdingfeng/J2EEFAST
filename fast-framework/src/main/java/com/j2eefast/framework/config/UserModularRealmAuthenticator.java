@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
@@ -31,7 +32,6 @@ public class UserModularRealmAuthenticator extends ModularRealmAuthenticator {
         // 登录类型对应的所有Realm
         List<Realm> typeRealms = new ArrayList<>();
         for (Realm realm : realms) {
-            System.out.println(realm.getName());
             if (realm.getName().contains(loginType)) {
                 typeRealms.add(realm);
             }

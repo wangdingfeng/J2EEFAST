@@ -25,7 +25,7 @@
 </head>
 <body style="margin:0;background:#ececec;">
 <script language="javascript">
-    var extName = "${extName}", fileUrl = "${fileUrl}";
+    var extName = "${extName}".toLowerCase(), fileUrl = "${fileUrl}";
     if(!startWith(fileUrl,"http://") || startWith(fileUrl,"https://")) {
         if(startWith(fileUrl,"${ctxStatic}")){
             fileUrl = "${basePath}" +  fileUrl.split("${ctxStatic}")[1];

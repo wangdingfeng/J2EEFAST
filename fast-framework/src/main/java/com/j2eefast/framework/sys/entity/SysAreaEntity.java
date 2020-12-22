@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.entity;
@@ -35,7 +36,7 @@ public class SysAreaEntity implements Serializable{
     private String name;
 
   /** 行政区域等级 1-省 2-市 3-区县 4-街道镇 */
-    private Integer level;
+    private Integer areaLevel;
 
 
   /** 完整名称 */

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.generator.gen.controller;
@@ -164,7 +165,11 @@ public class GenController extends BaseController {
                 success(): error("删除失败!");
     }
 
-
+    /**
+     * 生成到开发工具
+     * @param tableId
+     * @return
+     */
     @RequiresPermissions("tool:gen:code")
     @BussinessLog(title = "代码生成", businessType = BusinessType.DELETE)
     @PostMapping("/genCode")
@@ -185,8 +190,7 @@ public class GenController extends BaseController {
      */
     @RequiresPermissions("tool:gen:preview")
     @GetMapping("/preview/{tableId}")
-    public String preview(@PathVariable("tableId") Long tableId, ModelMap mmap) throws IOException
-    {
+    public String preview(@PathVariable("tableId") Long tableId, ModelMap mmap){
         Map<String, String> dataMap = genTableService.previewCode(tableId);
         Map <String,String> map = new LinkedHashMap<>();
         for(Map.Entry<String, String> entry : dataMap.entrySet()){
@@ -199,6 +203,7 @@ public class GenController extends BaseController {
             }else{
                 map.put(mapKey,mapValue);
             }
+
         }
         mmap.put("gen_code", map);
         return urlPrefix + "/codeView";
@@ -207,7 +212,7 @@ public class GenController extends BaseController {
     /**
      *
      */
-    @RequestMapping("/edit/childLoad")
+    @RequestMapping("/childLoad")
     @ResponseBody
     public ResponseData load(@RequestParam Map<String, Object> params) {
         PageUtil page =  genTableService.findChildPage(params);

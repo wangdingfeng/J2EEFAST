@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.bussiness.aop;
@@ -22,11 +23,9 @@ import com.j2eefast.framework.annotation.DataFilter;
 import com.j2eefast.framework.utils.Constant;
 
 /**
- * 
  * @Description:数据过滤，切面处理类
  * @author zhouzhou loveingowp@163.com
  * @time 2018-12-03 17:25
- *
  */
 @Order(5)
 @Aspect
@@ -41,9 +40,6 @@ public class DataFilterAspect {
 	@SuppressWarnings("unchecked")
 	@Before("dataFilterCut()")
 	public void dataFilter(JoinPoint point) throws Throwable {
-
-		String[] permissions = (String[]) UserUtils.getSessionAttribute(Constant.REQUIRES_PERMISSIONS);
-		UserUtils.removeSessionAttribute(Constant.REQUIRES_PERMISSIONS);
 		Object params = point.getArgs()[0];
 		if (params != null && params instanceof Map) {
 			LoginUserEntity user = UserUtils.getUserInfo();
@@ -51,7 +47,8 @@ public class DataFilterAspect {
 			if (!(user.getId().equals(Constant.SUPER_ADMIN)
 					|| UserUtils.hasRole(Constant.SU_ADMIN))) {
 					Map map = (Map) params;
-					map.put(Constant.SQL_FILTER, getSQLFilter(user, point,permissions));
+					map.put(Constant.SQL_FILTER, getSQLFilter(user,
+							point,(String[])map.get(Constant.REQUIRES_PERMISSIONS)));
 			}
 			return;
 		}
@@ -62,7 +59,7 @@ public class DataFilterAspect {
 	 * 获取数据过滤的SQL
 	 * @param user 当前用户
 	 * @param point 制入点
-	 * @param permissions 控制层 权限字符
+	 * @param permissions 控制层权限字符
 	 * @return
 	 */
 	private String getSQLFilter(LoginUserEntity user, JoinPoint point,String[] permissions) {

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.modules.sys.controller;
@@ -123,7 +124,8 @@ public class SysProfileController extends BaseController {
             return error(ToolUtil.message("sys.user.phone.improper.format"));
         }
         LoginUserEntity loginUser = UserUtils.getUserInfo();
-        if(ToolUtil.isNotEmpty(user.getEmail()) && !ReUtil.isMatch(Constant.EMAIL_PATTERN, user.getEmail())){
+        if(ToolUtil.isNotEmpty(user.getEmail()) &&
+                !ReUtil.isMatch(Constant.EMAIL_PATTERN, user.getEmail())){
             loginUser.setEmail(user.getEmail());
             return error(ToolUtil.message("sys.user.email.improper.format"));
         }

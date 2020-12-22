@@ -1,26 +1,17 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
- */package com.j2eefast.test;
+ */
+package com.j2eefast.test;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.EnctryptTools;
-import com.j2eefast.common.core.crypto.SoftEncryption;
-import com.j2eefast.common.core.utils.AddressUtil;
-import com.j2eefast.common.core.utils.HexUtil;
 import com.j2eefast.common.core.utils.JasyptUtils;
-import com.j2eefast.common.core.utils.ToolUtil;
-
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 
 /**
@@ -128,17 +119,6 @@ public class EncodeTest {
         KeyGenerator keygen = KeyGenerator.getInstance("AES");
         SecretKey deskey = keygen.generateKey();
         System.out.println(Base64.encode(deskey.getEncoded()));
-    }
-
-    @Test
-    public void testIp(){
-//      System.out.println(AddressUtil.getRealAddressByIP("117.136.29.207"));
-        //urR5V11IElHFgy+t3uywNHROl+RtJMOk
-        //j2eefast@110.com
-        String t = "vm/java/mapper.java.vm";
-        String templ = StrUtil.subAfter(t,"/",true);
-        templ = StrUtil.subBefore(t,"/",true) + "/child" + StrUtil.upperFirst(templ);
-        System.out.println(templ);
     }
 
 }

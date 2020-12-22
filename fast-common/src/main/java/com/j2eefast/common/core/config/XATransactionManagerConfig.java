@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.config;
-
 import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
-
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -25,6 +25,7 @@ import javax.transaction.UserTransaction;
  */
 @Configuration
 @EnableTransactionManagement
+@ConditionalOnProperty(prefix = "fast.jta", name = "enabled", havingValue="true")
 public class XATransactionManagerConfig {
 
 	@Bean

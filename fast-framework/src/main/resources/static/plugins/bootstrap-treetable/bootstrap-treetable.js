@@ -9,7 +9,6 @@
  */
 (function($) {
     "use strict";
-
     $.fn.bootstrapTreeTable = function(options, param) {
         var target = $(this).data('bootstrap.tree.table');
         target = target ? target : $(this);
@@ -19,18 +18,26 @@
         }
         // 如果是初始化组件
         options = $.extend({}, $.fn.bootstrapTreeTable.defaults, options || {});
-        target.hasSelectItem = false;// 是否有radio或checkbox
-        target.data_list = null; //用于缓存格式化后的数据-按父分组
-        target.totalPages = 0; //总页数
-        target.pageSize =  0; // 一页多少
-        target.totalRows = 0; // 一共数据
-        target.pageNumber = 0; // 当前实际数据
-
-        target.data_obj = null; //用于缓存格式化后的数据-按id存对象
-        target.hiddenColumns = []; //用于存放被隐藏列的field
-        target.lastAjaxParams; //用户最后一次请求的参数
-        target.isFixWidth=false; //是否有固定宽度
-
+        // 是否有radio或checkbox
+        target.hasSelectItem = false;
+        //用于缓存格式化后的数据-按父分组
+        target.data_list = null;
+        //总页数
+        target.totalPages = 0;
+        // 一页多少
+        target.pageSize =  0;
+        // 一共数据
+        target.totalRows = 0;
+        // 当前实际数据
+        target.pageNumber = 0;
+        //用于缓存格式化后的数据-按id存对象
+        target.data_obj = null;
+        //用于存放被隐藏列的field
+        target.hiddenColumns = [];
+        //用户最后一次请求的参数
+        target.lastAjaxParams;
+        //是否有固定宽度
+        target.isFixWidth=false;
         // 初始化
         var init = function() {
 
@@ -72,16 +79,19 @@
             // $main_div.append($pagination);
             $treetable.append(target);
             target.addClass("table");
-            if (options.striped) { //是否各行渐变色
+            if (options.striped) {
+                //是否各行渐变色
                 target.addClass('table-striped');
             }
             // if (options.bordered) { //是否显示边框
             //     target.addClass('table-bordered');
             // }
-            if (options.hover) {//是否鼠标悬停
+            if (options.hover) {
+                //是否鼠标悬停
                 target.addClass('table-hover');
             }
-            if (options.condensed) {//是否紧缩表格
+            if (options.condensed) {
+                //是否紧缩表格
                 target.addClass('table-condensed');
             }
             target.html("");
@@ -171,8 +181,6 @@
             target.append($thead);
         }
 
-
-
         // 初始化表体
         var initBody = function() {
             var $tbody = $('<tbody class="treetable-tbody"></tbody>');
@@ -217,7 +225,6 @@
                 };
                 if(parms){
                     if(parms.__refre){
-                        //delete parms.__refre;
                         parms[options.parentCode] = options.rootIdValue;
                     }
                     parms = $.extend(curParams, parms);
@@ -243,6 +250,7 @@
                     error: function(xhr, textStatus) {
                         var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;font-weight: bold;color: red;">' + JSON.parse(xhr.responseText).msg || xhr.responseText + '</div></td></tr>'
                         $tbody.html(_errorMsg);
+                        opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
                     },
                 };
                 //J2eeFAST 新增CSRF 防护
@@ -257,29 +265,33 @@
             }
         }
 
-
         // 加载完数据后渲染表格
         var renderTable = function(data) {
             //兼容返回数据
-            //pageSize: "10"
-            // totalCount: "34"
-            // totalPage: "4"
             var list,totalPage = 0,currPage = 0;
-
             if(options.async){
-                list = data.data.list; //数据
-                totalPage = data.data.totalPage; //一共多少页
+                //数据
+                list = data.data.list;
+                //一共多少页
+                totalPage = data.data.totalPage;
                 target.totalPages = totalPage;
-                currPage = data.data.currPage; // 当前页
-                target.pageSize =  data.data.pageSize; // 一页多少
-                target.totalRows = data.data.totalCount; // 一共数据
-                target.pageNumber = list.length; // 当前实际数据
+                // 当前页
+                currPage = data.data.currPage;
+                // 一页多少
+                target.pageSize =  data.data.pageSize;
+                // 一共数据
+                target.totalRows = data.data.totalCount;
+                // 当前实际数据
+                target.pageNumber = list.length;
             }else{
                 if(data.constructor==Array){
                     list = data;
                 }else{
                     if(data.code == '00000'){
-                        if(Array==data.list.constructor){
+                        if(data.list && Array==data.list.constructor){
+                            list = data.list;
+                        }
+                        if(data.data && Array==data.data.list.constructor){
                             list = data.list;
                         }
                     }
@@ -360,7 +372,11 @@
                 $.each(options.pageList, function (i, page) {
                     if(page == target.pageSize){
                         html.push('<li class="active"><a href="javascript:void(0)">'+page+'</a></li>');
-                    }else if(page <= target.totalRows){
+                    }
+                    else if(page >= target.totalRows && i === 1){
+                        html.push('<li><a href="javascript:void(0)">'+page+'</a></li>');
+                    }
+                    else if(page <= target.totalRows){
                         html.push('<li><a href="javascript:void(0)">'+page+'</a></li>');
                     }
                 })
@@ -454,24 +470,21 @@
                 html.push('<li class="page-next"><a href="javascript:void(0)">'+options.paginationNextText +'</a></li>');
                 html.push('</ul></div>');
             }
-            //
-            //<ul class="pagination pagination-outline">
-            //
-            // <li class="page-number active"><a href="javascript:void(0)">1</a></li>
-            // <li class="page-number"><a href="javascript:void(0)">2</a></li>
-            // <li class="page-next"><a href="javascript:void(0)">›</a></li>
-            // <li class="pageGo"><input type="text" class="form-control" value="1"><button class="btn btn-default btn-outline" title="跳转" type="button">跳转</button></li>
-            // </ul>
-            // </div>
+
             $pagination.append(html.join(''));
 
             //添加事件
             var $pageList = $pagination.find('.page-list a');
-            var $pre = $pagination.find('.page-pre'); //上一页
-            var $next = $pagination.find('.page-next'); //下一页
-            var $number = $pagination.find('.page-number'); // 页码
-            var $first = $pagination.find('.page-first'); //首页
-            var $last = $pagination.find('.page-last'); //尾页
+            //上一页
+            var $pre = $pagination.find('.page-pre');
+            //下一页
+            var $next = $pagination.find('.page-next');
+            // 页码
+            var $number = $pagination.find('.page-number');
+            //首页
+            var $first = $pagination.find('.page-first');
+            //尾页
+            var $last = $pagination.find('.page-last');
             $pre.off('click').on('click', $.proxy(onPagePre, this));
             $pageList.off('click').on('click', $.proxy(onPageListChange, this));
             $number.off('click').on('click', $.proxy(onPageNumber, this));
@@ -718,11 +731,6 @@
                     }
                     $tr.append($td);
                 } else {
-                    // var _n = '';
-                    // if(column.class){
-                    //     _n =  ' '+column.class;
-                    // }
-                    // var $td = $('<td '+(column.field?('name="' + column.field + '" class="' + column.field + '_cls'+_n+'"'):'')+'></td>');
                     var $td = $('<td '+(column.class?(' class="'+column.field + '_cls ' + column.class + '"'): ' class="'+column.field + '_cls"')+'></td>');
                     if(column.width){
                         $td.css("width",column.width);
@@ -853,6 +861,11 @@
                             $(this).addClass("treetable-selected");
                         }
                     }
+                    var _rowData = target.data_obj["id_" + $(this).data('id')];
+                    // if(typeof options.onClickRow == 'function'){
+                    //     options.onClickRow(id,_rowData);
+                    // }
+                    calculateObjectValue(options, options.onClickRow, [_rowData], _rowData);
                 }
             });
         }
@@ -860,14 +873,19 @@
         var registerExpanderEvent = function() {
             target.find("tbody").find("tr").find(".treetable-expander").unbind();
             target.find("tbody").find("tr").find(".treetable-expander").click(function() {
-                var _isExpanded = $(this).hasClass(options.expanderExpandedClass); //展开
-                var _isCollapsed = $(this).hasClass(options.expanderCollapsedClass); //收起
+                //展开
+                var _isExpanded = $(this).hasClass(options.expanderExpandedClass);
+                //收起
+                var _isCollapsed = $(this).hasClass(options.expanderCollapsedClass);
                 if (_isExpanded || _isCollapsed) {
-                    var tr = $(this).parent().parent(); // tr 本行
+                    // tr 本行
+                    var tr = $(this).parent().parent();
                     var row_id = tr.attr("id");
                     var  _id = tr.attr("data-id");
-                    if(!options.async){ // 普通情况
-                        var _ls = target.find("tbody").find("tr[id^='" + row_id + "_']"); //下所有
+                    if(!options.async){
+                        // 普通情况
+                        var _ls = target.find("tbody").find("tr[id^='" + row_id + "_']");
+                        //下所有
                         if (_isExpanded) {
                             $(this).removeClass(options.expanderExpandedClass);
                             $(this).addClass(options.expanderCollapsedClass);
@@ -889,8 +907,10 @@
                                 });
                             }
                         }
-                    }else{  //异步
-                        var _ls = target.find("tbody").find("tr[id^='" + row_id + "_']"); //下所有
+                    }else{
+                        //异步
+                        //下所有
+                        var _ls = target.find("tbody").find("tr[id^='" + row_id + "_']");
                         if (_ls && _ls.length > 0) {
                             if (_isExpanded) {
                                 $.each(_ls, function(index, item) {
@@ -948,6 +968,7 @@
                                         error: function(xhr, textStatus) {
                                             var _errorMsg = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;font-weight: bold;color: red;">' + JSON.parse(xhr.responseText).msg || xhr.responseText + '</div></td></tr>'
                                             $("#" + row_id).after(_errorMsg);
+                                            opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
                                         }
                                     };
                                     //J2eeFAST 新增CSRF 防护
@@ -989,12 +1010,17 @@
                 var _data = target.data_obj["id_" + item[options.code]];
                 var _p_data = target.data_obj["id_" + item[options.parentCode]];
                 var _c_list = target.data_list["_n_" + item[options.parentCode]];
-                var row_id = ""; //行id
-                var p_id = ""; //父行id
-                var _lv = 1; //如果没有父就是1默认显示
-                var tr; //要添加行的对象
+                //行id
+                var row_id = "";
+                //父行id
+                var p_id = "";
+                //如果没有父就是1默认显示
+                var _lv = 1;
+                //要添加行的对象
+                var tr;
                 if (_data && _data.row_id && _data.row_id != "") {
-                    row_id = _data.row_id; // 如果已经存在了，就直接引用原来的
+                    // 如果已经存在了，就直接引用原来的
+                    row_id = _data.row_id;
                 }
                 if (_p_data) {
                     p_id = _p_data.row_id;
@@ -1253,6 +1279,7 @@
         sortOrder: "asc",          // 默认升序
         totalRows: 0,              // 总共条数
         pageNumber: 1,             // 当前页条数
+        onClickRow: null,           // 单击某行事件
         pageSize: 6,               // 一页条数
         pageList: [6, 12, 18],     // 分页数据库
         showTitle: true,           // 是否采用title属性显示字段内容（被formatter格式化的字段不会显示）

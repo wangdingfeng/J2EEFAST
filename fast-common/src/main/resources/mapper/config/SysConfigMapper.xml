@@ -4,7 +4,7 @@
 
     <!-- 根据key，更新value -->
     <update id="updateValueByKey" parameterType="map">
-		update sys_config set param_value = #{paramValue} where param_key = #{paramKey}
+		UPDATE sys_config SET param_value = #{paramValue} WHERE param_key = #{paramKey}
 	</update>
 
     <!-- 通用查询结果列 -->
@@ -14,9 +14,9 @@
 
     <!-- 根据key，查询value -->
     <select id="queryByKey" resultType="com.j2eefast.common.config.entity.SysConfigEntity" parameterType="string">
-		select
+		SELECT
 		<include refid="Base_Column_List"/>
-		from sys_config where param_key = #{paramKey}
+		FROM sys_config WHERE param_key = #{paramKey}
 	</select>
 
 </mapper>

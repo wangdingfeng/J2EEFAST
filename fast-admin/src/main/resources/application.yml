@@ -2,7 +2,8 @@
 productName: J2eeFast Demo
 
 # 当前版本
-version: V2.1.1
+# ¢此版本号最好不要改动、有助于你后期维修解决问题都会用到当前版本¢
+version: 2.2.0
 
 server:
     tomcat:
@@ -82,13 +83,17 @@ shiro:
         httpOnly: true
         # 设置Cookie的过期时间，天为单位
         maxAge: 30
-        # 设置密钥 可以在EncondeTest 测试类 执行getShiroDeskey单元测试方法 获取项目唯一密钥
-        cipherKey: k1M2DC1QcPdR/yrQLvX54g==
     session:
         # Session超时时间，-1代表永不过期（默认30分钟）
         expireTime: 30
         #设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
         validationTime: 5
+    rememberMe:
+        # 是否开启记住我
+        enabled: false
+        # 若开启记住我请设置记住我密钥 可以在 com.j2eefast.test.EncondeTest 测试类 执行getShiroDeskey单元测试方法 获取项目唯一密钥
+        # 若不设置，则每次启动系统后自动随机生成一个新秘钥，这样会导致每次重启后，客户端记录的用户信息将失效。
+        cipherKey: ~
     #custome url filter Map(系统权限拦截配置)   
     filterMap: " { 
            '/login': 'anon',

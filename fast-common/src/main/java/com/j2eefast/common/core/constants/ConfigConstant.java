@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.constants;
@@ -32,6 +33,9 @@ public final class ConfigConstant {
 	public static final String 					CTX_STATIC							= "ctxStatic";
 	public static final String 					BASE_PATH							= "basePath";
 	public static final String 					FAST_SESSION_ID						= "fast.session.id";
+	public static final String 					JTA_ENABLED_YML 					= "fast.jta.enabled";
+	public static final String 					FLOWABLE_ENABLED_YML 				= "fast.flowable.enabled";
+
 	/**
 	 * 登录安全key
 	 */
@@ -91,7 +95,9 @@ public final class ConfigConstant {
 	/**
 	 * 版本号
 	 */
-	public final static String SYS_CONFIG_VERSION = "SYS_CONFIG_VERSION";
+	public final static String SYS_VERSION = "version";
+
+	public final static String CONFIG_KEY  = "sys:cfg:version";
 	
 	/**
 	 * JS CSS版本

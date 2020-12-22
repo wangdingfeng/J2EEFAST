@@ -3,6 +3,8 @@ package com.j2eefast.common.core.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+
+import cn.hutool.core.io.FileUtil;
 import com.j2eefast.common.core.exception.RxcException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -147,7 +149,7 @@ public class FileUploadUtil {
         int dirLastIndex = uploadDir.lastIndexOf("/") + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         String pathFileName =  "/profile/" + currentDir + "/" + fileName;
-        return ToolUtil.path(pathFileName);
+        return FileUtil.normalize(pathFileName);
     }
 
 

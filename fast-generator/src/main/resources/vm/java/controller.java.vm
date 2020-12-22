@@ -1,3 +1,8 @@
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ */
 package ${packageName}.controller;
 
 import com.j2eefast.common.core.business.annotaion.BussinessLog;
@@ -11,17 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.ui.ModelMap;
 import java.util.Map;
-import java.util.Date;
 import org.springframework.web.bind.annotation.*;
 import ${packageName}.entity.${ClassName}Entity;
 import ${packageName}.service.${ClassName}Service;
 #if($table.master)
-import ${packageName}.entity.${childTable.className}Entity;
 import ${packageName}.service.${childTable.className}Service;
-import java.util.List;
-#end###
+#end
 #if($table.tree)
 import com.j2eefast.common.core.base.entity.Ztree;
+import java.util.List;
+#end
+#foreach ($column in $columns)
+#if($column.validation && $column.validation.indexOf("V") != -1)
+import org.apache.shiro.authz.annotation.Logical;
+#break
+#end
 #end
 
 /**
@@ -31,81 +40,132 @@ import com.j2eefast.common.core.base.entity.Ztree;
  */
 @Controller
 @RequestMapping("/${moduleName}/${businessName}")
-public class ${ClassName}Controller extends BaseController{##
+public class ${ClassName}Controller extends BaseController{
 
+    private String prefix = "modules/${moduleName}/${businessName}";
 
-    private String prefix = "modules/${moduleName}/${businessName}";##
+    @Autowired
+    private ${ClassName}Service ${className}Service;
+#if($table.master)
+#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+    @Autowired
+    private ${childTable.className}Service ${classEnty}Service;
+#end
 
-    @Autowired##
-
-    private ${ClassName}Service ${className}Service;##
-
-    #if($table.master)
-    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
-
-    @Autowired###
-
-    private ${childTable.className}Service ${classEnty}Service;###
-
-
-    #end
-
+    /**
+     * 视图页面
+     */
     @RequiresPermissions("${permissionPrefix}:view")
     @GetMapping()
     public String ${businessName}(){
         return prefix + "/${businessName}";
-    }##
-
-    #if($table.crud || $table.r || $table.master)##
+    }
+#if($table.crud || $table.r || $table.master)
     #*有查询列表*#
+    /**
+     * 页面表格分页查询
+     * @param params
+     * @param ${className}Entity
+     * @return
+     */
     @RequiresPermissions("${permissionPrefix}:list")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {####
-        #if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')##设置多数据源
-        PageUtil page = ${className}Service.findPage(params);####
-
-        #else###
-
-        PageUtil page = ${className}Service.findPage(params,${className}Entity);#####
-        #end###
-
+    public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+        PageUtil page = ${className}Service.findPage(params);
+#else
+        PageUtil page = ${className}Service.findPage(params,${className}Entity);
+#end
 		return success(page);
-    }##
-    #end
-
-    #if($table.tree)##
+    }
+#end
+#if($table.tree)
+#if($async == '0')
 
     /**
-     * 选择${functionName}树
+     * 同步树页面表格分页查询
+     * @param params
+     * @param ${className}Entity
+     * @return
      */
-	//TODO *注意* 树还有问题暂时不用-后期再处理
-    #set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
-    @GetMapping(value = { "/select${BusinessName}Tree/{${pkColumn.javaField}}", "/select${BusinessName}Tree/" })
-    public String select${BusinessName}Tree(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, ModelMap mmap){
-        if (StringUtils.isNotNull(${pkColumn.javaField})){
-            mmap.put("${className}", ${className}Service.find${ClassName}ById(${pkColumn.javaField}));
-        }
-        return prefix + "/tree";
-    }##
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("${permissionPrefix}:list")
+    @ResponseBody
+    public List<${ClassName}Entity> list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {
+        return  ${className}Service.findTreeList(params,${className}Entity);
+    }
+#else
 
     /**
-     * 加载${functionName}树列表
+     * 页面请求分页
+     * @param params 请求分页参数
+     * @param ${className}Entity 请求对象
+     * @return
+     */
+    @RequiresPermissions("${permissionPrefix}:list")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseData list(@RequestParam Map<String, Object> params,${ClassName}Entity ${className}Entity) {
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+        PageUtil page = ${className}Service.findPage(params);
+#else
+        PageUtil page = ${className}Service.findPage(params,${className}Entity);
+#end
+        return success(page);
+    }
+
+    /**
+     * 异步请求数据
+     * @param ${className}Entity
+     * @return
+     */
+    @RequestMapping(value = "/listChild" , method = RequestMethod.POST)
+    @RequiresPermissions("${permissionPrefix}:list")
+    @ResponseBody
+    public ResponseData listChild(${ClassName}Entity ${className}Entity) {
+        List<${ClassName}Entity> list = ${className}Service.findList(${className}Entity);
+        return success().put("list", list);
+    }
+#end
+
+    /**
+     * 加载树
      */
     @GetMapping("/treeData")
+    @RequiresPermissions("${permissionPrefix}:add")
     @ResponseBody
     public List<Ztree> treeData(){
-        List<Ztree> ztrees = ${className}Service.select${ClassName}Tree();
+        List<Ztree> ztrees = ${className}Service.findTree();
         return ztrees;
     }
-    #end
-    #if($table.crud || $table.c || $table.master)##
-    #*新增*#
-    @GetMapping("/add")
-    public String add(ModelMap mmap){
+#set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
+    #*新增 树结构 新增*#
+    /**
+     * 新增视图
+     * @param mmap
+     * @return
+     */
+    @GetMapping("/add/{${pkColumn.javaField}}")
+    public String add(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}, ModelMap mmap){
+        ${ClassName}Entity ${className} = null;
+        if (0L != ${pkColumn.javaField}){
+            ${className} = ${className}Service.find${ClassName}ById(${pkColumn.javaField});
+        }else{
+            ${className} = new ${ClassName}Entity();
+#foreach ($column in $columns)
+#if($column.pk)
+#set($id00 = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+            ${className}.set${id00}(0L);
+#break
+#end
+#end
+#set($name01 = $treeName.substring(0,1).toUpperCase() + $treeName.substring(1))
+            ${className}.set${name01}("根节点");
+        }
+        mmap.put("${className}", ${className});
         return prefix + "/add";
-    }##
-
+    }
 
     /**
      * 新增
@@ -117,29 +177,50 @@ public class ${ClassName}Controller extends BaseController{##
     @ResponseBody
     public ResponseData add${ClassName}(@Validated ${ClassName}Entity ${className}){
         //校验参数
-        ValidatorUtil.validateEntity(${className});####
+        ValidatorUtil.validateEntity(${className});
+        return ${className}Service.add${ClassName}(${className})? success(): error("新增失败!");
+    }
+#end
+#if($table.crud || $table.c || $table.master)
 
-        return ${className}Service.add${ClassName}(${className})? success(): error("新增失败!");####
+    /**
+     * 新增视图
+     * @param mmap
+     * @return
+     */
+    @GetMapping("/add")
+    public String add(){
+        return prefix + "/add";
+    }
 
-    }##
-    #end
-
-    #if($table.master)####
-    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+    /**
+     * 新增
+     */
+    @RepeatSubmit
+    @RequiresPermissions("${permissionPrefix}:add")
+    @BussinessLog(title = "${functionName}", businessType = BusinessType.INSERT)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseData add${ClassName}(@Validated ${ClassName}Entity ${className}){
+        //校验参数
+        ValidatorUtil.validateEntity(${className});
+        return ${className}Service.add${ClassName}(${className})? success(): error("新增失败!");
+    }
+#end
+#if($table.master)
+#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
 
     @RequiresPermissions("${permissionPrefix}:list")
     @RequestMapping(value = "/child/list", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData childList(@RequestParam Map<String, Object> params) {####
+    public ResponseData childList(@RequestParam Map<String, Object> params) {
 
-        PageUtil page = ${classEnty}Service.findPage(params);#####
+        PageUtil page = ${classEnty}Service.findPage(params);
 
         return success(page);
-    }##
-    #end
-
-
-    #if($table.crud || $table.u || $table.master)##
+    }
+#end
+#if($table.crud || $table.u || $table.master || $table.tree)
 
     /**
      * 修改
@@ -150,8 +231,7 @@ public class ${ClassName}Controller extends BaseController{##
         ${ClassName}Entity ${className} = ${className}Service.find${ClassName}ById(${pkColumn.javaField});
         mmap.put("${className}", ${className});
         return prefix + "/edit";
-    }##
-
+    }
 
     /**
      * 修改保存${functionName}
@@ -162,16 +242,14 @@ public class ${ClassName}Controller extends BaseController{##
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData edit${ClassName}(${ClassName}Entity ${className}){
-		ValidatorUtil.validateEntity(${className});####
+        //校验参数
+		ValidatorUtil.validateEntity(${className});
+        return ${className}Service.update${ClassName}ById(${className})? success(): error("修改失败!");
+    }
+#end
+#if($table.crud || $table.d || ($table.r && $table.rDel) || $table.master)
 
-        return ${className}Service.update${ClassName}ById(${className})? success(): error("修改失败!");####
-
-    }###
-    #end
-
-
-    #if($table.crud || $table.d || ($table.r && $table.rDel) || $table.master)##
-/**
+    /**
      * 删除
      */
     @RepeatSubmit
@@ -181,7 +259,38 @@ public class ${ClassName}Controller extends BaseController{##
     @ResponseBody
     public ResponseData del(${pkColumn.javaType}[] ids) {
       return ${className}Service.deleteBatchByIds(ids)? success(): error("删除失败!");
-    }##
-    #end
+    }
+#end
+#if($table.tree)
+    /**
+     * 删除
+     */
+    @RepeatSubmit
+    @RequiresPermissions("${permissionPrefix}:del")
+    @BussinessLog(title = "${functionName}", businessType = BusinessType.DELETE)
+    @RequestMapping(value = "/del/{${pkColumn.javaField}}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseData del(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
+        return ${className}Service.del${ClassName}ById(${pkColumn.javaField})? success(): error("删除失败!");
+    }
+#end
+#foreach ($column in $columns)
+#if($column.validation && $column.validation.indexOf("V") != -1)
+#set($field = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+
+    /**
+     * 校验${column.columnComment}
+     */
+    @RequestMapping(value = "/check${field}Unique", method = RequestMethod.POST)
+    @RequiresPermissions(value = {"${permissionPrefix}:add", "${permissionPrefix}:edit"}, logical = Logical.OR)
+    @ResponseBody
+    public ResponseData check${field}Unique(${ClassName}Entity ${className}) {
+        if(${className}Service.check${field}Unique(${className})){
+            return success();
+        }
+        return error("${column.columnComment}已经存在!");
+    }
+#end
+#end
 
 }

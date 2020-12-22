@@ -1,3 +1,4 @@
+${gen_copyright}
 <<@>include "/common/defaultEngine.html"/>
 ${pageTheme}
 #set($selectPage_="0")
@@ -15,9 +16,8 @@ ${pageTheme}
 #end
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-${businessName}-edit"  class="form-horizontal">
-    <input name="${pkColumn.javaField}" value="${${className}.${pkColumn.javaField}}" type="hidden">
-    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw ${table.menuIcon}"></i></h4>######
-#####
+    <@f.hidden name="${pkColumn.javaField}" value="${${className}.${pkColumn.javaField}}"/>
+    <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw ${table.menuIcon}"></i></h4>
 #set($indexTag = 0)
 #set($isTag = 1)
 #foreach($column in $columns)
@@ -28,7 +28,7 @@ ${pageTheme}
 #if($indexTag % 2 == 0)
 #set($isTag = 0)
 #end
-#set($compId_="")### 设置公司变量
+#set($compId_="")
 #set($indexTag = 0)
 #foreach($column in $columns)
 #if($column.edit && !$column.pk)
@@ -41,81 +41,150 @@ ${pageTheme}
 #end
 #set($field=$column.javaField)
 #set($dictType=$column.dictType)
-#if($indexTag % 2 == 0)#####
-
+#if($indexTag % 2 == 0)
     <div class="row">
         <div class="col-sm-6">
-#if("" != $treeParentCode && $column.javaField == $treeParentCode)##
+#if("" != $treeParentCode && $column.javaField == $treeParentCode)
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>： </label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-        #set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
-                        <input id="treeId" name="${treeParentCode}" type="hidden" value="${${className}.${treeParentCode}}" />
-                        <input class="form-control" type="text" onclick="select${BusinessName}Tree()" id="treeName" readonly="true" value="<$>{${className}.parentName}"#if($column.required) required#end/>
-                        <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
-                    </div>
-                </div>
-             </div>
-#elseif($column.htmlType == "input")##
-            <div class="form-group">##
-
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：##
-                        #if($column.required && $column.info)##
-        #if($column.circleType == "Q")##
-                       <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom"##
-                       data-content="${column.editInfo}">##
-                       <i class="fa fa-question-circle-o" style="color: orange"></i></a>##
-                       #elseif($column.circleType == "T")##
-                       <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>##
-                        #end##
-                        #end##
-
-               </label>##
-
-                <div class="col-sm-8">
-                <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
-                </div>
-             </div>
-#elseif($column.htmlType == "icon")
-            <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"
-                       data-content="自定义获取图标:<a href='http://www.fontawesome.com.cn/faicons/' target='_blank'>http://www.fontawesome.com.cn/faicons/</a>">
-                        <i class="fa fa-question-circle-o" style="color: orange"></i></a>
+                <label class="col-sm-3 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
                 </label>
                 <div class="col-sm-8">
-                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
+                    <@f.treeselect id="${treeParentCode}" name="${treeParentCode}" boxTitle="选择${comment}" url="${moduleName}/${businessName}/treeData"
+                    value="${${className}.${treeParentCode}}" labelValue="${${className}.parentName?default('根节点')}"
+                    placeholder="请选择${comment}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                </div>
+            </div>
+#elseif($column.htmlType == "input")
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                </div>
+            </div>
+#elseif($column.htmlType == "icon")
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标" #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "imgcup")
-        <div class="form-group">
-            <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
-            </label>
-            <div class="col-sm-8">
-                <div class="input-group">
-                    <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+                    </div>
                 </div>
             </div>
-        </div>###
 #elseif($column.htmlType == "addr")
-        <div class="form-group">
-            <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
-            </label>
-            <div class="col-sm-8">
-                 <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                     <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+                </div>
             </div>
-        </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "select" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <select name="${field}" class="form-control m-b"#if($column.required) required#end>
                         <option value="">所有</option>
@@ -125,14 +194,39 @@ ${pageTheme}
             </div>
 #elseif($column.htmlType == "dselect" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "dselect" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <select name="${field}" class="form-control m-b"#if($column.required) required#end>
                         <option value="">所有</option>
@@ -142,14 +236,42 @@ ${pageTheme}
             </div>
 #elseif($column.htmlType == "radio" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
+                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "radio" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <div class="radio-box">
                         <input type="radio" name="${field}" value=""#if($column.required) required#end/><span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
@@ -158,152 +280,303 @@ ${pageTheme}
             </div>
  #elseif($column.htmlType == "checkbox" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
+                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                       <label><input type="checkbox" name="${field}" value=""#if($column.required) required#end>
-                        <label th:for="${field}" th:text="未知"></label></label>
-                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                    </div>
+                    <label><input type="checkbox" name="${field}" value=""#if($column.required) required#end>
+                    <label th:for="${field}" th:text="未知"></label></label>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
             </div>
 #elseif($column.htmlType == "datetime")
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input class="form-control time-input" name="${field}"  data-type="date"   value="${(${className}.${field}?string('yyyy-MM-dd'))!}" data-format="yyyy-MM-dd" type="text" #if($column.required) required#end/>
-                    </div>
+                    <@f.input name="${field}" type="date" dataType="date" dataFormat="yyyy-MM-dd" value="${(${className}.${field}?string('yyyy-MM-dd'))!}"
+                   butClass="fa fa-fw fa-calendar" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "textarea")
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <textarea name="${field}" class="form-control"#if($column.required) required#end>${${className}.${field}?default('')}</textarea>
                 </div>
             </div>
 #elseif($column.htmlType == "dept")
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                         <@f.treeselect name="${field}" value="${${className}.${field}?default('')}"
                           labelValue="${${className}.organization.name?default('')}"
-                          boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
+                          boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
  #elseif($column.htmlType == "comp")
 #set($compId_ = $field)
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                         <@f.treeselect  name="${field}" value="${${className}.${field}?default('')}"
                         labelValue="${${className}.company.name?default('')}"
-                        boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
+                        boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #else
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：
-                 #if($column.required && $column.info)
-                 #if($column.circleType == "Q")
-                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom"  data-content="${column.editInfo}">
-                 <i class="fa fa-question-circle-o" style="color: orange"></i></a>
-                 #elseif($column.circleType == "T")
-                 <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
-                #end
-                #end
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
                 </label>
                 <div class="col-sm-8">
                     <input name="${field}" class="form-control" type="text"#if($column.required) required#end>
-                    #if($column.required && $column.info)
-                        #if($column.circleType == "R")
-                            <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${column.editInfo}</span>
-                        #end
-                    #end
+#if($column.required && $column.info)
+#if($column.circleType == "R")
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${column.editInfo}</span>
+#end
+#end
                 </div>
             </div>
 #end
         </div>
 #else
         <div class="col-sm-6">
-#if("" != $treeParentCode && $column.javaField == $treeParentCode)##
+#if("" != $treeParentCode && $column.javaField == $treeParentCode)
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>： </label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-        #set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
-                        <input id="treeId" name="${treeParentCode}" type="hidden" value="${${className}.${treeParentCode}}" />
-                        <input class="form-control" type="text" onclick="select${BusinessName}Tree()" id="treeName" readonly="true" value="<$>{${className}.parentName}"#if($column.required) required#end/>
-                        <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
-                    </div>
-                </div>
-             </div>
-#elseif($column.htmlType == "input")##
-            <div class="form-group">##
-
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：##
-    #if($column.required && $column.info)##
-        #if($column.circleType == "Q")##
-                       <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom"##
-                       data-content="${column.editInfo}">##
-                       <i class="fa fa-question-circle-o" style="color: orange"></i></a>##
-        #elseif($column.circleType == "T")##
-                       <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>##
-        #end##
-    #end##
-
-               </label>##
-
-                <div class="col-sm-8">
-                <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.required && $column.info)#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
-                </div>
-             </div>
-#elseif($column.htmlType == "icon")
-            <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"
-                       data-content="自定义获取图标:<a href='http://www.fontawesome.com.cn/faicons/' target='_blank'>http://www.fontawesome.com.cn/faicons/</a>">
-                        <i class="fa fa-question-circle-o" style="color: orange"></i></a>
+                <label class="col-sm-3 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
                 </label>
                 <div class="col-sm-8">
-                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标"/>
+                    <@f.treeselect id="${treeParentCode}" name="${treeParentCode}" boxTitle="选择${comment}" url="${moduleName}/${businessName}/treeData"
+                    value="${${className}.${treeParentCode}}" labelValue="${${className}.parentName?default('根节点')}"
+                    placeholder="请选择${comment}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                </div>
+            </div>
+#elseif($column.htmlType == "input")
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <@f.input name="${field}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
+                </div>
+            </div>
+#elseif($column.htmlType == "icon")
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <@f.iconselect name="${field}" value="${${className}.${field}?default('')}" placeholder="选择图标" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "imgcup")
-        <div class="form-group">
-            <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
-            </label>
-            <div class="col-sm-8">
-                <div class="input-group">
-                    <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
+                    </div>
                 </div>
             </div>
-        </div>###
 #elseif($column.htmlType == "addr")
-        <div class="form-group">
-            <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：
-            </label>
-            <div class="col-sm-8">
-                 <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
+                <div class="col-sm-8">
+                     <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
+                </div>
             </div>
-        </div>###
 #elseif($column.htmlType == "select" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true  />
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end  multiple=true #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "select" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <select name="${field}" class="form-control m-b"#if($column.required) required#end>
                         <option value="">所有</option>
@@ -313,14 +586,42 @@ ${pageTheme}
             </div>
 #elseif($column.htmlType == "dselect" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end/>
+                     <@f.select name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}"  #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "dselect" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <select name="${field}" class="form-control m-b"#if($column.required) required#end>
                         <option value="">所有</option>
@@ -330,14 +631,42 @@ ${pageTheme}
             </div>
 #elseif($column.htmlType == "radio" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end />
+                   <@f.radio name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "radio" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <div class="radio-box">
                         <input type="radio" name="${field}" value=""#if($column.required) required#end/><span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
@@ -346,93 +675,174 @@ ${pageTheme}
             </div>
  #elseif($column.htmlType == "checkbox" && "" != $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end/>
+                    <@f.checkbox name="${field}" dictType="${dictType}" value="${${className}.${field}?default('')}" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
  #elseif($column.htmlType == "checkbox" && $dictType)
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                        <label><input type="checkbox" name="${field}" value=""#if($column.required) required#end>
-                        <label th:for="${field}" th:text="未知"></label></label>
-                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                    </div>
+                       <label th:for="${field}" th:text="未知"></label></label>
+                       <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
             </div>
 #elseif($column.htmlType == "datetime")
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input class="form-control time-input" name="${field}"  data-type="date"   value="${(${className}.${field}?string('yyyy-MM-dd'))!}" data-format="yyyy-MM-dd" type="text" #if($column.required) required#end/>
-                    </div>
+                    <@f.input name="${field}" type="date" dataType="date" dataFormat="yyyy-MM-dd" value="${(${className}.${field}?string('yyyy-MM-dd'))!}"
+                   butClass="fa fa-fw fa-calendar" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #elseif($column.htmlType == "textarea")
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                     <textarea name="${field}" class="form-control"#if($column.required) required#end>${${className}.${field}?default('')}</textarea>
                 </div>
             </div>
 #elseif($column.htmlType == "dept")
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                         <@f.treeselect name="${field}" value="${${className}.${field}?default('')}"
-                          labelValue="${${className}.organization.name?default('')}"
-                          boxTitle="请选择管理地区" url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区"/>
+                        labelValue="${${className}.organization.name?default('')}" boxTitle="请选择管理地区"
+                        url="sys/dept/selectZtree"  correlationId="${compId_}" isSelectParent=true placeholder="请选择管理地区" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
- #elseif($column.htmlType == "comp")
-    #set($compId_ = $field)
+#elseif($column.htmlType == "comp")
+#set($compId_ = $field)
             <div class="form-group">
-                <label class="col-sm-4 control-label"><@ctx.i18n text = "${comment}"/>：</label>
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+                    <span style="color: red; ">* </span>
+#end
+                    <@ctx.i18n text = "${comment}"/>：
+                </label>
                 <div class="col-sm-8">
                         <@f.treeselect  name="${field}" value="${${className}.${field}?default('')}"
-                        labelValue="${${className}.company.name?default('')}"
-                        boxTitle="选择归属公司" url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司"/>
+                        labelValue="${${className}.company.name?default('')}"boxTitle="选择归属公司"
+                        url="sys/comp/treeData?type=0" expandLevel=true  placeholder="请选择归属公司" #if($column.required) required=true#end #if($column.info && $column.info !="")#if($column.circleType == "R")helpTip="${column.editInfo}"#end#end/>
                 </div>
             </div>
 #else
             <div class="form-group">
-                <label class="col-sm-4 control-label">#if($column.required)<span style="color: red; ">*</span>#end<@ctx.i18n text = "${comment}"/>：
-                 #if($column.required && $column.info)
-    #if($column.circleType == "Q")
-                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom"  data-content="${column.editInfo}">
-                 <i class="fa fa-question-circle-o" style="color: orange"></i></a>
-                 #elseif($column.circleType == "T")
-                 <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
-                #end
+                <label class="col-sm-4 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                        <i class="fa fa-question-circle-o" style="color: orange"></i>
+                    </a>
+#elseif($column.circleType == "T")
+                    <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
 #end
+#end
+                    <@ctx.i18n text = "${comment}"/>：
                 </label>
                 <div class="col-sm-8">
                     <input name="${field}" class="form-control" type="text"#if($column.required) required#end>
-                    #if($column.required && $column.info)
-    #if($column.circleType == "R")
-                            <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${column.editInfo}</span>
-                        #end
+#if($column.required && $column.info)
+#if($column.circleType == "R")
+                     <span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${column.editInfo}</span>
+#end
 #end
                 </div>
             </div>
 #end
         </div>
-    </div>#####
+    </div>
 #end
 #end
 #set($indexTag = $indexTag+1)
 #end
-#end###
+#end
 #if($isTag == 1)
     </div>
 #end
 #if($table.rImg || $table.rFile)
     <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
 #end
-#if($table.rImg)### 表单有上传附件
-   <div class="row">
+#if($table.rImg)
+    <div class="row">
        <div class="col-xs-12">
             <div class="form-group">
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "图片附件上传"/>：
@@ -444,8 +854,8 @@ ${pageTheme}
        </div>
     </div>
 #end
-#if($table.rFile)### 表单有上传附件
-   <div class="row">
+#if($table.rFile)
+    <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
                 <label class="col-sm-2 control-label"><@ctx.i18n text = "文件附件上传"/>：
@@ -455,7 +865,7 @@ ${pageTheme}
                 </div>
             </div>
         </div>
-   </div>
+    </div>
 #end
 #if($table.master)
   <h4 class="form-header h4">子表单信息</h4>
@@ -471,25 +881,104 @@ ${pageTheme}
    </div>
 #end
 </@f.form>
-    <div class="hr-line-dashed"></div>
-    <div class="row" id="_addTab">
-        <div class="col-sm-offset-5 col-sm-10">
-            <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-check"></i><@ctx.i18n text = "保存"/></button>&nbsp;
-            <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>
-        </div>
+<div class="hr-line-dashed"></div>
+<div class="row" id="_addTab">
+    <div class="col-sm-offset-5 col-sm-10">
+        <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-check"></i><@ctx.i18n text = "保存"/></button>&nbsp;
+        <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>
     </div>
 </div>
+</div>
 <@footer>
-#foreach($column in $columns)
-#if($column.edit && !$column.superColumn && !$column.pk && $column.htmlType == "datetime")
+<script type="text/javascript">
+    var prefix = baseURL + "${moduleName}/${businessName}";
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-${businessName}-edit").validate({
+#set($fFlag = -1)
+#foreach ($column in $columns)
+#if($column.validation && ($column.validation.indexOf("V") != -1 || $column.validation.indexOf("P") != -1
+|| $column.validation.indexOf("N") != -1 || $column.validation.indexOf("R") != -1
+|| $column.validation.indexOf("J") != -1 || $column.validation.indexOf("Z") != -1
+|| $column.validation.indexOf("Y") != -1 || $column.validation.indexOf("S") != -1
+|| $column.validation.indexOf("I") != -1 || $column.validation.indexOf("H") != -1
+|| $column.validation.indexOf("A") != -1)
+)
+#set($fFlag = $fFlag+1)
 #break
 #end
 #end
-<script type="text/javascript">
-    var prefix = baseURL + "${moduleName}/${businessName}";
-    $("#form-${businessName}-edit").validate({
+#if($fFlag != -1)
+        onkeyup: false,
+        rules:{
+#foreach ($column in $columns)
+#if($column.validation && $column.edit)
+#set($field = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+#if($column.validation.indexOf("V") != -1 || $column.validation.indexOf("P") != -1
+||$column.validation.indexOf("N") != -1 || $column.validation.indexOf("R") != -1
+|| $column.validation.indexOf("J") != -1 || $column.validation.indexOf("Z") != -1
+|| $column.validation.indexOf("Y") != -1 || $column.validation.indexOf("S") != -1
+|| $column.validation.indexOf("I") != -1 || $column.validation.indexOf("H") != -1
+|| $column.validation.indexOf("A") != -1
+)
+            $column.javaField: {
+#if($column.validation.indexOf("N") != -1)
+                digits:true,
+#end
+#if($column.validation.indexOf("P") != -1)
+                isMobile:true,
+#end
+#if($column.validation.indexOf("R") != -1)
+                date:true,
+#end
+#if($column.validation.indexOf("Y") != -1)
+                email:true,
+#end
+#if($column.validation.indexOf("Z") != -1)
+                isABC:true,
+#end
+#if($column.validation.indexOf("J") != -1)
+                decimalsValue:true,
+#end
+#if($column.validation.indexOf("I") != -1)
+                isIp:true,
+#end
+#if($column.validation.indexOf("S") != -1)
+                isIdentity:true,
+#end
+#if($column.validation.indexOf("H") != -1)
+                isName:true,
+#end
+#if($column.validation.indexOf("A") != -1)
+                alnum:true,
+#end
+#if($column.validation.indexOf("V") != -1)
+                remote: {
+                    url: prefix + "/check${field}Unique",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        "$pkColumn.javaField": function(){
+                            return opt.common.trim($("#$pkColumn.javaField").val());
+                        },
+                        "$column.javaField": function() {
+                            return opt.common.trim($("#$column.javaField").val());
+                        }
+                    },
+                    dataFilter: function(data, type) {
+                        return opt.validate.unique(data);
+                    }
+                }
+#end
+            },
+#end
+#end
+#end
+        },
+#end
         focusCleanup: true
     });
+    </@compress>
 
     function submitHandler() {
         if (opt.validate.form()) {
@@ -518,103 +1007,74 @@ ${pageTheme}
             };
             return curParams;
         },
-        columns: [{
-            checkbox: true
-        },
-            {
-                field: 'index',
-                align: 'center',
-                title: "序号",
-                formatter: function (value, row, index) {
-                    var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
-                    return columnIndex + $.table.serialNumber(index);
-                }
-            }
-            #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
-    #foreach($c in $childColumns)## foreach columns
-        #set($dictType=$c.dictType)
-        #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
-        #if($parentheseIndex != -1)
-            #set($com=$c.columnComment.substring(0, $parentheseIndex))
-        #else##
-            #set($com=$c.columnComment)##
-        #end#####注释含有括符
-        #if($c.edit && !$c.pk)
-            ,{
-                field: '${c.javaField}',
-                align: 'center',
-                title: '${com}',
-                formatter: function(value, row, index) {
-                    #if($c.htmlType == "input")
-                    var html = opt.common.sprintf("<input class='form-control' type='text' name='${classEnty}[%s].${c.javaField}' value='%s'>", index, value);
-                    return html;
-                    #end
-            #if($c.htmlType == "datetime")
-                    var data = {"index":index,"field":"${c.javaField}","value":opt.common.formatDat(value,"yyyy-MM-dd")};
-                    return opt.template('datetime',data);
-                    #end
-                }
-            }
-            #end
-    #end
-            ]
+        columns: [
+            {checkbox: true},
+            {field: 'index',align: 'center',title: "序号",formatter: function (value, row, index) {
+                var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                return columnIndex + $.table.serialNumber(index);
+            }}
+#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+#foreach($c in $childColumns)
+#set($dictType=$c.dictType)
+#set($parentheseIndex=$c.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($com=$c.columnComment.substring(0, $parentheseIndex))
+#else
+#set($com=$c.columnComment)
+#end
+#if($c.edit && !$c.pk)
+            ,{field: '${c.javaField}',align: 'center',title: '${com}',formatter: function(value, row, index) {
+#if($c.htmlType == "input")
+                var html = opt.common.sprintf("<input class='form-control' type='text' name='${classEnty}[%s].${c.javaField}' value='%s'>", index, value);
+                return html;
+#end
+#if($c.htmlType == "datetime")
+                var data = {"index":index,"field":"${c.javaField}","value":opt.common.formatDat(value,"yyyy-MM-dd")};
+                return opt.template('datetime',data);
+#end
+            }}
+#end
+#end
+        ]
     };
     $.table.init(options);
 
     function addColumn(){
         var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
         var row = {index: count + 1
-            #foreach($c in $childColumns)## foreach columns
-        #if($c.edit && !$c.pk)
+#foreach($c in $childColumns)
+#if($c.edit && !$c.pk)
             ,${c.javaField}:""
-            #end
-    #end};
-        $.table.addColumn(row);
-    }
-    #end
-#if($table.tree)
-    /*${functionName}-新增-选择父部门树*/
-    function select${BusinessName}Tree() {
-        var options = {
-            title: '${functionName}选择',
-            width: "380",
-            url: prefix + "/select${BusinessName}Tree/" + $("#treeId").val(),
-            callBack: doSubmit
+#end
+#end
         };
-        $.modal.openOptions(options);
-    }
-    function doSubmit(index, layero){
-        var body = layer.getChildFrame('body', index);
-           $("#treeId").val(body.find('#treeId').val());
-           $("#treeName").val(body.find('#treeName').val());
-           layer.close(index);
+        $.table.addColumn(row);
     }
 #end
 </script>
 </@footer>
 #if($table.master)
+#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+#foreach($c in $childColumns)
+#set($dictType=$c.dictType)
+#set($parentheseIndex=$c.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($com=$c.columnComment.substring(0, $parentheseIndex))
+#else
+#set($com=$c.columnComment)
+#end
+#if($c.edit && !$c.pk)
+#if($c.htmlType == "datetime")
 
-    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
-    #foreach($c in $childColumns)## foreach columns
-        #set($dictType=$c.dictType)
-        #set($parentheseIndex=$c.columnComment.indexOf("（")) ##注释含有括符
-        #if($parentheseIndex != -1)
-            #set($com=$c.columnComment.substring(0, $parentheseIndex))
-        #else##
-            #set($com=$c.columnComment)##
-        #end#####注释含有括符
-        #if($c.edit && !$c.pk)
-
-            #if($c.htmlType == "datetime")
 <script id="datetime" type="text/template">//<!--
 <div>
     <input class="form-control time-input" name="${classEnty}[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
 </div>
 //-->
 </script>
-        #break
-            #end
-        #end
-    #end
+#break
+#end
+#end
+#end
 #end
 </@pageTheme>

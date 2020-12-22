@@ -194,7 +194,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
 
     private boolean isStaticFile(String path) {
         Map<String, String> filterMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-        filterMap.put(Constant.RESOURCE_urlPrefix + "/**","anon");
+        filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
         filterMap.put("/logout","anon");
         filterMap.put("/error","anon");
         filterMap.put("/Account/login","anon");

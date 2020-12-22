@@ -4,12 +4,12 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysDictDataMapper">
 
     <select id="selectDictLabel" resultType="String">
-		select dict_label from sys_dict_data
-		where dict_type = #{dictType} and dict_value = #{dictValue}
+		SELECT dict_label FROM sys_dict_data
+		WHERE dict_type = #{dictType} AND dict_value = #{dictValue}
 	</select>
 
 	<delete id="deleteDictDataByIds" parameterType="Long">
-		delete from sys_dict_data where id in
+		DELETE FROM sys_dict_data WHERE id IN
 		<foreach collection="array" item="dictCode" open="(" separator="," close=")">
 			#{dictCode}
 		</foreach>

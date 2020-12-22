@@ -4,9 +4,8 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysCompMapper">
 
     <select id="findDetpIdList" resultType="long">
-		select id from sys_comp where parent_id = #{parentId} and status = 0 and del_flag = 0
+		SELECT id FROM sys_comp WHERE parent_id = #{parentId} AND status = 0 AND del_flag = 0
 	</select>
-
 
     <sql id="selectCompVo">
         SELECT c.id, c.parent_id, c.name,c.type, c.order_num,c.status,c.create_time,c.full_name,c.area_ids,c.tenant_id,
@@ -15,30 +14,30 @@
 		FROM sys_comp c
     </sql>
 
-
     <select id="findCompById" parameterType="Long" resultType="com.j2eefast.framework.sys.entity.SysCompEntity">
         <include refid="selectCompVo"/>
-        where c.id = #{id}
+        WHERE c.id = #{id}
     </select>
 
     <select id="getDeptList" resultType="com.j2eefast.framework.sys.entity.SysCompEntity">
         <include refid="selectCompVo"/>
-        where c.del_flag = '0'
+        WHERE c.del_flag = '0'
         <if test="parentId != null and parentId != ''">
             AND c.parent_id = #{parentId}
         </if>
         <if test="id != null and id != ''">
-            <if test="_databaseId == 'mysql'">
-                AND (FIND_IN_SET(#{id},c.parent_ids)
-                OR (c.id = #{id} AND c.del_flag = '0'))
-            </if>
-            <if test="_databaseId == 'postgresql'">
-                AND ('${id}' = ANY(STRING_TO_ARRAY(c.parent_ids, ','))
-                OR (c.id = '${id}' AND c.del_flag = '0'))
-            </if>
+            <if test="_databaseId == 'mysql'">AND ((FIND_IN_SET(#{id},c.parent_ids))</if>
+            <if test="_databaseId == 'postgresql'">AND (('${id}' = ANY(STRING_TO_ARRAY(c.parent_ids, ',')))</if>
+            <if test="_databaseId == 'oracle'">AND (INSTR(','||c.parent_ids||',',',${id},') > 0</if>
+            <if test="_databaseId == 'sqlserver'">AND (CHARINDEX(','+'${id}'+',', ','+c.parent_ids+',') > 0</if>
+            OR (c.id = '${id}' AND c.del_flag = '0'))
         </if>
         <if test="name != null and name != ''">
-            AND c.name like concat('%', #{name}, '%')
+            AND c.name LIKE
+            <choose>
+                <when test="_databaseId == 'oracle'">'%,'||#{name}||',%'</when>
+                <otherwise>CONCAT('%', #{name}, '%')</otherwise>
+            </choose>
         </if>
         <if test="status != null and status != ''">
             AND c.status = #{status}
@@ -47,26 +46,23 @@
             AND c.type = #{type}
         </if>
         <if test="ids != null and ids.length > 0">
-            AND c.id in
+            AND c.id IN
             <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
               #{id}
            </foreach>
         </if>
-        
         <!-- 数据范围过滤 -->
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
         </if>
-
     </select>
 
-
     <select id="selectRoleDeptTree" parameterType="Long" resultType="String">
-		select concat(d.id, d.name) as name
-		from sys_comp d
-			left join sys_role_dept rd on d.id = rd.dept_id
-		where d.del_flag = '0' and rd.role_id = #{roleId}
-		order by d.parent_id, d.order_num
+		SELECT CONCAT(d.id, d.name) AS name
+		FROM sys_comp d
+		LEFT JOIN sys_role_dept rd ON d.id = rd.dept_id
+		WHERE d.del_flag = '0' AND rd.role_id = #{roleId}
+		ORDER BY d.parent_id, d.order_num
 	</select>
 
 </mapper>

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.service;
@@ -54,7 +55,7 @@ public class SysDictTypeSerive extends ServiceImpl<SysDictTypeMapper,SysDictType
         Long dictId = ToolUtil.isEmpty(dict.getId()) ? -1L : dict.getId();
         SysDictTypeEntity dictType = this.getOne(new QueryWrapper<SysDictTypeEntity>()
                 .eq("dict_type",dict.getDictType()));
-        if (!ToolUtil.isEmpty(dictType) && dictType.getId().longValue() != dictId.longValue()){
+        if (!ToolUtil.isEmpty(dictType) && !dictType.getId().equals(dictId)){
             return  false;
         }
         return true;

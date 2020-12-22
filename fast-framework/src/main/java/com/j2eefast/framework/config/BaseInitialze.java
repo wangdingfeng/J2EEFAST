@@ -1,9 +1,13 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.config;
 
+import com.j2eefast.common.core.constants.ConfigConstant;
+import com.j2eefast.common.core.io.PropertiesUtils;
+import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.quartz.entity.SysJobEntity;
 import com.j2eefast.framework.quartz.service.SysJobService;
@@ -11,8 +15,6 @@ import com.j2eefast.framework.quartz.utils.ScheduleUtils;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.service.SysModuleService;
 import org.quartz.Scheduler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -27,11 +29,9 @@ import java.util.List;
  * @author: zhouzhou Emall:loveingowp@163.com
  * @time 2020/2/14 18:32
  * @version V1.0
- *
  */
 @Component
 public class BaseInitialze  implements ApplicationRunner {
-    public static final Logger logger = LoggerFactory.getLogger(BaseInitialze.class);
 
     @Autowired
     private SysModuleService sysModuleService;
@@ -40,7 +40,8 @@ public class BaseInitialze  implements ApplicationRunner {
 	private Scheduler scheduler;
     @Autowired
     private SysJobService sysJobService;
-    
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -72,19 +73,16 @@ public class BaseInitialze  implements ApplicationRunner {
         //清除
 		scheduler.clear();
 
+        //设置系统版本号
+        redisUtil.set(ConfigConstant.CONFIG_KEY, PropertiesUtils.getInstance().getProperty(ConfigConstant.SYS_VERSION,"1.0.1"));
+
         /**
          * 检测定时任务
          */
         List<SysJobEntity> sysJobList =  sysJobService.list();
         if(ToolUtil.isNotEmpty(sysJobList)) {
         	for(SysJobEntity sysJob: sysJobList) {
-//        		CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, sysJob.getJobId());
-//    			// 如果不存在，则创建
-//    			if(cronTrigger == null) {
-    				ScheduleUtils.createScheduleJob(scheduler, sysJob);
-//    			}else{
-//    				ScheduleUtils.updateScheduleJob(scheduler, sysJob);
-//    			}
+    			ScheduleUtils.createScheduleJob(scheduler, sysJob);
         	}
         }
         

@@ -1,6 +1,10 @@
 package com.j2eefast.common.core.utils;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,12 +21,14 @@ import me.zhyd.oauth.cache.AuthStateCache;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
 import me.zhyd.oauth.request.*;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import cn.hutool.core.util.NumberUtil;
@@ -310,26 +316,6 @@ public class ToolUtil{
     }
 
     /**
-     * 修正路径，将 \\ 或 / 等替换为 File.separator
-     * @param path 待修正的路径
-     * @return 修正后的路径
-     */
-    public static String path(String path){
-        String p = StringUtils.replace(path, "\\", "/");
-        p = StringUtils.join(StringUtils.split(p, "/"), "/");
-        if (!StringUtils.startsWithAny(p, "/") && StringUtils.startsWithAny(path, "\\", "/")){
-            p += "/";
-        }
-        if (!StringUtils.endsWithAny(p, "/") && StringUtils.endsWithAny(path, "\\", "/")){
-            p = p + "/";
-        }
-        if (path != null && path.startsWith("/")){
-            p = "/" + p; // linux下路径
-        }
-        return p;
-    }
-
-    /**
      * 获取工程源文件所在路径
      * @return
      */
@@ -339,11 +325,11 @@ public class ToolUtil{
             File file = ResourceUtil.getResource("").getFile();
             if (file != null){
                 while(true){
-                    File f = new File(path(file.getPath() + "/src/main"));
+                    File f = new File(FileUtil.normalize(file.getPath() + "/src/main"));
                     if (f.exists()){
                         break;
                     }
-                    f = new File(path(file.getPath() + "/target/classes"));
+                    f = new File(FileUtil.normalize(file.getPath() + "/target/classes"));
                     if (f.exists()){
                         break;
                     }
@@ -361,10 +347,32 @@ public class ToolUtil{
             // 忽略异常
         }
         // 取不到，取当前工作路径
-        if (StringUtils.isBlank(projectPath)){
+        if (StrUtil.isBlank(projectPath)){
             projectPath = System.getProperty("user.dir");
         }
         return projectPath;
+    }
+
+
+    /**
+     * 结果值转换
+     * @param resultSet 执行返回结果值
+     * @return Map 返回信息
+     */
+    public static Map<String, Object> resultSetToMap(ResultSet resultSet) {
+        try {
+            HashMap<String, Object> result = new HashMap<>();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                String columnName = metaData.getColumnName(i);
+                Object columnValue = resultSet.getObject(i);
+                result.put(columnName, columnValue);
+            }
+            return result;
+        } catch (SQLException e) {
+            log.error("转化结果集异常", e);
+            return new HashMap<>(1);
+        }
     }
 
     /**
@@ -377,11 +385,11 @@ public class ToolUtil{
             File file = ResourceUtil.getResource("").getFile();
             if (file != null){
                 while(true){
-                    File f = new File(path(file.getPath() + "/WEB-INF/classes"));
+                    File f = new File(FileUtil.normalize(file.getPath() + "/WEB-INF/classes"));
                     if (f.exists()){
                         break;
                     }
-                    f = new File(path(file.getPath() + "/src/main/webapp"));
+                    f = new File(FileUtil.normalize(file.getPath() + "/src/main/webapp"));
                     if (f.exists()){
                         return f.getPath();
                     }
@@ -399,7 +407,7 @@ public class ToolUtil{
             // 忽略异常
         }
         // 取不到，取当前工作路径
-        if (StringUtils.isBlank(webappPath)){
+        if (StrUtil.isBlank(webappPath)){
             webappPath = System.getProperty("user.dir");
         }
         return webappPath;
@@ -769,5 +777,24 @@ public class ToolUtil{
             sos.close();
         }catch (Exception e){}
         log.info("==============================下载完成![" + fileName +"]   ========================");
+    }
+
+
+    /**
+     * 随机生成秘钥，参考org.apache.shiro.crypto.AbstractSymmetricCipherService#generateNewKey(int)
+     * @return
+     */
+    public static byte[] generateNewKey() {
+        KeyGenerator kg;
+        try {
+            kg = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException var5) {
+            String msg = "Unable to acquire AES algorithm.  This is required to function.";
+            throw new IllegalStateException(msg, var5);
+        }
+        kg.init(128);
+        SecretKey key = kg.generateKey();
+        byte[] encoded = key.getEncoded();
+        return encoded;
     }
 }

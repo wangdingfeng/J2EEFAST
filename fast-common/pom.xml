@@ -1,36 +1,36 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.j2eefast</groupId>
-    <artifactId>fast</artifactId>
-    <version>3.2.0</version>
-  </parent>
-  
-  <artifactId>fast-common</artifactId>
-  <version>3.3.0</version>
-  <name>fast 公共工具</name>
-  <url>http://www.j2eefast.com</url>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
-  <dependencies>
-      <!-- 授权登录-->
-      <dependency>
-          <groupId>me.zhyd.oauth</groupId>
-          <artifactId>JustAuth</artifactId>
-          <exclusions>
-              <exclusion>
-                  <groupId>com.alibaba</groupId>
-                  <artifactId>fastjson</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
+    <modelVersion>4.0.0</modelVersion>
 
-    	<!--工具类-->
+    <parent>
+        <groupId>com.j2eefast</groupId>
+        <artifactId>fast</artifactId>
+        <version>2.2.0</version>
+    </parent>
+
+    <artifactId>fast-common</artifactId>
+    <name>fast 公共工具</name>
+    <url>http://www.j2eefast.com</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+  
+    <dependencies>
+        <!-- 授权登录-->
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--工具类-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -42,30 +42,36 @@
             </exclusions>
         </dependency>
 
-       <!-- 加密依赖-->
-      <dependency>
-          <groupId>org.bouncycastle</groupId>
-          <artifactId>bcprov-jdk15</artifactId>
-      </dependency>
-
+        <!-- 加密依赖-->
         <dependency>
-             <groupId>org.projectlombok</groupId>
-             <artifactId>lombok</artifactId>
-         </dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+        </dependency>
 
+        <!-- lombok 工具-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- 阿里巴巴fastJson-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+
+        <!-- 工具类 -->
         <dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+
 		 <!-- 简化反射封工具类 -->
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>commons-beanutils</groupId>-->
+<!--			<artifactId>commons-beanutils</artifactId>-->
+<!--		</dependency>-->
+
         <!-- yml解析器 -->
 		<dependency>
 		    <groupId>org.yaml</groupId>
@@ -83,7 +89,7 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         
-       <dependency>
+        <dependency>
            <groupId>org.redisson</groupId>
            <artifactId>redisson-spring-boot-starter</artifactId>
            <version>3.13.4</version>
@@ -93,7 +99,7 @@
                    <artifactId>spring-boot-starter-actuator</artifactId>
                </exclusion>
            </exclusions>
-        </dependency>
+         </dependency>
         
          <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -106,17 +112,12 @@
           </dependency>
 
 
-      <!-- Shiro使用Spring框架 -->
+          <!-- Shiro使用Spring框架 -->
           <dependency>
               <groupId>org.apache.shiro</groupId>
               <artifactId>shiro-spring</artifactId>
           </dependency>
 
-          <!-- Shiro使用EhCache缓存框架
-          <dependency>
-              <groupId>org.apache.shiro</groupId>
-              <artifactId>shiro-ehcache</artifactId>
-          </dependency> -->
           
 		<!-- SpringWeb模块 -->
 		<dependency>
@@ -124,27 +125,34 @@
             <artifactId>spring-web</artifactId>
         </dependency>
         
-          <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-	     </dependency>
-        
-        <!--数据库-->
+        <!--Mysql数据库-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-          <dependency>
-              <groupId>com.oracle</groupId>
-              <artifactId>ojdbc6</artifactId>
-          </dependency>
+        <!--orcale -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+        </dependency>
 
-          <dependency>
-              <groupId>org.postgresql</groupId>
-              <artifactId>postgresql</artifactId>
-              <version>42.2.14</version>
-          </dependency>
+        <!-- postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+        </dependency>
 
         <dependency>
 			<groupId>com.baomidou</groupId>
@@ -156,11 +164,11 @@
               <artifactId>druid</artifactId>
           </dependency>
 
-          <!--多数据源控制-->
-          <dependency>
-              <groupId>org.springframework.boot</groupId>
-              <artifactId>spring-boot-starter-jta-atomikos</artifactId>
-          </dependency>
+        <!--JTA 分布式事务-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+        </dependency>
 
          <!--web-->
         <dependency>

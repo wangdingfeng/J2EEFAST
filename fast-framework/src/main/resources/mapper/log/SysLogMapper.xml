@@ -4,27 +4,26 @@
 <mapper namespace="com.j2eefast.framework.log.mapper.SysOperLogMapper">
 
     <!--  实体栏位  -->
-    <!--  实体栏位  -->
     <sql id="sysOperLogColumns">
-          a.id as "id"   ,
-          a.title as "title"   ,
-          a.business_type as "businessType"   ,
-          a.method as "method"   ,
-          a.request_method as "requestMethod"   ,
-          a.operator_type as "operatorType"   ,
-          a.oper_name as "operName"   ,
-          a.comp_name as "compName"   ,
-          a.oper_url as "operUrl"   ,
-          a.oper_ip as "operIp"   ,
-          a.oper_location as "operLocation"   ,
-          a.oper_param as "operParam"   ,
-          a.json_result as "jsonResult"   ,
-          a.status as "status"   ,
-          a.error_msg as "errorMsg"   ,
-          a.oper_time as "operTime"   ,
-          a.time as "time"   ,
-          a.comp_id as "compId"   ,
-          a.dept_id as "deptId"
+          a.id AS "id"   ,
+          a.title AS "title"   ,
+          a.business_type AS "businessType"   ,
+          a.method AS "method"   ,
+          a.request_method AS "requestMethod"   ,
+          a.operator_type AS "operatorType"   ,
+          a.oper_name AS "operName"   ,
+          a.comp_name AS "compName"   ,
+          a.oper_url AS "operUrl"   ,
+          a.oper_ip AS "operIp"   ,
+          a.oper_location AS "operLocation"   ,
+          a.oper_param AS "operParam"   ,
+          a.json_result AS "jsonResult"   ,
+          a.status AS "status"   ,
+          a.error_msg AS "errorMsg"   ,
+          a.oper_time AS "operTime"   ,
+          a.time AS "time"   ,
+          a.comp_id AS "compId"   ,
+          a.dept_id AS "deptId"
       </sql>
 
     <!-- 外联表  -->
@@ -40,29 +39,32 @@
     <select id="findPage"  resultType="com.j2eefast.framework.log.entity.SysOperLogEntity">
         SELECT
         <include refid="sysOperLogColumns"/>
-        FROM sys_oper_log AS a
+        FROM sys_oper_log a
         <include refid="sysOperLogJoins"/>
         <where>
             <if test="title != null and title != ''">
                 AND a.title LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{title}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{title}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{title}||',%'</when>
+                    <otherwise>CONCAT('%', #{title}, '%')</otherwise>
+                </choose>
             </if>
             <if test="operName != null and operName != ''">
                 AND a.oper_name LIKE
-                <if test="_databaseId == 'oracle'"> '%,'||#{operName}||',%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'"> CONCAT('%', #{operName}, '%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{operName}||',%'</when>
+                    <otherwise>CONCAT('%', #{operName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="status != null and status != ''">
                 AND a.status = '${status}'
             </if>
             <if test="deptId != null and deptId !=''">
-                <if test="_databaseId == 'mysql'">
-                    AND (FIND_IN_SET(#{deptId},d.parent_ids)
-                </if>
-                <if test="_databaseId == 'postgresql'">
-                    AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))
-                </if>
+                <if test="_databaseId == 'mysql'">AND (FIND_IN_SET(#{deptId},d.parent_ids)</if>
+                <if test="_databaseId == 'postgresql'">AND ('${deptId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))</if>
+                <if test="_databaseId == 'oracle'">AND (INSTR(','||d.parent_ids||',',',${deptId},') > 0</if>
+                <if test="_databaseId == 'sqlserver'">AND (CHARINDEX(','+'${deptId}'+',', ','+d.parent_ids+',') > 0</if>
+                OR a.dept_id = '${deptId}')
             </if>
             <if test="businessTypes != null and businessTypes != ''">
                 AND  a.business_type IN(${businessTypes})
@@ -77,10 +79,10 @@
             </if>
             <if test="_databaseId == 'postgresql'">
                 <if test="beginTime != null and beginTime != ''">
-                    AND a.oper_time <![CDATA[ >= ]]> '${beginTime}'::timestamp
+                    AND a.oper_time <![CDATA[ >= ]]> '${beginTime}'::TIMESTAMP
                 </if>
                 <if test="endTime != null  and endTime != ''">
-                    AND a.oper_time <![CDATA[ < ]]> ('${endTime}'::timestamp + '1 day')
+                    AND a.oper_time <![CDATA[ < ]]> ('${endTime}'::TIMESTAMP + '1 DAY')
                 </if>
             </if>
             <!-- 数据范围过滤 -->

@@ -1,16 +1,14 @@
 package com.j2eefast.generator.gen.util;
 
 /**
-  * @ClassName Options
-  * @Description GenTableEntity 扩展 ---对应options 在数据库中以json存储
-  * @author mfksn001@163.com
-  * @date 2020年6月10日
-*/
-
+ * @ClassName Options
+ * @Description GenTableEntity 扩展 ---对应options 在数据库中以json存储
+ * @author mfksn001@163.com
+ * @date 2020年6月10日
+ */
 public class Option {
 
     /** 树编码字段 */
-
     private String treeCode;
 
     /** 树父编码字段 */
@@ -42,7 +40,6 @@ public class Option {
 		return treeParentCode;
 	}
 
-
 	public void setTreeParentCode(String treeParentCode) {
 		this.treeParentCode = treeParentCode;
 	}
@@ -55,6 +52,4 @@ public class Option {
 		this.treeName = treeName;
 	}
     
-	
-	
 }

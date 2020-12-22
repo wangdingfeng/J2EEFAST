@@ -36,6 +36,7 @@ public class AntiFakeCsrfFilter {
     @Autowired
     private ShiroFilterFactoryBean shiroFilterFactoryBean;
     @Autowired
+    @Lazy
     private RedisUtil redisUtil;
 
     /**

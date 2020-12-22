@@ -3,14 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.j2eefast</groupId>
-    <artifactId>fast</artifactId>
-    <version>3.2.0</version>
+      <groupId>com.j2eefast</groupId>
+	  <artifactId>fast</artifactId>
+	  <version>2.2.0</version>
   </parent>
   <artifactId>fast-web</artifactId>
-  <name>子模块</name>
+  <name>web  应用子模块</name>
   <description>
-	    子模块
+	    二次开发子模块
   </description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,6 +31,7 @@
 					<!-- 不打包资源文件（配置文件和依赖包分开） -->
 					<excludes>
 						<exclude>templates/**</exclude>
+						<exclude>mapper/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

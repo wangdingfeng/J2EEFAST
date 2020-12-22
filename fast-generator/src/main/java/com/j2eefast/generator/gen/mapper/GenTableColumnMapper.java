@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.generator.gen.mapper;
@@ -19,11 +20,14 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface GenTableColumnMapper extends BaseMapper<GenTableColumnEntity> {
 
+	/**
+	 * 更新字段表
+	 * @param genTableColumn
+	 * @return
+	 */
 	int updateGenTableColumn(GenTableColumnEntity genTableColumn);
 
-
-	/** 
-	* @Title: findListByTableId 
+	/**
 	* @param tableId
 	* @return  List<GenTableColumnEntity> 
 	* @author mfksn001@163.com
@@ -32,7 +36,6 @@ public interface GenTableColumnMapper extends BaseMapper<GenTableColumnEntity> {
 	List<GenTableColumnEntity> findListByTableId(@Param("tableId") Long tableId);
 	
 	/**
-	* @Title: generateDbTableColumnsByName 
 	* @Description: 产生表栏位名
 	* @param dbType 数据库类型
 	* @param schema schema
@@ -45,7 +48,11 @@ public interface GenTableColumnMapper extends BaseMapper<GenTableColumnEntity> {
                                                             @Param("schema") String schema ,
                                                             @Param("tableName") String tableName);
 
-
+	/**
+	 * 批量删除字段表
+	 * @param ids
+	 * @return
+	 */
 	int deleteGenTableColumnByIds(Long[] ids);
 
 }

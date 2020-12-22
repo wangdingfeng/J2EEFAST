@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.core.utils;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -29,19 +31,13 @@ import java.util.HashSet;
 @Component
 public class RedisUtil {
 
-	/**
-	 * 是否开启Redis
-	 */
-	/**
-	 * 是否开启redis缓存 true开启 false关闭
-	 */
-	@Value("${fast.redis.enabled: true}")
-	private Boolean enabled;
 	@SuppressWarnings("unused")
 	@Autowired
+	@Lazy
 	private StringRedisTemplate 					stringRedisTemplate;
 	@SuppressWarnings("rawtypes")
 	@Autowired
+	@Lazy
 	private RedisTemplate 							redisTemplate;
 	@Resource(name = "redisTemplate")
 	private ValueOperations<String, String> 		valueOperations;
@@ -84,67 +80,42 @@ public class RedisUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public void add(String key,long expire,String... values) {
-		
-		if(enabled) {
-			setOperations.add(key, values);
-			if(expire != NOT_EXPIRE) {
-				redisTemplate.expire(key,expire,TimeUnit.SECONDS);
-			}
+		setOperations.add(key, values);
+		if(expire != NOT_EXPIRE) {
+			redisTemplate.expire(key,expire,TimeUnit.SECONDS);
 		}
-		
 	}
 	
 	public void delSet(String key,String... values) {
-		
-		if(enabled) {
-			setOperations.remove(key,values);
-		}
-		
+		setOperations.remove(key,values);
 	}
 	
 	/**
 	 * 通过Key获取之前存放的Set集合
 	 */
 	public Set<Object> getSets(String key){
-		
-		if(enabled) {
-			return setOperations.members(key);
-		}
-		
-		return null;
+		return setOperations.members(key);
 	}
 	
 	
 	@SuppressWarnings("unchecked")
 	public void set(String key, Object value, long expire) {
-		
-		if(enabled) {
-			valueOperations.set(key, toJson(value));
-			if (expire != NOT_EXPIRE) {
-				redisTemplate.expire(key, expire, TimeUnit.SECONDS);
-			}
+		valueOperations.set(key, toJson(value));
+		if (expire != NOT_EXPIRE) {
+			redisTemplate.expire(key, expire, TimeUnit.SECONDS);
 		}
-		
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void setMillse(String key, Object value, long expire) {
-		
-		if(enabled) {
-			valueOperations.set(key, toJson(value));
-			if (expire != NOT_EXPIRE) {
-				redisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
-			}
+		valueOperations.set(key, toJson(value));
+		if (expire != NOT_EXPIRE) {
+			redisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
 		}
-		
 	}
 
 	public void set(String key, Object value) {
-		
-		if(enabled) {
-			set(key, value, DEFAULT_EXPIRE);
-		}
-		
+		set(key, value, DEFAULT_EXPIRE);
 	}
 
 	/**
@@ -159,22 +130,14 @@ public class RedisUtil {
 	
 	@SuppressWarnings("unchecked")
 	public void setSeConds(String key, Object value, long expire) {
-		
-		if(enabled) {
-			valueOperations.set(key, toJson(value));
-			if (expire != NOT_EXPIRE) {
-				redisTemplate.expire(key, expire, TimeUnit.SECONDS);
-			}
+		valueOperations.set(key, toJson(value));
+		if (expire != NOT_EXPIRE) {
+			redisTemplate.expire(key, expire, TimeUnit.SECONDS);
 		}
-		
 	}
 	
 	public void set(String key, Object value,int out) {
-		
-		if(enabled) {
-			set(key, value, NOT_EXPIRE);
-		}
-		
+		set(key, value, NOT_EXPIRE);
 	}
 
 	/**
@@ -193,54 +156,34 @@ public class RedisUtil {
 	}
 	
 	public void setApi(String key, Object value) {
-		
-		if(enabled) {
-			set(key, value, DEFAULT_EXPIRE_MT);
-		}
+		set(key, value, DEFAULT_EXPIRE_MT);
 		return;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T get(String key, Class<T> clazz, long expire) {
-		
-		if(enabled) {
-			String value = valueOperations.get(key);
-			if (expire != NOT_EXPIRE) {
-				redisTemplate.expire(key, expire, TimeUnit.SECONDS);
-			}
-			return value == null ? null : fromJson(value, clazz);
+		String value = valueOperations.get(key);
+		if (expire != NOT_EXPIRE) {
+			redisTemplate.expire(key, expire, TimeUnit.SECONDS);
 		}
-		return null;
+		return value == null ? null : fromJson(value, clazz);
 	}
 
 	public <T> T get(String key, Class<T> clazz) {
-		
-		if(enabled) {
-			return get(key, clazz, NOT_EXPIRE);
-		}
-		return null;
+		return get(key, clazz, NOT_EXPIRE);
 	}
 
 	@SuppressWarnings("unchecked")
 	public String get(String key, long expire) {
-		
-		if(enabled) {
-			String value = valueOperations.get(key);
-			if (expire != NOT_EXPIRE) {
-				redisTemplate.expire(key, expire, TimeUnit.SECONDS);
-			}
-			return value;
+		String value = valueOperations.get(key);
+		if (expire != NOT_EXPIRE) {
+			redisTemplate.expire(key, expire, TimeUnit.SECONDS);
 		}
-		return null;
+		return value;
 	}
 
 	public String get(String key) {
-		
-		if(enabled) {
-			return get(key, NOT_EXPIRE);
-		}
-
-		return null;
+		return get(key, NOT_EXPIRE);
 	}
 
 	/**
@@ -254,10 +197,7 @@ public class RedisUtil {
 
 	@SuppressWarnings("unchecked")
 	public void delete(String key) {
-		
-		if(enabled) {
-			redisTemplate.delete(key);
-		}
+		redisTemplate.delete(key);
 	}
 
 	/**
@@ -325,15 +265,8 @@ public class RedisUtil {
 
 	@SuppressWarnings("unchecked")
 	public boolean deletes(String key){
-		if(enabled) {
-			Set<String> keys = redisTemplate.keys(key);
-		  	return  redisTemplate.delete(keys) > 0;
-		}
-		return  false;
-	}
-
-	public boolean isEnabled(){
-		return enabled;
+		Set<String> keys = redisTemplate.keys(key);
+		return  redisTemplate.delete(keys) > 0;
 	}
 
 	/**

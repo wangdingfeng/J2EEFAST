@@ -1,13 +1,15 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.utils;
 
-
 import java.io.File;
-
 import com.j2eefast.common.config.service.SysConfigService;
+import com.j2eefast.common.core.io.PropertiesUtils;
+import com.j2eefast.common.core.utils.RedisUtil;
+import com.j2eefast.common.core.utils.ToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.j2eefast.common.core.constants.ConfigConstant;
@@ -26,7 +28,7 @@ import cn.hutool.setting.Setting;
 public class Global {
 	
 	private static final Logger log = LoggerFactory.getLogger(Global.class);
-	
+
 	/**
      * 获取配置
      */
@@ -46,7 +48,12 @@ public class Global {
      * 获取项目版本
      */
     public static String getVersion(){
-    	return StrUtil.blankToDefault(getConfig(ConfigConstant.SYS_CONFIG_VERSION),"1.0.1");
+        String  version = SpringUtil.getBean(RedisUtil.class).get(ConfigConstant.CONFIG_KEY);
+        if(ToolUtil.isEmpty(version)){
+            version = PropertiesUtils.getInstance().getProperty(ConfigConstant.SYS_VERSION,"1.0.1");
+            SpringUtil.getBean(RedisUtil.class).set(ConfigConstant.CONFIG_KEY,version);
+        }
+    	return version;
     }
     
     /**

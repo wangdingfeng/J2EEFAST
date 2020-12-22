@@ -1,37 +1,66 @@
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ */
 package ${packageName}.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+#if($column.required)
+#if($column.javaType == 'String')
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-##### 如果是主子表主表
-#if($table.master)
-import ${packageName}.entity.${childTable.className}Entity;
-import java.util.List;
+#break
 #end
-#foreach ($column in $columns)##
-#if(!$table.isSuperColumn($column.javaField))####
-#if($column.javaType == 'Date')##
+#end
+#end
+#end
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+#if($column.required)
+#if($column.javaType != 'String')
+import javax.validation.constraints.NotNull;
+#break
+#end
+#end
+#end
+#end
+#foreach ($import in $importList)
+import ${import};
+#end
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+#if($column.javaType == 'Date')
 import com.fasterxml.jackson.annotation.JsonFormat;
 #break
 #end
 #end
 #end
-#foreach ($column in $columns)##
-#if(!$table.isSuperColumn($column.javaField))####
-#if($column.javaField == 'delFlag')##
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+#if($column.javaField == 'delFlag')
 import com.baomidou.mybatisplus.annotation.TableLogic;
 #break
 #end
 #end
 #end
-import lombok.Data;
+#foreach ($column in $columns)
+#if($column.htmlType == 'comp')
+import com.j2eefast.framework.sys.entity.SysCompEntity;
+#elseif($column.htmlType == 'user')
+import com.j2eefast.framework.sys.entity.SysUserEntity;
+#elseif($column.htmlType == 'dept')
+import com.j2eefast.framework.sys.entity.SysDeptEntity;
+#end
+#end
 #if($table.crud)
 #set($Entity="extends BaseEntity")
 import com.j2eefast.common.core.base.entity.BaseEntity;
 #else
 #set($EntityFlag="0")
-#foreach ($column in $columns)##
-#if($table.isSuperColumn($column.javaField))####
+#foreach ($column in $columns)
+#if($table.isSuperColumn($column.javaField))
 #set($EntityFlag="1")#break
 #end
 #end
@@ -43,17 +72,10 @@ import java.io.Serializable;
 import com.j2eefast.common.core.base.entity.BaseEntity;
 #end
 #end
-#foreach ($import in $importList)
-import ${import};
-#end
-#foreach ($column in $columns)##
-#if($column.htmlType == 'comp')##
-import com.j2eefast.framework.sys.entity.SysCompEntity;
-#elseif($column.htmlType == 'user')##
-import com.j2eefast.framework.sys.entity.SysUserEntity;
-#elseif($column.htmlType == 'dept')##
-import com.j2eefast.framework.sys.entity.SysDeptEntity;
-#end
+import lombok.Getter;
+import lombok.Setter;
+#if($table.master)
+import java.util.List;
 #end
 
 /**
@@ -61,152 +83,163 @@ import com.j2eefast.framework.sys.entity.SysDeptEntity;
  * @author: ${author}
  * @date ${datetime}
  */
-@Data
+@Getter
+@Setter
 @TableName("${tableName}")
 public class ${ClassName}Entity ${Entity}{
 
-    private static final long serialVersionUID = 1L;#####
-#foreach ($column in $columns)##
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-#if($table.crud)#### CRUE
-#if(!$table.isSuperColumn($column.javaField))####
-
-
-    /** $column.columnComment */####
-#if($column.javaField == 'delFlag')##
-
-    @TableLogic###
-    @TableField(value = "del_flag", fill = FieldFill.INSERT)###
+#if($table.crud)
+#if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+#if($column.javaField == 'delFlag')
+    @TableLogic
+    @TableField(value = "del_flag", fill = FieldFill.INSERT)
 #end
-#if($column.plus)##
+#if($column.plus)
     @TableField(exist = false)
-#if($column.javaType == 'Date')##
+#if($column.javaType == 'Date')
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
-#end##
-    private $column.javaType $column.javaField;###
-#else##
-#if($column.pk) #* 是表主键*#
-#if($column.increment)#### #* 是主键*#
-	@TableId(type = IdType.AUTO)###
+#end
+    private $column.javaType $column.javaField;
 
-    private $column.javaType $column.javaField;###
+#else
+#if($column.pk)
+#if($column.increment)
+	@TableId(type = IdType.AUTO)
+    private $column.javaType $column.javaField;
+
 #else
     @TableId(value = "$column.columnName",type = IdType.ASSIGN_ID)
-    private $column.javaType $column.javaField;###
+    private $column.javaType $column.javaField;
+
 #end
 #else
 #if($column.queryType == "BETWEEN")
     @TableField(exist = false)  
-    private $column.javaType begin$AttrName;###  //between 查询用
+    private $column.javaType begin$AttrName;
+
     @TableField(exist = false)
-    private $column.javaType end$AttrName;###   //between 查询用
+    private $column.javaType end$AttrName;
+
 #end 
-#if($column.javaType == 'Date')####
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")####
-#end
-#if($column.required)## #*是否未必填项*#
-#if($column.javaType == 'String')###
-
-    @NotBlank(message = "参数值不能为空")###
-#else##
-
-    @NotNull(message = "参数值不能为空")###
-#end
-#end###
-
-    private $column.javaType $column.javaField;####
-#if($column.htmlType == "comp")####
-
-    @TableField(exist=false)
-    private SysCompEntity company;####
-#end##
-#if($column.htmlType == "dept")####
-
-    @TableField(exist=false)
-    private SysDeptEntity organization;####
-#end##
-#if($column.htmlType == "user")####
-
-    @TableField(exist=false)
-    private SysUserEntity sysUser;####
-#end##
-#end
-#end
-#end
-#else  ### NO -CRUE
-#if(!$table.isSuperColumn($column.javaField))####
-
-
-    /** $column.columnComment */
-#if($column.javaField == 'delFlag')##
-    @TableLogic###
-    @TableField(value = "del_flag", fill = FieldFill.INSERT)####
-
-#end##
-#if($column.plus)
-    @TableField(exist = false)
-#if($column.javaType == 'Date')
-	#if($column.queryType == "BETWEEN")
-	    @TableField(exist = false)  
-	    private $column.javaType begin$AttrName;
-	    @TableField(exist = false)
-	    private $column.javaType end$AttrName;
-	#end###
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")####
-#end
-    private $column.javaType $column.javaField;
-#else
-#if($column.pk)####* 是表主键*#
-#if($column.increment)####* 是主键自增型*#
-	@TableId(type = IdType.AUTO)
-    private $column.javaType $column.javaField;####
-#else
-    @TableId(value = "$column.columnName",type = IdType.ASSIGN_ID)
-    private $column.javaType $column.javaField;#####
-#end
-#else### 普通不是主键
 #if($column.javaType == 'Date')
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
 #end
-#if($column.required)###*是否未必填项*#
-#if($column.javaType == 'String')#####
-    @NotBlank(message = "参数值不能为空")####
+#if($column.required)
+#if($column.javaType == 'String')
+    @NotBlank(message = "参数值不能为空")
+#else
+    @NotNull(message = "参数值不能为空")
+#end
+#end
+    private $column.javaType $column.javaField;
 
-#else##
-    @NotNull(message = "参数值不能为空")#####
+#if($column.htmlType == "comp")
+    @TableField(exist=false)
+    private SysCompEntity company;
+
+#end
+#if($column.htmlType == "dept")
+    @TableField(exist=false)
+    private SysDeptEntity organization;
+
+#end
+#if($column.htmlType == "user")
+    @TableField(exist=false)
+    private SysUserEntity sysUser;
 
 #end
 #end
-    private $column.javaType $column.javaField;####
-#if($column.htmlType == "comp")##
+#end
+#end
+#else
+#if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+#if($column.javaField == 'delFlag')
+    @TableLogic
+    @TableField(value = "del_flag", fill = FieldFill.INSERT)
+#end
+#if($column.plus)
+    @TableField(exist = false)
+#if($column.javaType == 'Date')
+#if($column.queryType == "BETWEEN")
+    @TableField(exist = false)
+    private $column.javaType begin$AttrName;
 
-    @TableField(exist=false)
-    private SysCompEntity company;###
-####
-#end####
-#if($column.htmlType == "user")##
+    @TableField(exist = false)
+    private $column.javaType end$AttrName;
 
-    @TableField(exist=false)
-    private SysUserEntity sysUser;###
-####
-#end####
-#if($column.htmlType == "dept")##
+#end
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")####
+#end
+    private $column.javaType $column.javaField;
 
+#else
+#if($column.pk)
+#if($column.increment)
+	@TableId(type = IdType.AUTO)
+    private $column.javaType $column.javaField;
+
+#else
+    @TableId(value = "$column.columnName",type = IdType.ASSIGN_ID)
+    private $column.javaType $column.javaField;
+
+#end
+#else
+#if($column.javaType == 'Date')
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
+#end
+#if($column.required)
+#if($column.javaType == 'String')
+    @NotBlank(message = "参数值不能为空")
+#else
+    @NotNull(message = "参数值不能为空")
+#end
+#end
+    private $column.javaType $column.javaField;
+
+#if($column.htmlType == "comp")
     @TableField(exist=false)
-    private SysDeptEntity organization;####
-####
-#end##
+    private SysCompEntity company;
+
+#end
+#if($column.htmlType == "user")
+    @TableField(exist=false)
+    private SysUserEntity sysUser;
+
+#end
+#if($column.htmlType == "dept")
+    @TableField(exist=false)
+    private SysDeptEntity organization;
+
+#end
 #end
 #end
 #end
 #end
 #end
 #if($table.master)
-    #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
-
-
+#set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
     @TableField(exist=false)
     private List<${childTable.className}Entity> ${classEnty};
+
+#end
+#if($table.tree)
+    /**
+     * 上级名称
+     */
+    @TableField(exist = false)
+    private String parentName;
+
+#if($async == '1')
+    /**是否有节点*/
+    @TableField(exist = false)
+    private Integer isTreeLeaf;
+
+#end
 #end
 }

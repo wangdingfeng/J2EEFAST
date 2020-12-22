@@ -200,7 +200,7 @@
 //默认配置
     Class.pt.config = {
         type: 0,
-        shade: 0.3,
+        shade: 0.4,
         fixed: true,
         move: doms[1],
         title: '&#x4FE1;&#x606F;',
@@ -336,8 +336,10 @@
 
         //遮罩
         $('#layui-layer-shade'+ that.index).css({
-            'background-color': config.shade[1] || '#000'
+            'background-color': config.shade[1] || 'rgba(0,0,0,.5)'
             ,'opacity': config.shade[0]||config.shade
+            ,'-webkit-backdrop-filter': 'blur(10px)'
+            ,'backdrop-filter': 'blur(10px)'
         });
 
 

@@ -13,7 +13,11 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "模块编码"/>：</label>
         <div class="col-sm-8">
-            <@f.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required=true/>
+            <#if sysModule.moduleCode == 'core'>
+                <@f.input name="moduleCode" readonly=true value="${sysModule.moduleCode?default('')}"/>
+            <#else>
+                <@f.input name="moduleCode" value="${sysModule.moduleCode?default('')}" required=true/>
+            </#if>
         </div>
     </div>
     <div class="form-group">
@@ -42,7 +46,11 @@
     <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span><@ctx.i18n text = "版本"/>：</label>
         <div class="col-sm-8">
-            <@f.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required=true/>
+            <#if sysModule.moduleCode == 'core'>
+                <@f.input name="currentVersion"  readonly=true value="${sysModule.currentVersion?default('')}"/>
+            <#else>
+                <@f.input name="currentVersion" value="${sysModule.currentVersion?default('')}" required=true/>
+            </#if>
         </div>
     </div>
     <div class="form-group">

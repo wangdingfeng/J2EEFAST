@@ -19,21 +19,6 @@
         <div class="form-group">
             <label class="col-sm-3 control-label"><@ctx.i18n text = "所属模块"/>：</label>
             <div class="col-sm-8">
-<#--                <#list modules>-->
-<#--                    <#items as d>-->
-<#--                        <#if d.status =='0' >-->
-<#--                            <label>-->
-<#--                                <#assign a=0 />-->
-<#--                                <#list gen_table.moduleCodes?default("")?split(",") as x>-->
-<#--                                    <#if x == d.moduleCode>-->
-<#--                                        <#assign a=1 />-->
-<#--                                    </#if>-->
-<#--                                </#list>-->
-<#--                                <label class="check-box"><input type="checkbox" name="moduleCodes" value="${d.moduleCode}" <#if a== 1>checked</#if> required/><@ctx.i18n text = "${d.moduleName}" /></label>-->
-<#--                            </label>-->
-<#--                        </#if>-->
-<#--                    </#items>-->
-<#--                </#list>-->
                 <@f.checkbox name="moduleCodes" items=modules itemLabel="moduleName" value="${gen_table.moduleCodes}" itemValue="moduleCode" required=true/>
             </div>
         </div>
@@ -44,16 +29,6 @@
                     <i class="fa fa-question-circle-o" style="color: orange"></i></a>
             </label>
             <div class="col-sm-8">
-<#--                <select id="menuTarget" name="menuTarget" class="form-control">-->
-<#--                    <#list dict.getType('sys_menu_target')>-->
-<#--                        <#items as d>-->
-<#--                            <#if d.status =='0' >-->
-<#--                                <option value="${d.dictValue}" <#if (d.isDefault =='Y' && gen_table.menuTarget == "") ||-->
-<#--                                (gen_table.menuTarget ==d.dictValue ) >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>-->
-<#--                            </#if>-->
-<#--                        </#items>-->
-<#--                    </#list>-->
-<#--                </select>-->
                 <@f.select name="menuTarget" dictType="sys_menu_target" />
             </div>
         </div>
@@ -63,6 +38,12 @@
                 <input class="form-control" type="text" name="menuOrder" value="${gen_table.menuOrder?default(0)}" required>
             </div>
         </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"><@ctx.i18n text = "是否显示(新)"/>：</label>
+        <div class="col-sm-8">
+            <@f.radio name="isNew" dictType="sys_yes_no" value="${gen_table.menuNew?default('N')}"/>
+        </div>
+    </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><@ctx.i18n text = "图标"/>：
                 <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-placement="bottom"
@@ -70,12 +51,6 @@
                     <i class="fa fa-question-circle-o" style="color: orange"></i></a>
             </label>
             <div class="col-sm-8">
-<#--                <div class="input-group">-->
-<#--                    <span class="input-group-addon"><i id="menuIconIcon" class="fa fa-fw ${gen_table.menuIcon?default("")}"></i></span>-->
-<#--                    <input id="icmenuIconon" name="icmenuIconon" type="text" value="${gen_table.menuIcon?default("")}" class="form-control" placeholder="选择图标">-->
-<#--                    <span class="input-group-btn"><a id="menuIconButton" href="javascript:"-->
-<#--                        ><i class="fa fa-fw fa-search"></i></a></span>-->
-<#--                </div>-->
                 <@f.iconselect name="icmenuIconon" placeholder="选择图标" value="${gen_table.menuIcon?default('')}"/>
             </div>
         </div>

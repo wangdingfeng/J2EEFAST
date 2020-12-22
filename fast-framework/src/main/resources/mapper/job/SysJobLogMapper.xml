@@ -4,15 +4,15 @@
 <mapper namespace="com.j2eefast.framework.quartz.mapper.SysJobLogMapper">
 
     <sql id="sysJobLogColumns">
-         a.id as "id" ,
-         a.job_id as "jobId" ,
-         a.job_name as "jobName" ,
-         a.job_group as "jobGroup" ,
-         a.invoke_target as "invokeTarget" ,
-         a.status as "status" ,
-         a.error as "error" ,
-         a.times as "times" ,
-         a.create_time as "createTime"
+         a.id AS "id" ,
+         a.job_id AS "jobId" ,
+         a.job_name AS "jobName" ,
+         a.job_group AS "jobGroup" ,
+         a.invoke_target AS "invokeTarget" ,
+         a.status AS "status" ,
+         a.error AS "error" ,
+         a.times AS "times" ,
+         a.create_time AS "createTime"
      </sql>
 
 	<update id="cleanJobLog">
@@ -27,9 +27,10 @@
         <where>
             <if test="sysJobLog.jobName != null  and sysJobLog.jobName != ''">
                 AND a.job_name LIKE
-                <if test="_databaseId == 'oracle'"> '%'||#{sysJobLog.jobName}||'%'</if>
-                <if test="_databaseId == 'mssql'">'%'+#{sysJobLog.jobName}+'%'</if>
-                <if test="_databaseId == 'mysql' || _databaseId == 'postgresql'">concat('%',#{sysJobLog.jobName},'%')</if>
+                <choose>
+                    <when test="_databaseId == 'oracle'">'%,'||#{sysJobLog.jobName}||',%'</when>
+                    <otherwise>CONCAT('%', #{sysJobLog.jobName}, '%')</otherwise>
+                </choose>
             </if>
             <if test="sysJobLog.jobGroup != null  and sysJobLog.jobGroup != ''"> AND a.job_group = #{sysJobLog.jobGroup} </if>
             <if test="sysJobLog.status != null  and sysJobLog.status != ''"> AND a.status = #{sysJobLog.status} </if>

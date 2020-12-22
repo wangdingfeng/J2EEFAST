@@ -1,14 +1,4 @@
 fast:
-# 多源数据库配置改为后台[多源数据] 配置不在此处配置, 后台配置优点:更加灵活 可以实现动态增加实时生效
-#    db:
-#        #开启多源配置 true, 如果为false 则会获取默认 default 配置数据库
-#        muti-datasource-open: true
-#        #多数据源名称列表，多个用逗号隔开， 使用方法：@DataSource(name="db1")
-#        # db1,db2,db3
-#        datasourceNames: db1
-    redis:
-        #是否开启redis 内存数据库 <*推荐使用*>
-        enabled: true
     #工作流是否开启 如果工作流开启 必须开启 rabbitmq消息队列 否则系统人员 与 角色同步就会有异常
     flowable:
         enabled: false
@@ -41,6 +31,9 @@ fast:
         enabled: true
         #防盗链允许的网站来源地址配置多个URL , 分割
         #urlReferer: 'http:127.0.0.1, http:loclhost'
+    #JTA 分布式事务，建议启用多数据源的时候开启
+    jta:
+        enabled: false
 ########################License认证相关#####################
 #License相关配置
 license:

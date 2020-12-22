@@ -36,6 +36,14 @@ opt.domReady(function(){
 		return this.optional(element)||(length == 11 && phone.test(value));
 	},"请填写正确的11位手机号");
 
+	jQuery.validator.addMethod("alnum", function(value, element){
+		return this.optional(element) ||/^[a-zA-Z0-9]+$/.test(value);
+	}, "只能包括英文字母和数字");
+	jQuery.validator.addMethod("isABC",function(value,element){
+		var abc=/^(?!_)(?!.*?_$)[a-zA-Z0-9_]+$/; //{4,12}$/
+		return this.optional(element)||(abc.test(value));
+	},"字母或者数字下划线组合,下划线不能开头和结尾");
+
 	jQuery.validator.addMethod("decimalsValue",function(value, element) {
 		var decimalsValue =/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/ ;
 		return this.optional(element) || (decimalsValue.test(value));
@@ -62,13 +70,12 @@ opt.domReady(function(){
 		}else{
 			return this.optional(element) || (length == 11 && mobile.test(value));
 		}
-
 	},"请填写正确的座机号码");
 	//姓名校验
 	jQuery.validator.addMethod("isName",function(value,element){
-		var name=/^[\u4e00-\u9fa5]{2,6}$/;
+		var name=/^[\u4e00-\u9fa5a-zA-Z0-9]{2,20}$/;
 		return this.optional(element) || (name.test(value));
-	},"姓名只能用汉字,长度2-4位");
+	},"只能汉字字符,长度2-20位");
 	//校验用户名
 	jQuery.validator.addMethod("isUserName",function(value,element){
 		var userName=/^[a-zA-Z0-9]{2,13}$/;

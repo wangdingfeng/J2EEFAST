@@ -5,7 +5,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,14 +13,16 @@ import com.google.common.collect.Lists;
 import com.j2eefast.common.core.base.entity.Ztree;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
+import com.j2eefast.common.core.mutidatasource.annotaion.mybatis.MybatisMapperRefresh;
 import com.j2eefast.common.core.page.Query;
 import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
+import com.j2eefast.common.db.context.SqlSessionFactoryContext;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
-import com.j2eefast.framework.sys.entity.SysAreaEntity;
+import com.j2eefast.common.db.utils.SqlExe;
 import com.j2eefast.framework.sys.mapper.SysDatabaseMapper;
+import com.j2eefast.framework.sys.service.SysMenuService;
 import com.j2eefast.framework.utils.Global;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
 import com.j2eefast.generator.gen.entity.GenTableEntity;
@@ -30,6 +31,7 @@ import com.j2eefast.generator.gen.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -37,13 +39,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +71,10 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 
     @Resource
     private GenTableMapper genTableMapper;
-    
-    
+
+    @Resource
+    private SysMenuService sysMenuService;
+
 	@Resource
 	private SysDatabaseMapper sysDatabaseMapper;
 
@@ -101,7 +105,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         if(searchTable.equals("gen_table")){
             Page<GenTableEntity> page = this.baseMapper.selectPage(new Query<GenTableEntity>(params).getPage(),
                     new QueryWrapper<GenTableEntity>().eq("tpl_category","child")
-                            .eq(StringUtils.isNotBlank(pId), "id", searchValue)
+                            .eq(StringUtils.isNotBlank(searchValue), "id", searchValue)
                             .like(StringUtils.isNotBlank(name), "table_name", name));
             //数据转换
             List<Ztree> list = new ArrayList<>();
@@ -177,6 +181,125 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 
     }
 
+
+    /**
+     * 生成代码
+     * @param tableId
+     * @return
+     */
+    public boolean genCode(Long tableId) {
+        // 查询表信息
+        GenTableEntity table = findGenTableById(tableId);
+        String path = table.getRunPath().equals("/")? Global.getTempPath() + File.separator: table.getRunPath();
+        // 查询列信息
+        List<GenTableColumnEntity> columns = table.getColumns();
+        setPkColumn(table, columns);
+
+        VelocityInitializer.initVelocity();
+
+        VelocityContext context = VelocityUtils.prepareContext(table);
+        // 获取模板列表
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
+        if(table.getIsCover().equals("N")){
+            for (String template : templates) {
+                if(!template.contains("sql.vm")){
+                    String p  = path + VelocityUtils.getFileName(template, table);
+                    if(FileUtil.exist(p)){
+                        throw  new RxcException(new File(p).getName() +"文件存在","99992");
+                    }
+                }
+            }
+        }
+        //菜单ID
+        Long menuId = (Long) context.get("menuId");
+        @SuppressWarnings("unused")
+		List<String> templaList = templates;
+        //预执行菜单SQL
+        String runMenuSqlPath = "";
+        boolean isMenu = false;
+        if(ToolUtil.isNotEmpty(table.getMenuName()) && ToolUtil.isNotEmpty(table.getParentName())){
+            isMenu = true;
+        }
+        for (String template : templates) {
+            // 渲染模板
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, CharsetUtil.UTF_8);
+            tpl.merge(context, sw);
+            try {
+                String p = path + VelocityUtils.getFileName(template, table);
+                String temp =StrUtil.replace(sw.toString(),"<@>","#");
+                temp =StrUtil.replace(temp,"<$>","$");
+                FileUtil.writeString(temp,p,CharsetUtil.UTF_8);
+                if(template.contains("sql.vm")){
+                    runMenuSqlPath = p;
+                }
+            }
+            catch (IORuntimeException e) {
+                throw  new RxcException("文件生成失败","99991");
+            }
+        }
+        @SuppressWarnings("unused")
+        GenTableEntity tableEntity = table;
+        // 若是主子表
+        if(GenConstants.TPL_MASTER.equals(table.getTplCategory())){
+            // 包路径
+            String packageName = table.getPackageName(); //com.j2eefast.bcs.tbc
+            // 模块名
+            String moduleName = table.getModuleName(); //tbc
+            // 业务名称
+            String businessName = table.getBusinessName();//log
+            table = genTableService.findGenTableById(table.getChildId());
+            table.setPackageName(packageName);
+            table.setModuleName(moduleName);
+            table.setBusinessName(businessName);
+            // 查询列信息
+            columns = table.getColumns();
+            setPkColumn(table, columns);
+
+            Object o = context.get("fKey");
+            Object packageName0 = context.get("packageName");
+            context = VelocityUtils.prepareContext(table);
+            context.put("fKey",o);
+            context.put("packageName",packageName0);
+            templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
+            for (String template : templates){
+                if(!template.contains("sql.vm")){
+                    // 渲染模板
+                    StringWriter sw = new StringWriter();
+                    Template tpl = Velocity.getTemplate(template, CharsetUtil.UTF_8);
+                    tpl.merge(context, sw);
+                    try {
+                        String p = path + VelocityUtils.getFileName(template, table);
+                        String temp =StrUtil.replace(sw.toString(),"<@>","#");
+                        temp =StrUtil.replace(temp,"<$>","$");
+                        FileUtil.writeString(temp,p,CharsetUtil.UTF_8);
+                    }
+                    catch (IORuntimeException e) {
+                        throw  new RxcException("文件生成失败","99991");
+                    }
+                }
+            }
+        }
+
+        if(isMenu){
+            //执行插入菜单信息
+            genTableService.updateGenTableMenuId(tableId,menuId);
+            SqlExe.runFileSql(DataSourceContext.MASTER_DATASOURCE_NAME,FileUtil.file(runMenuSqlPath));
+            sysMenuService.clearMenuRedis();
+        }
+
+        FileUtil.del(runMenuSqlPath);
+        
+        //刷新更新生成业务的mapperXML
+        Iterator<Map.Entry<Object, SqlSessionFactory>> entries = SqlSessionFactoryContext.getSqlSessionFactorys().entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Object, SqlSessionFactory> entry = entries.next();
+           new MybatisMapperRefresh((String) entry.getKey(),entry.getValue()).loadRefresh();
+        }
+
+        return true;
+    }
+
     /**
      * 设置主键列信息
      *
@@ -232,10 +355,10 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
             table = genTableService.findGenTableById(table.getChildId());
             Object o = context.get("fKey");
             Object packageName = context.get("packageName");
-            context = VelocityUtils.prepareContext(table);
             // 查询列信息
             columns = table.getColumns();
             setPkColumn(table, columns);
+            context = VelocityUtils.prepareContext(table);
             context.put("fKey",o);
             context.put("packageName",packageName);
             templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
@@ -256,104 +379,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
         return dataMap;
     }
 
-    /**
-     * 生成代码
-     * @param tableId
-     * @return
-     */
-    public boolean genCode(Long tableId) {
-        // 查询表信息
-        GenTableEntity table = findGenTableById(tableId);
-        String path = table.getRunPath().equals("/")? Global.getTempPath() + File.separator: table.getRunPath();
-        // 查询列信息
-        List<GenTableColumnEntity> columns = table.getColumns();
-        setPkColumn(table, columns);
 
-        VelocityInitializer.initVelocity();
-
-        VelocityContext context = VelocityUtils.prepareContext(table);
-        // 获取模板列表
-        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
-        if(table.getIsCover().equals("N")){
-            for (String template : templates) {
-                if(!template.contains("sql.vm")){
-                    String p  = path + VelocityUtils.getFileName(template, table);
-                    if(FileUtil.exist(p)){
-                        throw  new RxcException(new File(p).getName() +"文件存在","99992");
-                    }
-                }
-            }
-        }
-        List<String> templaList = templates;
-        for (String template : templates) {
-            if(!template.contains("sql.vm")){
-                // 渲染模板
-                StringWriter sw = new StringWriter();
-                Template tpl = Velocity.getTemplate(template, CharsetUtil.UTF_8);
-                tpl.merge(context, sw);
-                try {
-                    String p = path + VelocityUtils.getFileName(template, table);
-                    String temp =StrUtil.replace(sw.toString(),"<@>","#");
-                    temp =StrUtil.replace(temp,"<$>","$");
-                    FileUtil.writeString(temp,p,CharsetUtil.UTF_8);
-                }
-                catch (IORuntimeException e) {
-                    throw  new RxcException("文件生成失败","99991");
-                }
-            }
-        }
-
-        GenTableEntity tableEntity = table;
-
-        if(GenConstants.TPL_MASTER.equals(table.getTplCategory())){
-            // 包路径
-            String packageName = table.getPackageName(); //com.j2eefast.bcs.tbc
-            // 模块名
-            String moduleName = table.getModuleName(); //tbc
-            // 业务名称
-            String businessName = table.getBusinessName();//log
-            table = genTableService.findGenTableById(table.getChildId());
-            table.setPackageName(packageName);
-            table.setModuleName(moduleName);
-            table.setBusinessName(businessName);
-            // 查询列信息
-            columns = table.getColumns();
-            setPkColumn(table, columns);
-
-            Object o = context.get("fKey");
-            Object packageName0 = context.get("packageName");
-            context = VelocityUtils.prepareContext(table);
-            context.put("fKey",o);
-            context.put("packageName",packageName0);
-            templates = VelocityUtils.getTemplateList(table.getTplCategory(),table.getTarget());
-            for (String template : templates){
-                if(!template.contains("sql.vm")){
-                    // 渲染模板
-                    StringWriter sw = new StringWriter();
-                    Template tpl = Velocity.getTemplate(template, CharsetUtil.UTF_8);
-                    tpl.merge(context, sw);
-                    try {
-                        String p = path + VelocityUtils.getFileName(template, table);
-                        String temp =StrUtil.replace(sw.toString(),"<@>","#");
-                        temp =StrUtil.replace(temp,"<$>","$");
-                        FileUtil.writeString(temp,p,CharsetUtil.UTF_8);
-                    }
-                    catch (IORuntimeException e) {
-                        throw  new RxcException("文件生成失败","99991");
-                    }
-                }
-            }
-        }
-
-        //删除无用生成的文件
-        List<String> allTemplates = VelocityUtils.allTemplateList(tableEntity.getTarget());
-        allTemplates.removeAll(templaList);
-        for(String template: allTemplates){
-            String p = path + VelocityUtils.getFileName(template, tableEntity);
-            FileUtil.del(p);
-        }
-        return true;
-    }
     /**
     * @Title: findGenTableById 
     * @Description: 已经获取了表的 columns
@@ -445,10 +471,17 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
     	//其它扩展设置
     	if (null != genTable.getOption()) { 
     		genTable.setOptions(JSONObject.toJSONString(genTable.getOption()));
-    	}    	
+    	}
         int row = this.genTableMapper.updateGenTable(genTable);
         if (row > 0) {
             for (GenTableColumnEntity cenTableColumn : genTable.getColumns()) {
+                cenTableColumn.setIsRequired(StrUtil.emptyToDefault(cenTableColumn.getIsRequired(),"0"));
+                cenTableColumn.setIsEdit(StrUtil.emptyToDefault(cenTableColumn.getIsEdit(),"0"));
+                cenTableColumn.setIsQuery(StrUtil.emptyToDefault(cenTableColumn.getIsQuery(),"0"));
+                cenTableColumn.setIsList(StrUtil.emptyToDefault(cenTableColumn.getIsList(),"0"));
+                cenTableColumn.setIsTableSort(StrUtil.emptyToDefault(cenTableColumn.getIsTableSort(),"0"));
+                cenTableColumn.setDictType(StrUtil.emptyToDefault(cenTableColumn.getDictType(),""));
+                cenTableColumn.setEditInfo(StrUtil.emptyToDefault(cenTableColumn.getEditInfo(),""));
                 genTableColumnService.updateGenTableColumn(cenTableColumn);
             }
             return  true;
@@ -466,38 +499,9 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
                 table.setDbName(dbName);
                 boolean row = this.save(table);
                 if (row) {
-                    // 保存列信息
-                //    List<GenTableColumnEntity> genTableColumns = genTableColumnService.selectDbTableColumnsByName(dbName,tableName);
+                     // 保存列信息
                 	 List<GenTableColumnEntity> genTableColumns = genTableColumnService.generateDbTableColumnsByName(dbName,tableName);
-                     
-                    for (GenTableColumnEntity column : genTableColumns) {
-                        GenUtils.initColumnField(column, table);
-                        //如果comment为空 设置comment 为JavaField
-                        if (StringUtils.isBlank(column.getColumnComment())){ 
-                        	column.setColumnComment(column.getJavaField());
-                        }
-                        genTableColumnService.save(column);
-                    }
-                }
-            }
-            catch (Exception e) {
-                log.error("表名 " + table.getTableName() + " 导入失败：", e);
-            }
-        }
-    }
-    
-    public void importGenTable(List<GenTableEntity> tableList, String operName,SysDatabaseEntity db) {
-        for (GenTableEntity table : tableList) {
-            try {
-
-                String tableName = table.getTableName();
-                GenUtils.initTable(table, operName);
-                boolean row = this.save(table);
-                if (row) {
-                    // 保存列信息
-                    List<GenTableColumnEntity> genTableColumns = genTableColumnService.generateDbTableColumnsByName(db.getDbType(), db.getSchema(), tableName);
-
-                    for (GenTableColumnEntity column : genTableColumns) {
+                     for (GenTableColumnEntity column : genTableColumns) {
                         GenUtils.initColumnField(column, table);
                         //如果comment为空 设置comment 为JavaField
                         if (StringUtils.isBlank(column.getColumnComment())){ 
@@ -636,5 +640,14 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
 			  DataSourceContextHolder.clearDataSourceType();
 		}
         return list;
+    }
+
+    /**
+     * 更新菜单Id
+     * @param id
+     * @param menuId
+     */
+    public void updateGenTableMenuId(Long id, Long menuId){
+        this.genTableMapper.updateGenTableMenuId(id,menuId);
     }
 }

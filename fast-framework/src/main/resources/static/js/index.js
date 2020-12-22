@@ -165,7 +165,7 @@
                 }
                 opt.navTabAdd(data);
             }catch (e) {
-                //console.error(e);
+                console.error("数据异常请截图联系技术人员:",e);
             }
         }
     };
@@ -285,21 +285,26 @@
      */
     menu.prototype.queryMenu = function(elem,id){
         var that = this;
+        var flag = false;
         //菜单
         if(elem.find('ul').length > 0){
             var $li = elem.children('ul').children('li');
             for(var i=0; i<$li.length; i++){
                 if($($li[i]).hasClass("treeview")){
-                    return that.queryMenu($($li[i]), id);
+                    flag = that.queryMenu($($li[i]), id);
+                    if(flag){
+                        break;
+                    }
                 }else{
                     var $a = $($li[i]).children('a');
                     if( id != 0 && $a.data('id') == id){
-                        return true;
+                        flag = true;
+                        break;
                     }
                 }
             }
         }
-        return false;
+        return flag;
     };
 
 
@@ -370,6 +375,7 @@
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                     if(that.queryMenu($(this), _id)){
                         flag = true;
+                        return;
                     }
                 });
                 if(flag){

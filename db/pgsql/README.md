@@ -1,1 +1,1 @@
-## PostgreSql 数据库SQL 请加群咨询下载
+## PostgreSql 数据库SQL脚本 请加群咨询下载

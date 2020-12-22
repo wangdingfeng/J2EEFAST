@@ -1,0 +1,74 @@
+<!-- 系统自动生成 Date:2020-12-21 10:58 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="修改测试同步树" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-synchTree-edit"  class="form-horizontal">
+    <@f.hidden name="id" value="${exampleSynchTree.id?default('')}"/>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "父级ID"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.treeselect id="parentId" name="parentId" boxTitle="选择父级ID" url="demo/synchTree/treeData"
+             value="${exampleSynchTree.parentId}" labelValue="${exampleSynchTree.parentName?default('根节点')}"
+             placeholder="请选择父级ID"  required=true helpTip="请点击选择父级节点"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "节点名称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="name" value="${exampleSynchTree.name?default('')}"   required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "节点全称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="fullName" value="${exampleSynchTree.fullName?default('')}"   />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "状态"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.radio name="status" dictType="sys_status" value="${exampleSynchTree.status?default('')}"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "备注信息"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.textarea name="remark" value="${exampleSynchTree.remark?default('')}" />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "demo/synchTree";
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-synchTree-edit").validate({
+        focusCleanup: true
+    });
+    </@compress>
+
+    /**
+     * 点击确定回调事件
+     */
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/edit", $('#form-synchTree-edit').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>

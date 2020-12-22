@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.modules.sys.controller;
@@ -31,6 +32,7 @@ import cn.hutool.core.util.HexUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +61,11 @@ public class SysLoginController extends BaseController {
 	private RedisUtil redisUtil;
 	@Autowired
 	private CaptchaService captchaService;
+	/**
+	 * 是否开启记住我功能
+	 */
+	@Value("${shiro.rememberMe.enabled: false}")
+	private boolean rememberMe;
 	
 	/**
 	 * <p>生成验证码图片 系统参数管理配置</p>
@@ -144,6 +151,7 @@ public class SysLoginController extends BaseController {
 		mmp.put("loginView",view);
 		mmp.put("verification",Global.getDbKey(ConfigConstant.SYS_LOGIN_VERIFICATION,Constant.SYS_DEFAULT_VALUE_ONE)
 				.equals(Constant.SYS_DEFAULT_VALUE_ONE));
+		mmp.put("rememberMe",rememberMe);
 		return "login-" + view;
 	}
 

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast;
@@ -38,7 +39,7 @@ public class FastApplication extends SpringBootServletInitializer {
 			//启动成功打印
 			if(!PropertiesUtils.getInstance().
 					getProperty(Constant.BANNER).equals(Constant.FALSE)){
-				System.out.println("-----------------------------------------------------\n"
+				System.out.println("-------------------------------------------------------------------\n"
 						+ "//             ┏┓   ┏┓					//\n"
 						+ "//            ┏┛┻━━━┛┻┓                  //\n"
 						+ "//            ┃   ☃   ┃				//\n"

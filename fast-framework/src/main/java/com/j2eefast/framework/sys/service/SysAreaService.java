@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.service;
@@ -82,7 +83,7 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		String searchValue = (String) params.get("searchValue");
 
 		Page<SysAreaEntity> page = sysAreaMapper.selectPage(new Query<SysAreaEntity>(params).getPage(),
-				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"level", Convert.toInt(type))
+				new QueryWrapper<SysAreaEntity>().eq(ToolUtil.isNotEmpty(type),"area_level", Convert.toInt(type))
 						.eq(ToolUtil.isNotEmpty(pId),"parent_id",Convert.toLong(pId))
 						.eq(ToolUtil.isNotEmpty(searchValue),"id",Convert.toLong(searchValue))
 						.like(ToolUtil.isNotEmpty(name),"name",name));

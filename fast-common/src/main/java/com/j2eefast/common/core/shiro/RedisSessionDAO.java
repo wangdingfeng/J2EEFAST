@@ -11,6 +11,7 @@ import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.serializer.SerializationException;
 
 import java.io.Serializable;
@@ -25,6 +26,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     private static final long DEFAULT_SESSION_IN_MEMORY_TIMEOUT = 1000L;
 
     @Autowired
+    @Lazy
     private RedisUtil redisUtil;
     @Value("${fast.csrf.enabled: false}")
     private boolean csrfEnabled;

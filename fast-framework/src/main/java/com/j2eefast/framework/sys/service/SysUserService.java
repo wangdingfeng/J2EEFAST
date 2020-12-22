@@ -1,12 +1,16 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -48,8 +52,6 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	private SysUserRoleService sysUserRoleService;
 	@Resource
 	private SysRoleService sysRoleService;
-	@Autowired
-	private SysUserDeptService sysUserDeptService;
 	@Autowired
 	private SysUserPostService sysUserPostService;
 	@Autowired

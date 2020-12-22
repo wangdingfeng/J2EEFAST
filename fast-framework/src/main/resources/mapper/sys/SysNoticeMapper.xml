@@ -21,11 +21,12 @@
     </resultMap>
 
     <sql id="selectsysNoticeVo">
-        select id, notice_title, notice_tip_title, start_time, end_time, status, create_by, create_time, update_by, update_time, remark, html_no, notice_type from sys_notice
+        SELECT id, notice_title, notice_tip_title, start_time, end_time, status, create_by,
+        create_time, update_by, update_time, remark, html_no, notice_type FROM sys_notice
     </sql>
 
     <update id="updatesysNotice" parameterType="sysNoticeEntity">
-        update sys_notice
+        UPDATE sys_notice
         <trim prefix="SET" suffixOverrides=",">
             <if test="noticeTitle != null  and noticeTitle != ''">notice_title = #{noticeTitle},</if>
             <if test="noticeTipTitle != null  and noticeTipTitle != ''">notice_tip_title = #{noticeTipTitle},</if>
@@ -36,7 +37,7 @@
             <if test="htmlNo != null  and htmlNo != ''">html_no = #{htmlNo},</if>
             <if test="noticeType != null  and noticeType != ''">notice_type = #{noticeType},</if>
         </trim>
-        where id = #{id}
+        WHERE id = #{id}
     </update>
 
 </mapper>

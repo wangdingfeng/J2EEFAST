@@ -5,37 +5,40 @@
     1. 引入核心模板引擎
     2. 引入页面压缩引擎
     3. 引入头部
+    4. 编写前端界面
     4. 引入底部
 
     //头部标签与底部标签 中间为我们自行设计区域
     //这样设计的目的就是为了最大程度的将前端代码中重复部分抽出，你只需要关心页面变化部分
-    //你可以仿照二次开发或者自定义模板引擎
+    //让你前端开发更为简单
+    //你也可以使用代码生成器一步到位解决你80%的代码开发量
  -->
-<#-- 引入J2eeFAST 前端核心模板引擎 页面必须添加-->
+<!-- 第一步 引入J2eeFAST 前端核心模板引擎 页面必须添加-->
 <#include "/common/defaultEngine.html"/>
-<#-- pageTheme 标签为页面压缩标签 后台系统参数控制页面是否压缩输出-->
+<!-- 第二步 pageTheme 标签为页面压缩标签 后台系统参数控制页面是否压缩输出 若需要请注意书写JS的规范-->
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<!-- 第三步 页面头部分引入 -->
 <#--
     页面头部分引入
     支持标签属性
-    ----------------------------
+    --------------------------------------------------------------------------------------------------------------------
     title = "默认标题J2eeFAST"  // 页面Title
     libs = ""                 // 需要引入的css样式 js脚本 数组形式 写法->例如页面需要引入 zTree树插件,bootstrap-table表格插件: libs=["zTree","table"]
                               // 目前支持: 表格插件[table],zTree 树[zTree],JSON试图脚本[jsonview],页面下拉框[bootstrapSelect],头像裁剪[cropbox]
                               // 页面代码格式化[prism], SelectPage 插件[selectPage], 富文本summernote[summernote], 工作流流程画板[bmp]
                               // 百度富文本编辑器[ueditor], 页面分割布局插件[layout-latest]
-                              // 你也可以自行控制扩展, 也可以单独页面引用
+                              // 你也可以自行控制扩展, 也可以单独页面引用 具体请看admin模块下资源目录jsLibs.html文件
 
     bodyClass = "gray-bg"     // body样式 页面body标签 class样式
-    isAnimation = "true"      // 是否需要页面动画
+    isAnimation = true        // 是否需要页面动画 默认 true
     animation = "fadeInRight" // 动画风格 具体值可以查看animation.css, 默认从右滑入
-    -------------------------
+    -----------------------------------------------------------------------------------------------------------------------
     // 如果你不需要单独使用css 可以如下标签直接闭合写法
     <@header title="新增用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
 
     // 如果你想单独引入css 样式 但是又不想在libs里面扩展,你可以如下引入你的css样式,建议此处只做css引入,JS脚本在下面的页面底部标签统一引入
     <@header title="新增用户" bodyClass="white-bg" libs=["bootstrapSelect"]>
-    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.css?V=${config.getDvVersion()}"/>
+    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css?V=${config.getDvVersion()}"/>
     <style>
         #larry-body{
             height: calc(100% - 116px);
@@ -44,12 +47,12 @@
     </@header>
  -->
 <@header title="前端模板说明" bodyClass="white-bg" libs=["bootstrapSelect"]/>
-<!--页面主体部分 就是除去页面body部分-->
+<!--第四步 页面主体部分 就是除去页面body部分-->
 <div class="wrapper wrapper-content ibox-content">
 </div>
+<!-- 第五步 底部JS部分 -->
 <#--
-    底部JS部分
-    footer 标签属性[无]
+    footer 标签无属性值
     //如果要单独引入JS插件或者写页面脚本都在footer闭合标签中写
     例如:
     <@footer>
@@ -59,6 +62,8 @@
         ....
     </script>
     </@footer>
+    //如果无脚本引用直接闭合
+    <@footer/>
 -->
 <@footer>
 </@footer>

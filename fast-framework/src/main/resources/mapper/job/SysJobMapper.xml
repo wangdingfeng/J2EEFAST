@@ -5,35 +5,18 @@
 
 	<!-- 批量更新状态 -->
 	<update id="updateBatchStatus"> 
-		update sys_job set status = #{status} where id in
+		UPDATE sys_job SET status = #{status} where id IN
 		<foreach item="id" collection="ids"  open="(" separator="," close=")">
 			#{id}
 		</foreach>
 	</update>
 
 	<update id="updateStatus">
-		update sys_job set status = #{status} where id = #{id}
+		UPDATE sys_job SET status = #{status} WHERE id = #{id}
 	</update>
 
 	<delete id="deleteJobById" parameterType="Long">
- 		delete from sys_job where id = #{id}
+ 		DELETE FROM sys_job WHERE id = #{id}
  	</delete>
-	
-<!-- 	<update id="updateSysJob" parameterType="SysJobEntity">
-		update schedule_job
-		<set>
-			<if test="jobName != null and jobName != ''">job_name = #{jobName},</if>
-			<if test="jobGroup != null and jobGroup != ''">job_group = #{jobGroup},</if>
-			<if test="beanName != null and beanName != ''">bean_name = #{beanName},</if>
-			<if test="cronExpression != null and cronExpression != ''">cron_expression = #{cronExpression},</if>
-			<if test="params != null and params != ''">params = #{params},</if>
-			<if test="methodName != null and methodName != ''">method_name = #{methodName},</if>
-			<if test="status !=null">status = #{status},</if>
-			<if test="remark != null and remark != ''">remark = #{remark},</if>
-			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-			update_time = sysdate()
-		</set>
-		where job_id = #{jobId}
-	</update> -->
 
 </mapper>

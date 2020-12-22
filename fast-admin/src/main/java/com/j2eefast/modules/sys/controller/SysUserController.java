@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless 
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.modules.sys.controller;
@@ -114,7 +115,6 @@ public class SysUserController extends BaseController {
 	public String edit(@PathVariable("userId") Long userId,ModelMap mmap){
 		//check data scope
 		sysUserService.checkDataScope(userId);
-		
 		SysUserEntity user = sysUserService.findUserByUserId(userId);
 		mmap.put("roles", sysRoleService.getRolesAll());
 		mmap.put("posts",sysPostService.getPostAll());
@@ -330,7 +330,7 @@ public class SysUserController extends BaseController {
 		
 		//check comp data scope
 		sysCompService.checkDataScope(user.getCompId());
-		
+
 		ValidatorUtil.validateEntity(user);
 		return sysUserService.update(user) ? success() : error("修改失败!");
 	}

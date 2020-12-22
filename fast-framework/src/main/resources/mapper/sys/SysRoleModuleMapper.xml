@@ -4,7 +4,7 @@
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysRoleModuleMapper">
 
 	<select id="findRoleModuleList"  parameterType="Long"  resultType="String">
-		select module_code from sys_role_module where role_id = #{roleId}
+		SELECT module_code FROM sys_role_module WHERE role_id = #{roleId}
 	</select>
 
 </mapper>

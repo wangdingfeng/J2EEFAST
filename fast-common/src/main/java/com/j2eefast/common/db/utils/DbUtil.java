@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.common.db.utils;
@@ -9,11 +10,9 @@ import com.j2eefast.common.db.dao.sql.AllTableListSql;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version: 1.0.1
  */
 @Slf4j
-public class DbUtil {
+public class DbUtil{
 
 	/**
 	 * 查询某个数据库连接的所有表
@@ -111,8 +110,7 @@ public class DbUtil {
 	/**
 	* @Title: getDbType 
 	* @Description: 返回数据库的类型
-	* @param dbInfo
-	* @return  String 
+	* @return  String
 	* @author mfksn001@163.com
 	* @Date: 2020年5月29日
 	 */

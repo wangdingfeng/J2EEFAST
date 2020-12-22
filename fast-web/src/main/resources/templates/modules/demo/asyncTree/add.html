@@ -1,0 +1,74 @@
+<!-- 系统自动生成 Date:2020-12-21 11:03 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="新增测试异步树" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-asyncTree-add"  class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "父级ID"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.treeselect id="parentId" name="parentId" boxTitle="选择父级ID" url="demo/asyncTree/treeData"
+            value="${exampleAsyncTree.id}" labelValue="${exampleAsyncTree.name?default('根节点')}"
+            placeholder="请选择父级ID"  required=true helpTip="请点击选择父级节点"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "节点名称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="name"  required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "节点全称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="fullName"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "状态"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.radio name="status" dictType="sys_status"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "备注信息"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.textarea name="remark" />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "demo/asyncTree"
+
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-asyncTree-add").validate({
+        focusCleanup: true
+    });
+    </@compress>
+
+    /**
+     * 窗口点击确定回调事件
+     */
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/add", $('#form-asyncTree-add').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>

@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.bussiness.aop;
@@ -56,14 +57,12 @@ public class BussinessLogAop {
 	 * @param joinPoint 切点
 	 */
 	@AfterReturning(pointcut = "logCut()", returning = "jsonResult")
-	public void doAfterReturning(JoinPoint joinPoint, Object jsonResult)
-	{
+	public void doAfterReturning(JoinPoint joinPoint, Object jsonResult) {
 		handleLog(joinPoint, null, jsonResult);
 	}
 
 
-	protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult)
-	{
+	protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult){
 		try{
 			long beginTime = System.currentTimeMillis();
 			// 获得注解

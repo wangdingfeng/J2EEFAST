@@ -1,34 +1,77 @@
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ */
 package ${packageName}.mapper;
 
 import ${packageName}.entity.${ClassName}Entity;
-import java.io.Serializable;
 import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+#if(($table.tree && $async == '1') || !$table.tree)
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+#end
+
 /**
- *
- * ${tableName}DAO接口
+ * ${tableName} Mapper接口
  * @author: ${author}
  * @date ${datetime}
  */
 public interface ${ClassName}Mapper extends BaseMapper<${ClassName}Entity> {
 #set($className=$ClassName.substring(0,1).toLowerCase() + ${ClassName.substring(1)})
+#if(($table.tree && $async == '1') || !$table.tree)
 
-	/**
+    /**
      * 自定义分页查询
-     * @param  page 
+     * @param  page
      * @param  ${className}Entity 实体类
      */
-     Page<${ClassName}Entity> findPage(IPage<${ClassName}Entity> page,
-                                       @Param("${className}") ${ClassName}Entity ${className}Entity,
-                                       @Param("sql_filter") String sql_filter);
+    Page<${ClassName}Entity> findPage(IPage<${ClassName}Entity> page,
+                                      @Param("${className}") ${ClassName}Entity ${className}Entity,
+                                      @Param("sql_filter") String sql_filter);
+#end
 
-     ${ClassName}Entity find${ClassName}ById(Serializable id);
+    /**
+     * 通过ID查询
+     * @param ${pkColumn.javaField} 查询ID
+     * @return
+     */
+    ${ClassName}Entity find${ClassName}ById(@Param("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField});
 
+    /**
+     * 查询列表
+     * @param ${className}Entity 查询条件对象
+     * @return
+     */
+    List<${ClassName}Entity> findList(${ClassName}Entity ${className}Entity);
+#if($table.tree)
+#if($async == '0')
 
-     List<${ClassName}Entity> findList(${ClassName}Entity ${className}Entity);
+#set($sort_=0)
+#foreach($column in $columns)
+#if($column.tableSort)
+#set($sort_=1)
+#break
+#end
+#end
+    /**
+     * @param ${className}Entity  查询条件对象
+#if($sort_== 1)
+     * @param sidx 排序字段
+     * @param asc 排序方式
+#end
+     * @param sql_filter 权限过滤
+     * @return
+     */
+    List<${ClassName}Entity> findTreeList(@Param("${className}") ${ClassName}Entity ${className}Entity,
+#if($sort_== 1)
+                                              @Param("sidx") String sidx,
+                                              @Param("order") String asc,
+#end
+                                              @Param("sql_filter") String sql_filter);
+#end
+#end
 
-     /**删除相关方法  使用mybatis-plus集成的 **/
 }

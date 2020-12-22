@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
  * No deletion without permission
  */
 package com.j2eefast.framework.sys.controller;
@@ -45,13 +46,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/sys/online")
 public class SysUserOnlineController extends BaseController {
+	
     private String urlPrefix = "modules/sys/monitor";
-
-    @Autowired
-    private SysUserService sysUserService;
-
-    @Autowired
-    private RedisUtil redisUtil;
 
     @Lazy
     @Resource
