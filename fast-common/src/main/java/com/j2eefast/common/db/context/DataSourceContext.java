@@ -5,7 +5,10 @@
  */
 package com.j2eefast.common.db.context;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.j2eefast.common.core.config.properties.DruidProperties;
+import com.j2eefast.common.core.constants.ConfigConstant;
+import com.j2eefast.common.core.io.PropertiesUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.dao.SysDataBaseDao;
 import com.j2eefast.common.db.factory.AtomikosFactory;
@@ -22,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version: 1.0.1
  */
 public class DataSourceContext {
+	
 	/**
 	 * 主数据源名称
 	 */
@@ -155,7 +159,13 @@ public class DataSourceContext {
 		//添加到全局配置里
 		DATA_SOURCES_CONF.put(dataSourceName, druidProperties);
 
-		return AtomikosFactory.create(dataSourceName, druidProperties);
+		if(PropertiesUtils.getInstance().getProperty(ConfigConstant.JTA_ENABLED_YML).equals(ConfigConstant.FALSE)) {
+			return AtomikosFactory.create(dataSourceName, druidProperties);
+		}else {
+			DruidDataSource dataSource = new DruidDataSource();
+			druidProperties.config(dataSource);
+			return dataSource;
+		}
 	}
 	
 	
