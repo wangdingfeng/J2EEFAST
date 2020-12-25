@@ -34,7 +34,7 @@ public final class ConfigConstant {
 	public static final String 					BASE_PATH							= "basePath";
 	public static final String 					FAST_SESSION_ID						= "fast.session.id";
 	public static final String 					JTA_ENABLED_YML 					= "fast.jta.enabled";
-	public static final String 					FALSE 								= "false";
+	public static final String 					TRUE 								= "true";
 	public static final String 					FLOWABLE_ENABLED_YML 				= "fast.flowable.enabled";
 
 	/**
