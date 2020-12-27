@@ -3193,17 +3193,11 @@ if (typeof jQuery === "undefined") {
                 $(optionsIds).off("click").on("click", '.img-circle', function() {
                     var src = $(this).attr('src');
                     var target = $(this).data('target');
-                    var height = $(this).data('height');
-                    var width = $(this).data('width');
+                    var height = $(this).data('height') == 'auto'?'':$(this).data('height');
+                    var name = $(this).data('name');
+                    var width = $(this).data('width') == 'auto'?'':$(this).data('width');
                     if(opt.common.equals("self", target)) {
-                        layer.open({
-                            title: false,
-                            type: 1,
-                            closeBtn: true,
-                            shadeClose: true,
-                            area: ['auto', 'auto'],
-                            content: "<img src='" + src + "' height='" + height + "' width='" + width + "'/>"
-                        });
+                        opt.modal.openView(name,src,width,height);
                     } else if (opt.common.equals("blank", target)) {
                         window.open(src);
                     }
@@ -3432,7 +3426,9 @@ if (typeof jQuery === "undefined") {
                 // blank or self
                 var _target = opt.common.isEmpty(target) ? 'self' : target;
                 if (opt.common.isNotEmpty(value)) {
-                    return opt.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s'/>", height, width, _target, value);
+                    var name = opt.common.fileFromPath(value);
+                    ///fast/sys/comm/fileAvatarView?filePath=/avatar/2020/12/25/7325bc151faf46538733237d97bf9270.png
+                    return opt.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s' data-name='%s'/>", height, width, _target, value,name);
                 } else {
                     return opt.common.nullToStr(value);
                 }
