@@ -16,6 +16,7 @@ import com.j2eefast.framework.sys.service.SysCompService;
 import com.j2eefast.framework.utils.FileUploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.mutidatasource.annotaion.DataSource;
+import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
 #end
 #if($table.master)
 import ${packageName}.entity.${childTable.className}Entity;
@@ -264,9 +265,6 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	/**
      * 保存
      */
-#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
-    @DataSource(name="$table.dbName")
-#end
 	@Transactional(rollbackFor = Exception.class)
 	public boolean add${ClassName}(${ClassName}Entity ${className}){
 #foreach ($column in $columns)
@@ -282,11 +280,17 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 		//图片剪切数据转换
 #set($id = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
 		${className}.set${id}(FileUploadUtils.saveImgBase64(${className}.get${id}(),"${tableName}_avatar",${className}.get${id00}()));
-
 #break
 #end
 #end
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+		//切换数据源
+		DataSourceContextHolder.setDataSourceType("$table.dbName");
+#end
 		if(this.save(${className})){
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+			DataSourceContextHolder.clearDataSourceType();
+#end
 #if($table.rFile || $table.rImg || $table.master)
 			//更新关联附件信息
 #foreach ($column in $columns)
@@ -316,15 +320,15 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end
 			return true;
 		}
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+		DataSourceContextHolder.clearDataSourceType();
+#end
         return false;
     }
 
 	/**
      * 修改根居ID
      */
-#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
-    @DataSource(name="$table.dbName")
-#end
 	@Transactional(rollbackFor = Exception.class)
 	public boolean update${ClassName}ById(${ClassName}Entity ${className}) {
 #foreach ($column in $columns)
@@ -341,7 +345,14 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #break
 #end
 #end
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+		//切换数据源
+		DataSourceContextHolder.setDataSourceType("$table.dbName");
+#end
 		if(this.updateById(${className})){
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+			DataSourceContextHolder.clearDataSourceType();
+#end
 #if($table.rFile || $table.rImg || $table.master)
 			//更新关联附件信息
 #foreach ($column in $columns)
@@ -373,6 +384,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #end
 			return true;
 		}
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+		DataSourceContextHolder.clearDataSourceType();
+#end
 		return false;
 	}
 
@@ -406,6 +420,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	/**
      * 页面树查询
      */
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+	@DataSource(name="$table.dbName")
+#end
 	public List<${ClassName}Entity> findTreeList(Map<String, Object> params,${ClassName}Entity ${className}Entity){
 #set($sort_=0)
 #foreach($column in $columns)
@@ -428,6 +445,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	}
 #end
 
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+	@DataSource(name="$table.dbName")
+#end
 	public List<Ztree> findTree(){
 		List<${ClassName}Entity> ${className}List = ${className}Mapper.findList(new ${ClassName}Entity());
 		List<Ztree> ztrees = new ArrayList<Ztree>();
@@ -453,6 +473,9 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 	 * 唯一性校验
 	 * @return
 	 */
+#if($table.dbName != 'MASTER' && $table.dbName != 'DEFAULT')
+	@DataSource(name="$table.dbName")
+#end
 	public boolean check${field}Unique(${ClassName}Entity ${className}) {
 #set($id = "")
 #foreach ($column in $columns)
