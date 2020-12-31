@@ -33,7 +33,7 @@
         u.dept_id,u.comp_id,d.name AS deptName,
         <if test="_databaseId == 'oracle'">
             NVL(c.name,'总公司') AS comp_name,
-            LISTAGG(l.role_name, ',') within GROUP( ORDER BY u.id) AS role_name
+            LISTAGG(TO_CHAR(l.role_name), ',') within GROUP( ORDER BY u.id) AS role_name
         </if>
         <if test="_databaseId == 'mysql'">
             IFNULL(c.name,'总公司') AS comp_name,

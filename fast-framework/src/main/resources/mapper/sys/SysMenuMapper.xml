@@ -24,8 +24,8 @@
     <sql id="selectMenuVo1_Orcale">
         SELECT m.id, m.parent_id,
         m.name, m.url, m.hide, m.is_new, NVL(m.perms,'') AS perms,m.module_codes,m.target, m.type, m.icon, m.order_num, m.create_time FROM
-        (SELECT DISTINCT REGEXP_SUBSTR(t.module_codes, '[^,]+', 1, LEVEL) AS cs,t.*
-        FROM sys_menu t CONNECT BY LEVEL   <![CDATA[ <=  ]]> regexp_count(t.module_codes, ',') + 1 ) m
+        (SELECT REGEXP_SUBSTR(TO_CHAR(t.module_codes), '[^,]+', 1, LEVEL) AS cs,t.*
+        FROM sys_menu t CONNECT BY LEVEL   <![CDATA[ <=  ]]> regexp_count(TO_CHAR(t.module_codes), ',') + 1 ) m
     </sql>
 
     <sql id="selectMenuVo1_Postgresql">
