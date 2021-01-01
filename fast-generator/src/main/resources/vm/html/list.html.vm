@@ -154,6 +154,10 @@ ${pageTheme}
                 ,{field : 'organization.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
 #elseif(${c.htmlType} == "user")
                 ,{field : 'sysUser.name',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end }
+#elseif(${c.htmlType} == "imgcup")
+                ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end,formatter: function(value, row, index) {
+                     return $.table.imageView(baseURL+'/sys/comm/fileAvatarView?filePath=' +value );
+                }}
 #else
                 ,{field : '${c.javaField}',title : '<@ctx.i18n text = "${com}"/>'#if($c.tableSort),sortable: true#end}
 #end
