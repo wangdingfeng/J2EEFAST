@@ -6,6 +6,7 @@
 package com.j2eefast.common.db.context;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.config.properties.DruidProperties;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.io.PropertiesUtils;
@@ -179,5 +180,27 @@ public class DataSourceContext {
 	public static DataSource getDefaultDataSource() {
 		
 		return DATA_SOURCES.get(MASTER_DATASOURCE_NAME);
+	}
+
+
+	/**
+	 * 获取系统主数据库类型
+	 * @author ZhouZhou
+	 * @Date: 2020-12-31 17:54:19
+	 * @return
+	 */
+	public static String getDefaultDbType() {
+		return JdbcUtils.getDbType(DATA_SOURCES_CONF.get(MASTER_DATASOURCE_NAME).getUrl()).getDb();
+	}
+
+	/**
+	 * 获取数据库类型
+	 * @param dbName 数据库别名
+	 * @author ZhouZhou
+	 * @Date: 2020-12-31 17:54:19
+	 * @return
+	 */
+	public static String getDbType(String dbName) {
+		return JdbcUtils.getDbType(DATA_SOURCES_CONF.get(dbName).getUrl()).getDb();
 	}
 }
