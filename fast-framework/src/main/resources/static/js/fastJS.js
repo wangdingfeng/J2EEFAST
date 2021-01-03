@@ -971,19 +971,101 @@ if (typeof jQuery === "undefined") {
                 }
                 return res
             },
-            // money:function(value, num) {
-            //     num = num > 0 && num <= 20 ? num : 2;
-            //     value = parseFloat((value + "").replace(/[^\d\.-]/g, "")).toFixed(num) + ""; //将金额转成比如 123.45的字符串
-            //     var valueArr = value.split(".")[0].split("") //将字符串的数变成数组
-            //     const valueFloat = value.split(".")[1]; // 取到 小数点后的值
-            //     let valueString = "";
-            //     for (let i = 0; i < valueArr.length; i++) {
-            //         valueString += valueArr[i] + ((i + 1) % 3 == 0 && (i + 1) != valueArr.length ? "," : ""); //循环 取数值并在每三位加个','
-            //     }
-            //     const money = valueString.split("").join("") + "." + valueFloat; //拼接上小数位
-            //     return money
-            // }
-            // ,
+
+            /**
+             * 金额转换中文汉字
+             * @param money
+             * @returns {string}
+             * @example
+             * ```javascript
+             *
+             * var money = opt.common.moneyToChinese(12390.97);
+             *
+             * //output: 壹万贰仟叁佰玖拾元玖角柒分
+             * console.log( money );
+             *
+             * ```
+             */
+            moneyToChinese : function (money) {
+                var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
+                var cnIntRadice = new Array("", "拾", "佰", "仟"); //基本单位
+                var cnIntUnits = new Array("", "万", "亿", "兆"); //对应整数部分扩展单位
+                var cnDecUnits = new Array("角", "分", "毫", "厘"); //对应小数部分单位
+                var cnInteger = "整"; //整数金额时后面跟的字符
+                var cnIntLast = "元"; //整型完以后的单位
+                var maxNum = 999999999999999.9999; //最大处理的数字
+                var IntegerNum; //金额整数部分
+                var DecimalNum; //金额小数部分
+                var ChineseStr = ""; //输出的中文金额字符串
+                var parts; //分离金额后用的数组，预定义
+                var Symbol = "";//正负值标记
+                if (opt.common.isEmpty(money)) {
+                    return "";
+                }
+                money = parseFloat(money);
+                if (money >= maxNum) {
+                    throw new Error('超出最大金额!');
+                }
+                if (money == 0) {
+                    ChineseStr = cnNums[0] + cnIntLast + cnInteger;
+                    return ChineseStr;
+                }
+                if (money < 0) {
+                    money = -money;
+                    Symbol = "负 ";
+                }
+                money = money.toString(); //转换为字符串
+                if (money.indexOf(".") == -1) {
+                    IntegerNum = money;
+                    DecimalNum = '';
+                } else {
+                    parts = money.split(".");
+                    IntegerNum = parts[0];
+                    DecimalNum = parts[1].substr(0, 4);
+                }
+                if (parseInt(IntegerNum, 10) > 0) { //获取整型部分转换
+                    var zeroCount = 0;
+                    var IntLen = IntegerNum.length;
+                    for (var i = 0; i < IntLen; i++) {
+                        var n = IntegerNum.substr(i, 1);
+                        var p = IntLen - i - 1;
+                        var q = p / 4;
+                        var m = p % 4;
+                        if (n == "0") {
+                            zeroCount++;
+                        }
+                        else {
+                            if (zeroCount > 0) {
+                                ChineseStr += cnNums[0];
+                            }
+                            zeroCount = 0; //归零
+                            ChineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+                        }
+                        if (m == 0 && zeroCount < 4) {
+                            ChineseStr += cnIntUnits[q];
+                        }
+                    }
+                    ChineseStr += cnIntLast;
+                    //整型部分处理完毕
+                }
+                if (DecimalNum != '') { //小数部分
+                    var decLen = DecimalNum.length;
+                    for (var i = 0; i < decLen; i++) {
+                        var n = DecimalNum.substr(i, 1);
+                        if (n != '0') {
+                            ChineseStr += cnNums[Number(n)] + cnDecUnits[i];
+                        }
+                    }
+                }
+                if (ChineseStr == '') {
+                    ChineseStr += cnNums[0] + cnIntLast + cnInteger;
+                } else if (DecimalNum == '') {
+                    ChineseStr += cnInteger;
+                }
+                ChineseStr = Symbol + ChineseStr;
+                return ChineseStr;
+            },
+
             /**
              * 数字 转金额格式
              * 12345678,2,'$',',','.'
