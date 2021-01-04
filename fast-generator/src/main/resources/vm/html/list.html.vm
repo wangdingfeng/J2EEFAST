@@ -82,7 +82,7 @@ ${pageTheme}
             </@shiro.hasPermission>
 #end
         </@table>
-    <div>
+    </div>
 </div>
 <@footer>
 <script type="text/javascript">
