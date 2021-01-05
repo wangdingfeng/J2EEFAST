@@ -111,17 +111,17 @@ public class FileUploadUtils {
 			//存储文件类型
             int ossType = Integer.parseInt(fileEntity.getOssType());
 
-            //本地直接文件删除
-            if(ossType == Constant.CloudService.LOCAL.getValue()){
-                String filePath = divPath + fileEntity.getFilePath();
-                //删除文件
-                if (FileUtil.exist(filePath)) {
-                    FileUtil.del(filePath);
-                }
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
-                //阿里云OSS
-                OSSFactory.build().delFileOss(fileEntity.getFilePath());
-            }
+            //TODO 暂不删除 考虑异常事务影响业务 本地直接文件删除
+//            if(ossType == Constant.CloudService.LOCAL.getValue()){
+//                String filePath = divPath + fileEntity.getFilePath();
+//                //删除文件
+//                if (FileUtil.exist(filePath)) {
+//                    FileUtil.del(filePath);
+//                }
+//            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+//                //阿里云OSS
+//                OSSFactory.build().delFileOss(fileEntity.getFilePath());
+//            }
 
 			//删除业务关联 sys_file_upload
             ConstantFactory.me().getSysFileUploadService().removeByFileId(fileId);
