@@ -66,12 +66,6 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		 <!-- 简化反射封工具类 -->
-<!--		<dependency>-->
-<!--			<groupId>commons-beanutils</groupId>-->
-<!--			<artifactId>commons-beanutils</artifactId>-->
-<!--		</dependency>-->
-
         <!-- yml解析器 -->
 		<dependency>
 		    <groupId>org.yaml</groupId>
@@ -101,22 +95,21 @@
            </exclusions>
          </dependency>
         
-         <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-          <dependency>
-              <groupId>org.springframework.boot</groupId>
-              <artifactId>spring-boot-starter-amqp</artifactId>
-          </dependency>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
 
-
-          <!-- Shiro使用Spring框架 -->
-          <dependency>
-              <groupId>org.apache.shiro</groupId>
-              <artifactId>shiro-spring</artifactId>
-          </dependency>
+        <!-- Shiro使用Spring框架 -->
+        <dependency>
+           <groupId>org.apache.shiro</groupId>
+           <artifactId>shiro-spring</artifactId>
+        </dependency>
 
           
 		<!-- SpringWeb模块 -->
@@ -137,18 +130,20 @@
             <artifactId>ojdbc6</artifactId>
         </dependency>
 
-        <!-- postgresql -->
+        <!-- Postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
 
+        <!-- SqlServer 2008 -->
         <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- SqlServer 2012以上 -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
@@ -159,10 +154,10 @@
 			<artifactId>mybatis-plus-boot-starter</artifactId> 
 		</dependency>
 
-          <dependency>
-              <groupId>com.alibaba</groupId>
-              <artifactId>druid</artifactId>
-          </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
 
         <!--JTA 分布式事务-->
         <dependency>
@@ -219,6 +214,7 @@
               <version>0.4.8</version>
           </dependency>
 
+          <!-- 验证码-->
           <dependency>
               <groupId>com.github.anji-plus</groupId>
               <artifactId>captcha-spring-boot-starter</artifactId>
