@@ -815,7 +815,7 @@ label {
 }
 
 .select-list li input {
-	display: initial;
+	display: inline;
 	width: 120px;
 }
 

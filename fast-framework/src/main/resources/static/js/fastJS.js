@@ -3,7 +3,7 @@
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-12-21
- * @version v1.0.15
+ * @version v1.0.16
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -18,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.15',
+            version:'1.0.16',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -601,7 +601,6 @@ if (typeof jQuery === "undefined") {
                     if(window.console)console.error(e);
                     return true;
                 }
-
             },
             /**
              * 检测值是否为 基本类型
@@ -958,6 +957,7 @@ if (typeof jQuery === "undefined") {
                     }
                 }
             },
+
             /**
              * 将一个对象数组合并到一个对象中。
              */
@@ -1088,6 +1088,7 @@ if (typeof jQuery === "undefined") {
                     j = (j = i.length) > 3 ? j % 3 : 0;
                 return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
             },
+
             /**
              * 播放音频
              * @param src 可以传网络url 也可传项目audio文件夹下面音频文件名称
@@ -1283,6 +1284,7 @@ if (typeof jQuery === "undefined") {
             fileFromPath: function(file){
                     return file.replace(/.*(\/|\\)/, "");
             },
+
             /**
              * Get file extension lowercase
              * @param {String} file name
@@ -1487,10 +1489,12 @@ if (typeof jQuery === "undefined") {
              * @param yes [非必输] 只有在传 true 则先回调弹出层submitHandler 方法如果此submitHandler方法返回true,则再回调 callback 方法
              */
             open: function (title, url,width, height,callback,type) {
+				var full = false;
                 //如果是移动端，就使用自适应大小弹窗
                 if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                     width = 'auto';
                     height = 'auto';
+					full = true;
                 }
                 if (opt.common.isEmpty(title)) {
                     title = false;
@@ -1507,7 +1511,6 @@ if (typeof jQuery === "undefined") {
                 if (opt.common.isEmpty(type)) {
                     type = 2;
                 }
-                var full = false;
                 //自动适配窗口大小 如果传的大小比所在窗口大 则最大化
                 if(width !== 'auto' || height !== 'auto'){
                     if(width > $(window).width() || height > $(window).height() ){
@@ -4180,12 +4183,12 @@ if (typeof jQuery === "undefined") {
                         //兼容返回数据
                         var list;
 
-                        if(data.__proto__.constructor==Array){
+                        if(opt.common.isArray(data)){
                             list = data;
                         }else{
                             if(data.code == opt.variable.web_status.SUCCESS){
                                 for(var key  in data){
-                                    if(Array.prototype==data[key].__proto__){
+                                    if(opt.common.isArray(data[key])){
                                         list = data[key];
                                     }
                                 }
