@@ -1,101 +1,47 @@
-# 产品或项目名称
-productName: J2eeFast Demo
-
-# 当前版本
-# ¢此版本号最好不要改动、有助于你后期维修解决问题都会用到当前版本¢
-version: 2.2.0
-
-server:
-    tomcat:
-        uri-encoding: UTF-8
-        max-threads: 1000
-        min-spare-threads: 30
-        #如果使用Nginx反向代理, 获取真实IP 需要开启
-        remote-ip-header: X-FORWARDED-FOR
-        protocol-header: X-Forwarded-Proto
-        port-header: X-Forwarded-Port
-        #设置表单提交数据最大大小,解决头像base64太大问题
-        max-http-form-post-size: 20MB
-    use-forward-headers: true
-    #########################################
-    servlet:
-        context-path: /fast
-    #Tomcat SSL Https 访问配置
-    #ssl:
-    #   key-store: classpath:
-    #   key-store-type: PKCS12
-    #   key-store-password: ''
-    #开启springBoot 对输出页面进行压缩
-    compression:
-        enabled: true
-        mime-types: 'application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain'
+# 设置项目访问路径
+#server:
+#    servlet:
+#        context-path: /fast
 
 spring:
-    # 环境 Dev|Test|Prod
+    # 启动环境 Dev|Test|Prod
     profiles:
         active: Dev
-    main:
-        #是否打印LOGO log 打印到日志, console 打印控制台, off 关闭
-        banner-mode: log
-    servlet:
-        multipart:   #设置上传文件大小
-            max-file-size: 200MB  #单个文件的大小
-            max-request-size: 200MB  #单次请求的文件的总大小
-            enabled: true
-    freemarker:
-        suffix: .html
-        request-context-attribute: request
-        #cache: true
-    # 资源信息
-    messages:
-        # 国际化资源文件路径
-        basename: i18n/i18n
-        #默认语言（2.0.3+）
-        defaultLocale: zh_CN
+#    freemarker:
+         #模板引擎缓存
+#        cache: true
+#    messages:
+#        #国际化默认语言（2.0.3+）
+#        defaultLocale: zh_CN
 
 #登录安全验证基本配置
 aj:
    captcha:
       #redis 缓存 本地缓存 local
       cache-type: redis
-      #local缓存的阈值,达到这个值，清除缓存
-      cache-number: 1000
-      #定时清除过期缓存(单位秒),设置为0代表不执行
-      timing-clear: 1800
-      #blockPuzzle 滑块 clickWord 文字点选  default默认两者都实例化
-      type: blockPuzzle
-      #右下角显示字
-      water-mark: J2eeFAST
-      water-font: 宋体
-      font-type: 宋体
-      #校验滑动拼图允许误差偏移量(默认5像素)
-      slip-offset: 5
-      #aes加密坐标开启或者禁用(true|false)
-      aes-status: true
-      #滑动干扰项(0/1/2)
-      interference-options: 2
+
 # Shiro 配置
 shiro:
-    cookie:
-        # 设置Cookie的域名 默认空，即当前访问的域名
-        domain:
-        # 设置HttpOnly属性
-        httpOnly: true
-        # 设置Cookie的过期时间，天为单位
-        maxAge: 30
-    session:
-        # Session超时时间，-1代表永不过期（默认30分钟）
-        expireTime: 30
-        #设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
-        validationTime: 5
-    rememberMe:
-        # 是否开启记住我
-        enabled: false
-        # 若开启记住我请设置记住我密钥 可以在 com.j2eefast.test.EncondeTest 测试类 执行getShiroDeskey单元测试方法 获取项目唯一密钥
-        # 若不设置，则每次启动系统后自动随机生成一个新秘钥，这样会导致每次重启后，客户端记录的用户信息将失效。
-        cipherKey: ~
+#    cookie:
+#        # 设置Cookie的域名 默认空，即当前访问的域名
+#        domain:
+#        # 设置HttpOnly属性
+#        httpOnly: true
+#        # 设置Cookie的过期时间，天为单位
+#        maxAge: 30
+#    session:
+#        # Session超时时间，-1代表永不过期（默认30分钟）
+#        expireTime: 30
+#        #设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
+#        validationTime: 5
+#    rememberMe:
+#        # 是否开启记住我
+#        enabled: false
+#        # 若开启记住我请设置记住我密钥 可以在 com.j2eefast.test.EncondeTest 测试类 执行getShiroDeskey单元测试方法 获取项目唯一密钥
+#        # 若不设置，则每次启动系统后自动随机生成一个新秘钥，这样会导致每次重启后，客户端记录的用户信息将失效。
+#        cipherKey: ~
     #custome url filter Map(系统权限拦截配置)   
-    filterMap: " { 
+    filterMap: "{
            '/login': 'anon',
            '/static/**': 'anon',
            '/swagger/**': 'anon',
@@ -114,32 +60,14 @@ shiro:
            '/captcha.gif': 'anon',
            '/captcha/**': 'anon',
            '/**': 'kickout,user'
-            }"
+           }"
+
 #mybatis 配置
 mybatis-plus:
     mapper-locations: classpath*:mapper/**/*.xml
-    global-config:
-        banner: false
-        db-config:
-            #全局逻辑删除的实体字段名,配置后可以忽略实体字段的@TableLogic 注解
-            #logic-delete-field: delFlag
-            #逻辑删除值
-            logic-delete-value: '1'
-            #逻辑未删除值
-            logic-not-delete-value: '0'
-            #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
-            id-type: ASSIGN_ID
-            #驼峰下划线转换
-            table_underline: true
-            #数据库大写下划线转换
-            capital-mode: false
-    configuration:
-        map-underscore-to-camel-case: true
-        cache-enabled: false
-        call-setters-on-nulls: true
 
 #日志路径配置
-logging:
-    file:
-        name: fast
-        path: logs/
+#logging:
+#    file:
+#        name: fast
+#        path: logs/
