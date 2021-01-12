@@ -27,11 +27,11 @@ public class DruidProperties {
 	/**
 	 * 数据库用户名称
 	 */
-    private String  username										   = "fast";
+    private String  username;
     /**
      * 数据库用户密码
      */
-    private String  password										   = "fast@123$";
+    private String  password;
     /**
      * 数据库驱动类名
      */
