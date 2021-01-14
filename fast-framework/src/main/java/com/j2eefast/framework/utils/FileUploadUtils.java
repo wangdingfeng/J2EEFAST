@@ -205,10 +205,14 @@ public class FileUploadUtils {
         String imageUrl = File.separator + "avatar"
                 + File.separator +
                 DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + saveName ;
-
+        imageUrl = FileUtil.normalize(imageUrl);
         String base64 = StrUtil.subAfter(imgBase64, "base64,", true);
         if (StrUtil.isBlank(base64)) {
-            return null;
+            if(ToolUtil.isBase64(imgBase64)){
+                base64 = imgBase64;
+            }else{
+                return null;
+            }
         }
 
         byte[] data = Base64.decode(base64);
