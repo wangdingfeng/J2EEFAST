@@ -3656,6 +3656,12 @@ if (typeof jQuery === "undefined") {
                     silent: true
                 });
             },
+            //根据行uniqueId值 查询整行数据
+            getRowByUniqueId: function(uniqueId,tableId){
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                return $("#" + currentId).bootstrapTable('getRowByUniqueId',uniqueId);
+            },
             // 查询表格指定列值
             selectColumns: function(column) {
                 var rows = $.map($("#" + opt.table.options.id).bootstrapTable('getSelections'), function (row) {
