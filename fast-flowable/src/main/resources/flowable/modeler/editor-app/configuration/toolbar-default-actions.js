@@ -543,15 +543,21 @@ angular.module('flowableModeler').controller('ValidateModelCtrl',['$scope', '$ht
 	        });
 	    };
 
+        var headers = {};
+        if(window.parent.document && window.parent.document.head.querySelector("[name=csrf-token][content]") &&
+            window.parent.document.head.querySelector("[name=csrf-token][content]").content){
+            headers = {'X-CSRF-Token':window.parent.document.head.querySelector("[name=csrf-token][content]").content,
+                "Content-Type":"application/json;charset=utf-8"};
+        }else{
+            headers = {"Content-Type":"application/json;charset=utf-8"};
+        }
+
         $http({
             url: FLOWABLE.URL.validateModel(),
             method: 'POST',
             cache: false,
-            headers: {
-                "Content-Type":"application/json;charset=utf-8"
-            },
+            headers: headers,
             data: model
-            
         }).then(function(response){
         	$scope.status.loading = false;
             response.data.forEach(function (row) {
