@@ -2572,7 +2572,6 @@
         if (len === this.options.data.length) {
             return;
         }
-        console.log("-->>>>>>")
         this.initSearch();
         this.initPagination();
         this.initSort();
