@@ -219,13 +219,13 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #if($table.rFile || $table.rImg)
 		for (Long id : ids) {
 #if($table.rFile)
-			FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_file");
+			FileUploadUtils.me().removeFileUpload(id,"${tableName}_file");
 #end
 #if($table.rImg)
-			FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_img");
+			FileUploadUtils.me().removeFileUpload(id,"${tableName}_img");
 #end
 #if($isImg == "1")
-			FileUploadUtils.me().removeFileUpload(${pkColumn.javaField},"${tableName}_avatar");
+			FileUploadUtils.me().removeFileUpload(id,"${tableName}_avatar");
 #end
 		}
 #end
