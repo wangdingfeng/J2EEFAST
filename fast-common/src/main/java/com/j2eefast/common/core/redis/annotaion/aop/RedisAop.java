@@ -5,7 +5,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import com.j2eefast.common.core.exception.RxcException;
 
@@ -16,7 +15,6 @@ import com.j2eefast.common.core.exception.RxcException;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "fast.redis", name = "enabled", havingValue = "true")
 public class RedisAop {
 
 	private final static Logger 					LOG 					= LoggerFactory.getLogger(RedisAop.class);
