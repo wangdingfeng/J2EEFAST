@@ -3570,17 +3570,22 @@ if (typeof jQuery === "undefined") {
                 opt.modal.confirm("确定导出所有" + opt.table.options.modalName + "吗？", function() {
                     var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                     opt.modal.loading("正在导出数据，请稍后...");
-
-                    $.post(opt.table.options.exportUrl, $("#" + currentId).serializeArray(), function(result) {
-                        if (result.code ==opt.variable.web_status.SUCCESS) {
-                            window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
-                        } else if (result.code == opt.variable.web_status.WARNING) {
-                            opt.modal.alertWarning(result.msg)
-                        } else {
-                            opt.modal.alertError(result.msg);
+                    var config = {
+                        type: "POST",
+                        url: opt.table.options.exportUrl,
+                        data: $("#" + currentId).serializeArray(),
+                        success: function(result) {
+                            if (result.code ==opt.variable.web_status.SUCCESS) {
+                                window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
+                            } else if (result.code == opt.variable.web_status.WARNING) {
+                                opt.modal.alertWarning(result.msg)
+                            } else {
+                                opt.modal.alertError(result.msg);
+                            }
+                            opt.modal.closeLoading();
                         }
-                        opt.modal.closeLoading();
-                    });
+                    }
+                    opt.common.sendAjax(config);
                 });
             },
             // 下载模板
