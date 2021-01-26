@@ -61,6 +61,10 @@ public class SysModuleService  extends ServiceImpl<SysModuleMapper,SysModuleEnti
         return this.baseMapper.setStatus(id, status);
     }
 
+    public int  setVersion(Long id, String currentVersion){
+    	return this.baseMapper.setVersion(id,currentVersion);
+	}
+
     public List<SysModuleEntity> findModuleByRoleIds(List<Long> roleList){
     	return this.baseMapper.findModuleByRoleIds(roleList);
 	}
