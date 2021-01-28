@@ -1252,11 +1252,20 @@ body .layui-layer-page .layui-layer-content .form-file {
 	display: none;
 }
 
-.edui-default.edui-editor {
+._focus{
+	border: 1px solid #ccc;
+	border-color: #79b2fc;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(62,142,247,.25), 0 0 8px rgba(20, 92, 205, .6);
+	box-shadow:inset 0 1px 1px rgba(62,142,247,.25), 0 0 8px rgba(20, 92, 205, .6)
+}
+
+.edui-default .edui-editor {
 	border-color: #e6e6e6 !important;
 	border-radius: .215rem !important;
 	z-index: 0!important;
 }
+
 .edui-default .edui-editor-toolbarbox {
 	-webkit-box-shadow: 0 1px 4px rgba(255,255,255,0)!important;
 	-moz-box-shadow: 0 1px 4px rgba(255,255,255,0)!important;

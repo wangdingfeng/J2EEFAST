@@ -683,6 +683,14 @@
                 remarksUE_${AssId?replace(".","_")}.addListener('contentchange', function(){
                     remarksUE_${AssId?replace(".","_")}.updateContent();
                 });
+                remarksUE_${AssId?replace(".","_")}.addListener('focus blur', function(type, arg1, arg2){
+                    if(type == 'focus'){
+                        $('#${AssId?replace(".","_")}ContentUE').addClass('_focus');
+                    }
+                    if(type == 'blur'){
+                        $('#${AssId?replace(".","_")}ContentUE').removeClass('_focus');
+                    }
+                });
             });
         });
     </script>
