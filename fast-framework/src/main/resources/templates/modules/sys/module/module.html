@@ -85,6 +85,9 @@ sys:module:del,sys:module:add")?string('true', 'false')};
                 ,{
                     field : 'currentVersion'
                     ,title : '<@ctx.i18n text = "版本"/>'
+                    ,formatter: function (value, row, index) {
+                        return '<div>'+value+'  <i class="fa-fw ion-ios-cloud-upload-outline" style="color: red"></i></div></div>'
+                    }
                 }
                 ,{
                     field : 'status'
