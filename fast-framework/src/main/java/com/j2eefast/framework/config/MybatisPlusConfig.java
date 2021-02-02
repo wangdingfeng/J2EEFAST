@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -29,6 +28,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class MybatisPlusConfig {
 
+	
 	/**
      * 新的分页插件,一缓和二缓遵循mybatis的规则,需要设置 MybatisConfiguration#useDeprecatedExecutor = false 
      * 避免缓存出现问题(该属性会在旧插件移除后一同移除)
@@ -43,6 +43,8 @@ public class MybatisPlusConfig {
         //对于单一数据库类型来说,都建议配置该值,避免每次分页都去抓取数据库类型
         //innerInterceptor.setDbType(DbType.MYSQL);
         interceptor.addInnerInterceptor(innerInterceptor);
+        //控制是否在count时对sql的join进行优化
+		//innerInterceptor.setOptimizeJoin(false);
         return interceptor;
     }
 
