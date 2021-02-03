@@ -1277,21 +1277,43 @@ if (typeof jQuery === "undefined") {
                 //toPrecision(3) 后面保留一位小数，如1.0GB //return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
             },
             /**
-             * Get file name from path
+             * Get file name from path(获取文件路径获取文件名)
              * @param {String} file path to file
              * @return filename
              */
             fileFromPath: function(file){
-                    return file.replace(/.*(\/|\\)/, "");
+                return file.replace(/.*(\/|\\)/, "");
             },
 
             /**
-             * Get file extension lowercase
+             * Get file extension lowercase(获取文件后缀名称)
              * @param {String} file name
              * @return file extenstion
              */
             getExt: function(file){
                 return (-1 !== file.indexOf('.')) ? file.replace(/.*[.]/, '') : '';
+            },
+
+            /**
+             * Repair the path(http修复路径)
+             * @param path
+             * @returns {string}
+             */
+            optimizationPath: function(path) {
+                var protocol = /^[a-z]+:\/\//.exec(path)[0],
+                    tmp = null,
+                    res = [];
+                path = path.replace(protocol, "").split("?")[0].split("#")[0];
+                path = path.replace(/\\/g, '/').split(/\//);
+                path[path.length - 1] = "";
+                while (path.length) {
+                    if (( tmp = path.shift() ) === "..") {
+                        res.pop();
+                    } else if (tmp !== ".") {
+                        res.push(tmp);
+                    }
+                }
+                return protocol + res.join("/");
             }
         },
         // 弹出层封装处理
