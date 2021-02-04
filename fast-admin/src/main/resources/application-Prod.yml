@@ -1,75 +1,43 @@
-fast:
-    flowable:
-        enabled: true
-    demoMode:
-        enabled: false
-        post: 'edit,del,remove,clean,updateAvatar,updateUser,add,resetPwd,updatePass,genCode,uploadLic,status,insertAuthRoles'
-        get: 'del,remove,clean,dirTreeData'
-        urlPatterns: '/sys/*,/tool/*,/file/ueditor/*,/bpm/procdef/*,/bpm/model/*,/bpm/processInstance/*,/gen/test/*'
-        ip:
-    ssl:
-        enabled: true
-    encrypt:
-        key:
-    xss:
-        enabled: true
-        excludes: /sys/notice/*,/sys/database/add
-        urlPatterns: /sys/*,/tool/*
-    csrf:
-        enabled: true
-    jta:
-        enabled: false
-license:
-    subject: fastOS
-    publicAlias: j2eefastCert
-    storePass: j2eefast.com
-    licensePath: license/license.lic
-    publicKeysStorePath: license/publicCerts.keystore
-
-    privateAlias:
-    keyPass:
-    privateKeysStorePath:
-
 spring:
+	#数据库配置
     datasource:
+        #默认(主)数据库配置
         master:
+            #mysql 数据库配置
             driverClassName: com.mysql.cj.jdbc.Driver
-            url:
-            username:
-            password:
+            url: jdbc:mysql://127.0.0.1:3306/fastdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=CTT
+            username: 
+            password: 
             filters: mergeStat
-        flowable:
-            driverClassName:
-            url:
-            username:
-            password:
-            filters:
+
+            #PostgreSql 数据库配置
+            #driverClassName: org.postgresql.Driver
+            #url: jdbc:postgresql://127.0.0.1:5432/fastdb
+            #username: 
+            #password: 
+            #filters: mergeStat
+
+            #oracle 数据库配置
+            #driverClassName: oracle.jdbc.driver.OracleDriver
+            #url: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+            #username: 
+            #password: 
+            #filters: wall,mergeStat
+
+            #mssql 2012以上版本 数据库配置
+            #driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+            #url: jdbc:sqlserver://ip:1433;database=fastdb
+            #username: 
+            #password: 
+            #filters: wall,mergeStat
+    #redis数据库服务器
     redis:
         database: 10
-        host:
-        port:
+        host: 127.0.0.1
+        port: 6379
+        #redis密码 请为你的redis 设置连接密码、 如果无密码、请注释 #password,否则会报连接异常
         password:
-        timeout: 6000ms
-        jedis:
-            pool:
-                max-active: 1000
-                max-wait: -1ms
-                max-idle: 10
-                min-idle: 5
-    rabbitmq:
-        addresses: ip:5672
-        username:
-        password:
-        virtual-host: /
-        publisher-confirms: true
-        publisher-returns: true
-        template.mandatory: true
-        listener:
-            simple:
-                concurrency: 5
-                max-concurrency: 10
-                acknowledge-mode: manual
-                prefetch: 1
+
 mybatis-plus:
     type-aliases-package: com.j2eefast.*.*.entity
     mapper-package: com.j2eefast.*.*.mapper

@@ -3,7 +3,7 @@
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-12-21
- * @version v1.0.16
+ * @version v1.0.17
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -18,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.16',
+            version:'1.0.17',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -655,7 +655,7 @@ if (typeof jQuery === "undefined") {
                 if(typeof value === 'string'){
                     return value.toString().replace(/(^[ \t\n\r]+)|([ \t\n\r]+$)/g, '');
                 }else{
-                    return "";
+                    return value;
                 }
             },
             hideStr:function(value,len, tag){
@@ -1065,7 +1065,45 @@ if (typeof jQuery === "undefined") {
                 ChineseStr = Symbol + ChineseStr;
                 return ChineseStr;
             },
-
+            /**
+             * 版本比较函数
+             * @param version1
+             * @param version2
+             * @returns {number}
+             */
+            compareVersion: function(version1, version2) {
+                var arr1 = version1.split('.');
+                var arr2 = version2.split('.');
+                var length1 = arr1.length;
+                var length2 = arr2.length;
+                var minlength = Math.min(length1, length2);
+                var i = 0;
+                for (i ; i < minlength; i++) {
+                    var a = parseInt(arr1[i]);
+                    var b = parseInt(arr2[i]);
+                    if (a > b) {
+                        return 1;
+                    } else if (a < b) {
+                        return -1;
+                    }
+                }
+                if (length1 > length2) {
+                    for(var j = i; j < length1; j++) {
+                        if (parseInt(arr1[j]) != 0) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                } else if (length1 < length2) {
+                    for(var j = i; j < length2; j++) {
+                        if (parseInt(arr2[j]) != 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
+                return 0;
+            },
             /**
              * 数字 转金额格式
              * 12345678,2,'$',',','.'
@@ -3021,9 +3059,9 @@ if (typeof jQuery === "undefined") {
                     }
                     if (!_flag){
                         if(options.columns[0] instanceof Array){
-                            options.columns[1].splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns[1].splice(0,0,{checkbox: true, field: '_state'});
                         }else{
-                            options.columns.splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns.splice(0,0,{checkbox: true, field: '_state'});
                         }
                     }
                 }
@@ -3041,7 +3079,7 @@ if (typeof jQuery === "undefined") {
                                 }
                                 // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                                 if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
-                                    options.columns[i][j].field = 'state';
+                                    options.columns[i][j].field = '_state';
                                 }
                             }
                         }else {
@@ -3053,7 +3091,7 @@ if (typeof jQuery === "undefined") {
                             }
                             // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                             if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
-                                options.columns[i].field = 'state';
+                                options.columns[i].field = '_state';
                             }
                         }
                     }
@@ -3211,9 +3249,9 @@ if (typeof jQuery === "undefined") {
                                         }
                                     }
 
-                                    row.state = _flag;
+                                    row._state = _flag;
                                 }else{
-                                    row.state = false;
+                                    row._state = false;
                                 }
                             })
                         }
@@ -3435,7 +3473,6 @@ if (typeof jQuery === "undefined") {
                     }
                 });
 
-
                 // $(window).on('resize', function () {
                 //     // 浮动提示框特效
                 //     //$(".table [data-toggle='tooltip']").tooltip();
@@ -3533,6 +3570,7 @@ if (typeof jQuery === "undefined") {
                 // blank or self
                 var _target = opt.common.isEmpty(target) ? 'self' : target;
                 if (opt.common.isNotEmpty(value)) {
+                    //value = opt.common.optimizationPath(value);
                     var name = opt.common.fileFromPath(value);
                     ///fast/sys/comm/fileAvatarView?filePath=/avatar/2020/12/25/7325bc151faf46538733237d97bf9270.png
                     return opt.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s' data-name='%s'/>", height, width, _target, value,name);

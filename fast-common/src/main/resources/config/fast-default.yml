@@ -6,7 +6,7 @@
 productName: J2eeFAST 开源版本
 
 # ¢此版本号最好不要改动、有助于你后期维修解决问题都会用到当前版本¢
-version: 2.2.0
+version: 2.2.1
 
 server:
   tomcat:

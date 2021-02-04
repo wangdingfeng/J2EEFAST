@@ -177,7 +177,7 @@
 <div class="help-block text-center">
 <#-- Enter your password to retrieve your session -->
 </div>
-<div class="login-footer">
+<div class="login-footer animated fadeInLeft">
     <span class="footer-item">
       Copyright &copy; 2018-${config.getCopyrightYear()} ${config.getCompany()}
     </span>
@@ -194,7 +194,7 @@
         </#items>
     </#list>
 </div>
-<div class="login-footer">
+<div class="login-footer animated fadeInLeft" >
         <span class="footer-item">
             <a href="http://www.beian.miit.gov.cn/" class="text-black" target="_blank">${config.getIPC()}</a>
         </span>
@@ -315,7 +315,7 @@
                             };
                             setTimeout(
                                 function () {
-                                    location.href ='index';
+                                    location.href =ctx +'index';
                                 }
                                 , 100);
                         }else if(result.code == '50004' || result.code == '50006'){

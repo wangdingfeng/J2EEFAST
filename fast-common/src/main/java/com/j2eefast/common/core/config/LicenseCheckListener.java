@@ -34,19 +34,19 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
         /**
          * 证书subject
          */
-        @Value("${license.subject: fastOs}")
+        @Value("${license.subject}")
         private String subject;
 
         /**
          * 公钥别称
          */
-        @Value("${license.publicAlias: j2eefastCert}")
+        @Value("${license.publicAlias}")
         private String publicAlias;
 
         /**
          * 访问公钥库的密码
          */
-        @Value("${license.storePass: j2eefast.com}")
+        @Value("${license.storePass}")
         private String storePass;
 
         /**

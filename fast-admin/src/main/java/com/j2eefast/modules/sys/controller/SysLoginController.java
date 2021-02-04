@@ -259,8 +259,8 @@ public class SysLoginController extends BaseController {
 				throw new RxcException("解密失败,数据异常","50004");
 			}
 			if(loginUser.getUsername().equals(username)){
-				Integer number = redisUtil.get(RedisKeys.getUserLoginKey(username),Integer.class); //用户锁屏密码错误次数
-
+				//用户锁屏密码错误次数
+				Integer number = redisUtil.get(RedisKeys.getUserLoginKey(username),Integer.class);
 				if( number != null  && number >= Global.getLoginNumCode()) {
 					String kaptcha = UserUtils.getKaptcha(Constant.KAPTCHA_SESSION_KEY);
 					String captcha = (String) ServletUtil.getRequest().getParameter("captcha");
@@ -285,8 +285,8 @@ public class SysLoginController extends BaseController {
 						redisUtil.set(RedisKeys.getUserLoginKey(username), number, RedisUtil.MINUTE * Global.getLockTime());
 					}
 					AsyncManager.me().execute(AsyncFactory.recordLogininfor(username,loginUser.getCompId(),loginUser.getDeptId(), "50010","锁屏账号或密码不正确,输入错误"+number+" 次!"));
-					if(number >= Global.getLoginNumCode()) { //错误3次
-						throw new RxcException(ToolUtil.message("sys.login.password.retry.limit.count",Global.getLoginMaxCount()),"50004"); //错误3次
+					if(number >= Global.getLoginNumCode()) {
+						throw new RxcException(ToolUtil.message("sys.login.password.retry.limit.count",Global.getLoginMaxCount()),"50004");
 					}
 					throw new RxcException(ToolUtil.message("sys.login.password.retry.limit.count",Global.getLoginMaxCount()),"50005");
 				}

@@ -18,10 +18,8 @@
 var FLOWABLE = FLOWABLE || {};
 
 var pathname = window.location.pathname.replace(/^(\/[^\/]*)(\/.*)?$/, '$1').replace(/\/$/, '');
-
-if (pathname.indexOf("/flowable") > 0) {
-	pathname = pathname.replace(/^(\/[^\/]*)(\/.*)?$/, "$1").replace(/\/$/, "")
-}else{
+console.log(pathname);
+if (pathname.indexOf("/flowable") >= 0 || pathname == "/") {
 	pathname = "";
 }
 FLOWABLE.CONFIG = {
