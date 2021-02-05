@@ -239,10 +239,8 @@ public class SysLicenseController extends BaseController {
                 }
                 //新增最大在线人数控制
                 if(onlineaxNum == -1){
-                    licenseCheck.setIpCheck(false);
                     licenseCheck.setOnlineNum(-1);
                 }else{
-                    licenseCheck.setIpCheck(true);
                     licenseCheck.setOnlineNum(onlineaxNum);
                 }
                 param.setLicenseCheck(licenseCheck);
