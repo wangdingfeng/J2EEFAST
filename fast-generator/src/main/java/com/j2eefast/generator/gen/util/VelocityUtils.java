@@ -85,7 +85,11 @@ public class VelocityUtils{
         velocityContext.put("createBy", UserUtils.getLoginName());
         velocityContext.put("updateBy", UserUtils.getLoginName());
         velocityContext.put("dbTypeTb", genTable.isDbTypeTb());
-        velocityContext.put("dbTypeName", JdbcUtils.getDbType(DataSourceContext.getDataSourcesConfs().get(genTable.getDbName()).getUrl()).getDb());
+        // 连接数据库类型
+        velocityContext.put("dbTypeName", DataSourceContext.getDbType(genTable.getDbName()));
+        // 主数据库类型
+        velocityContext.put("master_dbTypeName", DataSourceContext.getDefaultDbType());
+
         velocityContext.put("importList", getImportList(genTable.getColumns()));
         velocityContext.put("gen_copyright","<!-- 系统自动生成 Date:"+DateUtil.format(new Date(),DatePattern.NORM_DATETIME_MINUTE_PATTERN)+" -->");
         Sequence n =  new Sequence();

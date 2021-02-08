@@ -48,4 +48,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{id}
 	</update>
 
+    <update id="setVersion">
+		UPDATE sys_module SET current_version = #{currentVersion} WHERE id =
+		#{id}
+	</update>
+
 </mapper>

@@ -18,12 +18,13 @@
 var FLOWABLE = FLOWABLE || {};
 
 var pathname = window.location.pathname.replace(/^(\/[^\/]*)(\/.*)?$/, '$1').replace(/\/$/, '');
-if (pathname.indexOf("/flowable/modeler") > 0) {
-	pathname = pathname.replace(/^(\/[^\/]*)(\/.*)?$/, "$1").replace(/\/$/, "")
+console.log(pathname);
+if (pathname.indexOf("/flowable") >= 0 || pathname == "/") {
+	pathname = "";
 }
 FLOWABLE.CONFIG = {
 	'onPremise' : true,
 	'contextRoot' :  pathname,
-	'webContextRoot' : pathname+ '/flowable/modeler',
+	'webContextRoot' : pathname + '/flowable/modeler',
 	'datesLocalization' : false
 };

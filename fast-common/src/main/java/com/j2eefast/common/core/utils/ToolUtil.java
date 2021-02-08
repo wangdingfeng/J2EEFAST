@@ -376,6 +376,30 @@ public class ToolUtil{
     }
 
     /**
+     * 判断字符是否是Base64
+     * @param str
+     * @return
+     */
+    public static boolean isBase64(String str) {
+        if (str == null || str.trim().length() == 0) {
+            return false;
+        } else {
+            if (str.length() % 4 != 0) {
+                return false;
+            }
+            char[] strChars = str.toCharArray();
+            for (char c:strChars) {
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+                        || c == '+' || c == '/' || c == '=') {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    /**
      * 获取工程源文件所在路径
      * @return
      */

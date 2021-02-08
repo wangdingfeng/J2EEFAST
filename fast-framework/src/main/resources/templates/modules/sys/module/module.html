@@ -84,7 +84,16 @@ sys:module:del,sys:module:add")?string('true', 'false')};
                 }
                 ,{
                     field : 'currentVersion'
+                    ,align: 'left'
+                    ,halign: 'left'
                     ,title : '<@ctx.i18n text = "版本"/>'
+                    ,formatter: function (value, row, index) {
+                        var v = 0;
+                        if(row.moduleCode == 'core'){
+                            v = opt.common.compareVersion('${config.getVersion()}',value+"");
+                        }
+                        return '<div>'+value+(v==1?'  <i class="fa-fw ion-ios-cloud-upload-outline" style="color: red"></i>':'')+'</div></div>'
+                    }
                 }
                 ,{
                     field : 'status'

@@ -37,6 +37,7 @@
             <!-- Added packaging to filter uncompressed core JS(打包排除核心未压缩的文件)-->
             <excludes>
                 <exclude>static/libs/SM4.js</exclude>
+                <exclude>static/plugins/blockUI/jquery.blockUI.js</exclude>
                 <exclude>static/plugins/captcha/ase.js</exclude>
                 <exclude>static/plugins/captcha/crypto-js.js</exclude>
                 <exclude>static/plugins/captcha/verify.js</exclude>

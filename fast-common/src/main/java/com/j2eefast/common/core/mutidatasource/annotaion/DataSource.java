@@ -8,7 +8,7 @@ package com.j2eefast.common.core.mutidatasource.annotaion;
 import java.lang.annotation.*;
 
 /**
- * 多数据源标识
+ * 多数据源标识- 可以注解到类 接口 方法
  * @author zhouzhou
  * @date 2020-03-12 09:55
  */
@@ -20,7 +20,7 @@ public @interface DataSource {
 	/**
 	 * 数据源名称
 	 * <p> 
-	 * 对应 yml文件 fast.db.datasourceNames 名称
+	 * 对应多源数据 数据库名称
 	 */
 	String name() default "";
 	

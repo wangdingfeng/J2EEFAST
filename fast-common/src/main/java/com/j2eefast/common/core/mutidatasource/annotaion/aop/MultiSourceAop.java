@@ -6,6 +6,7 @@
 package com.j2eefast.common.core.mutidatasource.annotaion.aop;
 
 import java.lang.reflect.Method;
+import com.j2eefast.common.db.context.DataSourceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,8 +30,7 @@ public class MultiSourceAop implements Ordered {
 
 	@SuppressWarnings("unused")
 	private String[]  						names					   = null;
-	private String 	  						defaultdb 				   = "DEFAULT";
-	
+
 	/**
 	 * AOP的顺序要早于Spring的事务
 	 */
@@ -48,7 +48,8 @@ public class MultiSourceAop implements Ordered {
         this.names = names;
     }
 
-    @Pointcut(value = "@annotation(com.j2eefast.common.core.mutidatasource.annotaion.DataSource)")
+    @Pointcut(value = "@annotation(com.j2eefast.common.core.mutidatasource.annotaion.DataSource)"
+				+ "|| @within(com.j2eefast.common.core.mutidatasource.annotaion.DataSource)")
     private void cut() {
 
     }
@@ -56,28 +57,16 @@ public class MultiSourceAop implements Ordered {
     @Around("cut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
-        //获取被aop拦截的方法
-//        Signature signature = point.getSignature();
-//        MethodSignature methodSignature = null;
-//        if (!(signature instanceof MethodSignature)) {
-//            throw new IllegalArgumentException("该注解只能用于方法");
-//        }
-//        methodSignature = (MethodSignature) signature;
-//        Object target = point.getTarget();
-//        Method currentMethod = target.getClass().getMethod(methodSignature.getName(), methodSignature.getParameterTypes());
-
         //支持获取类上注解
-        //DataSource datasource = currentMethod.getAnnotation(DataSource.class);
 		DataSource datasource = getDataSource(point);
 		//如果有DataSource注解，则设置DataSourceContextHolder为注解上的名称
         if (ToolUtil.isNotEmpty(datasource)) {
             DataSourceContextHolder.setDataSourceType(datasource.name());
             log.debug("设置数据源为：" + datasource.name());
         } else {
-            DataSourceContextHolder.setDataSourceType(defaultdb);
+            DataSourceContextHolder.setDataSourceType(DataSourceContext.MASTER_DATASOURCE_NAME);
 			log.debug("设置数据源为：dataSourceCurrent");
         }
-
         try {
             return point.proceed();
         } finally {
@@ -88,20 +77,29 @@ public class MultiSourceAop implements Ordered {
 
 	/**
 	 * 获取需要切换的数据源
+	 * 支持类\接口\方法
 	 */
 	public DataSource getDataSource(ProceedingJoinPoint point){
 		MethodSignature signature = (MethodSignature) point.getSignature();
 		Class<? extends Object> targetClass = point.getTarget().getClass();
-		DataSource targetDataSource = targetClass.getAnnotation(DataSource.class);
-		if (ToolUtil.isNotEmpty(targetDataSource)) {
-			return targetDataSource;
-		}
-		else{
-			//获取方法上的DataSource注解
-			Method method = signature.getMethod();
-			DataSource dataSource = method.getAnnotation(DataSource.class);
+		//获取方法上的DataSource注解
+		DataSource dataSource = targetClass.getAnnotation(DataSource.class);
+		if (ToolUtil.isNotEmpty(dataSource)) {
 			return dataSource;
 		}
+		//获取方法上的DataSource注解
+		Method method = signature.getMethod();
+		dataSource = method.getAnnotation(DataSource.class);
+		if (ToolUtil.isNotEmpty(dataSource)) {
+			return dataSource;
+		}
+		//获取接口注解
+		targetClass = method.getDeclaringClass();
+		dataSource = targetClass.getAnnotation(DataSource.class);
+		if (ToolUtil.isNotEmpty(dataSource)) {
+			return dataSource;
+		}
+		return dataSource;
 	}
 	
 }

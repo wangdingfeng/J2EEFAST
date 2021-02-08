@@ -32,7 +32,6 @@
 	var prefix = baseURL + "tool/gen";
 
 	function queryParams(params) {
-		console.log(params);
 		var search = $.table.queryParams(params);
 		search.dbName = $("#dbName").val();
 		return search;
@@ -41,19 +40,18 @@
 	$(function() {
 		var options = {
 			url: prefix + "/db/list",
-			sortName: "create_time",
+			sortName: "createTime",
+			uniqueId: "tableName",
 			sortOrder: "desc",
 			showSearch: false,
 			showRefresh: false,
 			showToggle: false,
 			showColumns: false,
-			clickToSelect: true,
 			queryParams: this.queryParams, /*初始化请求参数*/
 			pageSize: 10,
 			pageList: [10, 30, 50],
-			columns: [{
-				checkbox: true
-			},
+			columns: [
+			{checkbox: true},
 			{
 				title: $.i18n.prop("序号"),
 				formatter: function (value, row, index) {

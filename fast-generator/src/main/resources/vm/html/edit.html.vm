@@ -1,7 +1,14 @@
 ${gen_copyright}
 <<@>include "/common/defaultEngine.html"/>
 ${pageTheme}
-<@header title="修改${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end]/>
+#set($selectPage_="0")
+#foreach($column in $columns)
+#if($column.htmlType == "addr")
+#set($selectPage_="1")
+#break
+#end
+#end
+<@header title="修改${functionName}" bodyClass="white-bg" libs=["bootstrapSelect"#if($table.rFile),"fileupload"#end#if($selectPage_ == "1"),"selectPage"#end]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="form-${businessName}-edit"  class="form-horizontal">
     <@f.hidden name="${pkColumn.javaField}" value="${${className}.${pkColumn.javaField}?default('')}"/>
@@ -103,6 +110,27 @@ ${pageTheme}
             <div class="input-group">
                 <@f.imageclip name="${field}" value="${${className}.${field}?default('')}"/>
             </div>
+        </div>
+    </div>
+#elseif($column.htmlType == "addr")
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+#if($column.info && $column.info !="")
+#if($column.circleType == "Q")
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="${column.editInfo}">
+                <i class="fa fa-question-circle-o" style="color: orange"></i>
+            </a>
+#elseif($column.circleType == "T")
+            <i class="fa fa-question-circle-o" title="${column.editInfo}"></i>
+#end
+#end
+#if($column.required)
+            <span style="color: red; ">* </span>
+#end
+            <@ctx.i18n text = "${comment}"/>：
+        </label>
+        <div class="col-sm-8">
+             <@f.selectLinkage name="${field}" value="${${className}.${field}?default('')}"/>
         </div>
     </div>
 #elseif($column.htmlType == "select" && "" != $dictType)

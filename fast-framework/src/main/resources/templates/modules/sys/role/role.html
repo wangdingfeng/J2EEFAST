@@ -3,38 +3,38 @@
 <@header title="角色列表" libs=["table"]/>
 <div class="container-div">
 	<div class="row">
-	<div class="col-sm-12 search-collapse">
-	<@f.form id="role-form">
-    <div class="select-list">
-        <ul>
-            <li>
-                <@ctx.i18n text = "角色名称"/>：<input type="text"  class="form-control" name="roleName"/>
-            </li>
+        <div class="col-sm-12 search-collapse">
+        <@f.form id="role-form">
+        <div class="select-list">
+            <ul>
+                <li>
+                    <@ctx.i18n text = "角色名称"/>：<input type="text"  class="form-control" name="roleName"/>
+                </li>
 
-            <li>
-                <@ctx.i18n text = "权限字符"/>：<input type="text" class="form-control" name="roleKey"/>
-            </li>
-            <li>
-                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
-                <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
-            </li>
-        </ul>
-    </div>
-    </@f.form>
-    </div>
-    <@table id="bootstrap-table">
-        <@shiro.hasPermission name="sys:role:add">
-            <a class="btn btn-success" onclick="opt.operate.add()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="sys:role:edit">
-            <a class="btn btn-primary single disabled" onclick="opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="sys:role:del">
-            <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()">
-                <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
-            </a>
-        </@shiro.hasPermission>
-    </@table>
+                <li>
+                    <@ctx.i18n text = "权限字符"/>：<input type="text" class="form-control" name="roleKey"/>
+                </li>
+                <li>
+                    <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+                    <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+                </li>
+            </ul>
+        </div>
+        </@f.form>
+        </div>
+        <@table id="bootstrap-table">
+            <@shiro.hasPermission name="sys:role:add">
+                <a class="btn btn-success" onclick="opt.operate.add()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="sys:role:edit">
+                <a class="btn btn-primary single disabled" onclick="opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="sys:role:del">
+                <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@shiro.hasPermission>
+        </@table>
     </div>
 </div>
 <@footer>

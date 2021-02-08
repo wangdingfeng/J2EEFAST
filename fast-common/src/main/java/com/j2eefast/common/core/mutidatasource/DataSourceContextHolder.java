@@ -1,3 +1,8 @@
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.mutidatasource;
 
 import cn.hutool.core.util.StrUtil;
@@ -10,7 +15,6 @@ import cn.hutool.core.util.StrUtil;
 public class DataSourceContextHolder {
 	
 	private static final ThreadLocal<String> CONTEXT_HOLDER  = new ThreadLocal<String>();
-	
     /**
      * 设置数据源类型
      *

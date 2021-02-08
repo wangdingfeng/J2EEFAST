@@ -5,6 +5,8 @@
  */
 package com.j2eefast.common.core.utils;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
@@ -216,6 +218,16 @@ public class RedisUtil {
 	}
 
 	/**
+	 * 删除Collection<String>集合中的key
+	 * @param keys
+	 * @return
+	 */
+	public Long del(Collection<String> keys){
+		Long delete = redisTemplate.delete(keys);
+		return delete;
+	}
+
+	/**
 	 * 使用scan命令 查询某些前缀的key
 	 * @param key
 	 * @return
@@ -238,6 +250,25 @@ public class RedisUtil {
 		});
 		return execute;
 	}
+
+	public void del(String... key) {
+
+		if (key != null && key.length > 0) {
+
+			if (key.length == 1) {
+
+				redisTemplate.delete(key[0]);
+
+			} else {
+
+				redisTemplate.delete(CollectionUtils.arrayToList(key));
+
+			}
+
+		}
+
+	}
+
 
 	/**
 	 * 使用scan命令 查询某些前缀的key 有多少个
@@ -262,6 +293,39 @@ public class RedisUtil {
 		});
 		return dbSize;
 	}
+
+	public Object hget(String key, String item) {
+		return redisTemplate.opsForHash().get(key, item);
+	}
+
+	public boolean hset(String key, String item, Object value) {
+		try {
+			redisTemplate.opsForHash().put(key, item, value);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	public boolean hmset(String key, Map<String, Object> map) {
+		try {
+			redisTemplate.opsForHash().putAll(key, map);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public Object execute(RedisCallback action){
+		Object execute = redisTemplate.execute(action);
+		return execute;
+	}
+
+
 
 	@SuppressWarnings("unchecked")
 	public boolean deletes(String key){

@@ -111,17 +111,17 @@ public class FileUploadUtils {
 			//存储文件类型
             int ossType = Integer.parseInt(fileEntity.getOssType());
 
-            //本地直接文件删除
-            if(ossType == Constant.CloudService.LOCAL.getValue()){
-                String filePath = divPath + fileEntity.getFilePath();
-                //删除文件
-                if (FileUtil.exist(filePath)) {
-                    FileUtil.del(filePath);
-                }
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
-                //阿里云OSS
-                OSSFactory.build().delFileOss(fileEntity.getFilePath());
-            }
+            //TODO 暂不删除 考虑异常事务影响业务 本地直接文件删除
+//            if(ossType == Constant.CloudService.LOCAL.getValue()){
+//                String filePath = divPath + fileEntity.getFilePath();
+//                //删除文件
+//                if (FileUtil.exist(filePath)) {
+//                    FileUtil.del(filePath);
+//                }
+//            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+//                //阿里云OSS
+//                OSSFactory.build().delFileOss(fileEntity.getFilePath());
+//            }
 
 			//删除业务关联 sys_file_upload
             ConstantFactory.me().getSysFileUploadService().removeByFileId(fileId);
@@ -205,10 +205,14 @@ public class FileUploadUtils {
         String imageUrl = File.separator + "avatar"
                 + File.separator +
                 DateFormatUtils.format(new Date(), "yyyy/MM/dd") + File.separator + saveName ;
-
+        imageUrl = FileUtil.normalize(imageUrl);
         String base64 = StrUtil.subAfter(imgBase64, "base64,", true);
         if (StrUtil.isBlank(base64)) {
-            return null;
+            if(ToolUtil.isBase64(imgBase64)){
+                base64 = imgBase64;
+            }else{
+                return null;
+            }
         }
 
         byte[] data = Base64.decode(base64);

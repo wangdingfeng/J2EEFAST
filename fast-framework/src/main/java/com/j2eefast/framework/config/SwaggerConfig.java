@@ -35,8 +35,8 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("FASTOS").description("FASTOS文档")
-				.termsOfServiceUrl("http://www.j2eefast.com").version("2.0.5").build();
+		return new ApiInfoBuilder().title("J2eeFATS").description("J2eeFATS文档")
+				.termsOfServiceUrl("http://www.j2eefast.com").version("2.2.0").build();
 	}
 
 }

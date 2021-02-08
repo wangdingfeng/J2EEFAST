@@ -1,6 +1,14 @@
+/*
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.common.core.mutidatasource.annotaion.mybatis;
 
+import cn.hutool.core.lang.Assert;
 import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
+import com.j2eefast.common.core.utils.ToolUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.BatchResult;
@@ -19,6 +27,8 @@ import static org.mybatis.spring.SqlSessionUtils.*;
 
 /**
  * <p>DataSourceContextHolder 动态获取SqlSessionFactory</p>
+ * @author zhouzhou
+ * @date 2020-12-25 21:05:50
  */
 public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 
@@ -28,6 +38,8 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 	private final PersistenceExceptionTranslator exceptionTranslator;
 
 	private Map<Object, SqlSessionFactory> targetSqlSessionFactorys;
+	private SqlSessionFactory defaultTargetSqlSessionFactory;
+
 
 	public OptionalSqlSessionTemplate(SqlSessionFactory sqlSessionFactory, Map<Object, SqlSessionFactory> targetSqlSessionFactorys) {
 		super(sqlSessionFactory);
@@ -42,21 +54,68 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 				SqlSessionFactory.class.getClassLoader(),
 				new Class[]{SqlSession.class},
 				new SqlSessionInterceptor());
+		this.defaultTargetSqlSessionFactory = sqlSessionFactory;
 	}
 
 	@Override
 	public SqlSessionFactory getSqlSessionFactory() {
-		if (targetSqlSessionFactorys == null) {
-			throw new IllegalArgumentException("OptionalSqlSessionTemplate初始化时，未初始化targetSqlSessionFactorys！");
+		String dataSourceKey = DataSourceContextHolder.getDataSourceType();
+		if(!ToolUtil.isEmpty(dataSourceKey)){
+			SqlSessionFactory targetSqlSessionFactory = this.targetSqlSessionFactorys.get(dataSourceKey);
+			if (targetSqlSessionFactory != null) {
+				return targetSqlSessionFactory;
+			} else if (defaultTargetSqlSessionFactory != null) {
+				return defaultTargetSqlSessionFactory;
+			} else {
+				Assert.notNull(this.targetSqlSessionFactorys, "Property 'targetSqlSessionFactories' or 'defaultTargetSqlSessionFactory' are required");
+				Assert.notNull(this.defaultTargetSqlSessionFactory, "Property 'defaultTargetSqlSessionFactory' or 'targetSqlSessionFactories' are required");
+			}
 		}
-		if (DataSourceContextHolder.getDataSourceType() == null) {
-			return sqlSessionFactory;
+		if (defaultTargetSqlSessionFactory != null){
+			return defaultTargetSqlSessionFactory;
 		}
-		SqlSessionFactory targetSqlSessionFactory = this.targetSqlSessionFactorys.get(DataSourceContextHolder.getDataSourceType());
-		if (targetSqlSessionFactory != null) {
-			return targetSqlSessionFactory;
-		} else {
-			return sqlSessionFactory;
+		return this.sqlSessionFactory;
+	}
+
+	/**
+	 * copy from super class org.mybatis.spring.SqlSessionTemplate
+	 *
+	 * @author Putthiphong Boonphong
+	 * @author Hunter Presnall
+	 * @author Eduardo Macarron
+	 */
+	private class SqlSessionInterceptor implements InvocationHandler {
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			SqlSession sqlSession = getSqlSession(
+					OptionalSqlSessionTemplate.this.getSqlSessionFactory(),
+					OptionalSqlSessionTemplate.this.executorType,
+					OptionalSqlSessionTemplate.this.exceptionTranslator);
+			try {
+				Object result = method.invoke(sqlSession, args);
+				if (!isSqlSessionTransactional(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory())) {
+					// force commit even on non-dirty sessions because some databases require
+					// a commit/rollback before calling close()
+					sqlSession.commit(true);
+				}
+				return result;
+			} catch (Throwable t) {
+				Throwable unwrapped = unwrapThrowable(t);
+				if (OptionalSqlSessionTemplate.this.exceptionTranslator != null && unwrapped instanceof PersistenceException) {
+					// release the connection to avoid a deadlock if the translator is no loaded. See issue #22
+					closeSqlSession(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory());
+					sqlSession = null;
+					Throwable translated = OptionalSqlSessionTemplate.this.exceptionTranslator.translateExceptionIfPossible((PersistenceException) unwrapped);
+					if (translated != null) {
+						unwrapped = translated;
+					}
+				}
+				throw unwrapped;
+			} finally {
+				if (sqlSession != null) {
+					closeSqlSession(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory());
+				}
+			}
 		}
 	}
 
@@ -314,45 +373,5 @@ public class OptionalSqlSessionTemplate  extends SqlSessionTemplate {
 		return this.sqlSessionProxy.flushStatements();
 	}
 
-	/**
-	 * copy from super class org.mybatis.spring.SqlSessionTemplate
-	 *
-	 * @author Putthiphong Boonphong
-	 * @author Hunter Presnall
-	 * @author Eduardo Macarron
-	 */
-	private class SqlSessionInterceptor implements InvocationHandler {
-		@Override
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-			SqlSession sqlSession = getSqlSession(
-					OptionalSqlSessionTemplate.this.getSqlSessionFactory(),
-					OptionalSqlSessionTemplate.this.executorType,
-					OptionalSqlSessionTemplate.this.exceptionTranslator);
-			try {
-				Object result = method.invoke(sqlSession, args);
-				if (!isSqlSessionTransactional(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory())) {
-					// force commit even on non-dirty sessions because some databases require
-					// a commit/rollback before calling close()
-					sqlSession.commit(true);
-				}
-				return result;
-			} catch (Throwable t) {
-				Throwable unwrapped = unwrapThrowable(t);
-				if (OptionalSqlSessionTemplate.this.exceptionTranslator != null && unwrapped instanceof PersistenceException) {
-					// release the connection to avoid a deadlock if the translator is no loaded. See issue #22
-					closeSqlSession(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory());
-					sqlSession = null;
-					Throwable translated = OptionalSqlSessionTemplate.this.exceptionTranslator.translateExceptionIfPossible((PersistenceException) unwrapped);
-					if (translated != null) {
-						unwrapped = translated;
-					}
-				}
-				throw unwrapped;
-			} finally {
-				if (sqlSession != null) {
-					closeSqlSession(sqlSession, OptionalSqlSessionTemplate.this.getSqlSessionFactory());
-				}
-			}
-		}
-	}
+
 }

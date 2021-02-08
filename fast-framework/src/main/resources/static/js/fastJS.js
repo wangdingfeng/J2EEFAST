@@ -3,7 +3,7 @@
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-12-21
- * @version v1.0.15
+ * @version v1.0.17
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -18,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.15',
+            version:'1.0.17',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -601,7 +601,6 @@ if (typeof jQuery === "undefined") {
                     if(window.console)console.error(e);
                     return true;
                 }
-
             },
             /**
              * 检测值是否为 基本类型
@@ -656,7 +655,7 @@ if (typeof jQuery === "undefined") {
                 if(typeof value === 'string'){
                     return value.toString().replace(/(^[ \t\n\r]+)|([ \t\n\r]+$)/g, '');
                 }else{
-                    return "";
+                    return value;
                 }
             },
             hideStr:function(value,len, tag){
@@ -958,6 +957,7 @@ if (typeof jQuery === "undefined") {
                     }
                 }
             },
+
             /**
              * 将一个对象数组合并到一个对象中。
              */
@@ -971,19 +971,139 @@ if (typeof jQuery === "undefined") {
                 }
                 return res
             },
-            // money:function(value, num) {
-            //     num = num > 0 && num <= 20 ? num : 2;
-            //     value = parseFloat((value + "").replace(/[^\d\.-]/g, "")).toFixed(num) + ""; //将金额转成比如 123.45的字符串
-            //     var valueArr = value.split(".")[0].split("") //将字符串的数变成数组
-            //     const valueFloat = value.split(".")[1]; // 取到 小数点后的值
-            //     let valueString = "";
-            //     for (let i = 0; i < valueArr.length; i++) {
-            //         valueString += valueArr[i] + ((i + 1) % 3 == 0 && (i + 1) != valueArr.length ? "," : ""); //循环 取数值并在每三位加个','
-            //     }
-            //     const money = valueString.split("").join("") + "." + valueFloat; //拼接上小数位
-            //     return money
-            // }
-            // ,
+
+            /**
+             * 金额转换中文汉字
+             * @param money
+             * @returns {string}
+             * @example
+             * ```javascript
+             *
+             * var money = opt.common.moneyToChinese(12390.97);
+             *
+             * //output: 壹万贰仟叁佰玖拾元玖角柒分
+             * console.log( money );
+             *
+             * ```
+             */
+            moneyToChinese : function (money) {
+                var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
+                var cnIntRadice = new Array("", "拾", "佰", "仟"); //基本单位
+                var cnIntUnits = new Array("", "万", "亿", "兆"); //对应整数部分扩展单位
+                var cnDecUnits = new Array("角", "分", "毫", "厘"); //对应小数部分单位
+                var cnInteger = "整"; //整数金额时后面跟的字符
+                var cnIntLast = "元"; //整型完以后的单位
+                var maxNum = 999999999999999.9999; //最大处理的数字
+                var IntegerNum; //金额整数部分
+                var DecimalNum; //金额小数部分
+                var ChineseStr = ""; //输出的中文金额字符串
+                var parts; //分离金额后用的数组，预定义
+                var Symbol = "";//正负值标记
+                if (opt.common.isEmpty(money)) {
+                    return "";
+                }
+                money = parseFloat(money);
+                if (money >= maxNum) {
+                    throw new Error('超出最大金额!');
+                }
+                if (money == 0) {
+                    ChineseStr = cnNums[0] + cnIntLast + cnInteger;
+                    return ChineseStr;
+                }
+                if (money < 0) {
+                    money = -money;
+                    Symbol = "负 ";
+                }
+                money = money.toString(); //转换为字符串
+                if (money.indexOf(".") == -1) {
+                    IntegerNum = money;
+                    DecimalNum = '';
+                } else {
+                    parts = money.split(".");
+                    IntegerNum = parts[0];
+                    DecimalNum = parts[1].substr(0, 4);
+                }
+                if (parseInt(IntegerNum, 10) > 0) { //获取整型部分转换
+                    var zeroCount = 0;
+                    var IntLen = IntegerNum.length;
+                    for (var i = 0; i < IntLen; i++) {
+                        var n = IntegerNum.substr(i, 1);
+                        var p = IntLen - i - 1;
+                        var q = p / 4;
+                        var m = p % 4;
+                        if (n == "0") {
+                            zeroCount++;
+                        }
+                        else {
+                            if (zeroCount > 0) {
+                                ChineseStr += cnNums[0];
+                            }
+                            zeroCount = 0; //归零
+                            ChineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+                        }
+                        if (m == 0 && zeroCount < 4) {
+                            ChineseStr += cnIntUnits[q];
+                        }
+                    }
+                    ChineseStr += cnIntLast;
+                    //整型部分处理完毕
+                }
+                if (DecimalNum != '') { //小数部分
+                    var decLen = DecimalNum.length;
+                    for (var i = 0; i < decLen; i++) {
+                        var n = DecimalNum.substr(i, 1);
+                        if (n != '0') {
+                            ChineseStr += cnNums[Number(n)] + cnDecUnits[i];
+                        }
+                    }
+                }
+                if (ChineseStr == '') {
+                    ChineseStr += cnNums[0] + cnIntLast + cnInteger;
+                } else if (DecimalNum == '') {
+                    ChineseStr += cnInteger;
+                }
+                ChineseStr = Symbol + ChineseStr;
+                return ChineseStr;
+            },
+            /**
+             * 版本比较函数
+             * @param version1
+             * @param version2
+             * @returns {number}
+             */
+            compareVersion: function(version1, version2) {
+                var arr1 = version1.split('.');
+                var arr2 = version2.split('.');
+                var length1 = arr1.length;
+                var length2 = arr2.length;
+                var minlength = Math.min(length1, length2);
+                var i = 0;
+                for (i ; i < minlength; i++) {
+                    var a = parseInt(arr1[i]);
+                    var b = parseInt(arr2[i]);
+                    if (a > b) {
+                        return 1;
+                    } else if (a < b) {
+                        return -1;
+                    }
+                }
+                if (length1 > length2) {
+                    for(var j = i; j < length1; j++) {
+                        if (parseInt(arr1[j]) != 0) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                } else if (length1 < length2) {
+                    for(var j = i; j < length2; j++) {
+                        if (parseInt(arr2[j]) != 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
+                return 0;
+            },
             /**
              * 数字 转金额格式
              * 12345678,2,'$',',','.'
@@ -1006,6 +1126,7 @@ if (typeof jQuery === "undefined") {
                     j = (j = i.length) > 3 ? j % 3 : 0;
                 return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
             },
+
             /**
              * 播放音频
              * @param src 可以传网络url 也可传项目audio文件夹下面音频文件名称
@@ -1194,20 +1315,43 @@ if (typeof jQuery === "undefined") {
                 //toPrecision(3) 后面保留一位小数，如1.0GB //return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
             },
             /**
-             * Get file name from path
+             * Get file name from path(获取文件路径获取文件名)
              * @param {String} file path to file
              * @return filename
              */
             fileFromPath: function(file){
-                    return file.replace(/.*(\/|\\)/, "");
+                return file.replace(/.*(\/|\\)/, "");
             },
+
             /**
-             * Get file extension lowercase
+             * Get file extension lowercase(获取文件后缀名称)
              * @param {String} file name
              * @return file extenstion
              */
             getExt: function(file){
                 return (-1 !== file.indexOf('.')) ? file.replace(/.*[.]/, '') : '';
+            },
+
+            /**
+             * Repair the path(http修复路径)
+             * @param path
+             * @returns {string}
+             */
+            optimizationPath: function(path) {
+                var protocol = /^[a-z]+:\/\//.exec(path)[0],
+                    tmp = null,
+                    res = [];
+                path = path.replace(protocol, "").split("?")[0].split("#")[0];
+                path = path.replace(/\\/g, '/').split(/\//);
+                path[path.length - 1] = "";
+                while (path.length) {
+                    if (( tmp = path.shift() ) === "..") {
+                        res.pop();
+                    } else if (tmp !== ".") {
+                        res.push(tmp);
+                    }
+                }
+                return protocol + res.join("/");
             }
         },
         // 弹出层封装处理
@@ -1405,10 +1549,12 @@ if (typeof jQuery === "undefined") {
              * @param yes [非必输] 只有在传 true 则先回调弹出层submitHandler 方法如果此submitHandler方法返回true,则再回调 callback 方法
              */
             open: function (title, url,width, height,callback,type) {
+				var full = false;
                 //如果是移动端，就使用自适应大小弹窗
                 if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                     width = 'auto';
                     height = 'auto';
+					full = true;
                 }
                 if (opt.common.isEmpty(title)) {
                     title = false;
@@ -1425,7 +1571,6 @@ if (typeof jQuery === "undefined") {
                 if (opt.common.isEmpty(type)) {
                     type = 2;
                 }
-                var full = false;
                 //自动适配窗口大小 如果传的大小比所在窗口大 则最大化
                 if(width !== 'auto' || height !== 'auto'){
                     if(width > $(window).width() || height > $(window).height() ){
@@ -2914,9 +3059,9 @@ if (typeof jQuery === "undefined") {
                     }
                     if (!_flag){
                         if(options.columns[0] instanceof Array){
-                            options.columns[1].splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns[1].splice(0,0,{checkbox: true, field: '_state'});
                         }else{
-                            options.columns.splice(0,0,{checkbox: true, field: 'state'});
+                            options.columns.splice(0,0,{checkbox: true, field: '_state'});
                         }
                     }
                 }
@@ -2934,7 +3079,7 @@ if (typeof jQuery === "undefined") {
                                 }
                                 // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                                 if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
-                                    options.columns[i][j].field = 'state';
+                                    options.columns[i][j].field = '_state';
                                 }
                             }
                         }else {
@@ -2946,7 +3091,7 @@ if (typeof jQuery === "undefined") {
                             }
                             // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                             if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
-                                options.columns[i].field = 'state';
+                                options.columns[i].field = '_state';
                             }
                         }
                     }
@@ -3104,9 +3249,9 @@ if (typeof jQuery === "undefined") {
                                         }
                                     }
 
-                                    row.state = _flag;
+                                    row._state = _flag;
                                 }else{
-                                    row.state = false;
+                                    row._state = false;
                                 }
                             })
                         }
@@ -3193,17 +3338,11 @@ if (typeof jQuery === "undefined") {
                 $(optionsIds).off("click").on("click", '.img-circle', function() {
                     var src = $(this).attr('src');
                     var target = $(this).data('target');
-                    var height = $(this).data('height');
-                    var width = $(this).data('width');
+                    var height = $(this).data('height') == 'auto'?'':$(this).data('height');
+                    var name = $(this).data('name');
+                    var width = $(this).data('width') == 'auto'?'':$(this).data('width');
                     if(opt.common.equals("self", target)) {
-                        layer.open({
-                            title: false,
-                            type: 1,
-                            closeBtn: true,
-                            shadeClose: true,
-                            area: ['auto', 'auto'],
-                            content: "<img src='" + src + "' height='" + height + "' width='" + width + "'/>"
-                        });
+                        opt.modal.openView(name,src,width,height);
                     } else if (opt.common.equals("blank", target)) {
                         window.open(src);
                     }
@@ -3334,7 +3473,6 @@ if (typeof jQuery === "undefined") {
                     }
                 });
 
-
                 // $(window).on('resize', function () {
                 //     // 浮动提示框特效
                 //     //$(".table [data-toggle='tooltip']").tooltip();
@@ -3432,7 +3570,10 @@ if (typeof jQuery === "undefined") {
                 // blank or self
                 var _target = opt.common.isEmpty(target) ? 'self' : target;
                 if (opt.common.isNotEmpty(value)) {
-                    return opt.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s'/>", height, width, _target, value);
+                    //value = opt.common.optimizationPath(value);
+                    var name = opt.common.fileFromPath(value);
+                    ///fast/sys/comm/fileAvatarView?filePath=/avatar/2020/12/25/7325bc151faf46538733237d97bf9270.png
+                    return opt.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s' data-name='%s'/>", height, width, _target, value,name);
                 } else {
                     return opt.common.nullToStr(value);
                 }
@@ -3489,17 +3630,22 @@ if (typeof jQuery === "undefined") {
                 opt.modal.confirm("确定导出所有" + opt.table.options.modalName + "吗？", function() {
                     var currentId = opt.common.isEmpty(formId) ? $('form').attr('id') : formId;
                     opt.modal.loading("正在导出数据，请稍后...");
-
-                    $.post(opt.table.options.exportUrl, $("#" + currentId).serializeArray(), function(result) {
-                        if (result.code ==opt.variable.web_status.SUCCESS) {
-                            window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
-                        } else if (result.code == opt.variable.web_status.WARNING) {
-                            opt.modal.alertWarning(result.msg)
-                        } else {
-                            opt.modal.alertError(result.msg);
+                    var config = {
+                        type: "POST",
+                        url: opt.table.options.exportUrl,
+                        data: $("#" + currentId).serializeArray(),
+                        success: function(result) {
+                            if (result.code ==opt.variable.web_status.SUCCESS) {
+                                window.location.href = baseURL + "excel/download?fileName=" + encodeURI(result.msg);
+                            } else if (result.code == opt.variable.web_status.WARNING) {
+                                opt.modal.alertWarning(result.msg)
+                            } else {
+                                opt.modal.alertError(result.msg);
+                            }
+                            opt.modal.closeLoading();
                         }
-                        opt.modal.closeLoading();
-                    });
+                    }
+                    opt.common.sendAjax(config);
                 });
             },
             // 下载模板
@@ -3574,6 +3720,12 @@ if (typeof jQuery === "undefined") {
                 $("#" + currentId).bootstrapTable('refresh', {
                     silent: true
                 });
+            },
+            //根据行uniqueId值 查询整行数据
+            getRowByUniqueId: function(uniqueId,tableId){
+                opt.table.set(tableId);
+                var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
+                return $("#" + currentId).bootstrapTable('getRowByUniqueId',uniqueId);
             },
             // 查询表格指定列值
             selectColumns: function(column) {
@@ -4102,12 +4254,12 @@ if (typeof jQuery === "undefined") {
                         //兼容返回数据
                         var list;
 
-                        if(data.__proto__.constructor==Array){
+                        if(opt.common.isArray(data)){
                             list = data;
                         }else{
                             if(data.code == opt.variable.web_status.SUCCESS){
                                 for(var key  in data){
-                                    if(Array.prototype==data[key].__proto__){
+                                    if(opt.common.isArray(data[key])){
                                         list = data[key];
                                     }
                                 }

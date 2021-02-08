@@ -62,7 +62,6 @@
             autoTheadWidth(true);
             // 缓存target对象
             target.data('bootstrap.tree.table', target);
-
         }
         // 初始化容器
         var initContainer = function() {
@@ -72,6 +71,7 @@
             }
             // 在外层包装一下div，样式用的bootstrap-table的
             var $main_div = $("<div class='bootstrap-tree-table'></div>");
+            //width: 323px;overflow: auto;position: relative;
             var $treetable = $("<div class='treetable-table'></div>");
             // var $pagination = $("<div class='fixed-table-pagination'></div>");
             target.before($main_div);
@@ -339,6 +339,37 @@
 
             if(options.async){
                 initPagination(totalPage,currPage);
+            }
+
+            // J2eeFAST 优化适配移动端
+            var  treetable_table = $(target).parent('.treetable-table');
+            var oWidth = treetable_table.outerWidth();
+            if(oWidth < 800 || navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
+                var style = "width: "+oWidth+"px;overflow: auto;position: relative;"
+                treetable_table.attr('style',style);
+                var w= 0;
+                //计算大概总宽度
+                $.each(options.columns, function(i, column) {
+                    // 判断有没有选择列
+                    if (i == 0 && column.field == 'selectItem') {
+                        w += 36;
+                    } else {
+                        if(column.width){
+                            if(typeof column.width === 'number' && !isNaN(column.width)){
+                                w += column.width;
+                            }else{
+                                if(column.width.indexOf('px') > 0){
+                                    w += parseInt(column.width.substr(0,column.width.indexOf('px')),10);
+                                }else{
+                                    w += 100;
+                                }
+                            }
+                        }else{
+                            w += 100;
+                        }
+                    }
+                });
+                $(target).attr('style','width:' + w+'px');
             }
         }
 

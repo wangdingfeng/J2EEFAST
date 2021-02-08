@@ -46,7 +46,6 @@ public class SysConfigController extends BaseController {
 		return urlPrefix + "/config";
 	}
 
-
 	/**
 	 * 新增参数配置
 	 */

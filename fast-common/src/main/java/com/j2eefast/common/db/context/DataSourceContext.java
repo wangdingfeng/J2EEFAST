@@ -5,7 +5,11 @@
  */
 package com.j2eefast.common.db.context;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.config.properties.DruidProperties;
+import com.j2eefast.common.core.constants.ConfigConstant;
+import com.j2eefast.common.core.io.PropertiesUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.dao.SysDataBaseDao;
 import com.j2eefast.common.db.factory.AtomikosFactory;
@@ -22,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version: 1.0.1
  */
 public class DataSourceContext {
+	
 	/**
 	 * 主数据源名称
 	 */
@@ -155,7 +160,13 @@ public class DataSourceContext {
 		//添加到全局配置里
 		DATA_SOURCES_CONF.put(dataSourceName, druidProperties);
 
-		return AtomikosFactory.create(dataSourceName, druidProperties);
+		if(PropertiesUtils.getInstance().getProperty(ConfigConstant.JTA_ENABLED_YML).equals(ConfigConstant.TRUE)) {
+			return AtomikosFactory.create(dataSourceName, druidProperties);
+		}else {
+			DruidDataSource dataSource = new DruidDataSource();
+			druidProperties.config(dataSource);
+			return dataSource;
+		}
 	}
 	
 	
@@ -169,5 +180,27 @@ public class DataSourceContext {
 	public static DataSource getDefaultDataSource() {
 		
 		return DATA_SOURCES.get(MASTER_DATASOURCE_NAME);
+	}
+
+
+	/**
+	 * 获取系统主数据库类型
+	 * @author ZhouZhou
+	 * @Date: 2020-12-31 17:54:19
+	 * @return
+	 */
+	public static String getDefaultDbType() {
+		return JdbcUtils.getDbType(DATA_SOURCES_CONF.get(MASTER_DATASOURCE_NAME).getUrl()).getDb();
+	}
+
+	/**
+	 * 获取数据库类型
+	 * @param dbName 数据库别名
+	 * @author ZhouZhou
+	 * @Date: 2020-12-31 17:54:19
+	 * @return
+	 */
+	public static String getDbType(String dbName) {
+		return JdbcUtils.getDbType(DATA_SOURCES_CONF.get(dbName).getUrl()).getDb();
 	}
 }
