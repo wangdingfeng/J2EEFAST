@@ -74,6 +74,14 @@ public class SysFileService extends ServiceImpl<SysFileMapper, SysFilesEntity> {
 	}
 
 	/**
+	 * 通过文件MD5判断文件是否存在
+	 * @param md5
+	 * @return
+	 */
+	public SysFilesEntity findSysFileByMd5(String md5){
+		return this.getOne(new QueryWrapper<SysFilesEntity>().eq("file_md5",md5));
+	}
+	/**
 	
     /**
      * 通过业务ID,类型查询 文件列表

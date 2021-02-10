@@ -172,7 +172,12 @@ public class Constant {
 		/**
 		 * 七牛云
 		 */
-		QINIU(3);
+		QINIU(3),
+
+		/**
+		 * FTP
+		 */
+		FTP(4);
 
 		private int value;
 
