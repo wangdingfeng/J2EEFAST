@@ -1,1 +1,1 @@
-sqlserver 数据库升级脚本
+sqlserver 数据库升级脚本目录
