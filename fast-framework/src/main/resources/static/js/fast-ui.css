@@ -1030,6 +1030,10 @@ label {
 	border-bottom: 1px dashed #ccd5db;
 }
 
+.table>tbody>tr>td>.tb-a:hover{
+	border-bottom: 1px dashed #ccd5db;
+}
+
 
 .table-striped .table>thead:first-child>tr:first-child>th {
 	/*font-weight: normal;*/
