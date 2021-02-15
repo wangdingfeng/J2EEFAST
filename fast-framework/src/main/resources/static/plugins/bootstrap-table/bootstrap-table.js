@@ -19,6 +19,7 @@
  * 8.新增id 对象标识,修复页面多表格 回调函数问题
  * 9.修复表格行title提示列转义显示问题
  * 10.修复页面同时多个表格属性firstLoad=false 异常情况
+ * 11.优化加载样式
  * --------------------------------------------------
  */
 (function ($) {
@@ -491,7 +492,7 @@
 
     BootstrapTable.LOCALES['en-US'] = BootstrapTable.LOCALES.en = {
         formatLoadingMessage: function () {
-            return 'Loading, please wait...';
+            return 'Loading, please wait';
         },
         formatRecordsPerPage: function (pageNumber) {
             return sprintf('%s rows per page', pageNumber);
@@ -632,7 +633,12 @@
             '<div class="fixed-table-header"><table></table></div>',
             '<div class="fixed-table-body">',
             '<div class="fixed-table-loading">',
+            '<span class="loading-wrap">',
+            '<span class="loading-text" style="font-size: 13px;">',
             this.options.formatLoadingMessage(),
+            '</span>',
+            '<span class="animation-wrap"><span class="animation-dot"></span></span>',
+            '</span>',
             '</div>',
             '</div>',
             '<div class="fixed-table-footer"><table><tr></tr></table></div>',
@@ -2100,7 +2106,6 @@
             }
             if(this.options.rightFixedColumns){
                 if($("#"+this.options.id + "-right-fixed-table-columns")){
-                    console.log("右侧隐藏---");
                     $("#"+this.options.id + "-right-fixed-table-columns").hide();
                 }
             }

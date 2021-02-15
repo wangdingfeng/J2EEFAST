@@ -3,7 +3,7 @@
 
     $.fn.bootstrapTable.locales['zh-CN'] = {
         formatLoadingMessage: function () {
-            return  $.i18n.prop('数据加载中，请稍后...');
+            return  $.i18n.prop('数据正在努力加载中,请稍后');
         },
         formatRecordsPerPage: function (pageNumber) {
             return pageNumber + ' 条记录每页';
