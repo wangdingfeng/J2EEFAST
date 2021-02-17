@@ -74,6 +74,7 @@ J2eeFAST 是一个 Java EE 企业级快速开发平台， **致力于打造中�
     - 修复代码生成器id上传文件id问题
     - 移除redis开启控制
     - 优化其他细节
+
     
 2. [更新日志](https://www.yuque.com/u1174484/j2eefast/yscyux) 
 
