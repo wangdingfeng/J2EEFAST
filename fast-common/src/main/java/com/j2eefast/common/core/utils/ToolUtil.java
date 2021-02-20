@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.extra.ftp.Ftp;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.OshiUtil;
@@ -821,4 +822,39 @@ public class ToolUtil{
         byte[] encoded = key.getEncoded();
         return encoded;
     }
+
+    public static String getLocalBpmDbPath(String dbName,String fileName) {
+        String realPath = ToolUtil.class.getClassLoader().getResource("")
+                .getFile();
+        java.io.File file = new java.io.File(realPath);
+        realPath = file.getAbsolutePath();
+        try {
+            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        realPath = realPath.substring(0,realPath.indexOf("fast-admin")) + "db"+File.separator+dbName+File.separator+"bpm"+File.separator+fileName+".sql";
+        realPath = FileUtil.normalize(realPath);
+        return realPath;
+    }
+
+    public static String getLocalCoreDbPath(String dbName,String fileName) {
+        String realPath = ToolUtil.class.getClassLoader().getResource("")
+                .getFile();
+        java.io.File file = new java.io.File(realPath);
+        realPath = file.getAbsolutePath();
+        try {
+            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        realPath = realPath.substring(0,realPath.indexOf("fast-admin")) + "db"+File.separator+dbName+File.separator+fileName+".sql";
+        realPath = FileUtil.normalize(realPath);
+        return realPath;
+    }
+
+//    public static void main(String[] args) {
+//        Ftp ftp = new Ftp("192.168.20.110",21,"ftp","zhouhuan");
+//        ftp.download("attach/file/2021/02/09/","ca296385a464b91bdbff567015519efa.jpg",FileUtil.touch(""));
+//    }
 }
