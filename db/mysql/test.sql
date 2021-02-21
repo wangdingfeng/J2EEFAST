@@ -110,7 +110,7 @@ COMMIT;
 -- Records of sys_module
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_module` VALUES (1, 'core', '核心模块', '用户、角色、组织、模块、菜单、字典、参数、系统相关功能', 'com.j2eefast.modules.sys.controller.SysLoginController', 'fa  icon-settings', '2.2.0', NULL, '0', '0', 'admin', '2020-02-14 17:31:35', 'admin', '2020-02-14 17:31:35', '2020-12-22 稳定版本支持同时支持多种数据库。'), (1250950663929724930, 'bpm', '业务流程', '流程设计器、流程监管控制、流程办理、流程追踪', 'com.j2eefast.flowable.bpm.controller.DeModelController', 'fa fa-codepen', '1.0.0', NULL, '0', '0', 'admin', '2020-04-16 16:54:14', 'admin', '2020-04-28 07:56:39', '业务流程');
+INSERT INTO `sys_module` VALUES (1, 'core', '核心模块', '用户、角色、组织、模块、菜单、字典、参数、系统相关功能', 'com.j2eefast.modules.sys.controller.SysLoginController', 'fa  icon-settings', '2.2.1', NULL, '0', '0', 'admin', '2020-02-14 17:31:35', 'admin', '2020-02-14 17:31:35', '2021-02-04 稳定版本支持同时支持多种数据库。'), (1250950663929724930, 'bpm', '业务流程', '流程设计器、流程监管控制、流程办理、流程追踪', 'com.j2eefast.flowable.bpm.controller.DeModelController', 'fa fa-codepen', '1.0.0', NULL, '0', '0', 'admin', '2020-04-16 16:54:14', 'admin', '2020-04-28 07:56:39', '业务流程');
 COMMIT;
 
 -- ----------------------------
