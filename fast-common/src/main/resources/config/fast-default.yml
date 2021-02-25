@@ -105,6 +105,11 @@ aj:
     aes-status: true
     #滑动干扰项(0/1/2)
     interference-options: 2
+    #滑动验证，底图路径，不配置将使用默认图片
+    ##支持全路径
+    ##支持项目路径,以classpath:开头,取resource目录下路径,例：classpath:images/jigsaw
+    jigsaw: classpath:config/aj/images/jigsaw
+    pic-click: classpath:config/aj/images/pic-click
 
 # Shiro 配置
 shiro:
