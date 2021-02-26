@@ -1267,7 +1267,7 @@ body .layui-layer-page .layui-layer-content .form-file {
 .edui-default .edui-editor {
 	border-color: #e6e6e6 !important;
 	border-radius: .215rem !important;
-	z-index: 0!important;
+	z-index: 0;
 }
 
 .edui-default .edui-editor-toolbarbox {
