@@ -2,10 +2,9 @@
  * All content copyright http://www.j2eefast.com, unless
  * otherwise indicated. All rights reserved.
  * No deletion without permission
- */package com.fast.test;
+ */package com.j2eefast.test;
 
 import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
@@ -14,7 +13,6 @@ import com.j2eefast.common.core.utils.YamlUtil;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import java.io.File;
 import java.util.Date;
 import java.util.List;
