@@ -5,6 +5,7 @@
  */
 package com.j2eefast.framework.bussiness.aop;
 
+import com.j2eefast.common.core.xss.SQLFilter;
 import com.j2eefast.framework.utils.Constant;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.aspectj.lang.JoinPoint;
@@ -41,6 +42,11 @@ public class RequiresPermissionsAspect {
             if (o != null && o instanceof Map) {
                 Map map = (Map) o;
                 map.put(Constant.REQUIRES_PERMISSIONS,dataFilter.value());
+                for (Object key : map.keySet()) {
+                    if(map.keySet() !=null && map.get(key) instanceof  String){
+                        SQLFilter.sqlInject((String)map.get(key));
+                    }
+                }
                 break;
             }
         }
