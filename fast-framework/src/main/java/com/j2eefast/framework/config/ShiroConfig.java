@@ -49,49 +49,49 @@ public class ShiroConfig {
 	/**
 	 * Session超时时间，单位为毫秒（默认30分钟）
 	 */
-	@Value("${shiro.session.expireTime: 30}")
+	@Value("#{ @environment['shiro.session.expireTime'] ?: 30 }")
 	private int expireTime;
 
 	/**
 	 * 设置session失效的扫描时间, 清理用户直接关闭浏览器造成的孤立会话 (默认设置5分钟)
 	 */
-	@Value("${shiro.session.validationTime: 5}")
+	@Value("#{ @environment['shiro.session.validationTime'] ?: 5 }")
 	private int validationTime;
 
 	/**
 	 * 设置Cookie的域名
 	 */
-	@Value("${shiro.cookie.domain: ''}")
+	@Value("${shiro.cookie.domain}")
 	private String domain;
 
 	/**
 	 * 设置cookie的有效访问路径设置与项目路径一直
 	 */
-	@Value("${server.servlet.context-path: /}")
+	@Value("#{ @environment['server.servlet.context-path'] ?: '/' }")
 	private String path;
 
 	/**
 	 * 设置HttpOnly属性
 	 */
-	@Value("${shiro.cookie.httpOnly: true}")
+	@Value("#{ @environment['shiro.cookie.httpOnly'] ?: true }")
 	private boolean httpOnly;
 
 	/**
 	 * 是否开启记住我功能
 	 */
-	@Value("${shiro.rememberMe.enabled: false}")
+	@Value("#{ @environment['shiro.rememberMe.enabled'] ?: false }")
 	private boolean rememberMe;
 
 	/**
 	 * 密钥
 	 */
-	@Value("${shiro.rememberMe.cipherKey: ~}")
+	@Value("${shiro.rememberMe.cipherKey}")
 	private String cipherKey;
 
 	/**
 	 * 设置Cookie的过期时间，秒为单位
 	 */
-	@Value("${shiro.cookie.maxAge: 30}")
+	@Value("#{ @environment['shiro.cookie.maxAge'] ?: 30 }")
 	private int maxAge;
 	
 	/**

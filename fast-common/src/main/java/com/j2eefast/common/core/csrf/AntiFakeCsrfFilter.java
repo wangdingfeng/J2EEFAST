@@ -22,6 +22,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +31,7 @@ import java.util.Map;
  * @author huanzhou
  */
 @Configuration
-@ConditionalOnProperty(prefix = "fast.csrf", name = "enabled", havingValue="true")
+@ConditionalOnProperty(prefix = "fast.csrf", name = "enabled", havingValue="true",matchIfMissing = true)
 public class AntiFakeCsrfFilter {
 
     @Lazy
@@ -42,8 +44,14 @@ public class AntiFakeCsrfFilter {
     /**
      * 防盗链URL
      */
-    @Value("${fast.csrf.urlReferer: }")
+    @Value("#{ @environment['fast.csrf.urlReferer'] ?: null }")
     private String urlReferer;
+
+    @Value("#{ @environment['fast.csrf.excludes'] ?: null }")
+    private String excludes;
+
+    @Value("#{ @environment['fast.csrf.enabled'] ?: false }")
+    private boolean csrfEnabled;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
@@ -64,8 +72,20 @@ public class AntiFakeCsrfFilter {
      */
     class CsrfFilter implements Filter {
 
+        /**
+         * 排除链接
+         */
+        public List<String> tempExcludes = new ArrayList<>();
+
         @Override
         public void init(FilterConfig filterConfig) throws ServletException {
+            if(ToolUtil.isNotEmpty(excludes)){
+                String[] url = excludes.split(",");
+                for (int i = 0; url != null && i < url.length; i++) {
+                    tempExcludes.add(url[i]);
+                }
+            }
+
         }
 
         @Override
@@ -79,7 +99,19 @@ public class AntiFakeCsrfFilter {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             }
-            if("POST".equals(request.getMethod())) {
+            if("POST".equals(request.getMethod()) && csrfEnabled) {
+
+                //排除特例
+                if(ToolUtil.isNotEmpty(tempExcludes)){
+                    for(String pattern: tempExcludes){
+                        AntPathMatcher matcher = new AntPathMatcher();
+                        if(matcher.match(pattern,path) ||
+                                matcher.matchStart(pattern,path)){
+                            filterChain.doFilter(servletRequest, servletResponse);
+                            return;
+                        }
+                    }
+                }
 
                 String referer = request.getHeader("Referer");
                 if(ToolUtil.isNotEmpty(urlReferer)){
@@ -104,7 +136,8 @@ public class AntiFakeCsrfFilter {
                 String ipnutCsrfToken = request.getParameter("X-CSRF-Token");
                 String sysCsrfToken = (String) redisUtil.getSession("sys_csrfToken:shiro:session:"+CookieUtil.getCookie(request,ConfigConstant.FAST_SESSION_ID));
 
-                if(ToolUtil.isEmpty(csrfToken) &&  ToolUtil.isEmpty(ipnutCsrfToken)){
+                if( (ToolUtil.isEmpty(csrfToken) && ToolUtil.isEmpty(ipnutCsrfToken))
+                        || ToolUtil.isEmpty(sysCsrfToken)){
                     ResponseData r = ResponseData.error("70001", ConfigConstant.REQUEST_PROMPT);
                     String json = JSONUtil.toJsonStr(r);
                     response.setStatus(406);
@@ -118,6 +151,7 @@ public class AntiFakeCsrfFilter {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
+
                 ResponseData r = ResponseData.error("70001", ConfigConstant.REQUEST_PROMPT);
                 String json = JSONUtil.toJsonStr(r);
                 response.setStatus(406);

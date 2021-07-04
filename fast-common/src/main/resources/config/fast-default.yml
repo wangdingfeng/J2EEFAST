@@ -211,6 +211,8 @@ fast:
     enabled: true
     #防盗链允许的网站来源地址配置多个URL , 分割
     #urlReferer: 'http:127.0.0.1, http:loclhost'
+    # 排除链接（多个用逗号分隔）
+    #excludes: /ureport/*
   #JTA 分布式事务，建议启用多数据源的时候开启
   jta:
     enabled: false
