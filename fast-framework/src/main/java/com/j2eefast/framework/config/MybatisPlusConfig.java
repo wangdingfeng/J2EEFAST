@@ -48,11 +48,6 @@ public class MybatisPlusConfig {
         return interceptor;
     }
 
-    @Bean
-    public ConfigurationCustomizer configurationCustomizer() {
-        return configuration -> configuration.setUseDeprecatedExecutor(false);
-    }
-
     /**
      * 自动填充
      * @author ZhouZhou
