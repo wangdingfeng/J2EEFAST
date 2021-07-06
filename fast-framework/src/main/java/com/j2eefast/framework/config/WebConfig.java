@@ -41,8 +41,9 @@ public class WebConfig implements WebMvcConfigurer {
 
 
 
-	@Value("${spring.messages.defaultLocale: zh_CN}")
+	@Value("#{ @environment['spring.messages.defaultLocale'] ?: 'zh_CN' }")
 	private String defaultLocale;
+
 	@Autowired
 	private SecurityKeyInterceptorAdapter securityKeyInterceptorAdapter;
 
@@ -64,7 +65,11 @@ public class WebConfig implements WebMvcConfigurer {
         /**工作流资源拦截 若不用可以屏蔽*/
 		registry.addResourceHandler("/flowable/**").addResourceLocations("classpath:/flowable/");
         /** 本地文件上传路径 */
-        registry.addResourceHandler(Constant.RESOURCE_URLPREFIX + "/**").addResourceLocations("file:" + Global.getRootPath());
+        registry.addResourceHandler("/**").addResourceLocations("file:" + Global.getAvatarPath(),"file:" + Global.getEditorPath());
+		/** swagger配置 */
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
 //    /**
