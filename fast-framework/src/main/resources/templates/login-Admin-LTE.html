@@ -5,19 +5,8 @@
 * @version 2020-09-28
 -->
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="true">
-<!DOCTYPE html>
-<html>
-<head>
-<#import "/common/springctx.ftl" as ctx>
-<meta charset="utf-8">
-<title>登录 - J2eeFAST J2eefast.com</title>
-<link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
-<#--Tell the browser to be responsive to screen width -->
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<meta name="keywords" content="PoweredByJ2eeFast"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<@pageTheme mark=true>
+<@header title="登录" isPAS=false >
 <#-- Bootstrap 3.3.7 -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
 <#-- Font Awesome -->
@@ -43,23 +32,29 @@
 <![endif]-->
 <#-- Vue单页面刷新闪烁标签{{}}问题解决-->
 <style>[v-cloak]{display:none !important;}
-  <#--.login-page {-->
-  <#--    background-image: url(${ctxStatic}/static/img/login/bg2.png);-->
-  <#--    background-repeat: no-repeat;-->
-  <#--    background-size:100% 100%;-->
-  <#--}-->
-  /*.login-logo a, .register-logo a {*/
-  /*    color: #fff;*/
-  /*    font-weight: 400;*/
-  /*}*/
-  .footer-item, .footer-item a{
-      color: #000;
-  }
-  .footer-item a:hover{
-      color:#00a0e9;
-  }
+    <#-- .login-page {-->
+    <#--     background-image: url(${ctxStatic}/static/img/login/bg15.jpg);-->
+    <#--     background-repeat: no-repeat;-->
+    <#--     background-size:100% 100%;-->
+    <#-- }-->
+    <#-- .animated {-->
+    <#--   -webkit-animation-duration: 2.6s;-->
+    <#--   animation-duration: 2.6s;-->
+    <#--   -webkit-animation-fill-mode: both;-->
+    <#--   animation-fill-mode: both;-->
+    <#--}-->
+    <#--.login-logo a, .register-logo a {-->
+    <#--    color: #fff;-->
+    <#--     font-weight: 400;-->
+    <#-- }-->
+    <#-- .footer-item, .footer-item a{-->
+    <#--     color: #fff !important;-->
+    <#-- }-->
+    <#-- .footer-item a:hover{-->
+    <#--     color:#fff;-->
+    <#-- }-->
 </style>
-</head>
+</@header>
 <body class="hold-transition login-page">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
@@ -77,12 +72,15 @@
       <form action="#" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" id="username" v-model="username" placeholder="<@ctx.i18n text = "账号/邮箱/手机号码"/>">
-        <span class="glyphicon glyphicon-user form-control-feedback "></span>
+        <span class="fa icon-user form-control-feedback "></span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" id="password"  autocomplete="off" class="form-control"  v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
-        <span class="glyphicon glyphicon-lock form-control-feedback" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
-              data-toggle="tooltip" data-placement="bottom" onmousedown="$('#password').attr('type','text')" onmouseup="$('#password').attr('type','password')"></span>
+        <span class="fa icon-lock form-control-feedback" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
+              data-toggle="tooltip" data-placement="bottom" onmousedown="$('#password').attr('type','text')"
+              onmouseup="$('#password').attr('type','password')"
+              onmouseenter="$(this).removeClass('icon-lock').addClass('icon-eye')"
+              onmouseout="$(this).removeClass('icon-eye').addClass('icon-lock')"></span>
       </div>
       <div  v-if="loadcode" class="form-group has-feedback">
         <input type="text" class="form-control"  v-model="captcha" copyright="J2eeFAST" placeholder="<@ctx.i18n text = "验证码"/>">
@@ -141,55 +139,36 @@
 					</div>
           </div>
        </div>
-      <#if config.getKey("SYS_IS_OAUTH") == "0">
           <div class="social-auth-links text-center">
+              <#if config.getKey("SYS_IS_OAUTH") == "0">
               <div class="oauth-title">
                   <span class="text-muted"> 其他方式登录 </span>
               </div>
               <div class="oauth-list">
                   <div class="item" title="<@ctx.i18n text = "使用 Gitee 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/gitee">
-                          <img src="${ctxStatic}/static/img/gitee.svg"/>
+                          <img src="${ctxStatic}/static/img/login/gitee.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "使用 GitHub 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/github">
-                          <img src="${ctxStatic}/static/img/github.svg"/>
+                          <img src="${ctxStatic}/static/img/login/github.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "使用 OsChina 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/oschina">
-                          <img src="${ctxStatic}/static/img/oschina.svg"/>
+                          <img src="${ctxStatic}/static/img/login/oschina.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "功能开发中..."/>" data-toggle="tooltip" data-placement="top">
                       <a href="#">
-                          <img src="${ctxStatic}/static/img/qq-no.svg"/>
+                          <img src="${ctxStatic}/static/img/login/qq-no.svg"/>
                       </a>
                   </div>
               </div>
-              <div class="login__ie_compatible">
-                  <span class="text">建议使用</span>
-                  <img data-v-0 class="icon">
-                  <span class="text">Chrome、</span>
-                  <img data-v-1 class="icon">
-                  <span class="text">火狐、</span>
-                  <img data-v-2 class="icon">
-                  <span class="text">Safari浏览器</span>
-              </div>
-              <div class="login__ie_compatible">
-                  <span class="text">或</span>
-                  <img data-v-3 class="icon">
-                  <span class="text">360、</span>
-                  <img data-v-4 class="icon">
-                  <span class="text">搜狗、</span>
-                  <img data-v-5 class="icon">
-                  <span class="text">QQ浏览器</span>
-                  <img data-v-6 class="icon">
-                  <span class="text">极速模式</span>
-              </div>
+              </#if>
+              <#include "/common/index/compatibility.html"/>
           </div>
-      </#if>
   </div>
   <!-- /.login-box-body -->
 </div>
@@ -219,9 +198,6 @@
             <a href="http://www.beian.miit.gov.cn/" class="text-black" target="_blank">${config.getIPC()}</a>
         </span>
 </div>
-<#--jQuery 3 -->
-<script src="${ctxStatic}/static/libs/jquery.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
@@ -280,7 +256,7 @@
                 <#else>
                 $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
-                var s4=new SM4Util(that.getCookie("_secretKey"));
+                var s4= new SM4Util(that.getCookie("_secretKey"));
                 var data = {"username":s4.encryptData_ECB(vm.username),
                     "password":s4.encryptData_ECB(vm.password),
                     "captcha":vm.captcha,

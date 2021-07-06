@@ -1,47 +1,36 @@
 <#include "/common/defaultEngine.html">
 <@pageTheme mark="true">
-<!DOCTYPE html>
-<html>
-<head>
-    <#import "/common/springctx.ftl" as ctx>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="renderer" content="webkit">
-    <title>登录 - J2eeFAST J2eefast.com</title>
-    <link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
-    <#-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
-    <#-- Font Awesome -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
-    <#-- Ionicons -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css">
-    <#-- Theme style -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
-    <#-- iCheck -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
-    <#--animate 样式-->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
-    <#-- jQuery toast 提示框  -->
-    <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
-    <link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
-    <link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
-    <link rel="stylesheet" type="text/css" href="${ctxStatic}/static/css/baidu/n.css">
-    <link rel="stylesheet" href="${ctxStatic}/static/css/baidu/index_baidu.css">
-    <link rel="stylesheet" href="${ctxStatic}/static/css/baidu/passport.css">
-    <#if verification>
-    <link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
-    </#if>
-    <style>
-        .checkbox{
-            margin-bottom: 20px !important;
-        }
-        .dropdown-menu>li>a {
-            color: #777 !important;
-        }
-    </style>
-</head>
+<@header title="登录" isPAS=false >
+<link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
+<#-- Font Awesome -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
+<#-- Ionicons -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/Ionicons/css/ionicons.min.css">
+<#-- Theme style -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
+<#-- iCheck -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
+<#--animate 样式-->
+<link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
+<#-- jQuery toast 提示框  -->
+<link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
+<link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
+<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
+<link rel="stylesheet" type="text/css" href="${ctxStatic}/static/css/baidu/n.css">
+<link rel="stylesheet" href="${ctxStatic}/static/css/baidu/index_baidu.css">
+<link rel="stylesheet" href="${ctxStatic}/static/css/baidu/passport.css">
+<#if verification>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
+</#if>
+<style>
+.checkbox{
+    margin-bottom: 20px !important;
+}
+.dropdown-menu>li>a {
+    color: #777 !important;
+}
+</style>
+</@header>
 <body>
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
@@ -150,55 +139,36 @@
                                         </p>
                                     </form>
                                 </div>
-                                <#if config.getKey("SYS_IS_OAUTH") == "0">
                                 <div class="social-auth-links text-center">
+                                    <#if config.getKey("SYS_IS_OAUTH") == "0">
                                     <div class="oauth-title">
                                         <span class="text-muted"> 其他方式登录 </span>
                                     </div>
                                     <div class="oauth-list">
                                         <div class="item" title="<@ctx.i18n text = "使用 Gitee 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                             <a href="${ctxStatic}/auth/gitee">
-                                                <img src="${ctxStatic}/static/img/gitee.svg"/>
+                                                <img src="${ctxStatic}/static/img/login/gitee.svg"/>
                                             </a>
                                         </div>
                                         <div class="item" title="<@ctx.i18n text = "使用 GitHub 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                             <a href="${ctxStatic}/auth/github">
-                                                <img src="${ctxStatic}/static/img/github.svg"/>
+                                                <img src="${ctxStatic}/static/img/login/github.svg"/>
                                             </a>
                                         </div>
                                         <div class="item" title="<@ctx.i18n text = "使用 OsChina 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                             <a href="${ctxStatic}/auth/oschina">
-                                                <img src="${ctxStatic}/static/img/oschina.svg"/>
+                                                <img src="${ctxStatic}/static/img/login/oschina.svg"/>
                                             </a>
                                         </div>
                                         <div class="item" title="<@ctx.i18n text = "功能开发中..."/>" data-toggle="tooltip" data-placement="top">
                                             <a href="#">
-                                                <img src="${ctxStatic}/static/img/qq-no.svg"/>
+                                                <img src="${ctxStatic}/static/img/login/qq-no.svg"/>
                                             </a>
                                         </div>
                                     </div>
+                                    </#if>
                                 </div>
-                                </#if>
-                                <div class="login__ie_compatible">
-                                    <span class="text">建议使用</span>
-                                    <img data-v-0 class="icon">
-                                    <span class="text">Chrome、</span>
-                                    <img data-v-1 class="icon">
-                                    <span class="text">火狐、</span>
-                                    <img data-v-2 class="icon">
-                                    <span class="text">Safari浏览器</span>
-                                </div>
-                                <div class="login__ie_compatible">
-                                    <span class="text">或</span>
-                                    <img data-v-3 class="icon">
-                                    <span class="text">360、</span>
-                                    <img data-v-4 class="icon">
-                                    <span class="text">搜狗、</span>
-                                    <img data-v-5 class="icon">
-                                    <span class="text">QQ浏览器</span>
-                                    <img data-v-6 class="icon">
-                                    <span class="text">极速模式</span>
-                                </div>
+                                <#include "/common/index/compatibility.html"/>
                                 <div class="tip-wrap">
                                     <p><strong>温馨提示：</strong><br>密码若错3次以上,才会需要提交验证码。</p>
                                 </div>
@@ -224,9 +194,6 @@
     </footer>
 </div>
 </body>
-<#--jQuery 3 -->
-<script src="${ctxStatic}/static/libs/jquery.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>

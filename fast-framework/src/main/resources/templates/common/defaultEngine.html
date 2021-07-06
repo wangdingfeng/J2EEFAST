@@ -61,21 +61,17 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
 <#----------------------------------------DEN--------------------------------------------------------------->
-<#if isPAS>
 <#if sys_csrfToken??>
 <meta content="${sys_csrfToken}" name="csrf-token" />
-</#if>
 </#if>
 <link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico"/>
 <script src="${ctxStatic}/static/libs/jquery.min.js"></script>
 <script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#if isPAS>
 <script>
-//<![CDATA[
 var baseURL = "${ctxStatic}/", _lang = "${config.getSysLang()}",  _username = "<@shiro.principal property="username"/>"  ,
 _userId = "<@shiro.principal property="id"/>",
 LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var img=event.srcElement;img.src=baseURL+"static/img/user2-160x160.jpg"; img.onerror=null;}
-//]]>
 </script>
 <@cssLibs.css Libs = libs/>
 <#-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
