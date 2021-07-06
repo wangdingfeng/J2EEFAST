@@ -161,7 +161,8 @@ public class SqlSessionFactoryCreator {
 		BeanUtil.copyProperties(originGlobalConfig, globalConfig, CopyOptions.create().ignoreError());
 
 
-		mybatisConfiguration.setGlobalConfig(globalConfig);
+
+		GlobalConfigUtils.setGlobalConfig(mybatisConfiguration, globalConfig);
 
 		// TODO 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
 		MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
