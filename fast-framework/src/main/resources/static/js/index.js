@@ -371,13 +371,27 @@
                 if(!$("#leftMenu-" + _module).hasClass('active')){
                     $("#leftMenu-" + _module).fadeIn(500).addClass('active');
                 }
+
                 var flag = false;
+
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                     if(that.queryMenu($(this), _id)){
                         flag = true;
                         return;
                     }
                 });
+                //判断菜单树是否有根菜单
+                $('#leftMenu-' + _module).children('.tree-link').each(function (i) {
+                    if($(this).children('a').data('id') == _id){
+                        $(this).children('a').addClass('active');
+                        $(this).addClass('active');
+                    }else{
+                        $(this).children('a').removeClass('active');
+                        $(this).removeClass('active');
+                    }
+                    flag = true;
+                });
+
                 if(flag){
                     $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                         that.recursiveHideMenu($(this));
@@ -416,7 +430,14 @@
                     });
                 })
             }
+        });
+
+        $(ClassName.classType).children('.tree-link').each(function (i) {
+            $(this).on('click',function (event) {
+                that.toggle($(this), event);
+            });
         })
+
         that._tabSwitch();
     };
 
