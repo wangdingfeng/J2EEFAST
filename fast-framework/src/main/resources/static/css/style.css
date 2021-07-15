@@ -7589,7 +7589,15 @@ span[data-index=_new]{
 .icon-size{
     font-size: 15px !important;
 }
+body.color-weak, html.color-weak {
+    -webkit-filter: invert(80%);
+    filter: invert(80%);
+}
 
+body.gray-mode, html.gray-mode {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+}
 @keyframes jump {
     from {
         transform:scale3d(1,1,1) translateY(0)

@@ -299,36 +299,50 @@ if (typeof jQuery === "undefined") {
             opt.storage.set('skin', cls)
             return false
         },
+        // 设置页面模式
+        setPageMode: function(src){
+            var mode = opt.storage.get('mode',0);
+            if(typeof mode !== 'undefined' && mode
+                && mode.length >0){
+                $('html').removeClass(mode);
+            }
+            if(typeof src !== 'undefined' && src
+                && src.length >0){
+                if (!$('html').hasClass(src)){
+                    $('html').addClass(src);
+                }
+            }
+        },
         //get menu config data for layer open  opt.getLeftMeunDataConfig('core','sys/comp')
         getLeftMeunDataConfig:function(module,href){
-	       	var dataId = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"']").attr("data-id") || -1;
-	       	var dataIcon = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] i").attr("data-icon") || "";
-	       	var title = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] span").html() || ""      	
-	       	var data = {
-               href: href,
-               icon:  dataIcon,  //'fa fa-address-card',
-               title: $.i18n.prop(title),
-               id:   dataId, // $("#leftMenu .treeview-menu [data-url='sys/comp'],[data-module='core']").attr("data-id"), //'Y29yZTQx',
-               module:module
+            var dataId = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"']").attr("data-id") || -1;
+            var dataIcon = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] i").attr("data-icon") || "";
+            var title = $("#leftMenu li a[data-url='"+href+"'][data-module='"+module+"'] span").html() || ""
+            var data = {
+                href: href,
+                icon:  dataIcon,  //'fa fa-address-card',
+                title: $.i18n.prop(title),
+                id:   dataId, // $("#leftMenu .treeview-menu [data-url='sys/comp'],[data-module='core']").attr("data-id"), //'Y29yZTQx',
+                module:module
             };
-	       	return data
+            return data
         },
         //get the frist menu config for layer open
         getLeftFirstMenuConig:function(){
-        	var href =  $("#leftMenu li a[data-url]:first-child").attr("data-url") || "main";
-        	var dataId = $("#leftMenu li a[data-url]:first-child").attr("data-id") || -1;
-        	var module = $("#leftMenu li a[data-url]:first-child").attr("data-module") ||"core";
-        	var dataIcon = $("#leftMenu li a[data-url]:first-child i").attr("data-icon") || "";
-        	var title = $("#leftMenu li a[data-url]:first-child span").html() ;
-        	var data = {
+            var href =  $("#leftMenu li a[data-url]:first-child").attr("data-url") || "main";
+            var dataId = $("#leftMenu li a[data-url]:first-child").attr("data-id") || -1;
+            var module = $("#leftMenu li a[data-url]:first-child").attr("data-module") ||"core";
+            var dataIcon = $("#leftMenu li a[data-url]:first-child i").attr("data-icon") || "";
+            var title = $("#leftMenu li a[data-url]:first-child span").html() ;
+            var data = {
                 href: href,
-                icon:  dataIcon, 
+                icon:  dataIcon,
                 title: $.i18n.prop(title),
-                id:   dataId, 
+                id:   dataId,
                 module:module
             };
-        	return data
-        }, 
+            return data
+        },
 
         createMenuItem: function(dataUrl, menuName) {
             if(top.location !== self.location) {
@@ -517,14 +531,26 @@ if (typeof jQuery === "undefined") {
 
         //本地缓存处理
         storage:{
-            set: function(key, value) {
-                window.localStorage.setItem(_username+key, value);
+            set: function(key, value,tag) {
+                if(typeof tag !== 'undefined'&& tag == 0){
+                    window.localStorage.setItem(key, value);
+                }else{
+                    window.localStorage.setItem(_username+key, value);
+                }
             },
-            get: function(key) {
-                return window.localStorage.getItem(_username+key);
+            get: function(key,tag) {
+                if(typeof tag !== 'undefined'&& tag == 0){
+                    return window.localStorage.getItem(key);
+                }else {
+                    return window.localStorage.getItem(_username+key);
+                }
             },
-            remove: function(key) {
-                window.localStorage.removeItem(_username+key);
+            remove: function(key,tag) {
+                if(typeof tag !== 'undefined'&& tag == 0){
+                    window.localStorage.removeItem(key);
+                }else{
+                    window.localStorage.removeItem(_username+key);
+                }
             },
             clear: function() {
                 window.localStorage.clear();

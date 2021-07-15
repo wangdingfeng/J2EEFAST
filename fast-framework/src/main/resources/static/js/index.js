@@ -14,8 +14,17 @@
 //菜单添加事件
 +function ($) {
 
-    //主页加载动画
+    //主页初始化加载动作
     opt.domReady(function(){
+        //设置页面模式
+        if(typeof (Storage) !== 'undefined'){
+            var css = opt.storage.get('mode',0);
+            if(typeof  css !== 'undefined' &&
+                css && css.length > 0){
+                $('html').addClass(css)
+            }
+        }
+        //加载动画
         setTimeout(function(){
             $('.mini-loader').css('display','none').remove();
         },1000);

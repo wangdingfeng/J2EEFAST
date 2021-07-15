@@ -379,6 +379,14 @@
                 });
             });
 
+            /* 设置页面模式*/
+            if(typeof (Storage) !== 'undefined'){
+                var css = window.localStorage.getItem('mode');
+                if(typeof  css !== 'undefined' && css && css.length > 0){
+                    $('html').addClass(css)
+                }
+            };
+
             /*设置tooltip*/
             $('[data-toggle="tooltip"]').each(function () {
                 $(this).tooltip();

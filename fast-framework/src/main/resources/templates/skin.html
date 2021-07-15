@@ -15,6 +15,7 @@
 .list-unstyled{margin:10px;}
 .full-opacity-hover{opacity:1;filter:alpha(opacity=1);border:1px solid #fff}
 .full-opacity-hover:hover{border:1px solid #f00;}
+.checkbox,.radio {margin-top: 0px;margin-bottom: 0px;}
 </style>
 </@header>
 <body class="gray-bg">
@@ -28,21 +29,29 @@
 </script>
 <script type="text/javascript">
 
-function get(name) {
-    if (typeof (Storage) !== 'undefined') {
-        return window.localStorage.getItem(_username+name);
-    } else {
-        errrInfo('Please use a modern browser to properly view this template!')
-    }
-}
+	function get(name,tag) {
+		if (typeof (Storage) !== 'undefined') {
+			if(typeof  tag !== 'undefined' && tag == 0){
+				return window.localStorage.getItem(name);
+			}else{
+				return window.localStorage.getItem(_username+name);
+			}
+		} else {
+			errrInfo('Please use a modern browser to properly view this template!')
+		}
+	}
 
-function store(name, val) {
-    if (typeof (Storage) !== 'undefined') {
-        window.localStorage.setItem(_username+name, val)
-    } else {
-        errrInfo('Please use a modern browser to properly view this template!')
-    }
-}
+	function store(name, val,tag) {
+		if (typeof (Storage) !== 'undefined') {
+			if(typeof  tag !== 'undefined' && tag == 0){
+				window.localStorage.setItem(name, val)
+			}else{
+				window.localStorage.setItem(_username+name, val)
+			}
+		} else {
+			errrInfo('Please use a modern browser to properly view this template!')
+		}
+	}
 
 $(function () {
 	var $skinsList = $('<ul />', {'class': 'list-unstyled clearfix'});
@@ -180,6 +189,15 @@ $(function () {
         '<label style="padding-left: 10px;"><input name="tabRef" type="checkbox" style="margin-right:20px"><@ctx.i18n text = "Tab 切换刷新"/></label>' +
         '</li>');
 
+	$skinsList.append('<li style="float:left; width: 33.33333%; padding: 5px;">' +
+			'<span  class="checkbox check-box">' +
+			'<label style="padding-left: 10px;font-weight: bold;color:#000;"><input name="grayMode" type="checkbox" style="margin-right:20px;"><@ctx.i18n text = "灰色模式(新)"/></label>' +
+			'</li>');
+	$skinsList.append('<li style="float:left; width: 33.33333%; padding: 5px;">' +
+			'<span  class="checkbox check-box">' +
+			'<label style="padding-left: 10px;font-weight: bold;color:#000;"><input name="colorWeak" type="checkbox" style="margin-right:20px;"><@ctx.i18n text = "色弱模式(新)"/></label>' +
+			'</li>');
+
 	$(".gray-bg").html($skinsList);
 
 	$('[data-skin]').on('click', function (e) {
@@ -195,6 +213,8 @@ $(function () {
     var _tab = get("_Tab");
 
     var _tabRef = get("_tabRef");
+
+	var mode = get("mode",0);
 
 	if(temp){
         if(temp === "0"){
@@ -219,6 +239,20 @@ $(function () {
             $("input[name='tabRef']").iCheck('check');
         }
     }
+
+	if(typeof mode !== 'undefined' &&  mode && mode.length >0){
+		if(mode !== "color-weak"){
+			$("input[name='colorWeak']").iCheck('uncheck');
+		}else{
+			$("input[name='colorWeak']").iCheck('check');
+		}
+
+		if(mode !== "gray-mode"){
+			$("input[name='grayMode']").iCheck('uncheck');
+		}else{
+			$("input[name='grayMode']").iCheck('check');
+		}
+	}
 
     /*iCheck单选框及复选框事件绑定*/
     if ($.fn.iCheck !== undefined) {
@@ -262,6 +296,48 @@ $(function () {
                 store("_tabRef","0");
             }
         }
+
+		if($(this).attr("name") == "colorWeak"){
+			if($(this).is(':checked')){
+				parent.opt.setPageMode('color-weak');
+				var md = get("mode",0);
+				if(typeof md !== 'undefined' && md && md.length > 0){
+					if(md == "gray-mode"){
+						$("input[name='grayMode']").iCheck('uncheck');
+					}
+				}
+				store("mode","color-weak",0);
+			}else{
+				var md = get("mode",0);
+				if(typeof md !== 'undefined' && md && md.length > 0){
+					if(md == "color-weak"){
+						parent.opt.setPageMode("");
+						store("mode","",0);
+					}
+				}
+			}
+		}
+
+		if($(this).attr("name") == "grayMode"){
+			if($(this).is(':checked')){
+				parent.opt.setPageMode('gray-mode');
+				var md = get("mode",0);
+				if(typeof md !== 'undefined' && md && md.length > 0){
+					if(md == "color-weak"){
+						$("input[name='colorWeak']").iCheck('uncheck');
+					}
+				}
+				store("mode","gray-mode",0);
+			}else{
+				var md = get("mode",0);
+				if(typeof md !== 'undefined' && md && md.length > 0){
+					if(md == "gray-mode"){
+						parent.opt.setPageMode("");
+						store("mode","",0);
+					}
+				}
+			}
+		}
     });
 
 
