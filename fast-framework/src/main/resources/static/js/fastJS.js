@@ -3770,14 +3770,24 @@ if (typeof jQuery === "undefined") {
             },
             // 获取当前页选中或者取消的行ID
             affectedRowIds: function(rows) {
-                var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
+                var field = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
                 var rowIds;
-                if ($.isArray(rows)) {
+                if (rows instanceof Array) {
                     rowIds = $.map(rows, function(row) {
-                        return row[column];
+                        var value = row;
+                        var props = field.split('.');
+                        for (var p in props) {
+                            value = value && value[props[p]];
+                        }
+                        return value;
                     });
                 } else {
-                    rowIds = [rows[column]];
+                    rowIds = rows;
+                    var props = field.split('.');
+                    for (var p in props) {
+                        rowIds = rowIds && rowIds[props[p]];
+                    }
+                    rowIds = [rowIds];
                 }
                 return rowIds;
             },
