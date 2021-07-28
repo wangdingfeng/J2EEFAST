@@ -128,7 +128,7 @@ public class DbUtil{
 			return "oracle";
 		} else if (jdbcUrl.contains("postgresql")) {
 			return "postgresql";
-		} else if (jdbcUrl.contains("sqlserver")) {
+		} else if (jdbcUrl.contains("sqlserver") || jdbcUrl.contains("jtds")) {
 			return "sqlserver";
 		} else if (jdbcUrl.contains("mysql")) {
 			return "mysql";

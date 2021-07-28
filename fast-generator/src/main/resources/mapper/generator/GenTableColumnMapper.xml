@@ -119,7 +119,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT indid FROM sysindexkeys WHERE id = a.id AND colid=a.colid))) THEN '1' ELSE '0' END) AS isPk,
             a.colorder AS sort,
             isnull(g.[value],'') AS columnComment,
-            CONCAT(b.name,'(',COLUMNPROPERTY(a.id,a.name,'PRECISION'),')')AS columnType
+            -- CONCAT(b.name,'(',COLUMNPROPERTY(a.id,a.name,'PRECISION'),')')AS columnType
+            CAST(b.name AS VARCHAR) +'('+ CAST(COLUMNPROPERTY(a.id,a.name,'PRECISION') AS VARCHAR) + ')' AS columnType
             FROM
             syscolumns a
             LEFT JOIN systypes b ON a.xusertype=b.xusertype
