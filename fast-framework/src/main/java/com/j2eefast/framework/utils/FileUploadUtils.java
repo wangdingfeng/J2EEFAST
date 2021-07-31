@@ -51,14 +51,14 @@ public class FileUploadUtils {
         String fileDels = request.getParameter(bizType+"__del");
         //删除关联
         if(ToolUtil.isNotEmpty(fileDels)){
-            String[] dels = StrUtil.split(fileDels,StrUtil.COMMA);
+            List<String> dels = StrUtil.split(fileDels,StrUtil.COMMA);
             for(String fId: dels){
                 ConstantFactory.me().getSysFileUploadService().removeByBizId(Convert.toLong(fId),bizId);
             }
         }
         //新增关联
         if(ToolUtil.isNotEmpty(fileUploads)){
-            String[] files = StrUtil.split(fileUploads,StrUtil.COMMA);
+        	List<String> files = StrUtil.split(fileUploads,StrUtil.COMMA);
             SysFileService sysFileService = SpringUtil.getBean(SysFileService.class);
             for(String fileId: files){
                 if(ConstantFactory.me().getSysFileUploadService().getSysFileUploadByBizId(Convert.toLong(fileId),bizId)){

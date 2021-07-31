@@ -44,7 +44,7 @@
         <!-- 验证码-->
         <easy.captcha>1.6.2</easy.captcha>
         <velocity.version>1.7</velocity.version>
-        <hutool.version>5.2.1</hutool.version>
+        <hutool.version>5.7.6</hutool.version>
         <oracle.version>11.2.0.3</oracle.version>
         <oauth.version>1.15.6</oauth.version>
         <bcprov.version>1.46</bcprov.version>

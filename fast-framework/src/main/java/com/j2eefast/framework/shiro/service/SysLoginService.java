@@ -228,7 +228,7 @@ public class SysLoginService implements AuthService {
 					Set<String> tempSet = new HashSet<>();
 					for (String permission : permissions) {
 						if (ToolUtil.isNotEmpty(permission)) {
-							String[] perm = StrUtil.split(permission,",");
+							String[] perm = StrUtil.splitToArray(permission,",");
 							for(String s: perm){
 								permissionSet.add(s);
 								tempSet.add(s);
