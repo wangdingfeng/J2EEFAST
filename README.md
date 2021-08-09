@@ -4,7 +4,7 @@
 <p align="center">
 <img src="https://img.shields.io/badge/%E9%AB%98%E6%95%88-%E5%BF%AB%E9%80%9F-brightgreen">
 <img  src="https://img.shields.io/badge/%E5%AE%89%E5%85%A8-%E6%BA%90%E7%A0%81%E5%8F%AF%E6%8E%A7-blueviolet">
-<a  href="https://jq.qq.com/?_wv=1027&k=mx2H3mNH" target="_blank"><img  src="https://img.shields.io/badge/QQ%E6%8A%80%E6%9C%AF%E7%BE%A4-805468934-orange"></a>
+<a  href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank"><img  src="https://img.shields.io/badge/QQ%E6%8A%80%E6%9C%AF%E7%BE%A4-805468934-orange"></a>
 </p>
 
 ---
@@ -84,7 +84,7 @@ J2eeFAST 是一个 Java EE 企业级快速开发平台， **致力于打造中�
 * 官网: [http://www.j2eefast.com](http://www.j2eefast.com)
 * 关于文档：[语雀 文档](https://www.yuque.com/u1174484/j2eefast/tv3kee)
 * 关于更新：项目现在会放缓更新优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
-* QQ群： **805468934①已满** 、 [239367801②](https://jq.qq.com/?_wv=1027&k=mx2H3mNH)
+* QQ群： [805468934①(大群)](https://jq.qq.com/?_wv=1027&k=5xTlnN6) 、 [239367801②](https://jq.qq.com/?_wv=1027&k=mx2H3mNH)
 #### 免责声明：
  1. **[本项目代码全部开源，免费。但请遵循开源协议,授权协议 Apache-2.0](https://www.yuque.com/u1174484/j2eefast/mbd8pi)** 
 1. 不得将 J2eeFAST于危害国家安全、荣誉和利益的行为，不能以任何形式用于非法为目的的行为,否则后果自负
