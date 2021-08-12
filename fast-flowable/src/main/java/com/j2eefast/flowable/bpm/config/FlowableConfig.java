@@ -25,8 +25,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 
 /**
- * <p></p>
- *
+ * 工作流配置类 - 屏蔽flowable 自带多租户插件
  * @author: zhouzhou
  * @date: 2020-04-16 14:23
  * @web: http://www.j2eefast.com
