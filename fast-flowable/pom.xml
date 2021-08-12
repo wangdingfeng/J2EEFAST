@@ -1,128 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.j2eefast</groupId>
-    <artifactId>fast</artifactId>
-    <version>2.2.0</version>
-  </parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.j2eefast</groupId>
+        <artifactId>fast</artifactId>
+        <version>2.2.0</version>
+    </parent>
 
-  <artifactId>fast-flowable</artifactId>
-  <name>fast 工作流</name>
-  <url>http://www.j2eefast.com</url>
+    <artifactId>fast-flowable</artifactId>
+    <name>fast 工作流</name>
+    <url>http://www.j2eefast.com</url>
 
-  <properties>
-       <flowable.version>6.4.2</flowable.version>
-       <liquibase.version>3.6.2</liquibase.version>
-  </properties>
+    <properties>
+        <flowable.version>6.6.0</flowable.version>
+        <liquibase.version>3.6.2</liquibase.version>
+    </properties>
 
-  <dependencies>
+    <dependencies>
 
-      <dependency>
-          <groupId>com.j2eefast</groupId>
-          <artifactId>fast-framework</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>com.j2eefast</groupId>
+            <artifactId>fast-framework</artifactId>
+        </dependency>
 
-      <dependency>
-          <groupId>org.flowable</groupId>
-          <artifactId>flowable-spring-boot-starter-basic</artifactId>
-          <version>${flowable.version}</version>
-          <exclusions>
-              <exclusion>
-                  <artifactId>mybatis</artifactId>
-                  <groupId>org.mybatis</groupId>
-              </exclusion>
-              <exclusion>
-                  <artifactId>activation</artifactId>
-                  <groupId>javax.activation</groupId>
-              </exclusion>
-          </exclusions>
-      </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-basic</artifactId>
+            <version>${flowable.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>activation</artifactId>
+                    <groupId>javax.activation</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.flowable</groupId>
+                    <artifactId>flowable-spring-boot-starter-app</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.flowable</groupId>
+                    <artifactId>flowable-form-spring-configurator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.flowable</groupId>
+                    <artifactId>flowable-idm-spring-configurator</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-      <!--流程设计器-->
-      <dependency>
-          <groupId>org.flowable</groupId>
-          <artifactId>flowable-ui-modeler-rest</artifactId>
-          <version>${flowable.version}</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>org.apache.logging.log4j</groupId>
-                  <artifactId>log4j-slf4j-impl</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.apache.logging.log4j</groupId>
-                  <artifactId>log4j-core</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.slf4j</groupId>
-                  <artifactId>jul-to-slf4j</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.mybatis</groupId>
-                  <artifactId>mybatis-spring</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.mybatis</groupId>
-                  <artifactId>mybatis</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
+        <!--流程设计器-->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-modeler-rest</artifactId>
+            <version>${flowable.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jul-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-      <!-- 兼容V5配置 -->
-      <dependency>
-          <groupId>org.flowable</groupId>
-          <artifactId>flowable5-spring-compatibility</artifactId>
-          <version>${flowable.version}</version>
-      </dependency>
+        <!-- 兼容V5配置 -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable5-spring-compatibility</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
 
-      <!-- https://mvnrepository.com/artifact/org.flowable/flowable-ui-idm-rest -->
-      <dependency>
-          <groupId>org.flowable</groupId>
-          <artifactId>flowable-ui-task-rest</artifactId>
-          <version>${flowable.version}</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>org.apache.logging.log4j</groupId>
-                  <artifactId>log4j-slf4j-impl</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.apache.logging.log4j</groupId>
-                  <artifactId>log4j-core</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.slf4j</groupId>
-                  <artifactId>jul-to-slf4j</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.mybatis</groupId>
-                  <artifactId>mybatis-spring</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.mybatis</groupId>
-                  <artifactId>mybatis</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
+        <!-- https://mvnrepository.com/artifact/org.flowable/flowable-ui-idm-rest -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-task-rest</artifactId>
+            <version>${flowable.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jul-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-      <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
-      <dependency>
-          <groupId>org.liquibase</groupId>
-          <artifactId>liquibase-core</artifactId>
-          <version>${liquibase.version}</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>ch.qos.logback</groupId>
-                  <artifactId>logback-core</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>ch.qos.logback</groupId>
-                  <artifactId>logback-classic</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
-  </dependencies>
+        <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
