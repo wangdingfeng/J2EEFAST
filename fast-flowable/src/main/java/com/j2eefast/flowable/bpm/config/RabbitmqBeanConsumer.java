@@ -1,7 +1,13 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.j2eefast.common.core.mutidatasource.annotaion.DataSource;
+import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.rabbit.constant.RabbitBeanInfo;
 import com.j2eefast.common.rabbit.constant.RabbitInfo;
@@ -13,6 +19,7 @@ import com.j2eefast.flowable.bpm.service.GroupService;
 import com.j2eefast.flowable.bpm.service.GroupUserService;
 import com.j2eefast.flowable.bpm.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.ui.common.tenant.TenantProvider;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +51,13 @@ public class RabbitmqBeanConsumer {
 	@Autowired
 	private UserService userService;
 
+
 	@RabbitListener(bindings = @QueueBinding(
 			value = @Queue(value = RabbitInfo.QUEUE_NAME, durable = RabbitInfo.QUEUE_DURABLE),
 			exchange = @Exchange(value = RabbitInfo.EXCHANGE_NAME, type = RabbitInfo.EXCHANGE_TYPE),
 			key = RabbitInfo.ROUTING_KEY)
 	)
+	@DataSource(name="FLOWABLE")
 	@RabbitHandler
 	public void onMessage(Message message, Channel channel) throws Exception {
 		MessageHeaders headers = message.getHeaders();
@@ -77,6 +86,7 @@ public class RabbitmqBeanConsumer {
 				user.setFirstName(json.getString("name"));
 				user.setLastName(json.getString("name"));
 				user.setEmail(json.getString("email"));
+				user.setTenantId(json.getString("tenantId"));
 				user.setRev(1);
 				userService.add(user);
 				JSONArray s = json.getJSONArray("roleIdList");
@@ -87,7 +97,44 @@ public class RabbitmqBeanConsumer {
 					guser.setUserId(user.getId());
 					groupUserService.add(guser);
 				}
-			}else if(ToolUtil.isNotEmpty(heade) && heade.equals("UPDATAUSER")){
+			}else if(ToolUtil.isNotEmpty(heade) && heade.equals("SYNCHRONIZATIONUSER")){
+				JSONArray jsonList = JSONArray.parseArray(info);
+				for(int i=0; i<jsonList.size(); i++){
+					JSONObject json = jsonList.getJSONObject(i);
+					UserEntity user = new UserEntity();
+					user.setId(String.valueOf(json.getLongValue("id")));
+					user.setDispalyName(json.getString("name"));
+					user.setFirstName(json.getString("name"));
+					user.setLastName(json.getString("name"));
+					user.setEmail(json.getString("email"));
+					user.setTenantId(json.getString("tenantId"));
+					user.setRev(1);
+					userService.insertOrUpdate(user);
+
+					//更新用户与权限中间表
+					groupUserService.delByUserId(user.getId());
+					JSONArray s = json.getJSONArray("roleIdList");
+					for(int k=0; k< s.size(); k++){
+						Long l = s.getLong(k);
+						GroupUserEntity guser = new GroupUserEntity();
+						guser.setGroupId(String.valueOf(l));
+						guser.setUserId(user.getId());
+						groupUserService.add(guser);
+					}
+				}
+			}else if(ToolUtil.isNotEmpty(heade) && heade.equals("SYNCHRONIZATIONROLE")){
+				JSONArray jsonList = JSONArray.parseArray(info);
+				for(int i=0; i<jsonList.size(); i++){
+					JSONObject json = jsonList.getJSONObject(i);
+					GroupEntity group = new GroupEntity();
+					group.setId(String.valueOf(json.getLongValue("id")));
+					group.setName(json.getString("roleName"));
+					group.setRev(1);
+					group.setType(json.getString("roleKey"));
+					groupService.insertOrUpdate(group);
+				}
+			}
+			else if(ToolUtil.isNotEmpty(heade) && heade.equals("UPDATAUSER")){
 				JSONObject json = JSONArray.parseObject(info);
 				UserEntity user = new UserEntity();
 				user.setId(String.valueOf(json.getLongValue("id")));
@@ -95,6 +142,7 @@ public class RabbitmqBeanConsumer {
 				user.setFirstName(json.getString("name"));
 				user.setLastName(json.getString("name"));
 				user.setEmail(json.getString("email"));
+				user.setTenantId(json.getString("tenantId"));
 				user.setRev(1);
 				userService.updateUser(user);
 				groupUserService.delByUserId(user.getId());

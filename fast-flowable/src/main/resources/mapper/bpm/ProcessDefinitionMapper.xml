@@ -19,6 +19,7 @@
         where t.ID_ = #{value}
     </select>
 
+    <!--业务流程定义数据表 -->
     <select id="findPage"
             resultType="com.j2eefast.flowable.bpm.entity.BpmProcessDefinitionEntity">
         SELECT
@@ -46,6 +47,12 @@
             </if>
             <if test="suspensionState!=null and suspensionState!=''">
                 or t.SUSPENSION_STATE_  = #{suspensionState}
+            </if>
+            <if test="suspensionState!=null and suspensionState!=''">
+                or t.SUSPENSION_STATE_  = #{suspensionState}
+            </if>
+            <if test="tenantId != null and tenantId !=''">
+                and t.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR}
             </if>
             <if test = "sql_filter !=null and sql_filter!=''">
                 and ${sql_filter}

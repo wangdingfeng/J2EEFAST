@@ -8,7 +8,9 @@ package com.j2eefast.flowable.bpm.service;
 import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.flowable.bpm.entity.CompleteTaskEntity;
+import com.j2eefast.flowable.bpm.entity.FlowNodeEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +40,14 @@ public interface IFlowableTaskService {
 	 */
 	ResponseData complete(CompleteTaskEntity params);
 
+
+	/**
+	 * 获取可驳回节点列表
+	 * @param processInstanceId
+	 * @param taskId
+	 * @return
+	 */
+	List<FlowNodeEntity> getBackNodesByProcessInstanceId(String processInstanceId, String taskId);
 
 	/**
 	 * 判断任务是否挂起

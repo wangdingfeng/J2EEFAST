@@ -314,8 +314,8 @@ angular.module('flowableModeler')
 
           }).error(function(data) {
 
-              if (data && data.message) {
-                  $scope.model.errorMessage = data.message;
+              if (data && (data.message || data.msg)) {
+                  $scope.model.errorMessage = data.message || data.msg;
               }
 
               $scope.model.error = true;

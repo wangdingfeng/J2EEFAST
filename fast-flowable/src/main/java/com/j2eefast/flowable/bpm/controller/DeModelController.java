@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.flowable.idm.engine.impl.persistence.entity.UserEntityImpl;
 import org.flowable.ui.common.model.UserRepresentation;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -40,7 +41,8 @@ public class DeModelController extends BaseController {
 	private String urlPrefix = "modules/bpm/deploy";
 
 	@Autowired
-	protected ModelService modelService;
+	private ModelService modelService;
+
 	@Autowired
 	private ProcdefService procdefService;
 
@@ -52,14 +54,16 @@ public class DeModelController extends BaseController {
 	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public UserRepresentation account() {
-		User user=new UserEntityImpl();
-		user.setId(UserUtils.getLoginName());
-		user.setEmail(UserUtils.getUserInfo().getEmail());
-		SecurityUtils.assumeUser(user);
+//		User user=new UserEntityImpl();
+//		user.setId(UserUtils.getLoginName());
+//		user.setEmail(UserUtils.getUserInfo().getEmail());
+//		user.setTenantId(UserUtils.getTenantId());
+//		SecurityUtils.assumeUser(user);
 		UserRepresentation userRepresentation = new UserRepresentation();
 		userRepresentation.setId(UserUtils.getLoginName());
 		userRepresentation.setFullName(UserUtils.getUserInfo().getName());
 		userRepresentation.setPrivileges(UserUtils.getUserInfo().getRoleKey());
+		userRepresentation.setTenantId(UserUtils.getTenantId());
 		return userRepresentation;
 	}
 

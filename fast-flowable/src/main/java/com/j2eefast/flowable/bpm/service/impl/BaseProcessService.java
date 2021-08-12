@@ -43,6 +43,7 @@ public abstract class BaseProcessService {
 	@Lazy(value = true)
 	protected FlowableCommentService flowableCommentService;
 	@Autowired
+	@Lazy(value = true)
 	protected TaskService taskService;
 
 	@Resource

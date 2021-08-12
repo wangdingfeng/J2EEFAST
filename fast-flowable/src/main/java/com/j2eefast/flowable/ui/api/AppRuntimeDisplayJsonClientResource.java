@@ -24,15 +24,17 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.job.api.Job;
 import org.flowable.ui.common.service.exception.BadRequestException;
 import org.flowable.ui.common.service.exception.InternalServerErrorException;
+import org.flowable.ui.modeler.service.FlowableModelQueryService;
 import org.flowable.ui.task.model.debugger.BreakpointRepresentation;
 import org.flowable.ui.task.service.debugger.DebuggerService;
-import org.flowable.ui.task.service.editor.mapper.*;
+import org.flowable.ui.task.service.editor.mapper.InfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import org.flowable.ui.task.service.editor.mapper.EventInfoMapper;
+import org.flowable.ui.task.service.editor.mapper.ReceiveTaskInfoMapper;
+import org.flowable.ui.task.service.editor.mapper.SequenceFlowInfoMapper;
+import org.flowable.ui.task.service.editor.mapper.ServiceTaskInfoMapper;
+import org.flowable.ui.task.service.editor.mapper.UserTaskInfoMapper;
 import java.util.*;
 
 /**
@@ -45,7 +47,6 @@ import java.util.*;
  */
 
 @RestController
-@RequestMapping("/app")
 public class AppRuntimeDisplayJsonClientResource extends BaseController {
 
 	@Autowired
@@ -58,6 +59,8 @@ public class AppRuntimeDisplayJsonClientResource extends BaseController {
 	protected DebuggerService debuggerService;
 	@Autowired
 	protected HistoryService historyService;
+	@Autowired
+	protected FlowableModelQueryService modelQueryService;
 
 	protected ObjectMapper objectMapper = new ObjectMapper();
 	protected List<String> eventElementTypes = new ArrayList<>();
@@ -83,15 +86,16 @@ public class AppRuntimeDisplayJsonClientResource extends BaseController {
 
 	@RequestMapping(value = "/rest/process-definitions/{processDefinitionId}/model-json", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode getModelJSONForProcessDefinition(@PathVariable String processDefinitionId) {
-
 		BpmnModel pojoModel = repositoryService.getBpmnModel(processDefinitionId);
 
 		if (pojoModel == null || pojoModel.getLocationMap().isEmpty()) {
 			throw new InternalServerErrorException("Process definition could not be found with id " + processDefinitionId);
 		}
-
-		return processProcessElements(pojoModel, null, null, Collections.EMPTY_LIST, "");
+		ObjectNode  objectNode = processProcessElements(pojoModel, null, null, Collections.EMPTY_LIST, "");
+		return objectNode;
 	}
+
+
 
 	@RequestMapping(value = "/rest/process-instances/history/{processInstanceId}/model-json", method = RequestMethod.GET, produces = "application/json")
 	public JsonNode getModelHistoryJSON(@PathVariable String processInstanceId) {

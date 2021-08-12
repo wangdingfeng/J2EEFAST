@@ -99,7 +99,6 @@ public class BpmOaFormService extends ServiceImpl<BpmOaFormMapper,BpmOaFormEntit
 		startProcessInstanceVo.setCreator(String.valueOf(UserUtils.getUserId()));
 		startProcessInstanceVo.setCurrentUserCode(String.valueOf(UserUtils.getUserId()));
 		startProcessInstanceVo.setFormName(bpmOaForm.getFromName());
-		startProcessInstanceVo.setSystemSn("system");
 		startProcessInstanceVo.setProcessDefinitionKey(bpmOaForm.getModelKey());
 		Map<String, Object> variables = new HashMap<>();
 		variables.put("leaveDays", bpmOaForm.getLeaveDays());

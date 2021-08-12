@@ -31,5 +31,6 @@ public interface ProcessDefinitionMapper extends BaseMapper<BpmProcessDefinition
 											   @Param("modelKey") String modelKey,
 											   @Param("category") String category,
 											   @Param("suspensionState") String suspensionState,
+											   @Param("tenantId") String tenantId,
 											   @Param("sql_filter") String sql_filter);
 }

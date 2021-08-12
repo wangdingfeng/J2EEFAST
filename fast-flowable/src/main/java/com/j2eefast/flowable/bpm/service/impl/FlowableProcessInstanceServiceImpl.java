@@ -21,6 +21,7 @@ import com.j2eefast.flowable.bpm.service.IFlowableBpmnModelService;
 import com.j2eefast.framework.utils.Constant;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.ui.common.tenant.TenantProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.flowable.engine.runtime.Execution;
@@ -41,13 +42,14 @@ import java.util.Map;
 public class FlowableProcessInstanceServiceImpl extends  BaseProcessService implements FlowableProcessInstanceService {
 
 	@Autowired
-	private IFlowableBpmnModelService flowableBpmnModelService;
+	protected TenantProvider tenantProvider;
+//	@Autowired
+//	private IFlowableBpmnModelService flowableBpmnModelService;
 
 	@Override
 	public ResponseData startProcessInstanceByKey(StartProcessInstanceEntity params) {
 		if (ToolUtil.isNotEmpty(params.getProcessDefinitionKey())
-				&& ToolUtil.isNotEmpty(params.getBusinessKey())
-				&& ToolUtil.isNotEmpty(params.getSystemSn())) {
+				&& ToolUtil.isNotEmpty(params.getBusinessKey())) {
 			ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(params.getProcessDefinitionKey())
 					.latestVersion().singleResult();
 			if (processDefinition != null && processDefinition.isSuspended()) {
@@ -72,12 +74,13 @@ public class FlowableProcessInstanceServiceImpl extends  BaseProcessService impl
 			}
 			//3.启动流程
 			identityService.setAuthenticatedUserId(creator);
+
 			ProcessInstance processInstance = runtimeService.createProcessInstanceBuilder()
 					.processDefinitionKey(params.getProcessDefinitionKey().trim())
 					.name(params.getFormName().trim())
 					.businessKey(params.getBusinessKey().trim())
 					.variables(params.getVariables())
-					.tenantId(params.getSystemSn().trim())
+					.tenantId(tenantProvider.getTenantId())
 					.start();
 			//4.添加审批记录
 
@@ -103,6 +106,7 @@ public class FlowableProcessInstanceServiceImpl extends  BaseProcessService impl
 				StrUtil.nullToDefault(starterId,""),
 				StrUtil.nullToDefault(formName,""),
 				StrUtil.nullToDefault(starter,""),
+				StrUtil.nullToDefault(tenantProvider.getTenantId(),""),
 				(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}

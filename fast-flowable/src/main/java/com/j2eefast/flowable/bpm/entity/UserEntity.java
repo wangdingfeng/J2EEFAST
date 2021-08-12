@@ -34,4 +34,6 @@ public class UserEntity {
 	protected String dispalyName;
 	@TableField(value = "EMAIL_")
 	protected String email;
+	@TableField(value = "TENANT_ID_")
+	protected String tenantId;
 }

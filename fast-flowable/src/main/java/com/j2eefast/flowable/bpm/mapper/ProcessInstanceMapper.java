@@ -5,6 +5,7 @@
  */
 package com.j2eefast.flowable.bpm.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,10 +19,12 @@ public interface ProcessInstanceMapper extends BaseMapper<ProcessInstanceEntity>
 	 * 页面查询流程实例分页
 	 * @return
 	 */
+	@InterceptorIgnore(tenantLine = "true")
 	Page<ProcessInstanceEntity> findPage(IPage<?> params,
 										 @Param("start_userId") String startUserId,
 										 @Param("start_name") String startName,
 										 @Param("name") String name,
+										 @Param("tenantId") String tenantId,
 										 @Param("sql_filter") String sql_filter);
 
 

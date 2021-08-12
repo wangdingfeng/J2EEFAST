@@ -5,6 +5,7 @@
  */
 package com.j2eefast.flowable.bpm.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.j2eefast.flowable.bpm.entity.CommentEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -16,11 +17,12 @@ import java.util.List;
 public interface IFlowableCommentMapper {
 	/**
 	 * 通过流程实例id获取审批意见列表
-	 * @param ProcessInstanceId 流程实例id
+	 * @param processInstanceId 流程实例id
 	 * @return
 	 */
-	List<CommentEntity> getFlowCommentVosByProcessInstanceId(String ProcessInstanceId);
+	@InterceptorIgnore(tenantLine = "true")
+	List<CommentEntity> getFlowCommentVosByProcessInstanceId(String processInstanceId);
 
 
-	String findTaskInstId(String ProcessInstanceId);
+	String findTaskInstId(String processInstanceId);
 }
