@@ -30,6 +30,7 @@
 <#assign jscssLib="">
 <#assign animationTag=true>
 </#macro>
+
 <#--页面公共头部-->
 <#macro header title = "默认标题J2eeFAST"
                libs = "" <#-- 需要引入的css js样式 -->
@@ -38,13 +39,15 @@
                animation = "fadeInRight" <#-- -->
                style = "" <#-- body style-->
                isPAS = true <#--禁止修改 -->
+               attrValue = "" <#--body 属性值 -->
                 >
 <#assign jscssLib=libs>
 <#assign animationTag=isAnimation>
 <!DOCTYPE html>
-<html lang='${config.getSysLang()}'>
+<html>
 <head>
-<#-- 其他地方代码都可以改,未获得作者许可此信息(以下信息到DEN结束)请不要修改。请尊重作者劳动成果! ™否则作者有权收回软件使用权ø -->
+<#-- 其他地方代码都可以改,未获得作者许可此信息(以下信息到END结束)请不要修改。请尊重作者劳动成果! ™否则作者有权收回软件使用权ø -->
+<#-- 软著编号: 2020SR1589493 -->
 <title>${title} - Powered By J2eeFast</title>
 <meta content='on' http-equiv='x-dns-prefetch-control'>
 <#import "springctx.ftl" as ctx>
@@ -60,7 +63,7 @@
 <meta http-equiv="Content-Language" content="${config.getSysLang()}">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
-<#----------------------------------------DEN--------------------------------------------------------------->
+<#----------------------------------------END--------------------------------------------------------------->
 <#if sys_csrfToken??>
 <meta content="${sys_csrfToken}" name="csrf-token" />
 </#if>
@@ -89,8 +92,8 @@ LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var i
 <#nested>
 </head>
 <#if isPAS>
-<body class="${bodyClass} sidebar-mini ${config.getKey('SYS_INDEX_SKINNAME','skin-blue')}" <#if style !="">style="${style}"</#if>>
-<#if animationTag>
+<body class="${bodyClass} sidebar-mini ${config.getKey('SYS_INDEX_SKINNAME','skin-blue')}" <#if style !="">style="${style}"</#if><#if attrValue != "">${attrValue}</#if>>
+<#if animationTag && attrValue == "">
 <div id="__bodyDiv009" class="animated ${animation}">
 </#if>
 </#if>
@@ -111,13 +114,19 @@ LockScreen = ${config.getKey('SYS_LOCK_SCEREEN')}; function imgUserError(){var i
 
 <#--表格-->
 <#macro table id = "bootstrap-table"
+              class = ""
+              isNative = false <#-- 是否需要添加外层div-->
 >
+	<#if isNative?string == "false">
     <div class="btn-group-sm" id="toolbar-${id}" role="group">
         <#nested>
     </div>
-    <div class="col-sm-12 select-table table-striped">
+    <div class="col-sm-12 select-table table-striped<#if class!=""> ${class}</#if>">
         <table id="${id}"></table>
     </div>
+    <#else>
+    	<table id="${id}"></table>
+    </#if>
 </#macro>
 
 <#-- 引入控件组件-->
