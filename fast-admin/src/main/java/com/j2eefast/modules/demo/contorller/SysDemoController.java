@@ -56,6 +56,15 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/component";
     }
 
+    @GetMapping("/table")
+    public String table(){
+        return urlPrefix + "/table";
+    }
+
+    @GetMapping("/fromTable")
+    public String fromTable(){
+        return urlPrefix + "/fromTable";
+    }
     /**
      * 创建表单视图
      * @return
@@ -66,7 +75,26 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/addfrom";
     }
 
-
+    /**
+     * 图表示例
+     * @return
+     */
+    @RequiresPermissions("sys:demo:addrpert")
+    @GetMapping("/addrpert")
+    public String addrpert() {
+        return urlPrefix + "/addrpert";
+    }
+    
+    
+    /**
+     * 多表联动示例
+     */
+    @RequiresPermissions("sys:demo:multiTable")
+    @GetMapping("/multiTable")
+    public String multiTable() {
+        return urlPrefix + "/multiTable";
+    }
+    
     /**
      * 消息组件
      * @return
@@ -163,11 +191,15 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/wizard";
     }
 
+
+
     @GetMapping("/test")
     public String test(ModelMap mmap) {
         mmap.put("mode",FileUtil.readUtf8String(Constant.BASE_WEB_HTML +urlPrefix+ "/mode1.txt"));
         return urlPrefix + "/test";
     }
+
+
 
 //    获取redis信息
 //    @RequestMapping(value = "/getRedis", method = RequestMethod.GET)

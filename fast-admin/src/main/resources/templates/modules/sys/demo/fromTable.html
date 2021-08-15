@@ -1,0 +1,370 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+    <@header title="表格形式表单" bodyClass="white-bg" isAnimation=false libs=['bootstrapSelect','table'] />
+    <div class="wrapper wrapper-content ibox-content">
+        <@f.form id="form-user-add" class="form-horizontal from-table">
+            <div class="form-table-div width-950">
+                <h3>员工人员简历信息</h3>
+                <table class="form-table">
+                    <tr class="form-title"><td colspan="9">基本信息</td></tr>
+                    <tr>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "姓名"/>
+                        </td>
+                        <td width="100"><@f.input name="name"  required=true /></td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "性别"/>
+                        </td>
+                        <td width="80"><@f.select name="sex" dictType="sys_user_sex"/></td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "出生年月"/>
+                        </td>
+                        <td width="150"><@f.input name="joinDate" type="date" dataType="date" dataFormat="yyyy-MM-dd"
+                            butClass="fa fa-fw fa-calendar"  />
+                        </td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "政治面貌"/>
+                        </td>
+                        <td width="100">
+                            <@f.input name="name"  required=true />
+                        </td>
+                        <td rowspan="3" width="120">
+                            <@f.imageclip name="avatar" height="100" tipHelp="上传员工头像"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "民族"/>
+                        </td>
+                        <td width="100"><@f.input name="name"  required=true /></td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "籍贯"/>
+                        </td>
+                        <td width="150">
+                            <@f.input name="name"  required=true />
+                        </td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "身份证"/>
+                        </td>
+                        <td colspan="3">
+                            <@f.input name="name"  required=true />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "学历"/>
+                        </td>
+                        <td width="100"><@f.input name="name"  required=true /></td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "毕业院校"/>
+                        </td>
+                        <td width="150"><@f.input name="name"  required=true />
+                        </td>
+                        <td class="form-label" width="100">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "联系电话"/>
+                        </td>
+                        <td colspan="3">
+                            <@f.input name="name"  required=true />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label"><span style="color: red; ">* </span>
+                            <@ctx.i18n text = "联系地址"/></td>
+                        <td colspan="8"><@f.input name="name"  required=true /></td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "工作经历"/>
+                        </td>
+                        <td colspan="8">
+                            <@table id="bootstrap-table" class="form-table">
+                                <a class="btn btn-success" onclick="addColumn()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+                                <a class="btn btn-danger" onclick="$.table.removeData()">
+                                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                                </a>
+                            </@table>
+                        </td>
+                    </tr>
+                    <tr class="form-title"><td colspan="9">个人情况</td></tr>
+                    <tr>
+                        <td class="form-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "主要业绩奖励情况"/>
+                        </td>
+                        <td colspan="8">
+                            <@f.textarea name="r" rows="10"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "应聘岗位、理由及其他原因"/>
+                        </td>
+                        <td colspan="8">
+                            <@f.textarea name="r" rows="6"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </@f.form>
+        <div class="hr-line-dashed hidden-print"></div>
+        <div class="row hidden-print" id="_addTab">
+            <div class="col-sm-offset-5 col-sm-10">
+                <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-check"></i><@ctx.i18n text = "保存"/></button>&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>
+            </div>
+        </div>
+    </div>
+    <@footer>
+        <script type="text/javascript">
+
+            function submitHandler() {
+                // wprint({
+                //     hide: ['#_addTab'],
+                //     horizontal: true
+                // });
+                window.print();
+            }
+
+            $(function() {
+                var options = {
+                    pagination: false,
+                    showSearch: false,
+                    showRefresh: false,
+                    showToggle: false,
+                    showColumns: false,
+                    clickToSelect: false,
+                    sidePagination: "client",
+                    rememberSelected: false,
+                    columns: [
+                        {checkbox: true},
+                        {field: 'index',align: 'center',title: "序号",formatter: function (value, row, index) {
+                                var columnIndex = opt.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                                return columnIndex + $.table.serialNumber(index);
+                            }}
+                        ,{field: 'workCompany',align: 'center',title: '工作公司',formatter: function(value, row, index) {
+                                var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].workCompany' value='%s'>", index, value);
+                                return html;
+                            }}
+                        ,{field: 'startTime',align: 'center',title: '起始时间',formatter: function(value, row, index) {
+                                var data = {"index":index,"field":"startTime","value":value};
+                                return opt.template('datetime',data);
+                            }}
+                        ,{field: 'endTime',align: 'center',title: '辞职时间',formatter: function(value, row, index) {
+                                var data = {"index":index,"field":"endTime","value":value};
+                                return opt.template('datetime',data);
+                            }}
+                        ,{field: 'jobs',align: 'center',title: '在职岗位',formatter: function(value, row, index) {
+                                var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].jobs' value='%s'>", index, value);
+                                return html;
+                            }}
+                    ]
+                };
+                $.table.init(options);
+            })
+
+            function addColumn(){
+                var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
+                var row = {
+                    index: count + 1
+                    ,workCompany:""
+                    ,startTime:""
+                    ,endTime:""
+                    ,jobs:""
+                };
+                $.table.addColumn(row);
+            }
+
+
+            var f = "hide-print";
+            var c = "hidden";
+            var e = '<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';
+            function getPageCss(j, h, g) {
+                var i = "<style>";
+                i += "body {";
+                i += "    margin: 0 !important;";
+                i += "} ";
+                i += ".print-page .print-page-item {";
+                i += "    page-break-after: always !important;";
+                i += "    box-sizing: border-box !important;";
+                i += "    border: none !important;";
+                j && (i += ("padding: " + j + ";"));
+                h && (i += ("  width: " + h + ";"));
+                g && (i += (" height: " + g + ";"));
+                i += "} ";
+                i += ".print-page.page-debug .print-page-item {";
+                i += "    border: 1px solid red !important;";
+                i += "} ";
+                i += getCommonCss(true);
+                i += "</style>";
+                return i
+            }
+            hideElem = function(g) {
+                $("." + f).addClass(c);
+                if (!g) {
+                    return
+                }
+                if (g instanceof Array) {
+                    for (var h = 0; h < g.length; h++) {
+                        $(g[h]).addClass(f + " " + c)
+                    }
+                } else {
+                    $(g).addClass(c)
+                }
+            }
+            function showElem(g) {
+                $("." + f).removeClass(c);
+                if (!g) {
+                    return
+                }
+                if (g instanceof Array) {
+                    for (var h = 0; h < g.length; h++) {
+                        $(g[h]).removeClass(f + " " + c)
+                    }
+                } else {
+                    $(g).removeClass(c)
+                }
+            }
+            function getCommonCss (h) {
+                var g = ("." + f + "." + c + " {");
+                g += "        visibility: hidden !important;";
+                g += "   }";
+                g += "   .print-table {";
+                g += "        border: none;";
+                g += "        border-collapse: collapse;";
+                g += "        width: 100%;";
+                g += "   }";
+                g += "   .print-table td, .print-table th {";
+                g += "        color: #333;";
+                g += "        padding: 9px 15px;";
+                g += "        word-break: break-all;";
+                g += "        border: 1px solid #333;";
+                g += "   }";
+                if (h) {
+                    g += ("." + f + " {");
+                    g += "     visibility: hidden !important;";
+                    g += "}"
+                }
+                return g
+            }
+
+            function isIE() {
+                return (!!window.ActiveXObject || "ActiveXObject"in window)
+            }
+
+            function printHtml(i){
+                i || (i = {});
+                var k = i.html;
+                var j = i.blank;
+                var p = i.close;
+                var g = i.print;
+                var h = i.horizontal;
+                var m = i.iePreview;
+                (g === undefined) && (g = true);
+                (m === undefined) && (m = true);
+                (j === undefined && isIE()) && (j = true);
+                (p === undefined && j && !isIE()) && (p = true);
+                var l, o;
+                if (j) {
+                    l = window.open("", "_blank");
+                    o = l.document
+                } else {
+                    var n = document.getElementById("printFrame");
+                    if (!n) {
+                        $("body").append('<iframe id="printFrame" style="display: none;"></iframe>');
+                        n = document.getElementById("printFrame")
+                    }
+                    l = n.contentWindow;
+                    o = n.contentDocument || n.contentWindow.document
+                }
+                l.focus();
+                if (k) {
+                    k += ("<style>" + getCommonCss(true) + "</style>");
+                    if (h !== undefined) {
+                        k += '<style type="text/css" media="print">';
+                        k += ("  @page { size: " + (h ? "landscape" : "portrait") + "; }");
+                        k += "</style>"
+                    }
+                    if (m && isIE()) {
+                        k += e;
+                        if (g) {
+                            k += ("<script>window.onload = function(){ WebBrowser.ExecWB(7, 1); " + (p ? "window.close();" : "") + " }<\/script>")
+                        }
+                    } else {
+                        if (g) {
+                            k += ("<script>window.onload = function(){ window.print(); " + (p ? "window.close();" : "") + " }<\/script>")
+                        }
+                    }
+                    o.open();
+                    o.write(k);
+                    o.close()
+                }
+                return l
+            }
+
+            function wprint(h) {
+                window.focus();
+                h || (h = {});
+                var j = h.hide;
+                var g = h.horizontal;
+                var l = h.iePreview;
+                var i = h.blank;
+                var o = h.close;
+                (l === undefined) && (l = true);
+                (i === undefined && window !== top && l && isIE()) && (i = true);
+                (o === undefined && i && !isIE()) && (o = true);
+                $("#page-print-set").remove();
+                if (g !== undefined) {
+                    var p = '<style type="text/css" media="print" id="page-print-set">';
+                    p += ("     @page { size: " + (g ? "landscape" : "portrait") + "; }");
+                    p += "   </style>";
+                    $("body").append(p)
+                }
+                hideElem(j);
+                var k;
+                if (i) {
+                    k = window.open("", "_blank");
+                    k.focus();
+                    var n = k.document;
+                    n.open();
+                    var m = "<!DOCTYPE html>" + document.getElementsByTagName("html")[0].innerHTML;
+                    if (l && isIE()) {
+                        m += e;
+                        m += ("<script>window.onload = function(){ WebBrowser.ExecWB(7, 1); " + (o ? "window.close();" : "") + " }<\/script>")
+                    } else {
+                        m += ("<script>window.onload = function(){ window.print(); " + (o ? "window.close();" : "") + " }<\/script>")
+                    }
+                    n.write(m);
+                    n.close()
+                } else {
+                    k = window;
+                    if (l && isIE()) {
+                        ($("#WebBrowser").length === 0) && (d("body").append(e));
+                        WebBrowser.ExecWB(7, 1)
+                    } else {
+                        k.print()
+                    }
+                }
+                showElem(j);
+                return k
+            }
+        </script>
+<script id="datetime" type="text/template">//<!--
+<div>
+    <input class="form-control time-input" name="exampleTestChild[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
+</div>
+//-->
+</script>
+    </@footer>
+</@pageTheme>
