@@ -25,7 +25,7 @@
     </#if>
     <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
     <script id="${AssId?replace(".","_")}ContentUE" type="text/plain" style="width:100%;height:${height}px;"></script>
-<#--    <@compress single_line=true>-->
+    <@compress single_line=true>
     <script type="text/javascript">
         $(function() {
             if (window.UEDITOR_CONFIG === undefined) {
@@ -112,6 +112,6 @@
             });
         });
     </script>
-<#--    </@compress>-->
+    </@compress>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
 </#macro>

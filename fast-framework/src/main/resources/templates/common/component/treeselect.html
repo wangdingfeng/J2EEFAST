@@ -55,7 +55,7 @@
         <span class="input-group-btn" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
     </div>
     <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
-<#--    <@compress single_line=true>-->
+    <@compress single_line=true>
     <script type="text/javascript">
         $(function(){
             $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").unbind('click').on('click',function(){
@@ -139,5 +139,5 @@
             }
         })
     </script>
-<#--    </@compress>-->
+    </@compress>
 </#macro>
