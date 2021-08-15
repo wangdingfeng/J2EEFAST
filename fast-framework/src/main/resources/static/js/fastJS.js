@@ -3,7 +3,7 @@
  * No deletion without permission
  * @author ZhouHuan 二次封装 新增若干方法优化部分BUG
  * @date 2020-12-21
- * @version v1.0.17
+ * @version v1.1.0
  * 、、、、、注意此为源文件、测试环境中使用、若部署生产请 压缩去掉注释
  */
 if (typeof jQuery === "undefined") {
@@ -18,7 +18,7 @@ if (typeof jQuery === "undefined") {
             _tabIndex:-999,
             tindex:0,
             pushMenu:null,
-            version:'1.0.17',
+            version:'1.1.0',
             debug:true,
             mode: 'storage',
             // 默认加载提示名人名言 如果不用 false
@@ -185,28 +185,28 @@ if (typeof jQuery === "undefined") {
         }(),
 
         error: function (msg,callback) {
-                opt.modal.enable(); //显示提交按钮
-                if(opt.toast){
-                    opt.toast({
-                        heading: $.i18n.prop('警告'),
-                        text: msg,
-                        hideAfter:4000,
-                        position: {
-                            right: 7,
-                            bottom: 32
-                        },
-                        showHideTransition: 'slide',
-                        afterHidden: function () {
-                            if(typeof(callback) === "function"){
-                                callback("ok");
-                            }
-                        },
-                        //stack: false,
-                        icon: 'error'
-                    })
-                }else{
-                    opt.modal.alertError(msg);
-                }
+            opt.modal.enable(); //显示提交按钮
+            if(opt.toast){
+                opt.toast({
+                    heading: $.i18n.prop('警告'),
+                    text: msg,
+                    hideAfter:4000,
+                    position: {
+                        right: 7,
+                        bottom: 32
+                    },
+                    showHideTransition: 'slide',
+                    afterHidden: function () {
+                        if(typeof(callback) === "function"){
+                            callback("ok");
+                        }
+                    },
+                    //stack: false,
+                    icon: 'error'
+                })
+            }else{
+                opt.modal.alertError(msg);
+            }
 
         },
 
@@ -303,15 +303,17 @@ if (typeof jQuery === "undefined") {
         },
         // 设置页面模式
         setPageMode: function(src){
-            var mode = opt.storage.get('mode',0);
-            if(typeof mode !== 'undefined' && mode
-                && mode.length >0){
-                $('html').removeClass(mode);
-            }
-            if(typeof src !== 'undefined' && src
-                && src.length >0){
-                if (!$('html').hasClass(src)){
-                    $('html').addClass(src);
+            if(top.location == self.location){
+                var mode = opt.storage.get('mode',0);
+                if(typeof mode !== 'undefined' && mode
+                    && mode.length >0){
+                    $('html').removeClass(mode);
+                }
+                if(typeof src !== 'undefined' && src
+                    && src.length >0){
+                    if (!$('html').hasClass(src)){
+                        $('html').addClass(src);
+                    }
                 }
             }
         },
@@ -913,14 +915,25 @@ if (typeof jQuery === "undefined") {
                 return json;
             },
             getJsonValue:function(obj,k){
-                var _r;
-                for(var key  in obj){
-                    if(key == k){
-                        _r = obj[key];
-                        break;
+                // var _r;
+                // for(var key  in obj){
+                //     if(key == k){
+                //         _r = obj[key];
+                //         break;
+                //     }
+                // }
+                // return _r;
+
+                var rn = obj;
+                var props = k.split('.');
+                for (var p in props) {
+                    if(rn[props[p]] && typeof rn[props[p]] != 'undefined'){
+                        rn = rn[props[p]];
+                    }else {
+                        rn = '';
                     }
                 }
-                return _r;
+                return rn;
             },
             objToEmpty:function(obj){
                 // for(var i=0; i<obj.length; i++){
@@ -1268,7 +1281,7 @@ if (typeof jQuery === "undefined") {
              * @param decimal 小数部分分隔符
              * @returns {string}
              */
-             formatMoney: function(number, places, symbol, thousand, decimal) {
+            formatMoney: function(number, places, symbol, thousand, decimal) {
                 number = number || 0;
                 places = !isNaN(places = Math.abs(places)) ? places : 2;
                 symbol = symbol !== undefined ? symbol : "$";
@@ -1327,11 +1340,15 @@ if (typeof jQuery === "undefined") {
                 }
                 if(opt.common.isEmpty(config.error) || typeof config.error != "function"){
                     config = opt.common.extend(config,{error:
-                        function(xhr, textStatus) {
-                            opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
-                            opt.modal.closeLoading();
-                            return;
-                        }
+                            function(xhr, textStatus) {
+                                try{
+                                    opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                                }catch (e) {
+                                    console.error(xhr.responseText);
+                                }
+                                opt.modal.closeLoading();
+                                return;
+                            }
                     });
                 }
                 $.ajax(config);
@@ -1684,7 +1701,13 @@ if (typeof jQuery === "undefined") {
                             if(!$(layero).find('.layui-right-update').html()){
                                 $(layero).find('.layui-layer-title').attr("style","font-size:13px;").before(update);
                             }
-
+                        }else{
+                            var update = $('<div id="'+index+'" class="layui-right-update"><i class="fa fa fa-times-circle-o"></i> 关闭</div>').on('click',function(){
+                                opt.layer.close($(this).attr('id'));
+                            });
+                            if(!$(layero).find('.layui-right-update').html()){
+                                $(layero).find('.layui-layer-title').attr("style","font-size:13px;").before(update);
+                            }
                         }
                     },
                     content: url
@@ -2164,9 +2187,9 @@ if (typeof jQuery === "undefined") {
                 //         $('.content-wrapper', window.parent.document).unblock();
                 //     }, 50);
                 // }else{
-                    setTimeout(function(){
-                        $.unblockUI();
-                    }, 50);
+                setTimeout(function(){
+                    $.unblockUI();
+                }, 50);
                 // }
             },
             // 立即关闭遮罩层
@@ -2205,13 +2228,13 @@ if (typeof jQuery === "undefined") {
                                     var p = [];
                                     if(opt.common.isNotEmpty(selectedRows)) {
                                         for (var j = 0; j < selectedRows.length; j++) {
-                                                for(var i=0; i< s.length; i++){
-                                                    if(opt.common.getJsonValue(selectedRows[j],column) === s[i]){
-                                                        p[p.length] = selectedRows[j];
-                                                        selectedRows.splice(j, 1);
-                                                        j = j - 1;
-                                                    }
+                                            for(var i=0; i< s.length; i++){
+                                                if(opt.common.getJsonValue(selectedRows[j],column) === s[i]){
+                                                    p[p.length] = selectedRows[j];
+                                                    selectedRows.splice(j, 1);
+                                                    j = j - 1;
                                                 }
+                                            }
                                         }
                                     }
                                     var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
@@ -2279,7 +2302,7 @@ if (typeof jQuery === "undefined") {
                     //skin: 'layui-layer-gray',
                     btn: ['关闭'],
                     yes: function (index,layero) {
-                    	opt.layer.close(index) || opt.selfLayer.close(index);
+                        opt.layer.close(index) || opt.selfLayer.close(index);
                     }
                 };
                 opt.modal.openOptions(options);
@@ -2300,12 +2323,27 @@ if (typeof jQuery === "undefined") {
                 return url;
             },
             // 删除信息
-            del: function(id) {
+            del: function(id,tableId) {
+
+                if(opt.common.isNotEmpty(tableId)){
+                    opt.table.set(tableId);
+                }else{
+                    opt.table.set();
+                }
                 if (opt.common.isEmpty( opt.table.options.delUrl)){
                     opt.modal.msgError("delUrl 未传!");
                     return;
                 }
-                opt.table.set();
+                //表格编辑回调
+                if(typeof bootTableCallback === 'function'){
+                    //获取当前编辑数据
+                    var rows = $.table.selectAllColumnRows(tableId);
+                    rows = rows.length ==0?[$.table.getRowByUniqueId(id)]:rows;
+                    //当回调函数返回false 代码终止
+                    if(!bootTableCallback(opt.table.options.id,'del',rows)){
+                        return;
+                    }
+                }
                 opt.modal.confirm("确定删除该条" + opt.table.options.modalName + "信息吗？", function() {
                     if(opt.table.options.type == opt.variable.table_type.bootstrapTreeTable) {
                         var row = $("#" + opt.table.options.id).bootstrapTreeTable('getSelections')[0];
@@ -2340,12 +2378,26 @@ if (typeof jQuery === "undefined") {
                 });
             },
             // 批量删除信息
-            delAll: function() {
+            delAll: function(tableId) {
+				if(opt.common.isEmpty(tableId)){
+                    opt.table.set();
+                }else{
+                    opt.table.set(tableId);
+                }
                 if (opt.common.isEmpty( opt.table.options.delUrl)){
                     opt.modal.msgError("delUrl 未传!");
                     return;
                 }
-                opt.table.set();
+
+                //表格编辑回调
+                if(typeof bootTableCallback === 'function'){
+                    //获取当前编辑数据
+                    var rows = $.table.selectAllColumnRows(tableId);
+                    //当回调函数返回false 代码终止
+                    if(!bootTableCallback(opt.table.options.id,'del',rows)){
+                        return;
+                    }
+                }
                 var rows  = opt.common.isEmpty(opt.table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(opt.table.options.uniqueId);
                 if (opt.common.isEmpty(rows)) {
                     opt.modal.error("请至少选择一条记录");
@@ -2397,12 +2449,38 @@ if (typeof jQuery === "undefined") {
                 var url = opt.common.isEmpty(id) ?  opt.table.options.exeUrl.replace("{id}", "") :  opt.table.options.exeUrl.replace("{id}", id);
                 return url;
             },
-            // 修改信息
-            edit: function(id) {
-                opt.table.set();
+            /**
+             * 修改信息
+             * @param id 修改数据ID
+             * @param tableId 表格对象ID
+             */
+            edit: function(id,tableId) {
+                opt.table.set(tableId);
                 if (opt.common.isEmpty( opt.table.options.editUrl)){
                     opt.modal.msgError("editUrl 未传!");
                     return;
+                }
+                //表格编辑回调
+                if(typeof bootTableCallback === 'function'){
+                    //获取当前编辑数据
+                    var rows;
+                    if(opt.common.isEmpty(id)){
+                        //获取当前编辑数据
+                        rows = $.table.selectAllColumnRows(tableId);
+                        rows = rows.length ==0?[$.table.getRowByUniqueId(id)]:rows;
+                    }else{
+                        rows = [$.table.getRowByUniqueId(id)];
+                    }
+                    //当回调函数返回false 代码终止
+                    /**
+                     * 回调参数
+                     * ID 表格对象ID
+                     * event 方法名称
+                     * data 当前数据
+                     */
+                    if(!bootTableCallback(opt.table.options.id,'edit',rows)){
+                        return;
+                    }
                 }
                 if(opt.common.isEmpty(id) &&  opt.table.options.type ==  opt.variable.table_type.bootstrapTreeTable) {
                     var row = $("#" + opt.table.options.id).bootstrapTreeTable('getSelections')[0];
@@ -2428,19 +2506,44 @@ if (typeof jQuery === "undefined") {
                     opt.modal.error("id必须传!");
                     return;
                 }
-
+                if(opt.common.isEmpty(edit)){
+                    edit = false;
+                }else{
+                    edit = true;
+                }
                 var url = opt.table.options.viewUrl.replace("{id}", id);
                 opt.modal.popupRight(opt.table.options.modalName + "信息详情",url,
-                    (edit==''),fun,id);
+                    edit,fun,id);
             },
             // 修改信息，以tab页展现
-            editTab: function(id) {
+            editTab: function(id,prefix,tableId) {
                 opt.table.set();
                 if (opt.common.isEmpty( opt.table.options.editUrl)){
                     opt.modal.msgError("editUrl 未传!");
                     return;
                 }
-
+                //表格编辑回调
+                if(typeof bootTableCallback === 'function'){
+                    //获取当前编辑数据
+                    var rows;
+                    if(opt.common.isEmpty(id)){
+                        //获取当前编辑数据
+                        rows = $.table.selectAllColumnRows(tableId);
+                        rows = rows.length ==0?[$.table.getRowByUniqueId(id)]:rows;
+                    }else{
+                        rows = [$.table.getRowByUniqueId(id)];
+                    }
+                    //当回调函数返回false 代码终止
+                    /**
+                     * 回调参数
+                     * ID 表格对象ID
+                     * event 方法名称
+                     * data 当前数据
+                     */
+                    if(!bootTableCallback(opt.table.options.id,'edit',rows)){
+                        return;
+                    }
+                }
                 if(opt.common.isEmpty(id) &&  opt.table.options.type ==  opt.variable.table_type.bootstrapTreeTable) {
                     var row = $("#" + opt.table.options.id).bootstrapTreeTable('getSelections')[0];
                     if (opt.common.isEmpty(row)) {
@@ -2448,9 +2551,9 @@ if (typeof jQuery === "undefined") {
                         return;
                     }
                     var url = opt.table.options.editUrl.replace("{id}", row[opt.table.options.uniqueId]);
-                    opt.modal.openTab("修改" + opt.table.options.modalName, opt.operate.editUrl(id));
+                    opt.modal.openTab(opt.common.isEmpty(prefix)?"修改":prefix + opt.table.options.modalName, opt.operate.editUrl(id));
                 } else {
-                    opt.modal.openTab("修改" + opt.table.options.modalName, opt.operate.editUrl(id));
+                    opt.modal.openTab(opt.common.isEmpty(prefix)?"修改":prefix + opt.table.options.modalName, opt.operate.editUrl(id));
                 }
             },
             // 修改信息 全屏
@@ -2568,7 +2671,7 @@ if (typeof jQuery === "undefined") {
                     opt.success($.i18n.prop("操作成功!"))
                     $.treeTable.refresh();
                 }else if (result.code == opt.variable.web_status.SUCCESS){
-                	 opt.success($.i18n.prop("操作成功!"))
+                    opt.success($.i18n.prop("操作成功!"))
                 }else if (result.code == opt.variable.web_status.WARNING) {
                     opt.modal.warning(result.msg)
                 }  else {
@@ -2937,6 +3040,12 @@ if (typeof jQuery === "undefined") {
 
     $(function () {
 
+        // 全局添加水印
+        if(!(self.frameElement && self.frameElement.tagName == "IFRAME")
+            && opt.variable.isWatermark) {
+            opt.common.watermark({"watermark_txt":"J2eeFAST 开源版本 v2.5.0"});
+        }
+
         //全局设置tooltip
         $('[data-toggle="tooltip"]').each(function () {
             $(this).tooltip();
@@ -2957,7 +3066,7 @@ if (typeof jQuery === "undefined") {
                 //     $(this).valid();
                 // })
                 if(typeof($(this).attr("multiple"))=="undefined"){
-                    $(this).select2();
+                    $(this).select2({allowClear: false, placeholder: "请点击选择"});
                 }else{
                     $(this).select2({allowClear: true, placeholder: ""});
                 }
@@ -3000,6 +3109,7 @@ if (typeof jQuery === "undefined") {
                             endDate.config.min.month = '';
                             endDate.config.min.date = '';
                         }
+                        $('#endTime').trigger('click');
                     }
                 });
                 var endDate = laydate.render({
@@ -3038,6 +3148,7 @@ if (typeof jQuery === "undefined") {
                     var buttons = time.attr("data-btn") || 'clear|now|confirm', newBtnArr = [];
                     // 日期控件选择完成后回调处理
                     var callback = time.attr("data-callback") || {};
+
                     if (buttons) {
                         if (buttons.indexOf("|") > 0) {
                             var btnArr = buttons.split("|"), btnLen = btnArr.length;
@@ -3065,6 +3176,15 @@ if (typeof jQuery === "undefined") {
                             if (typeof window[callback] != 'undefined'
                                 && window[callback] instanceof Function) {
                                 window[callback](value, data);
+                            }else{
+                                try{
+                                    if(opt.common.isString(callback)){
+                                        console.log(callback);
+                                        eval(callback) || new Function(callback);
+                                    }
+                                }catch (e) {
+                                    console.error(e);
+                                }
                             }
                         }
                     });
@@ -3119,17 +3239,28 @@ if (typeof jQuery === "undefined") {
                 $('#scroll-up').toTop();
             }
         }
-
-        //屏蔽鼠标右键
-        //document.oncontextmenu = function() {
-        //    return false
-        //}
-
+        /* 页面菜单更多事件*/
+        $('a[data-toggle="formMore"]').each(function(){
+            $(this).off("click").on("click", function () {
+                var html = [];
+                var formMore = $(this).parents('form').find('.select-list-more');
+                var show = formMore.css('display');
+                if(show == 'block'){
+                    formMore.toggle('normal');
+                    html.push('<i class="fa fa-angle-double-down"></i>&nbsp;',$.i18n.prop("更多"));
+                }else{
+                    formMore.fadeIn(500).css('display','block');
+                    html.push('<i class="fa fa-angle-double-up"></i>&nbsp;',$.i18n.prop("隐藏"));
+                }
+                $(this).empty().append(html.join(''));
+            })
+        });
     });
 
     window.opt = opt;
 
 })(window.jQuery, window);
+// 回到顶部
 (function( $ ){
     'use strict';
     //TOP方法
@@ -3195,7 +3326,7 @@ if (typeof jQuery === "undefined") {
                     height: undefined,
                     sidePagination: "server",
                     sortName: "",
-                    sortOrder: "asc",
+                    sortOrder: "desc",
                     pagination: true,
                     pageSize: 50,
                     pageList: [50, 100, 150],
@@ -3205,8 +3336,8 @@ if (typeof jQuery === "undefined") {
                     outcheckbox:true, //是否开启检测toolbar有删除按钮 就默认使表格 checkbox:true 支持选中
                     firstLoad: true,
                     showFooter: false,
-                    undefinedText:'/',
-                    emptyText:'/',
+                    undefinedText:'-',
+                    emptyText:'-',
                     search: false,
                     showSearch: true,
                     showPageGo: true,
@@ -3233,6 +3364,8 @@ if (typeof jQuery === "undefined") {
                     totalData:undefined, //服务返回合计对象
                     _totalColumns:[],
                     rowStyle: {},
+                    showBorder: false,
+                    isFixedColumn: false
                 };
 
                 if(options.resizable){
@@ -3253,7 +3386,7 @@ if (typeof jQuery === "undefined") {
                     var _flag = false;
                     if(!opt.common.isEmpty(options.columns.length)){
                         for(var i=0; i<options.columns.length; i++ ){
-                            if(options.columns[0] instanceof Array){
+                            if(options.columns[i] instanceof Array){
                                 for(var j=0; j<options.columns[i].length; j++) {
                                     if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
                                         _flag = true;
@@ -3269,12 +3402,12 @@ if (typeof jQuery === "undefined") {
                                     break;
                                 }
                             }
-
                         }
                     }
                     if (!_flag){
+                        //无表头信息
                         if(options.columns[0] instanceof Array){
-                            options.columns[1].splice(0,0,{checkbox: true, field: '_state'});
+                            options.columns[options.columns.length -1].splice(0,0,{checkbox: true, field: '_state'});
                         }else{
                             options.columns.splice(0,0,{checkbox: true, field: '_state'});
                         }
@@ -3296,6 +3429,10 @@ if (typeof jQuery === "undefined") {
                                 if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i][j],"checkbox"))){
                                     options.columns[i][j].field = '_state';
                                 }
+                                // 表格首列有radio 勾选字段名称必须state - 记住我必须是字段state
+                                if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"radio"))){
+                                    options.columns[i].field = '_state';
+                                }
                             }
                         }else {
                             if(opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"align"))){
@@ -3306,6 +3443,10 @@ if (typeof jQuery === "undefined") {
                             }
                             // 表格首列有checkbox 勾选字段名称必须state - 记住我必须是字段state
                             if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"checkbox"))){
+                                options.columns[i].field = '_state';
+                            }
+                            // 表格首列有radio 勾选字段名称必须state - 记住我必须是字段state
+                            if(!opt.common.isEmpty(opt.common.getJsonValue(options.columns[i],"radio"))){
                                 options.columns[i].field = '_state';
                             }
                         }
@@ -3335,12 +3476,15 @@ if (typeof jQuery === "undefined") {
                     pageSize: options.pageSize,                         // 每页的记录行数（*）
                     pageList: options.pageList,                         // 可供选择的每页的行数（*）
                     firstLoad: options.firstLoad,                       // 是否首次请求加载数据，对于数据较大可以配置false
+                    isFixedColumn: options.isFixedColumn,               // 是否固定列宽，当列比较多时，开启水平滚动，可设置为 true
                     escape: options.escape,                             // 转义HTML字符串
-                    showFooter: options.showFooter,                     // 是否显示表尾
+                    showFooter: options.showFooter,                     // 是否统计显示表底部尾行 配合 footerFormatter 方法使用
+                    footerStyle: options.footerStyle,                   // 表底部尾行统计样式
                     iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
                     toolbar: '#' + options.toolbar + '-'+options.id,    // 指定工作栏
                     sidePagination: options.sidePagination,             // server启用服务端分页client客户端分页
                     search: options.search,                             // 是否显示搜索框功能
+                    showBorder: options.showBorder,                     // 是否显示表格边框
                     searchText: options.searchText,                     // 搜索框初始显示的内容，默认为空
                     showSearch: options.showSearch,                     // 是否显示检索信息
                     showPageGo: options.showPageGo,               		// 是否显示跳转页
@@ -3354,6 +3498,10 @@ if (typeof jQuery === "undefined") {
                     singleSelect: options.singleSelect,                 // 是否单选checkbox
                     mobileResponsive: options.mobileResponsive,         // 是否支持移动端适配
                     detailView: options.detailView,                     // 是否启用显示细节视图
+                    onCheck: options.onCheck,                           // 点击选择（check）此行时触发
+                    onUncheck: options.onUncheck,                       // 当取消选择（uncheck）此行时触发
+                    onCheckAll: options.onCheckAll,                     // 当全选行时触发
+                    onUncheckAll: options.onUncheckAll,                 // 当取消全选行时触发
                     onClickRow: options.onClickRow,                     // 点击某行触发的事件
                     onDblClickRow: options.onDblClickRow,               // 双击某行触发的事件
                     onClickCell: options.onClickCell,                   // 单击某格触发的事件
@@ -3363,7 +3511,7 @@ if (typeof jQuery === "undefined") {
                     rememberSelected: options.rememberSelected,         // 启用翻页记住前面的选择
                     fixedColumns: options.fixedColumns,                 // 是否启用冻结列（左侧）
                     fixedNumber: options.fixedNumber,                   // 列冻结的个数（左侧）
-                    resizable: options.resizable,                       // 是否允许拉伸列宽
+                    resizable: options.resizable,                       // 是否允许拉伸列宽及增加表格线
                     rightFixedColumns: options.rightFixedColumns,       // 是否启用冻结列（右侧）
                     rightFixedNumber: options.rightFixedNumber,         // 列冻结的个数（右侧）
                     onReorderRow: options.onReorderRow,                 // 当拖拽结束后处理函数
@@ -3413,6 +3561,7 @@ if (typeof jQuery === "undefined") {
                     __sidx:           params.sort,
                     __order:          params.order
                 };
+                opt.table.set(this.id);
                 var currentId = opt.common.isEmpty(opt.table.options.formId) ? $('form').attr('id') : opt.table.options.formId;
                 return $.extend(curParams, opt.common.formToJSON(currentId));
             },
@@ -3441,7 +3590,7 @@ if (typeof jQuery === "undefined") {
                                 if(opt.table.rememberSelectedIds[opt.table.options.id]){
                                     var _flag = false;
                                     for(var i=0; i<opt.table.rememberSelectedIds[opt.table.options.id].length; i++){
-                                        if(row[column] == opt.table.rememberSelectedIds[opt.table.options.id][i]){
+                                        if(opt.common.getJsonValue(row,column) == opt.table.rememberSelectedIds[opt.table.options.id][i]){
                                             _flag = true;
                                         }
                                     }
@@ -3452,7 +3601,7 @@ if (typeof jQuery === "undefined") {
                                         }else{
                                             var _f = true;
                                             for(var k=0; k< opt.table.rememberSelecteds[opt.table.options.id].length; k++){
-                                                if(row[column] == opt.common.getJsonValue(opt.table.rememberSelecteds[opt.table.options.id][k],column)){
+                                                if(opt.common.getJsonValue(row,column) == opt.common.getJsonValue(opt.table.rememberSelecteds[opt.table.options.id][k],column)){
                                                     _f = false;
                                                     break;
                                                 }
@@ -3463,7 +3612,6 @@ if (typeof jQuery === "undefined") {
                                             }
                                         }
                                     }
-
                                     row._state = _flag;
                                 }else{
                                     row._state = false;
@@ -3491,15 +3639,15 @@ if (typeof jQuery === "undefined") {
                 var optionsIds = $.table.getOptionsIds();
                 // 监听事件处理
                 $(optionsIds).on(TABLE_EVENTS, function () {
-                    opt.table.set($(this).attr("id"));
+                    opt.table.set(this.id);
                 });
 
                 // 选中、取消、全部选中、全部取消（事件）
                 $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
-                    console.log("e.type:"+e.type);
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
+                        //获取到当前页面数据
                         var _trows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                             return row;
                         });
@@ -3510,8 +3658,9 @@ if (typeof jQuery === "undefined") {
                             opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([],  $.table.affectedRowIds(_trows),opt.table.options.uniqueId);
                         }
                         if(!opt.table.options.singleSelect){
-                            var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId;
-                            func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
+                            var column = opt.common.isEmpty(opt.table.options.uniqueId) ? opt.table.options.columns[1].field : opt.table.options.uniqueId,
+                                //判断勾选使用合并函数-反选使用剔除元素
+                                func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
                             selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
                             if(opt.common.isNotEmpty(selectedIds)) {
                                 opt.table.rememberSelectedIds[opt.table.options.id] = _[func](selectedIds, rowIds,column);
@@ -3531,11 +3680,11 @@ if (typeof jQuery === "undefined") {
                     }
 
                     if (typeof opt.table.get(opt.table.options.id).onSelectData == "function") {
-                    	if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
-                    		opt.table.get(opt.table.options.id).onSelectData(opt.table.rememberSelecteds[opt.table.options.id]);
-                    	}else{
-                    		opt.table.get(opt.table.options.id).onSelectData(rows);
-                    	}
+                        if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
+                            opt.table.get(opt.table.options.id).onSelectData(opt.table.rememberSelecteds[opt.table.options.id]);
+                        }else{
+                            opt.table.get(opt.table.options.id).onSelectData(rows);
+                        }
                     }
                 });
                 // 加载成功、选中、取消、全部选中、全部取消（事件）
@@ -3578,6 +3727,7 @@ if (typeof jQuery === "undefined") {
             },
             // 当所有数据被加载时触发
             onLoadSuccess: function(data) {
+
                 if (typeof opt.table.get(this.id).onLoadSuccess == "function") {
                     opt.table.get(this.id).onLoadSuccess(data);
                 }
@@ -3722,6 +3872,8 @@ if (typeof jQuery === "undefined") {
             destroy: function (tableId) {
                 var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('destroy');
+                delete opt.table.rememberSelectedIds[tableId];
+                delete opt.table.rememberSelecteds[tableId];
             },
             // 序列号生成
             serialNumber: function (index, tableId) {
@@ -3814,6 +3966,20 @@ if (typeof jQuery === "undefined") {
                     currentId = formId;
                 }
 
+                //查询是否有更多按钮
+                var butform = $('#'+currentId).find('a[data-toggle="formMore"]');
+                var formMore = $('#'+currentId).find('div.select-list-more');
+                if(opt.common.isNotEmpty(butform) &&
+                    opt.common.isNotEmpty(formMore) &&
+                    formMore.css('display')){
+                    var show = formMore.css('display');
+                    var html = [];
+                    if(show == 'block'){
+                        formMore.toggle('normal');
+                        html.push('<i class="fa fa-angle-double-down"></i>&nbsp;',$.i18n.prop("更多"));
+                        butform.empty().append(html.join(''));
+                    }
+                }
 
                 var params = opt.common.isEmpty(tableId) ? $("#" + opt.table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
                 params.queryParams = function(params) {
@@ -3830,6 +3996,7 @@ if (typeof jQuery === "undefined") {
                     search.__order = params.order;
                     return search;
                 }
+
                 if(opt.common.isNotEmpty(tableId)){
                     $("#" + tableId).bootstrapTable('refresh', params);
                 } else{
@@ -3864,68 +4031,63 @@ if (typeof jQuery === "undefined") {
                 });
             },
             // 下载模板
-            importTemplate: function() {
-                table.set();
-                $.get(table.options.importTemplateUrl, function(result) {
-                    if (result.code == web_status.SUCCESS) {
-                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
-                    } else if (result.code == web_status.WARNING) {
-                        opt.modal.alertWarning(result.msg)
-                    } else {
-                        opt.modal.alertError(result.msg);
-                    }
-                });
+            importTemplate: function(fileName) {
+                fileName = window.encodeURI(fileName);
+                opt.common.downLoadFile(baseURL + "excel/download?fileName=" +fileName);
             },
             // 导入数据
             importExcel: function(formId) {
-                table.set();
+                opt.table.set();
                 var currentId = opt.common.isEmpty(formId) ? 'importTpl' : formId;
-                layer.open({
+                opt.layer.open({
                     type: 1,
-                    area: ['400px', '230px'],
-                    fix: false,
-                    //不固定
-                    maxmin: true,
+                    area: ['580px', '200px'],
+                    shadeClose: true,
+                    resize: false,
+                    scrollbar: true,
                     //shade: 0.3,
-                    title: '导入' + table.options.modalName + '数据',
-                    content: $('#' + currentId).html(),
+                    title: '<i class="fa fa-upload"></i> 导入' + opt.table.options.modalName + '数据',
+                    content: opt.template(currentId),
                     btn: ['<i class="fa fa-check"></i> 导入', '<i class="fa fa-remove"></i> 取消'],
                     // 弹层外区域关闭
                     shadeClose: true,
                     btn1: function(index, layero){
                         var file = layero.find('#file').val();
                         if (file == '' || (!opt.common.endWith(file, '.xls') && !opt.common.endWith(file, '.xlsx'))){
-                            opt.modal.msgWarning("请选择后缀为 “xls”或“xlsx”的文件。");
+                            opt.warning("请选择后缀为 “xls”或“xlsx”的文件。");
                             return false;
                         }
-                        var index = layer.load(2, {shade: false});
-                        opt.modal.disable();
-                        var formData = new FormData();
-                        formData.append("file", $('#file')[0].files[0]);
-                        formData.append("updateSupport", $("input[name='updateSupport']").is(':checked'));
-                        $.ajax({
-                            url: table.options.importUrl,
+                        parent.opt.modal.loading();
+                        var formData = new FormData(layero.find('form')[0]);
+                        var config = {
+                            url: opt.table.options.importUrl,
                             data: formData,
                             cache: false,
                             contentType: false,
                             processData: false,
                             type: 'POST',
                             success: function (result) {
-                                if (result.code == web_status.SUCCESS) {
-                                    opt.modal.closeAll();
-                                    opt.modal.alertSuccess(result.msg);
+                                if (result.code == opt.variable.web_status.SUCCESS) {
+                                    parent.opt.modal.closeLoading();
+                                    opt.error(result.msg);
                                     $.table.refresh();
-                                } else if (result.code == web_status.WARNING) {
-                                    layer.close(index);
-                                    opt.modal.enable();
-                                    opt.modal.alertWarning(result.msg)
+                                } else if (result.code == opt.variable.web_status.WARNING) {
+                                    opt.error(result.msg);
+                                    parent.opt.modal.closeLoading();
+                                    opt.layer.close(index);
                                 } else {
-                                    layer.close(index);
-                                    opt.modal.enable();
-                                    opt.modal.alertError(result.msg);
+                                    opt.error(result.msg);
+                                    parent.opt.modal.closeLoading();
+                                    opt.layer.close(index);
                                 }
+                            },
+                            error: function(xhr, textStatus) {
+                                opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                                parent.opt.modal.closeLoading();
+                                return;
                             }
-                        });
+                        };
+                        opt.common.sendAjax(config);
                     }
                 });
             },
@@ -3945,13 +4107,23 @@ if (typeof jQuery === "undefined") {
             // 查询表格指定列值
             selectColumns: function(column) {
                 var rows = $.map($("#" + opt.table.options.id).bootstrapTable('getSelections'), function (row) {
-                    return row[column];
+                    var value = row;
+                    var props = column.split('.');
+                    for (var p in props) {
+                        value = value && value[props[p]];
+                    }
+                    return value;
                 });
                 if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
                     var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
                     if(opt.common.isNotEmpty(selectedRows)) {
                         rows = $.map(opt.table.rememberSelecteds[opt.table.options.id], function (row) {
-                            return row[column];
+                            var value = row;
+                            var props = column.split('.');
+                            for (var p in props) {
+                                value = value && value[props[p]];
+                            }
+                            return value;
                         });
                     }
                 }
@@ -3981,7 +4153,10 @@ if (typeof jQuery === "undefined") {
                 return rowIds;
             },
             // 查询表格首列值 -- 实际就是第二列 去掉了前面的 勾选 与序列
-            selectFirstColumns: function() {
+            selectFirstColumns: function(tableId) {
+                if(opt.common.isNotEmpty(tableId)){
+                    opt.table.set(tableId);
+                }
                 var rows = $.map($("#" + opt.table.options.id).bootstrapTable('getSelections'), function (row) {
                     return row[opt.table.options.columns[1].field];
                 });
@@ -3996,13 +4171,16 @@ if (typeof jQuery === "undefined") {
                 return opt.common.uniqueFn(rows);
             },
             //获取选中行 id 集合
-            selectAllColumns :function(){
+            selectAllColumns :function(tableId){
+                if(opt.common.isNotEmpty(tableId)){
+                    opt.table.set(tableId);
+                }
                 var rows;
                 if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
                     var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
                     if(opt.common.isNotEmpty(selectedRows)) {
                         rows = $.map(selectedRows, function (row) {
-                            return row[opt.table.options.uniqueId];
+                            return opt.common.getJsonValue(row,opt.table.options.uniqueId);
                         });
                     }else{
                         rows = [];
@@ -4022,8 +4200,11 @@ if (typeof jQuery === "undefined") {
                 return opt.common.uniqueFn(rows);
             },
             //获取选中行对象集合
-            selectAllColumnRows: function(){
-            	var rows;
+            selectAllColumnRows: function(tableId){
+                if(opt.common.isNotEmpty(tableId)){
+                    opt.table.set(tableId);
+                }
+                var rows;
                 if (opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected) {
                     var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
                     if(opt.common.isNotEmpty(selectedRows)) {
@@ -4032,7 +4213,7 @@ if (typeof jQuery === "undefined") {
                         rows = [];
                     }
                 }
-              //若没有记住我或者记住我内部无值 则获取页面，如果有值则获取记住我,因为记住我里面的值为所有,不单单是当前页还有其他页记住的数据
+                //若没有记住我或者记住我内部无值 则获取页面，如果有值则获取记住我,因为记住我里面的值为所有,不单单是当前页还有其他页记住的数据
                 if(opt.common.isEmpty(rows) || rows.length == 0){
                     rows = $.map($("#" + opt.table.options.id).bootstrapTable('getAllSelections'), function (row) {
                         return row;
@@ -4075,21 +4256,21 @@ if (typeof jQuery === "undefined") {
                 });
                 return actions.join('');
             },
-            // 回显数据字典 多个, 约定以逗号分割---用于复选框翻译回显 , values 值 字符串 如： 1,2,3,4  
+            // 回显数据字典 多个, 约定以逗号分割---用于复选框翻译回显 , values 值 字符串 如： 1,2,3,4
             selectDictLabels: function(datas, valueStr) {
                 var actions = [];
                 valueStr = valueStr + "";
                 valueStr = valueStr || "";
                 var values = valueStr.split(",");
                 $.each(values ,function(index, value){
-	                $.each(datas, function(index, dict) {
-	                    if (dict.dictValue == ('' + value)) {
-	                        // var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
-	                        // if(!opt.common.isEmpty(dict.cssClass)){
-	                        //     listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
-	                        // }
-	                        // actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
-	                        // return false;
+                    $.each(datas, function(index, dict) {
+                        if (dict.dictValue == ('' + value)) {
+                            // var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
+                            // if(!opt.common.isEmpty(dict.cssClass)){
+                            //     listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
+                            // }
+                            // actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
+                            // return false;
                             var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
                             if(!opt.common.isEmpty(dict.cssClass)){
                                 listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
@@ -4103,19 +4284,19 @@ if (typeof jQuery === "undefined") {
                                 actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
                             }
                             return false;
-	                    }
-	                    //兼容客户端数据为空 -- 则匹配字典默认值
-	                    if (opt.common.isEmpty(value) && dict.isDefault === "Y") {
-	                        var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
-	                        if(!opt.common.isEmpty(dict.cssClass)){
-	                            listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
-	                        }
-	                        actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
-	                        return false;
-	                    }
-	                });
+                        }
+                        //兼容客户端数据为空 -- 则匹配字典默认值
+                        if (opt.common.isEmpty(value) && dict.isDefault === "Y") {
+                            var listClass = opt.common.equals("default", dict.listClass) || opt.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
+                            if(!opt.common.isEmpty(dict.cssClass)){
+                                listClass = opt.common.isEmpty(dict.cssClass) ? "" : dict.cssClass;
+                            }
+                            actions.push(opt.common.sprintf("<span class='%s'>%s</span>", listClass, $.i18n.prop(dict.dictLabel)));
+                            return false;
+                        }
+                    });
                 });
-                
+
                 return actions.join(',');
             },
             // 显示表格指定列
@@ -4132,7 +4313,7 @@ if (typeof jQuery === "undefined") {
             },
             //取消选择某一行，索引（index）从0开始
             uncheck: function(index,tableId){
-            	opt.table.set(tableId);
+                opt.table.set(tableId);
                 var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('uncheck', index);
             },
@@ -4224,7 +4405,7 @@ if (typeof jQuery === "undefined") {
                 });
             },
             //动态插入数据
-            addColumn: function(row,tableId){
+            addColumn: function(row,callback,tableId){
                 var that = this;
                 opt.table.set(tableId);
                 var currentId = opt.common.isEmpty(tableId) ? opt.table.options.id : tableId;
@@ -4281,6 +4462,10 @@ if (typeof jQuery === "undefined") {
                             });
                         });
                     });
+                }
+
+                if(typeof callback == "function"){
+                    callback(row);
                 }
             }
         }
@@ -4436,7 +4621,7 @@ if (typeof jQuery === "undefined") {
                     },
                     check: {
                         enable: true,             // 置 zTree 的节点上是否显示 checkbox / radio
-                        //radioType: "level",
+                        radioType: "level",
                         chkStyle: "radio",
                         nocheckInherit: true      // 设置子节点是否自动继承
                     },
@@ -4465,7 +4650,8 @@ if (typeof jQuery === "undefined") {
                     },
                     check: options.check,
                     view: options.view,
-                    data: options.data
+                    data: options.data,
+
                 };
 
 
@@ -4529,7 +4715,7 @@ if (typeof jQuery === "undefined") {
                             tree.expandAll(true);
                         }
                         //
-                        if(options.check.enable){
+                        // if(options.check.enable){
                             if(!opt.common.isEmpty(options._list)){
                                 var _l = options._list.split(",");
                                 for(var i=0; i<_l.length; i++){
@@ -4558,7 +4744,7 @@ if (typeof jQuery === "undefined") {
                                 //     if($.tree._option.check.chkStyle == 'radio') tree.selectNode(node);
                                 // }
                             }
-                        }
+                        // }
 
                         // if(!opt.common.isEmpty(treeId) && !options.check.enable){
                         //     var node = tree.getNodeByParam(opt.common.isEmpty(options.data.simpleData.idKey)?
@@ -4736,22 +4922,23 @@ if (typeof jQuery === "undefined") {
                     var treeId = body.find('#treeId').val()
                     var treeName = body.find('#treeName').val();
                     var parentIds = body.find('#parentIds').val();
+                    var treeTitle = body.find('#treeTitle').val();
                     var type = body.find('#type').val();
-                    if(opt.common.isEmpty(treeName)){
-                        if(tree.setting.check.enable){
-                            var _l = treeId.split(",");
-                            for(var i=0; i<_l.length; i++){
-                                var node = tree.getNodeByParam(tree.setting.data.simpleData.idKey,_l[i]);
-                                if(node!=null){
-                                    treeName += node.name + ",";
-                                }
-                            }
-                            if(opt.common.isEmpty(treeName)) treeName = treeName.substr(0,treeName.length-1);
-                        }else{
-                            treeName = tree.getNodesByParam(tree.setting.data.simpleData.idKey, treeId, null)[0].name;
-                        }
-                    }
-                    var _n = "{\"id\":\""+treeId+"\",\"name\":\""+treeName+"\",\"parentIds\":\""+parentIds+"\",\"type\":\""+type+"\"}";
+                    // if(opt.common.isEmpty(treeName)){
+                    //     if(tree.setting.check.enable){
+                    //         var _l = treeId.split(",");
+                    //         for(var i=0; i<_l.length; i++){
+                    //             var node = tree.getNodeByParam(tree.setting.data.simpleData.idKey,_l[i]);
+                    //             if(node!=null){
+                    //                 treeName += node.name + ",";
+                    //             }
+                    //         }
+                    //         if(opt.common.isEmpty(treeName)) treeName = treeName.substr(0,treeName.length-1);
+                    //     }else{
+                    //         treeName = tree.getNodesByParam(tree.setting.data.simpleData.idKey, treeId, null)[0].name;
+                    //     }
+                    // }
+                    var _n = "{\"id\":\""+treeId+"\",\"name\":\""+treeName+"\",\"title\":\""+treeTitle+"\",\"parentIds\":\""+parentIds+"\",\"type\":\""+type+"\"}";
                     return $.parseJSON(_n);
                 }else{
                     return false;
@@ -4948,172 +5135,172 @@ if (typeof jQuery === "undefined") {
  *         Pass any option as data-option="value"
  */
 +function ($) {
-  'use strict';
+    'use strict';
 
-  var DataKey = 'lte.boxwidget';
+    var DataKey = 'lte.boxwidget';
 
-  var Default = {
-    animationSpeed : 500,
-    collapseTrigger: '[data-widget="collapse"]',
-    removeTrigger  : '[data-widget="remove"]',
-    collapseIcon   : 'fa-minus',
-    expandIcon     : 'fa-plus',
-    removeIcon     : 'fa-times'
-  };
+    var Default = {
+        animationSpeed : 500,
+        collapseTrigger: '[data-widget="collapse"]',
+        removeTrigger  : '[data-widget="remove"]',
+        collapseIcon   : 'fa-minus',
+        expandIcon     : 'fa-plus',
+        removeIcon     : 'fa-times'
+    };
 
-  var Selector = {
-    data     : '.box',
-    collapsed: '.collapsed-box',
-    header   : '.box-header',
-    body     : '.box-body',
-    footer   : '.box-footer',
-    tools    : '.box-tools'
-  };
+    var Selector = {
+        data     : '.box',
+        collapsed: '.collapsed-box',
+        header   : '.box-header',
+        body     : '.box-body',
+        footer   : '.box-footer',
+        tools    : '.box-tools'
+    };
 
-  var ClassName = {
-    collapsed: 'collapsed-box'
-  };
+    var ClassName = {
+        collapsed: 'collapsed-box'
+    };
 
-  var Event = {
+    var Event = {
         collapsing: 'collapsing.boxwidget',
         collapsed: 'collapsed.boxwidget',
         expanding: 'expanding.boxwidget',
         expanded: 'expanded.boxwidget',
         removing: 'removing.boxwidget',
-        removed: 'removed.boxwidget'        
+        removed: 'removed.boxwidget'
     };
 
-  // BoxWidget Class Definition
-  // =====================
-  var BoxWidget = function (element, options) {
-    this.element = element;
-    this.options = options;
+    // BoxWidget Class Definition
+    // =====================
+    var BoxWidget = function (element, options) {
+        this.element = element;
+        this.options = options;
 
-    this._setUpListeners();
-  };
+        this._setUpListeners();
+    };
 
-  BoxWidget.prototype.toggle = function () {
-    var isOpen = !$(this.element).is(Selector.collapsed);
+    BoxWidget.prototype.toggle = function () {
+        var isOpen = !$(this.element).is(Selector.collapsed);
 
-    if (isOpen) {
-      this.collapse();
-    } else {
-      this.expand();
-    }
-  };
-
-  BoxWidget.prototype.expand = function () {
-    var expandedEvent = $.Event(Event.expanded);
-    var expandingEvent = $.Event(Event.expanding);
-    var collapseIcon  = this.options.collapseIcon;
-    var expandIcon    = this.options.expandIcon;
-
-    $(this.element).removeClass(ClassName.collapsed);
-
-    $(this.element)
-      .children(Selector.header + ', ' + Selector.body + ', ' + Selector.footer)
-      .children(Selector.tools)
-      .find('.' + expandIcon)
-      .removeClass(expandIcon)
-      .addClass(collapseIcon);
-
-    $(this.element).children(Selector.body + ', ' + Selector.footer)
-      .slideDown(this.options.animationSpeed, function () {
-        $(this.element).trigger(expandedEvent);
-      }.bind(this))
-      .trigger(expandingEvent);
-  };
-
-  BoxWidget.prototype.collapse = function () {
-    var collapsedEvent = $.Event(Event.collapsed);
-    var collapsingEvent = $.Event(Event.collapsing);
-    var collapseIcon   = this.options.collapseIcon;
-    var expandIcon     = this.options.expandIcon;
-
-    $(this.element)
-      .children(Selector.header + ', ' + Selector.body + ', ' + Selector.footer)
-      .children(Selector.tools)
-      .find('.' + collapseIcon)
-      .removeClass(collapseIcon)
-      .addClass(expandIcon);
-
-    $(this.element).children(Selector.body + ', ' + Selector.footer)
-      .slideUp(this.options.animationSpeed, function () {
-        $(this.element).addClass(ClassName.collapsed);
-        $(this.element).trigger(collapsedEvent);
-      }.bind(this))
-      .trigger(expandingEvent);
-  };
-
-  BoxWidget.prototype.remove = function () {
-    var removedEvent = $.Event(Event.removed);
-    var removingEvent = $.Event(Event.removing);
-
-    $(this.element).slideUp(this.options.animationSpeed, function () {
-      $(this.element).trigger(removedEvent);
-      $(this.element).remove();
-    }.bind(this))
-    .trigger(removingEvent);
-  };
-
-  // Private
-
-  BoxWidget.prototype._setUpListeners = function () {
-    var that = this;
-
-    $(this.element).on('click', this.options.collapseTrigger, function (event) {
-      if (event) event.preventDefault();
-      that.toggle($(this));
-      return false;
-    });
-
-    $(this.element).on('click', this.options.removeTrigger, function (event) {
-      if (event) event.preventDefault();
-      that.remove($(this));
-      return false;
-    });
-  };
-
-  // Plugin Definition
-  // =================
-  function Plugin(option) {
-    return this.each(function () {
-      var $this = $(this);
-      var data  = $this.data(DataKey);
-
-      if (!data) {
-        var options = $.extend({}, Default, $this.data(), typeof option == 'object' && option);
-        $this.data(DataKey, (data = new BoxWidget($this, options)));
-      }
-
-      if (typeof option == 'string') {
-        if (typeof data[option] == 'undefined') {
-          throw new Error('No method named ' + option);
+        if (isOpen) {
+            this.collapse();
+        } else {
+            this.expand();
         }
-        data[option]();
-      }
+    };
+
+    BoxWidget.prototype.expand = function () {
+        var expandedEvent = $.Event(Event.expanded);
+        var expandingEvent = $.Event(Event.expanding);
+        var collapseIcon  = this.options.collapseIcon;
+        var expandIcon    = this.options.expandIcon;
+
+        $(this.element).removeClass(ClassName.collapsed);
+
+        $(this.element)
+            .children(Selector.header + ', ' + Selector.body + ', ' + Selector.footer)
+            .children(Selector.tools)
+            .find('.' + expandIcon)
+            .removeClass(expandIcon)
+            .addClass(collapseIcon);
+
+        $(this.element).children(Selector.body + ', ' + Selector.footer)
+            .slideDown(this.options.animationSpeed, function () {
+                $(this.element).trigger(expandedEvent);
+            }.bind(this))
+            .trigger(expandingEvent);
+    };
+
+    BoxWidget.prototype.collapse = function () {
+        var collapsedEvent = $.Event(Event.collapsed);
+        var collapsingEvent = $.Event(Event.collapsing);
+        var collapseIcon   = this.options.collapseIcon;
+        var expandIcon     = this.options.expandIcon;
+
+        $(this.element)
+            .children(Selector.header + ', ' + Selector.body + ', ' + Selector.footer)
+            .children(Selector.tools)
+            .find('.' + collapseIcon)
+            .removeClass(collapseIcon)
+            .addClass(expandIcon);
+
+        $(this.element).children(Selector.body + ', ' + Selector.footer)
+            .slideUp(this.options.animationSpeed, function () {
+                $(this.element).addClass(ClassName.collapsed);
+                $(this.element).trigger(collapsedEvent);
+            }.bind(this))
+            .trigger(expandingEvent);
+    };
+
+    BoxWidget.prototype.remove = function () {
+        var removedEvent = $.Event(Event.removed);
+        var removingEvent = $.Event(Event.removing);
+
+        $(this.element).slideUp(this.options.animationSpeed, function () {
+            $(this.element).trigger(removedEvent);
+            $(this.element).remove();
+        }.bind(this))
+            .trigger(removingEvent);
+    };
+
+    // Private
+
+    BoxWidget.prototype._setUpListeners = function () {
+        var that = this;
+
+        $(this.element).on('click', this.options.collapseTrigger, function (event) {
+            if (event) event.preventDefault();
+            that.toggle($(this));
+            return false;
+        });
+
+        $(this.element).on('click', this.options.removeTrigger, function (event) {
+            if (event) event.preventDefault();
+            that.remove($(this));
+            return false;
+        });
+    };
+
+    // Plugin Definition
+    // =================
+    function Plugin(option) {
+        return this.each(function () {
+            var $this = $(this);
+            var data  = $this.data(DataKey);
+
+            if (!data) {
+                var options = $.extend({}, Default, $this.data(), typeof option == 'object' && option);
+                $this.data(DataKey, (data = new BoxWidget($this, options)));
+            }
+
+            if (typeof option == 'string') {
+                if (typeof data[option] == 'undefined') {
+                    throw new Error('No method named ' + option);
+                }
+                data[option]();
+            }
+        });
+    }
+
+    var old = $.fn.boxWidget;
+
+    $.fn.boxWidget             = Plugin;
+    $.fn.boxWidget.Constructor = BoxWidget;
+
+    // No Conflict Mode
+    // ================
+    $.fn.boxWidget.noConflict = function () {
+        $.fn.boxWidget = old;
+        return this;
+    };
+
+    // BoxWidget Data API
+    // ==================
+    $(window).on('load', function () {
+        $(Selector.data).each(function () {
+            Plugin.call($(this));
+        });
     });
-  }
-
-  var old = $.fn.boxWidget;
-
-  $.fn.boxWidget             = Plugin;
-  $.fn.boxWidget.Constructor = BoxWidget;
-
-  // No Conflict Mode
-  // ================
-  $.fn.boxWidget.noConflict = function () {
-    $.fn.boxWidget = old;
-    return this;
-  };
-
-  // BoxWidget Data API
-  // ==================
-  $(window).on('load', function () {
-    $(Selector.data).each(function () {
-      Plugin.call($(this));
-    });
-  });
 }(jQuery);
 
 /**
