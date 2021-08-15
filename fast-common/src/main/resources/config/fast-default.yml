@@ -193,6 +193,13 @@ fast:
   #是否开启HTTPS false 则以server:port
   ssl:
     enabled: false
+  #是否开启ureport2报表功能
+  ureport:
+    enabled: true
+    mysql:
+      provider:
+         prefix: fast-
+         disabled: false
   #配置文件yml文件中敏感数据加密key /*注意 数据加密安全性其实是相对的,什么加密如果私钥或者key泄露都是无用,这个世界上没有一种加密方法是绝对安全的。
   #这种加密方法只能做到：防君子不防小人*/
   #此参数可以配置可以不配置,如果不配置则自动获取系统key,或者使用环境变量方式储存，使用启动命令方式,建议不配置key 让系统自己生成 因为系统是生成key是根居机器码,只有这台机器才能解密
