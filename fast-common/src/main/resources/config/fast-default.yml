@@ -237,8 +237,8 @@ web:
       #角色登录对应main主页 key 角色字符支持 | & 符号 value 相当于Controller控制器的指向路径
       #例如 'USER|DEPT': 'modules/demo/addrpert' 意思为登录用户为 USER 或者 DEPT 角色的用户 访问modules/demo/main0 首页、注意所有Key角色不能有重复
       roleMain: "{
-                  'USER|DEPT': 'modules/sys/demo/addrpert',
-                  'HR': 'modules/demo/main1'
+                  'USER|DEPT|HR': 'modules/sys/demo/addrpert',
+                  'ADMIN': 'main'
                   }"
    adapter:
       # 子系统 自定义HandlerInterceptorAdapter 适配器拦截器 添加配置 list map形式
