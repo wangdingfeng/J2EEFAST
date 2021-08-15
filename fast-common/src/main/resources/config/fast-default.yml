@@ -232,6 +232,11 @@ fast:
     enabled: false
     #多租户需要略拼接多租户ID的表 多个表之间, 分割 注意大小写. 例如: 'sys_user,sys_comp'
     ignoreTable: ~
+#web页面相关
+web:
+   response:
+      enabled: true
+      urlPatterns: /demo/testData/**
 #日志路径配置
 logging:
     file:

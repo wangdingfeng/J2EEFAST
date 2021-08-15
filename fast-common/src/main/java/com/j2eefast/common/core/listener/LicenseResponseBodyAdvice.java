@@ -13,15 +13,14 @@ import com.j2eefast.common.core.base.entity.BaseEntity;
 import com.j2eefast.common.core.base.entity.annotaion.JsonListBaselgonre;
 import com.j2eefast.common.core.base.entity.annotaion.JsonListFiledIgnore;
 import com.j2eefast.common.core.enums.ConvertType;
-import com.j2eefast.common.core.utils.JSON;
-import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.ResponseData;
-import com.j2eefast.common.core.utils.ToolUtil;
+import com.j2eefast.common.core.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.lang.annotation.Annotation;
@@ -29,7 +28,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * pageList 数据拦截
+ * 全局响ResponseData应数据拦截
  * @author huanzhou
  * @date: 2020-03-18 09:15
  */
@@ -39,6 +38,17 @@ import java.util.*;
 public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
 
 
+    /**
+     * 是否拦截指定数据打返回印日志
+     */
+    @Value("#{ @environment['web.response.enabled'] ?: false }")
+    private boolean enabled;
+
+    /**
+     * 需要拦截的地址多个,隔开
+     */
+    @Value("#{ @environment['web.response.urlPatterns'] ?: null }")
+    private String urlPatterns;
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
         return true;
@@ -124,81 +134,93 @@ public class LicenseResponseBodyAdvice implements ResponseBodyAdvice {
                            }
                        }
                    }
-                   if(ToolUtil.isEmpty(rmfields) && ToolUtil.isEmpty(conver) && ToolUtil.isEmpty(objList)){
-                       return body;
+                   if(ToolUtil.isNotEmpty(rmfields) || ToolUtil.isNotEmpty(conver) || ToolUtil.isNotEmpty(objList)){
+                       String q = JSON.marshal(rd);
+                       cn.hutool.json.JSONObject c = JSONUtil.parseObj(q);
+                       JSONArray a =  c.getJSONObject("data").getJSONArray("list");
+                       for (Iterator iter = a.iterator(); iter.hasNext();) {
+                           cn.hutool.json.JSONObject str = (cn.hutool.json.JSONObject)iter.next();
+
+                           //剔除不输出前端数据
+                           if(ToolUtil.isNotEmpty(rmfields)){
+                               rmfields.forEach(x->{
+                                   str.remove(x);
+                               });
+                           }
+
+                           //需要转换输出前端的数据
+                           if(ToolUtil.isNotEmpty(conver)){
+                               conver.forEach(x->{
+                                   for(String key : x.keySet()){
+                                       ConvertType value = x.get(key);
+                                       // 手机号码隐藏转换
+                                       if(value.equals(ConvertType.PHONE)){
+                                           if(!ToolUtil.isEmpty(str.getStr(key))){
+                                               str.put(key,str.getStr(key).replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2"));
+                                           }else {
+                                               str.put(key, StrUtil.EMPTY);
+                                           }
+
+                                       }
+                                       // 邮箱隐藏转换
+                                       if(value.equals(ConvertType.EMAIL)){
+                                           if(!ToolUtil.isEmpty(str.getStr(key))){
+                                               str.put(key,str.getStr(key).replaceAll("(\\w?)(\\w+)(\\w)(@\\w+\\.[a-z]+(\\.[a-z]+)?)", "$1****$3$4"));
+                                           }else {
+                                               str.put(key, StrUtil.EMPTY);
+                                           }
+                                       }
+                                   }
+                               });
+                           }
+
+                           //字段对象中输出前端的数据
+                           if(ToolUtil.isNotEmpty(objList)){
+                               objList.forEach(x->{
+                                   for(String key : x.keySet()){
+                                       String[]  value = x.get(key);
+                                       cn.hutool.json.JSONObject ob =  str.getJSONObject(key);
+                                       List<String> show = new ArrayList<>();
+                                       for(Map.Entry<String, Object> entry :ob.entrySet()){
+                                           boolean mark = true;
+                                           for(String s: value){
+                                               if(entry.getKey().equals(s)){
+                                                   mark = false;
+                                                   break;
+                                               }
+                                           }
+                                           if(mark){
+                                               show.add(entry.getKey());
+                                           }
+                                       }
+                                       if(ToolUtil.isNotEmpty(show)){
+                                           show.forEach(k->{
+                                               str.getJSONObject(key).remove(k);
+                                           });
+                                       }
+                                   }
+                               });
+                           }
+                       }
+                       body = JSONObject.parseObject(c.toString());
                    }
-                   String q = JSON.marshal(rd);
-                   cn.hutool.json.JSONObject c = JSONUtil.parseObj(q);
-                   JSONArray a =  c.getJSONObject("data").getJSONArray("list");
-                   for (Iterator iter = a.iterator(); iter.hasNext();) {
-                       cn.hutool.json.JSONObject str = (cn.hutool.json.JSONObject)iter.next();
-
-                       //剔除不输出前端数据
-                       if(ToolUtil.isNotEmpty(rmfields)){
-                           rmfields.forEach(x->{
-                               str.remove(x);
-                           });
-                       }
-
-                       //需要转换输出前端的数据
-                       if(ToolUtil.isNotEmpty(conver)){
-                           conver.forEach(x->{
-                               for(String key : x.keySet()){
-                                   ConvertType value = x.get(key);
-                                   // 手机号码隐藏转换
-                                   if(value.equals(ConvertType.PHONE)){
-                                       if(!ToolUtil.isEmpty(str.getStr(key))){
-                                           str.put(key,str.getStr(key).replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2"));
-                                       }else {
-                                           str.put(key, StrUtil.EMPTY);
-                                       }
-
-                                   }
-                                   // 邮箱隐藏转换
-                                   if(value.equals(ConvertType.EMAIL)){
-                                       if(!ToolUtil.isEmpty(str.getStr(key))){
-                                           str.put(key,str.getStr(key).replaceAll("(\\w?)(\\w+)(\\w)(@\\w+\\.[a-z]+(\\.[a-z]+)?)", "$1****$3$4"));
-                                       }else {
-                                           str.put(key, StrUtil.EMPTY);
-                                       }
-                                   }
-                               }
-                           });
-                       }
-
-                       //字段对象中输出前端的数据
-                       if(ToolUtil.isNotEmpty(objList)){
-                           objList.forEach(x->{
-                               for(String key : x.keySet()){
-                                 String[]  value = x.get(key);
-                                   cn.hutool.json.JSONObject ob =  str.getJSONObject(key);
-                                   List<String> show = new ArrayList<>();
-                                   for(Map.Entry<String, Object> entry :ob.entrySet()){
-                                       boolean mark = true;
-                                       for(String s: value){
-                                          if(entry.getKey().equals(s)){
-                                              mark = false;
-                                              break;
-                                          }
-                                       }
-                                       if(mark){
-                                           show.add(entry.getKey());
-                                       }
-                                   }
-                                   if(ToolUtil.isNotEmpty(show)){
-                                       show.forEach(k->{
-                                           str.getJSONObject(key).remove(k);
-                                       });
-                                   }
-                               }
-                           });
-                       }
-                   }
-                   JSONObject jsonObject = JSONObject.parseObject(c.toString());
-                   return  jsonObject;
                }
             }catch (Exception e){
                 log.error("转换输出数据异常:",e);
+            }
+        }
+        if(enabled){
+            if(ToolUtil.isNotEmpty(urlPatterns)){
+                String path = ServletUtil.getRequest().getServletPath();
+                String[] url = urlPatterns.split(",");
+                for (int i = 0; url != null && i < url.length; i++) {
+                    AntPathMatcher matcher = new AntPathMatcher();
+                    if(matcher.match(url[i],path) ||
+                            matcher.matchStart(url[i],path)){
+                        log.info("响应信息-->>>:"+JSONUtil.parse(body).toString());
+                        break;
+                    }
+                }
             }
         }
         return body;
