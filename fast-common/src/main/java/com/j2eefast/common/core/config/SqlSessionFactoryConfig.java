@@ -60,7 +60,7 @@ public class SqlSessionFactoryConfig {
 	/**
 	 * 多数据源sqlSessionTemplate切换模板
 	 */
-	@Bean(name = "fastSqlSessionTemplate")
+	@Bean(name = "flowableModeler")
 	public OptionalSqlSessionTemplate fastSqlSessionTemplate(@Qualifier("dataSourcePrimary") DataSource dataSourcePrimary,
 															 @Qualifier("sqlSessionFactoryPrimary") SqlSessionFactory sqlSessionFactoryPrimary,
 															 @Qualifier("defaultProperties") DruidProperties druidProperties,
