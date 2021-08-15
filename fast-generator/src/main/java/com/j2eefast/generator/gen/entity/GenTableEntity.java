@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.generator.gen.util.GenConstants;
 import com.j2eefast.generator.gen.util.Option;
 import org.apache.commons.lang3.StringUtils;
@@ -415,9 +416,26 @@ public class GenTableEntity extends BaseEntity {
     }
 
 
+    public int isQueryNum(){
+        if(ToolUtil.isNotEmpty(this.columns)){
+            int num = 0;
+            for(GenTableColumnEntity columnEntity: this.columns){
+                if(columnEntity.isQuery()){
+                    num ++;
+                }
+            }
+            return num;
+        }
+        return 0;
+    }
+
     public boolean isSuperColumn(String javaField)
     {
         return isSuperColumn(this.tplCategory, javaField);
+    }
+
+    public static boolean isLenCamelCase(String javaField){
+        return ToolUtil.charUpperCaseLen(javaField) > 1;
     }
 
     public static boolean isSuperColumn(String tplCategory, String javaField)

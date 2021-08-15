@@ -101,6 +101,8 @@ public class VelocityUtils{
         }
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("columns", genTable.getColumns());
+        // 表 需要查询字段有几个
+        velocityContext.put("columnsIsQueryNum", genTable.isQueryNum());
         velocityContext.put("table", genTable);
         velocityContext.put("pageTheme", "<@pageTheme mark=\"${config.optimize()?string('true', 'false')}\">");
         if (GenConstants.TPL_TREE.equals(tplCategory))

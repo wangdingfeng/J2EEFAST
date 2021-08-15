@@ -8,6 +8,7 @@ package com.j2eefast.generator.gen.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import cn.hutool.core.util.StrUtil;
+import com.j2eefast.common.core.utils.ToolUtil;
 import org.apache.commons.lang3.StringUtils;
 import javax.validation.constraints.NotBlank;
 
@@ -314,8 +315,6 @@ public class GenTableColumnEntity{
     {
         return isPk(this.isPlus);
     }
-
-
 
     public boolean isPk(String isPk)
     {

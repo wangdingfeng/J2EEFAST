@@ -362,8 +362,8 @@ public class GenController extends BaseController {
             }
             Ztree ztree = new Ztree();
             String path = roots[i].getPath();
-            ztree.setId((long) HashUtil.rsHash(path));
-            ztree.setpId((long) -1);
+            ztree.setId(String.valueOf(HashUtil.rsHash(path)));
+            ztree.setpId("-1");
             ztree.setName(path);
             ztree.setTitle(path);
             ztree.setIsParent(!FileUtil.isDirEmpty(roots[i]));
@@ -387,8 +387,8 @@ public class GenController extends BaseController {
             if(file[i].isDirectory()){
                 Ztree ztree = new Ztree();
                 String path0 = file[i].getPath();
-                ztree.setId((long) HashUtil.rsHash(file[i].getName()));
-                ztree.setpId(pid);
+                ztree.setId(String.valueOf(HashUtil.rsHash(file[i].getName())));
+                ztree.setpId(String.valueOf(pid));
                 ztree.setName(file[i].getName());
                 ztree.setTitle(path0);
                 try {

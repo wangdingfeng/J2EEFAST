@@ -5,17 +5,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="${packageName}.mapper.${ClassName}Mapper">
 
 #set($className=$ClassName.substring(0,1).toLowerCase() + ${ClassName.substring(1)})
-    <resultMap type="${ClassName}Entity" id="${ClassName}Result">
-#foreach ($c in $columns)
-#if($c.javaType == "SysCompEntity")
-#elseif($c.javaType == "SysDeptEntity")
-#elseif( $c.javaType == "SysUserEntity")
-#else
-        <result property="${c.javaField}" column="${c.columnName}"/>
-#end
-#end
-    </resultMap>
-    
     <!--  实体栏位  --> 
     <sql id="${className}Columns">
 #foreach($c in $columns)
