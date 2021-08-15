@@ -14,11 +14,14 @@ import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
 import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysModuleEntity;
 import com.j2eefast.framework.sys.entity.SysRoleEntity;
+import com.j2eefast.framework.sys.entity.SysTenantEntity;
 import com.j2eefast.framework.sys.factory.UserFactory;
 import com.j2eefast.framework.sys.mapper.SysMenuMapper;
 import com.j2eefast.framework.sys.mapper.SysModuleMapper;
+import com.j2eefast.framework.sys.mapper.SysTenantMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.utils.UserUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -55,6 +58,13 @@ public class SysLoginService implements AuthService {
 	@Resource
 	private SysMenuMapper sysMenuMapper;
 
+	@Resource
+	private SysTenantMapper sysTenantMapper;
+	/**
+	 * 系统是否开启多租户模式
+	 */
+	@Value("#{ @environment['fast.tenantModel.enabled'] ?: false }")
+	private boolean enabled;
 
 	@Override
 	public Integer loginBeforeVerify(String username, String password) {
@@ -68,7 +78,7 @@ public class SysLoginService implements AuthService {
 		}
 
 		//获取验证码
-		String captcha = (String) HttpContextUtil.getRequest().getParameter("captcha");
+		String captcha = ServletUtil.getRequest().getParameter("captcha");
 		boolean verityFlag = (number != null  && number >= Global.getLoginNumCode()) || ToolUtil.isNotEmpty(captcha);
 
 		//如果错误次数大于设定次数必须验证 验证码
@@ -77,6 +87,21 @@ public class SysLoginService implements AuthService {
 			String sysCaptcha = UserUtils.getKaptcha(Constant.KAPTCHA_SESSION_KEY);
 			if (ToolUtil.isEmpty(captcha) || !captcha.equalsIgnoreCase(sysCaptcha)) {
 				throw new RxcException(ToolUtil.message("sys.login.code.error"),"50004");
+			}
+		}
+
+		//租户是否开启
+		if(enabled){
+			String tenantId = ServletUtil.getRequest().getParameter("tenantId");
+			if(ToolUtil.isEmpty(tenantId)){
+				throw new RxcException(ToolUtil.message("sys.login.tenant.error"),"50004");
+			}
+			SysTenantEntity sysTenantEntity = sysTenantMapper.findSysTenantByIdTenantId(tenantId);
+			if(ToolUtil.isEmpty(sysTenantEntity)){
+				throw new RxcException(ToolUtil.message("sys.login.tenant.error"),"50004");
+			}
+			if(sysTenantEntity.getStatus().equals("1")){
+				throw new RxcException(ToolUtil.message("sys.login.tenant.error"),"50004");
 			}
 		}
 
@@ -98,18 +123,27 @@ public class SysLoginService implements AuthService {
 	@Override
 	public LoginUserEntity loginVerify(String username, String password) {
 
+
 		Integer number = this.loginBeforeVerify(username,password);
 
-		SysUserEntity user = this.sysUserMapper.findUserByUserName(username);
+		//获取请求租户号
+		String tenantId = StrUtil.EMPTY;
+		if(enabled){
+			tenantId  = StrUtil.blankToDefault(ServletUtil.getRequest()
+				.getParameter(Constant.TENANT_PARAMETER),StrUtil.EMPTY);
+		}
+
+		SysUserEntity user = this.sysUserMapper.findUserByUserName(username,
+				tenantId);
 
 		//手机号码登陆
 		if(ToolUtil.isEmpty(user) && ReUtil.isMatch(Constant.MOBILE_PHONE_NUMBER_PATTERN, username)) {
-			user = this.sysUserMapper.findUserByMobile(username);
+			user = this.sysUserMapper.findUserByMobile(username,tenantId);
 		}
 
 		//邮箱登陆
 		if(ToolUtil.isEmpty(user) && ReUtil.isMatch(Constant.EMAIL_PATTERN,username)) {
-			user = this.sysUserMapper.findUserByEmail(username);
+			user = this.sysUserMapper.findUserByEmail(username,tenantId);
 		}
 
 		if(ToolUtil.isEmpty(user)){
@@ -121,6 +155,9 @@ public class SysLoginService implements AuthService {
 		if ("1".equals(user.getStatus())) {
 			throw new RxcException(ToolUtil.message("sys.login.accountDisabled"),"50001");
 		}
+
+		//多租户模式判断租户是否正常
+
 
 		//判断密码是否正确
 		if(!UserUtils.sha256(password, user.getSalt()).equals(user.getPassword())) {
@@ -161,8 +198,15 @@ public class SysLoginService implements AuthService {
 	 */
 	@Override
 	public LoginUserEntity freeLoginVerify(String openId) {
+		//获取请求租户号
+		String tenantId = StrUtil.EMPTY;
+		if(enabled){
+			tenantId  = StrUtil.blankToDefault(ServletUtil.getRequest()
+					.getParameter(Constant.TENANT_PARAMETER),StrUtil.EMPTY);
+		}
 		//检查第三方账号是否有绑定用户ID
-		SysUserEntity user = this.sysUserMapper.findUserByUserName(openId);
+		SysUserEntity user = this.sysUserMapper.findUserByUserName(openId,tenantId);
+
 		if(ToolUtil.isEmpty(user)){
 			AsyncManager.me().execute(AsyncFactory.recordLogininfor(openId,-1L,-1L, "60001","第三方授权登录,系统没有绑定用户."));
 			throw new RxcException(ToolUtil.message("sys.login.failure"),"60001");
@@ -268,6 +312,17 @@ public class SysLoginService implements AuthService {
 			loginUser.setPermissions(permissionSet);
 //			loginUser.setDataScope("1");
 		}
+
+		//多租户模式设置
+		if(enabled){
+			//如果是最大管理员租户且为ADMIN则多租户显示标志为true
+			if(loginUser.getTenantId().equals(Constant.SUPER_TENANT)
+					&& loginUser.getRoleKey().contains(Constant.SU_ADMIN)){
+				loginUser.setSuperTenant(true);
+			}
+		}else{
+			loginUser.setSuperTenant(false);
+		}
 	}
 
 	@Override
@@ -281,7 +336,7 @@ public class SysLoginService implements AuthService {
 		loginUser.setLoginTime(loginInfo.getLoginTime());
 
 		//登陆IP
-		loginUser.setLoginIp(HttpContextUtil.getIp());
+		loginUser.setLoginIp(ServletUtil.getIp());
 
 		//设置登陆时间
 		loginUser.setNowLoginTime(DateUtil.date());

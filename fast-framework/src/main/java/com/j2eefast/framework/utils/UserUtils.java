@@ -6,7 +6,9 @@
 package com.j2eefast.framework.utils;
 
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
+import com.j2eefast.common.core.utils.BeanUtil;
 import com.j2eefast.framework.shiro.realm.UserRealm;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -19,6 +21,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.utils.ToolUtil;
+import org.apache.shiro.subject.support.DelegatingSubject;
 
 /**
  * 
@@ -28,6 +31,7 @@ import com.j2eefast.common.core.utils.ToolUtil;
  * @version V1.0
  *
  */
+@Slf4j
 public class UserUtils {
 
 
@@ -49,11 +53,11 @@ public class UserUtils {
 	}
 
 	/**
-	 * 获取用户信息
+	 * 获取当前登录用户信息
 	 * @return
 	 */
 	public static LoginUserEntity getUserInfo() {
-		return (LoginUserEntity) SecurityUtils.getSubject().getPrincipal();
+		return (LoginUserEntity)getSubject().getPrincipal();
 	}
 
 	/**
@@ -100,8 +104,20 @@ public class UserUtils {
 	}
 
 
+	/**
+	 * 是否最大管理员
+	 * @return
+	 */
 	public static boolean isSupAdmin(){
 		return  hasRole(Constant.SU_ADMIN);
+	}
+
+	/**
+	 * 是否管理租户
+	 * @return
+	 */
+	public static boolean isSuperTenant(){
+		return getUserInfo().getSuperTenant();
 	}
 
 	/**
@@ -110,6 +126,10 @@ public class UserUtils {
 	 */
 	public static String getLoginName() {
 		return getUserInfo().getUsername();
+	}
+
+	public static String getName() {
+		return getUserInfo().getName();
 	}
 
 	/**
@@ -169,7 +189,15 @@ public class UserUtils {
 	}
 
 	public static boolean isLogin() {
-		return SecurityUtils.getSubject().getPrincipal() != null;
+		return SecurityUtils.getSubject()!=null && SecurityUtils.getSubject().getPrincipal() != null;
+	}
+
+	/**
+	 * 获取用户租户ID
+	 * @return
+	 */
+	public static String getTenantId(){
+		return getUserInfo().getTenantId();
 	}
 
 	public static void logout() {

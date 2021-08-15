@@ -5,6 +5,9 @@
  */
 package com.j2eefast.framework.config;
 
+import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.j2eefast.common.core.constants.ConfigConstant;
+import com.j2eefast.common.core.datasources.CustomTenantLineHandler;
 import com.j2eefast.common.core.datasources.MybatisPulsMetaObjectHandler;
 import com.j2eefast.common.core.io.PropertiesUtils;
 import com.j2eefast.common.core.utils.ToolUtil;
@@ -37,6 +40,11 @@ public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+		//多租户模式
+		if((Boolean) PropertiesUtils.getInstance().get(ConfigConstant.TENANTMODEL)){
+			interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new SysTenantHanler()));
+		}
+
         PaginationInnerInterceptor innerInterceptor =  new PaginationInnerInterceptor();
         //设置最大分页数量
         innerInterceptor.setMaxLimit(200L);
@@ -45,6 +53,11 @@ public class MybatisPlusConfig {
         interceptor.addInnerInterceptor(innerInterceptor);
         //控制是否在count时对sql的join进行优化
 		//innerInterceptor.setOptimizeJoin(false);
+
+		//防止全表更新与删除插件: BlockAttackInnerInterceptor
+		BlockAttackInnerInterceptor blockAttackInnerInterceptor = new BlockAttackInnerInterceptor();
+		interceptor.addInnerInterceptor(blockAttackInnerInterceptor);
+
         return interceptor;
     }
 

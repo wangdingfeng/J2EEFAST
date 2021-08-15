@@ -1,0 +1,108 @@
+<!-- 系统自动生成 Date:2021-07-23 13:39 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="新增租户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-tenant-add"  class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+        <@ctx.i18n text = "租户ID"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tenantId" maxlength="12" required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+        <@ctx.i18n text = "租户名称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tenantName"  required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "联系人"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="linkman"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "联系电话"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="link"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "联系地址"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="address"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "状态"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.radio name="status" dictType="sys_status"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "备注"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.textarea name="remark" />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "sys/tenant"
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-tenant-add").validate({
+        onkeyup: false,
+        rules:{
+            tenantId: {
+                alnum:true,
+                minlength: 6,
+                maxlength: 12,
+                remote: {
+                        url: prefix + "/checkTenantIdUnique",
+                        type: "POST",
+                        dataType: "html",
+                        data: {
+                            "tenantId": function() {
+                                return opt.common.trim($("#tenantId").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return opt.validate.unique(data);
+                        }
+                }
+            },
+            link: {
+                isMobile:true,
+            }
+        },
+        focusCleanup: true
+    });
+    </@compress>
+
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/add", $('#form-tenant-add').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>

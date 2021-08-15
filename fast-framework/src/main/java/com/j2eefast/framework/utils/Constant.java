@@ -6,8 +6,13 @@
 
 package com.j2eefast.framework.utils;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * 常量
+ * @author huanzhou
  */
 public class Constant {
 
@@ -15,6 +20,11 @@ public class Constant {
 	/** 超级管理员ID */
 	public static final Long SUPER_ADMIN = 1L;
 	public static final String SU_ADMIN = "ADMIN";
+	/** 管理员租户**/
+	public static final String SUPER_TENANT = "000000";
+	public static final String TENANT_PARAMETER = "tenantId";
+
+
 	//0=未设置, 1=仅本人数据, 2=本公司数据,3=本部门及以下数据权限,4=本部门数据权限, 5=自定义数据权限  6 所有数据权限
 	/**
 	 * 未设置
@@ -76,7 +86,7 @@ public class Constant {
 	/**
 	 * 资源映射路径 前缀
 	 */
-	public static final String RESOURCE_URLPREFIX = "/profile";
+//	public static final String RESOURCE_URLPREFIX = "/profile";
 	public static final String BASE_WEB_HTML = "templates/";
 	/**
      * 手机号码格式限制

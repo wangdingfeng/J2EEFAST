@@ -41,7 +41,8 @@ public class UserFactory {
 		loginUser.setEmail(user.getEmail());
 		loginUser.setPwdSecurityLevel(user.getPwdSecurityLevel());
 		loginUser.setAvatar(user.getAvatar());
-
+		loginUser.setTenantId(user.getTenantId());
+		loginUser.setTenanName(user.getTenantName());
 		return loginUser;
 	}
 }

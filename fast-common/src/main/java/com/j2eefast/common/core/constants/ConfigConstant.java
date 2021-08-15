@@ -5,6 +5,7 @@
  */
 package com.j2eefast.common.core.constants;
 
+import com.google.common.collect.Lists;
 import com.j2eefast.common.core.utils.HexUtil;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,25 @@ public final class ConfigConstant {
 	public static final String 					JTA_ENABLED_YML 					= "fast.jta.enabled";
 	public static final String 					TRUE 								= "true";
 	public static final String 					FLOWABLE_ENABLED_YML 				= "fast.flowable.enabled";
+	public static final String 					TENANTMODEL 						= "fast.tenantModel.enabled";
+	public static final String					IGNORETABLE 				        = "fast.tenantModel.ignoreTable";
+	public static final String 				    SERVER_SERVLET_CONTEXTPATH          = "server.servlet.context-path";
+	/**
+	 *  系统多租户忽略添加租户ID的表
+	 *  也可以称为多租户数据共享表 具体可以参考数据表描述
+	 *  -- 若还需要添加请在配置文件xml 配置,此处为系统配置禁止修改,若修改请自行维护
+	 */
+	public static final List<String>  		    IGNORE_TABLE_NAMES 				    = Lists.newArrayList(
+			"sys_config",/* 系统参数表*/
+			"sys_module",/* 模块表*/
+			"sys_job", /* 任务表*/
+			"sys_user_post","sys_dict_data","sys_tenant","sys_index","sys_role_menu","sys_role_module","sys_role_dept",
+			"sys_dict_type","sys_menu","sys_area","sys_user_role","tables","columns","gen_table_column",
+			"sys_job_log","sys_notice","sys_msg_push","sys_msg_push_user","sys_file_upload","sys_msg_cc_user",
+			"extended_properties",
+			"act_*", /* 所有工作流表*/
+			"sys_login_infor","gen_table","sys_database"
+	);
 
 	/**
 	 * 登录安全key
@@ -50,7 +70,7 @@ public final class ConfigConstant {
 	/**
 	 * 资源映射路径 前缀
 	 */
-	public static final String 					RESOURCE_URLPREFIX 					= "/profile";
+//	public static final String 					RESOURCE_URLPREFIX 					= "/profile";
 	
 	
 	/**********************************系统参数配置常量**********************************************************************/

@@ -4,28 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysUserMapper">
 
-    <resultMap type="sysUserEntity" id="sysUserResult">
-        <result property="id"    column="id"    />
-        <result property="username"    column="username"    />
-        <result property="name"    column="name"    />
-        <result property="password"    column="password"    />
-        <result property="salt"    column="salt"    />
-        <result property="email"    column="email"    />
-        <result property="mobile"    column="mobile"    />
-        <result property="status"    column="status"    />
-        <result property="pwdSecurityLevel"    column="pwd_security_level"    />
-        <result property="pwdUpdateDate"    column="pwd_update_date"    />
-        <result property="compId"    column="comp_id"    />
-        <result property="deptId"    column="dept_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="cardId"    column="card_id"    />
-        <result property="avatar"    column="avatar"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="remark"    column="remark"    />
-    </resultMap>
-
     <!--分页查询 -->
     <sql id="sqlpage">
         SELECT u.id,
@@ -51,7 +29,7 @@
         LEFT JOIN (SELECT id,name FROM sys_comp) c ON u.comp_id = c.id
         LEFT JOIN (SELECT id, name, parent_ids FROM sys_comp) d ON u.dept_id = d.id
         LEFT JOIN (SELECT user_id, role_id FROM sys_user_role)  r ON u.id = r.user_id
-        LEFT JOIN (SELECT id, role_name FROM sys_role) l ON r.role_id = l.id
+        LEFT JOIN (SELECT id, role_name, role_key FROM sys_role) l ON r.role_id = l.id
     </sql>
 
     <!-- 条件语句-->
@@ -80,11 +58,11 @@
     </sql>
 
     <sql id="selectsysUserVo">
-        SELECT id AS "id", username AS "username", name AS "name", password AS "password",
-        salt AS "salt", email AS "email", mobile AS "mobile", status AS "status", pwd_security_level AS "pwdSecurityLevel",
-        pwd_update_date AS "pwdUpdateDate", comp_id AS "compId", dept_id AS "deptId",
-        create_time AS "createTime", card_id AS "cardId", avatar AS "avatar", update_time AS "updateTime",
-        update_by AS "updateBy", create_by AS "createBy", remark AS "remark" FROM sys_user
+        SELECT u.id AS "id", u.username AS "username", u.name AS "name", u.password AS "password",
+        u.salt AS "salt", u.email AS "email", u.mobile AS "mobile", u.status AS "status", u.pwd_security_level AS "pwdSecurityLevel",
+        u.pwd_update_date AS "pwdUpdateDate", u.comp_id AS "compId", u.dept_id AS "deptId",
+        u.create_time AS "createTime", u.card_id AS "cardId", u.avatar AS "avatar", u.update_time AS "updateTime",
+        u.update_by AS "updateBy", u.create_by AS "createBy", u.remark AS "remark",u.tenant_id AS "tenantId"
     </sql>
 
     <sql id="selectRoleToUserVo">
@@ -95,9 +73,9 @@
         <if test="_databaseId == 'mysql'">IFNULL(c.name,"总公司") AS comp_name</if>
         <if test=" _databaseId  == 'postgresql'">COALESCE(c.name,'总公司') AS comp_name</if>
         <if test="_databaseId == 'sqlserver'">ISNULL(c.name,'总公司') AS comp_name,</if>
-		FROM sys_user u
-		LEFT JOIN sys_user_role r ON u.id = r.user_id
-		LEFT JOIN sys_comp c ON u.comp_id = c.id
+        FROM sys_user u
+        LEFT JOIN sys_user_role r ON u.id = r.user_id
+        LEFT JOIN sys_comp c ON u.comp_id = c.id
     </sql>
 
     <!-- 更新用户 -->
@@ -150,9 +128,16 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 登录使用-->
     <select id="findUserByUserName" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="selectsysUserVo"/>
-        WHERE username = #{userName} AND del_flag = '0'
+        ,t.tenant_name AS "tenantName"
+        FROM sys_user u
+        LEFT JOIN sys_tenant t ON u.tenant_id = t.tenant_id
+        WHERE u.username = #{userName} AND u.del_flag = '0'
+        <if test = "tenantId !=null and tenantId!=''">
+            AND u.tenant_id = #{tenantId}
+        </if>
     </select>
 
     <select id="findAuthByUuid" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
@@ -171,14 +156,26 @@
 
     <select id="findUserByMobile" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="selectsysUserVo"/>
-        WHERE mobile = #{mobile} AND del_flag = '0'
+        ,t.tenant_name AS "tenantName"
+        FROM sys_user u
+        LEFT JOIN sys_tenant t ON u.tenant_id = t.tenant_id
+        WHERE u.mobile = #{mobile} AND u.del_flag = '0'
+        <if test = "tenantId !=null and tenantId!=''">
+            AND u.tenant_id = #{tenantId}
+        </if>
     </select>
 
     <select id="findUserByEmail" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="selectsysUserVo"/>
-        WHERE email = #{email} AND del_flag = '0'
+        ,t.tenant_name AS "tenantName"
+        FROM sys_user u
+        LEFT JOIN sys_tenant t ON u.tenant_id = t.tenant_id
+        WHERE u.email = #{email} AND u.del_flag = '0'
+        <if test = "tenantId !=null and tenantId!=''">
+            AND u.tenant_id = #{tenantId}
+        </if>
     </select>
-    
+
     <select id="findCompNameByUserId" resultType="String">
         SELECT ur.name AS CompName
         FROM  sys_user u
@@ -208,6 +205,9 @@
         <if test = "status !=null and status!=''">
             AND u.status = #{status}
         </if>
+        <if test = "roleKey !=null and roleKey!=''">
+            AND l.role_key = #{roleKey}
+        </if>
         <if test="compId != null and compId !=''">
             <if test="_databaseId == 'mysql'">AND (FIND_IN_SET(#{compId},d.parent_ids)</if>
             <if test="_databaseId == 'postgresql'">AND ('${compId}' = ANY(STRING_TO_ARRAY(d.parent_ids, ','))</if>
@@ -230,7 +230,7 @@
         </choose>
     </select>
 
-	<!-- 查询用户列表 -->
+    <!-- 查询用户列表 -->
     <select id="findList" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         <include refid="sqlpage"/>
         WHERE u.del_flag = '0'
@@ -240,9 +240,9 @@
         </if>
         <if test="ids !=null and ids.length > 0">
             AND u.id IN
-          <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
-            #{id}
-           </foreach>
+            <foreach collection="ids" item = "id" open="(" separator="," close=")" index="index">
+                #{id}
+            </foreach>
         </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             AND ${sql_filter}
@@ -301,8 +301,8 @@
             <otherwise>GROUP BY u.id,u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,u.dept_id,u.comp_id,c.name, d.name</otherwise>
         </choose>
     </select>
-	
-	<!-- 修改用户状态 -->
+
+    <!-- 修改用户状态 -->
     <update id="setStatus">
         UPDATE sys_user SET status = #{status} WHERE id = #{id}
     </update>
@@ -310,12 +310,12 @@
     <select id="findUserByUserId" resultType="com.j2eefast.framework.sys.entity.SysUserEntity">
         SELECT u.id AS id,
         u.username, u.name,u.password,u.salt,u.email,u.mobile,u.status,u.card_id,u.create_time,
-        u.dept_id,u.comp_id,d.name AS deptName,
+        u.dept_id,u.comp_id,d.name AS deptName,u.avatar,
         <if test="_databaseId == 'oracle'">NVL(c.name,'总公司') AS comp_name</if>
         <if test="_databaseId == 'mysql'">IFNULL(c.name,"总公司") AS comp_name</if>
         <if test=" _databaseId  == 'postgresql'">COALESCE(c.name,'总公司') AS comp_name</if>
         <if test="_databaseId == 'sqlserver'">ISNULL(c.name,'总公司') AS comp_name</if>
-		FROM sys_user u
+        FROM sys_user u
         LEFT JOIN sys_comp c ON u.comp_id = c.id
         LEFT JOIN (SELECT id, name FROM sys_comp) d ON u.dept_id = d.id
         WHERE u.id = #{id} AND u.del_flag = '0'
