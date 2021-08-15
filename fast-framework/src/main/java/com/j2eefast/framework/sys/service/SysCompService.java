@@ -72,6 +72,12 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 //	}
 
 //
+
+	/**
+	 * 查询公司分页信息
+	 * @param params
+	 * @return
+	 */
 	public List<SysCompEntity> findList(Map<String, Object> params) {
 		params.put("type","0");
 		return SpringUtil.getAopProxy(this).getDeptList(params);
@@ -86,13 +92,13 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 		String id = (String)params.get("id");
 		Long[] ids  = (Long[]) params.get("ids");
 		return this.baseMapper.getDeptList(
-											StrUtil.nullToDefault(id,""),
-											StrUtil.nullToDefault(parentId,""),
-											StrUtil.nullToDefault(name,""),
-											StrUtil.nullToDefault(status,""),
-											StrUtil.nullToDefault(type,""),
-											ids,
-											(String) params.get(Constant.SQL_FILTER));
+				StrUtil.nullToDefault(id,""),
+				StrUtil.nullToDefault(parentId,""),
+				StrUtil.nullToDefault(name,""),
+				StrUtil.nullToDefault(status,""),
+				StrUtil.nullToDefault(type,""),
+				ids,
+				(String) params.get(Constant.SQL_FILTER));
 	}
 
 	/**
@@ -125,10 +131,11 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 		if(ToolUtil.isNotEmpty(compList)){
 			for(SysCompEntity comp: compList){
 				Ztree ztree = new Ztree();
-				ztree.setId(comp.getId());
-				ztree.setpId(comp.getParentId());
+				ztree.setId(String.valueOf(comp.getId()));
+				ztree.setpId(String.valueOf(comp.getParentId()));
 				ztree.setName(comp.getName());
 				ztree.setTitle(comp.getName());
+				ztree.setIsParent(comp.getIsParent());
 				ztree.setChkDisabled(comp.getType().equals("0"));
 				ztrees.add(ztree);
 			}
@@ -143,15 +150,15 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 	public List<Long> findDetpIdList(Long parentId) {
 		return sysCompMapper.findDetpIdList(parentId);
 	}
-	
+
 	/**
 	 * 通过id删除
-	 * @param ids
+	 * @param id
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	public boolean delSysCompById(Long id) {
-		
+
 		// 先判断是否有子公司
 		List<SysCompEntity> list = this.listByMap(new MapUtil().put("parent_id", id));
 		if (ToolUtil.isNotEmpty(list)) {
@@ -177,8 +184,13 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 		List<SysCompEntity> compList = new ArrayList<>();
 		SysCompEntity self = this.findCompById(id);
 		if(ToolUtil.isNotEmpty(self)){
-			compList.add(self);
 			List<SysCompEntity>  levelComps = this.list(new QueryWrapper<SysCompEntity>().eq("parent_id",id));
+			if(ToolUtil.isNotEmpty(levelComps)){
+				self.setIsParent(true);
+			}else{
+				self.setIsParent(false);
+			}
+			compList.add(self);
 			getLevelComps(compList, levelComps);
 		}
 		return compList;
@@ -187,8 +199,13 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 	public void getLevelComps(List<SysCompEntity> compList, List<SysCompEntity> levelComps){
 		if(ToolUtil.isNotEmpty(levelComps)){
 			for(SysCompEntity comp: levelComps){
-				compList.add(comp);
 				List<SysCompEntity>  zComps = this.list(new QueryWrapper<SysCompEntity>().eq("parent_id",comp.getId()));
+				if(ToolUtil.isNotEmpty(zComps)){
+					comp.setIsParent(true);
+				}else{
+					comp.setIsParent(false);
+				}
+				compList.add(comp);
 				if(ToolUtil.isNotEmpty(zComps)){
 					getLevelComps(compList,zComps);
 				}
@@ -238,6 +255,11 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 	}
 
 
+	/**
+	 * 校验是否存在名称
+	 * @param comp
+	 * @return @return true 存在
+	 */
 	public boolean checkCompNameUnique(SysCompEntity comp) {
 		Long compId = ToolUtil.isEmpty(comp.getId()) ? -1L : comp.getId();
 		SysCompEntity info = this.getOne(new QueryWrapper<SysCompEntity>().
@@ -248,14 +270,29 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 		}
 		return true;
 	}
-	
+
 	/**
-	* @Title: checkDataScope 
-	* @Description: Check whether the (ids) belongs to the current user (loginUser)
-	* @param ids  void 
-	* @Date: 2020年9月25日
+	 * 校验是否存在code
+	 * @param comp
+	 * @return true 存在
 	 */
-	public void checkDataScope(Long... ids) {	
+	public boolean checkCompCodeUnique(SysCompEntity comp) {
+		Long compId = ToolUtil.isEmpty(comp.getId()) ? -1L : comp.getId();
+		SysCompEntity info = this.getOne(new QueryWrapper<SysCompEntity>().
+				eq("code",comp.getCode()));
+		if (ToolUtil.isNotEmpty(info) && info.getId().longValue() != compId.longValue()){
+			return  false;
+		}
+		return true;
+	}
+
+	/**
+	 * @Title: checkDataScope
+	 * @Description: Check whether the (ids) belongs to the current user (loginUser)
+	 * @param ids  void
+	 * @Date: 2020年9月25日
+	 */
+	public void checkDataScope(Long... ids) {
 		if (!UserUtils.hasAnyRoleKeys(Constant.SU_ADMIN)) {
 			//check current user has data scope for the deleted use
 			Map<String, Object> params = Maps.newConcurrentMap();
@@ -264,7 +301,7 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 			if (null == listData || listData.size() == 0 || listData.size() != ids.length) {
 				throw new RxcException(ToolUtil.message("illegal request"),"50001");
 			}
-		}		
+		}
 	}
 
 	/**
@@ -290,8 +327,8 @@ public class SysCompService extends ServiceImpl<SysCompMapper,SysCompEntity>  {
 		for (SysCompEntity comp : compList) {
 			if (Constant.COMP_NORMAL.equals(comp.getStatus())) {
 				Ztree ztree = new Ztree();
-				ztree.setId(comp.getId());
-				ztree.setpId(comp.getParentId());
+				ztree.setId(String.valueOf(comp.getId()));
+				ztree.setpId(String.valueOf(comp.getParentId()));
 				ztree.setName(comp.getName());
 				ztree.setTitle(comp.getName());
 				ztree.setType(comp.getType());

@@ -123,8 +123,8 @@ public class SysDeptService extends ServiceImpl<SysDeptMapper,SysDeptEntity> {
 		for (SysDeptEntity dept : deptList) {
 			if (Constant.DEPT_NORMAL.equals(dept.getStatus())) {
 				Ztree ztree = new Ztree();
-				ztree.setId(dept.getId());
-				ztree.setpId(dept.getParentId());
+				ztree.setId(String.valueOf(dept.getId()));
+				ztree.setpId(String.valueOf(dept.getParentId()));
 				ztree.setName(dept.getName());
 				ztree.setTitle(dept.getName());
 				ztree.setType(dept.getType()+"");

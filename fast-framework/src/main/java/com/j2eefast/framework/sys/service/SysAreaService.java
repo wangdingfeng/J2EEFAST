@@ -91,8 +91,8 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		List<Ztree> list = new ArrayList<>();
 		for(SysAreaEntity area: page.getRecords()){
 			Ztree ztree = new Ztree();
-			ztree.setId(area.getId());
-			ztree.setpId(area.getParentId());
+			ztree.setId(String.valueOf(area.getId()));
+			ztree.setpId(String.valueOf(area.getParentId()));
 			ztree.setName(area.getName());
 			list.add(ztree);
 		}
@@ -178,8 +178,8 @@ public class SysAreaService extends ServiceImpl<SysAreaMapper,SysAreaEntity> {
 		List<Ztree> ztrees = new ArrayList<Ztree>(areaList.size());
 		for (SysAreaEntity area : areaList) {
 				Ztree ztree = new Ztree();
-				ztree.setId(area.getId());
-				ztree.setpId(area.getParentId());
+				ztree.setId(String.valueOf(area.getId()));
+				ztree.setpId(String.valueOf(area.getParentId()));
 				ztree.setName(area.getName());
 				ztree.setTitle(area.getName());
 				ztrees.add(ztree);
