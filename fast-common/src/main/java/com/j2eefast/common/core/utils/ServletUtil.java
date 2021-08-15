@@ -6,6 +6,9 @@
 package com.j2eefast.common.core.utils;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +16,10 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-
-
 
 /**
  * Web客户端工具
@@ -24,6 +27,39 @@ import cn.hutool.core.util.StrUtil;
  * @date 2020-03-12 14:56
  */
 public class ServletUtil {
+	
+	
+	/**
+     * 获取请求的ip地址
+     */
+    public static String getIp() {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return "127.0.0.1";
+        } else {
+        	return NetUtil.getMultistageReverseProxyIp(request.getRemoteAddr());
+        }
+    }
+	
+	/**
+     * 获取所有请求的值
+     */
+    public static Map<String, String> getRequestParameters() {
+        HashMap<String, String> values = new HashMap<>();
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return values;
+        }
+        @SuppressWarnings("rawtypes")
+		Enumeration enums = request.getParameterNames();
+        while (enums.hasMoreElements()) {
+            String paramName = (String) enums.nextElement();
+            String paramValue = request.getParameter(paramName);
+            values.put(paramName, paramValue);
+        }
+        return values;
+    }
+	
 	/**
      * 获取String参数
      */
