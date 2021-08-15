@@ -6,11 +6,11 @@
 package com.j2eefast.framework.config;
 
 import cn.hutool.core.comparator.ComparableComparator;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.setting.Setting;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.io.PropertiesUtils;
-import com.j2eefast.common.core.mutidatasource.DataSourceContextHolder;
 import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
@@ -53,16 +53,18 @@ public class BaseInitialze  implements ApplicationRunner {
     private SysJobService sysJobService;
     @Autowired
     private RedisUtil redisUtil;
+
     /**
      * 是否检测脚本自动升级
      */
-    @Value("${fast.updateDb.auto: false}")
+    @Value("#{ @environment['fast.updateDb.auto'] ?: false }")
     private boolean auto;
 
     @SuppressWarnings({ "unchecked"})
 	@Override
     public void run(ApplicationArguments args) throws Exception {
-    	
+
+
     	/**
     	 * 初始化检测模块
     	 */
@@ -80,7 +82,7 @@ public class BaseInitialze  implements ApplicationRunner {
                 	sysModuleService.setRoles(entity.getId(), entity.getStatus());
                 }
             }else{
-
+                // 根据不同模块进行数据库升级
                 if(auto){
                     //检测升级脚本
                     String path = "classpath:config"+File.separator+"update"+File.separator+"db" + File.separator +
@@ -95,7 +97,7 @@ public class BaseInitialze  implements ApplicationRunner {
                                 String dbV = entity.getCurrentVersion();
                                 //获取本身系统对应数据库类型
                                 String defaultDbType = DataSourceContext.getDbType(dbType);
-                                String version = "";
+                                String update_info = "";
                                 for(int i=1;;i++){
                                     if(setting.containsKey("version","v"+i)){
                                         String tempVersion = setting.get("version","v"+i);
@@ -108,7 +110,8 @@ public class BaseInitialze  implements ApplicationRunner {
                                                     //
                                                     log.info("------------------------------------////---<"+entity.getModuleName()+ ">模块 -->[版本:"+dbV+" 升级-->"+tempVersion+"]///------------------------------------");
                                                     SqlExe.runFileSql(dbType,FileUtil.file(path));
-                                                    version = tempVersion;
+                                                    update_info = "更新时间:" + DateUtil.now() + " 版本:"+entity.getCurrentVersion() +" --> " +tempVersion;
+                                                    dbV = tempVersion;
                                                 }
                                             }
                                         }
@@ -117,8 +120,8 @@ public class BaseInitialze  implements ApplicationRunner {
                                     }
                                 }
 
-                                if(ToolUtil.isNotEmpty(version) && !version.equals(dbV)){
-                                    sysModuleService.setVersion(entity.getId(),version);
+                                if(ToolUtil.isNotEmpty(update_info) && !entity.getCurrentVersion().equals(dbV)){
+                                    sysModuleService.setVersion(entity.getId(),dbV,update_info);
                                 }
                             }
                         }
