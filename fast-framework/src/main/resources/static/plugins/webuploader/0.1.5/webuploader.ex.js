@@ -26,8 +26,18 @@ if (typeof jQuery === "undefined") {
         if(imageFlag){
             $fileLists.appendTo($upDiv.find(".queueList"));
         }else{
+            var temp = options.tipTitle;
             //设置表头
-            var html = '<thead id="'+upId+'_thead" style="display: none"><tr style="border-top: 1px solid rgb(221, 221, 221);"><th style="width: 300px;max-width: 400px; text-align: left;">文件名称</th><th style="width: 100px;text-align: center">文件大小</th><th style="text-align: center">上传进度</th><th style="text-align: center">信息</th><th style="text-align: center; width: 200px;">操作</th></tr></thead>';
+            var html = '<thead id="'+upId+'_thead" style="display: none">' +
+                (temp !="" ?('<tr><th colspan="5">'+temp+'</th></tr>'):'') +
+                '<tr style="border-top: 1px solid rgb(221, 221, 221);">' +
+                '<th style="width: 300px;max-width: 400px; text-align: left;">文件名称</th>' +
+                '<th style="width: 100px;text-align: center">文件大小</th>' +
+                '<th style="text-align: center">上传进度</th>' +
+                '<th style="text-align: center">信息</th>' +
+                '<th style="text-align: center; width: 200px;">操作</th>' +
+                '</tr>' +
+                '</thead>';
             $fileLists.before(html);
         }
         var $bar = $upDiv.find(".statusBar"), //顶部上传信息bar
@@ -960,6 +970,7 @@ if (typeof jQuery === "undefined") {
             download: baseURL + "/sys/comm/download",
             fileList: baseURL + "/sys/comm/fileList"
         },
+        tipTitle:"",
         extendParams: {}, //提交的上传扩展参数
         chunked: false, //
         chunkSize: 10485760,
