@@ -29,10 +29,20 @@ public class TableEntity {
 	 * 是否对应字典信息
 	 */
 	private String dict;
+
+	/**
+	 * 查询字段是否为树查询
+	 */
+	private TableZtreeEntity ztree;
 	
 	/**
 	 * 是否查询
 	 */
 	private boolean query;
+
+	/**
+     * 是否为树
+	 */
+	private boolean filedQueryZtree;
 	
 }
