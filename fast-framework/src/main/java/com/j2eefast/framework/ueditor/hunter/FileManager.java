@@ -107,7 +107,8 @@ public class FileManager {
 			if(index >= 0) {
 				url = url.substring(index-1);
 			}
-			fileState.putInfo( "url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + url );
+//			fileState.putInfo( "url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + url );
+			fileState.putInfo( "url", request.getContextPath() + url );
 			fileState.putInfo("name",  FileUtil.getName(file));
 			state.addState( fileState );
 		}

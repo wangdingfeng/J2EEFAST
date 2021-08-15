@@ -13,10 +13,10 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.j2eefast.common.core.utils.HttpContextUtil;
+import com.j2eefast.common.core.utils.ServletUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.oss.cloud.CloudStorageService;
-import com.j2eefast.framework.oss.cloud.FTPCloudStorageService;
 import com.j2eefast.framework.oss.cloud.OSSFactory;
 import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysFileUploadEntity;
@@ -46,7 +46,7 @@ public class FileUploadUtils {
      * @param bizType 业务类型
      */
     public static void saveFileUpload(Long bizId,String bizType){
-        HttpServletRequest request = HttpContextUtil.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         String fileUploads = request.getParameter(bizType);
         String fileDels = request.getParameter(bizType+"__del");
         //删除关联
