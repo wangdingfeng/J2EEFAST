@@ -28,22 +28,32 @@ public class SysLoginInfoEntity implements Serializable {
 	private static final long 					serialVersionUID 					= 1L;
 	@TableId(type = IdType.ASSIGN_ID)
 	private Long id;
+	
 	/** 
 	 *  登录账号
 	 */
 	private String username;
+	
 	/** 
 	 *  登录IP地址
 	 */
 	private String ipaddr;
+	
 	/** 
 	 *  登录地点
 	 */
 	private String loginLocation;
+	
 	/** 
 	 *  浏览器类型
 	 */
 	private String browser;
+	
+	/**
+	 * 用户代理
+	 */
+	private String userAgent;
+	
 	/**
 	 *  系统类型
 	 */
@@ -58,19 +68,23 @@ public class SysLoginInfoEntity implements Serializable {
 	 * 登录状态（0成功 1失败）
 	 */
 	private String status;
+	
 	/**
 	 * 提示消息
 	 */
 	private String msg;
+	
 	/**
 	 * 访问时间
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date loginTime;
+	
 	/**
 	 * 移动平台(0) 电脑设备(1)
 	 */
 	private String mobile;
+	
 	/**
 	 * 公司ID
 	 */

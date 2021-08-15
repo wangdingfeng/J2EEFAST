@@ -1,6 +1,6 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="操作日志详细" bodyClass="white-bg" libs=["jsonview"]/>
+<@header title="操作日志详细" bodyClass="white-bg" libs=["jsonview","prism"]/>
 <div class="wrapper wrapper-content ibox-content">
 <@f.form id="signupForm" class="form-horizontal">
 	<div class="form-group">
@@ -25,6 +25,12 @@
 		<label class="col-sm-2 control-label">请求方式：</label>
 		<div class="label label-primary">
 			${sysLog.requestMethod}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">用户代理：</label>
+		<div class="col-sm-8 pl0 form-control-static">
+			${sysLog.userAgent?default('')}
 		</div>
 	</div>
 	<div class="form-group">
@@ -56,7 +62,9 @@
 	<div class="form-group" style="display:<#if sysLog.status == 0 >none<#else>block</#if>">
 		<label class="col-sm-2 control-label">异常信息：</label>
 		<div class="form-control-static">
-			${sysLog.errorMsg?default('')}
+			<@f.code codeType="java">
+				${sysLog.errorMsg?default('')}
+			</@f.code>
 		</div>
 	</div>
 </@f.form>
