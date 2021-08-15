@@ -57,19 +57,19 @@ public class SysLicenseController extends BaseController {
     /**
      * 证书生成路径
      */
-    @Value("${license.licensePath: license.lic}")
+    @Value("#{ @environment['license.licensePath'] ?: 'license.lic' }")
     private String licensePath;
 
     /////////////////////////////*****此处为生成许可证书配置参数正式项目应当分离////////////////////////
-    @Value("${license.subject: }")
+    @Value("#{ @environment['license.subject'] ?: '' }")
     private String subject;
-    @Value("${license.privateAlias: }")
+    @Value("#{ @environment['license.privateAlias'] ?: '' }")
     private String privateAlias;
-    @Value("${license.keyPass: }")
+    @Value("#{ @environment['license.keyPass'] ?: '' }")
     private String keyPass;
-    @Value("${license.storePass: }")
+    @Value("#{ @environment['license.storePass'] ?: '' }")
     private String storePass;
-    @Value("${license.privateKeysStorePath: }")
+    @Value("#{ @environment['license.privateKeysStorePath'] ?: '' }")
     private String privateKeysStorePath;
     //////////////////////////////////////////////////////////
 
