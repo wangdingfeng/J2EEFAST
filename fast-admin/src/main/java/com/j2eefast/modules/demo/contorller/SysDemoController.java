@@ -5,23 +5,14 @@
  */
 package com.j2eefast.modules.demo.contorller;
 
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import com.j2eefast.common.core.controller.BaseController;
-import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.framework.utils.Constant;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.*;
 
 /**
