@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50730
  Source Host           : 192.168.20.110:3306
- Source Schema         : fast_flowabledb
+ Source Schema         : fast_flowable
 
  Target Server Type    : MySQL
  Target Server Version : 50799
  File Encoding         : 65001
 
- Date: 23/06/2020 15:32:27
+ Date: 15/08/2021 18:00:36
 */
 
 SET NAMES utf8;
@@ -71,14 +71,14 @@ COMMIT;
 -- Records of act_ge_property
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_ge_property` VALUES ('cfg.execution-related-entities-count', 'true', 1), ('cfg.task-related-entities-count', 'true', 1), ('common.schema.version', '6.5.0.1', 1), ('entitylink.schema.version', '6.5.0.1', 1), ('eventsubscription.schema.version', '6.5.0.1', 1), ('identitylink.schema.version', '6.5.0.1', 1), ('job.schema.version', '6.5.0.1', 1), ('next.dbid', '1', 1), ('schema.history', 'create(6.5.0.1)', 1), ('schema.version', '6.5.0.1', 1), ('task.schema.version', '6.5.0.1', 1), ('variable.schema.version', '6.5.0.1', 1);
+INSERT INTO `act_ge_property` VALUES ('batch.schema.version', '6.6.0.0', 1), ('cfg.execution-related-entities-count', 'true', 1), ('cfg.task-related-entities-count', 'true', 1), ('common.schema.version', '6.6.0.0', 1), ('entitylink.schema.version', '6.6.0.0', 1), ('eventsubscription.schema.version', '6.6.0.0', 1), ('identitylink.schema.version', '6.6.0.0', 1), ('job.schema.version', '6.6.0.0', 1), ('next.dbid', '1', 1), ('schema.history', 'upgrade(6.5.0.1->6.6.0.0)', 2), ('schema.version', '6.6.0.0', 2), ('task.schema.version', '6.6.0.0', 1), ('variable.schema.version', '6.6.0.0', 1);
 COMMIT;
 
 -- ----------------------------
 -- Records of act_hi_actinst
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_hi_actinst` VALUES ('f35132ebb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'startEvent', NULL, '2020-06-23 02:05:41.902', '2020-06-23 02:05:41.909', 7, NULL, 'system'), ('f352b98cb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-A6138D25-F1DC-447F-BAF5-1F1358E1838C', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.912', 0, NULL, 'system'), ('f352b98db51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'USER', 'f35a81beb51f11eab5491a94429025f9', NULL, '申请请假表单', 'userTask', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.964', 52, NULL, 'system'), ('f35aa8cfb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-63F199B8-E373-4B75-A417-C4370FE6968E', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.964', '2020-06-23 02:05:41.964', 0, NULL, 'system'), ('f35aa8d0b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f35aa8d1b51f11eab5491a94429025f9', NULL, '部门经理审核', 'userTask', NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, 'system');
+INSERT INTO `act_hi_actinst` VALUES ('f35132ebb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'startEvent', NULL, '2020-06-23 02:05:41.902', '2020-06-23 02:05:41.909', 7, NULL, 'system', NULL), ('f352b98cb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-A6138D25-F1DC-447F-BAF5-1F1358E1838C', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.912', 0, NULL, 'system', NULL), ('f352b98db51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'USER', 'f35a81beb51f11eab5491a94429025f9', NULL, '申请请假表单', 'userTask', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.964', 52, NULL, 'system', NULL), ('f35aa8cfb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-63F199B8-E373-4B75-A417-C4370FE6968E', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.964', '2020-06-23 02:05:41.964', 0, NULL, 'system', NULL), ('f35aa8d0b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f35aa8d1b51f11eab5491a94429025f9', NULL, '部门经理审核', 'userTask', NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, 'system', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -110,21 +110,21 @@ COMMIT;
 -- Records of act_hi_identitylink
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_hi_identitylink` VALUES ('f3506f96b51f11eab5491a94429025f9', NULL, 'starter', '1275318721723772930', NULL, '2020-06-23 02:05:41.898', 'f3504885b51f11eab5491a94429025f9', NULL, NULL, NULL), ('f35acfe2b51f11eab5491a94429025f9', '1275313504231895041', 'candidate', NULL, 'f35aa8d1b51f11eab5491a94429025f9', '2020-06-23 02:05:41.965', NULL, NULL, NULL, NULL);
+INSERT INTO `act_hi_identitylink` VALUES ('f3506f96b51f11eab5491a94429025f9', NULL, 'starter', '1275318721723772930', NULL, '2020-06-23 02:05:41.898', 'f3504885b51f11eab5491a94429025f9', NULL, NULL, NULL, NULL), ('f35acfe2b51f11eab5491a94429025f9', '1275313504231895041', 'candidate', NULL, 'f35aa8d1b51f11eab5491a94429025f9', '2020-06-23 02:05:41.965', NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
 -- Records of act_hi_procinst
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_hi_procinst` VALUES ('f3504885b51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', '8d80b978dfbf4921ae28576708afedd9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', '2020-06-23 02:05:41.896', NULL, NULL, '1275318721723772930', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'system', '办公请假实例', NULL, NULL);
+INSERT INTO `act_hi_procinst` VALUES ('f3504885b51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', '8d80b978dfbf4921ae28576708afedd9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', '2020-06-23 02:05:41.896', NULL, NULL, '1275318721723772930', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'system', '办公请假实例', NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
 -- Records of act_hi_taskinst
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_hi_taskinst` VALUES ('f35a81beb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'USER', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, '申请请假表单', NULL, NULL, NULL, NULL, '2020-06-23 02:05:41.912', NULL, '2020-06-23 02:05:41.964', 52, NULL, 50, NULL, NULL, NULL, 'system', '2020-06-23 02:05:41.964'), ('f35aa8d1b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, '部门经理审核', NULL, NULL, NULL, NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, NULL, 50, NULL, NULL, NULL, 'system', '2020-06-23 02:05:41.964');
+INSERT INTO `act_hi_taskinst` VALUES ('f35a81beb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'USER', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, '申请请假表单', NULL, NULL, NULL, NULL, '2020-06-23 02:05:41.912', NULL, '2020-06-23 02:05:41.964', 52, NULL, 50, NULL, NULL, NULL, 'system', '2020-06-23 02:05:41.964', NULL), ('f35aa8d1b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, '部门经理审核', NULL, NULL, NULL, NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, NULL, 50, NULL, NULL, NULL, 'system', '2020-06-23 02:05:41.964', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -182,7 +182,7 @@ COMMIT;
 -- Records of act_id_property
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_id_property` VALUES ('schema.version', '6.5.0.1', 1);
+INSERT INTO `act_id_property` VALUES ('schema.version', '6.6.0.0', 1);
 COMMIT;
 
 -- ----------------------------
@@ -228,7 +228,7 @@ COMMIT;
 -- Records of act_ru_actinst
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_ru_actinst` VALUES ('f35132ebb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'startEvent', NULL, '2020-06-23 02:05:41.902', '2020-06-23 02:05:41.909', 7, NULL, 'system'), ('f352b98cb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-A6138D25-F1DC-447F-BAF5-1F1358E1838C', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.912', 0, NULL, 'system'), ('f352b98db51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'USER', 'f35a81beb51f11eab5491a94429025f9', NULL, '申请请假表单', 'userTask', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.964', 52, NULL, 'system'), ('f35aa8cfb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-63F199B8-E373-4B75-A417-C4370FE6968E', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.964', '2020-06-23 02:05:41.964', 0, NULL, 'system'), ('f35aa8d0b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f35aa8d1b51f11eab5491a94429025f9', NULL, '部门经理审核', 'userTask', NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, 'system');
+INSERT INTO `act_ru_actinst` VALUES ('f35132ebb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', NULL, NULL, NULL, 'startEvent', NULL, '2020-06-23 02:05:41.902', '2020-06-23 02:05:41.909', 7, NULL, 'system', NULL), ('f352b98cb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-A6138D25-F1DC-447F-BAF5-1F1358E1838C', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.912', 0, NULL, 'system', NULL), ('f352b98db51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'USER', 'f35a81beb51f11eab5491a94429025f9', NULL, '申请请假表单', 'userTask', NULL, '2020-06-23 02:05:41.912', '2020-06-23 02:05:41.964', 52, NULL, 'system', NULL), ('f35aa8cfb51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-63F199B8-E373-4B75-A417-C4370FE6968E', NULL, NULL, NULL, 'sequenceFlow', NULL, '2020-06-23 02:05:41.964', '2020-06-23 02:05:41.964', 0, NULL, 'system', NULL), ('f35aa8d0b51f11eab5491a94429025f9', 1, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'f35132eab51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 'f35aa8d1b51f11eab5491a94429025f9', NULL, '部门经理审核', 'userTask', NULL, '2020-06-23 02:05:41.964', NULL, NULL, NULL, 'system', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -253,7 +253,13 @@ COMMIT;
 -- Records of act_ru_execution
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_ru_execution` VALUES ('f3504885b51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', '8d80b978dfbf4921ae28576708afedd9', NULL, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', NULL, 1, 0, 1, 0, 0, 1, NULL, 'system', '办公请假实例', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', '2020-06-23 02:05:41.896', '1275318721723772930', NULL, 1, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL), ('f35132eab51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 1, 0, 0, 0, 0, 1, NULL, 'system', NULL, NULL, '2020-06-23 02:05:41.902', NULL, NULL, 1, 0, 1, 0, 0, 0, 0, 0, 0, NULL, NULL);
+INSERT INTO `act_ru_execution` VALUES ('f3504885b51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', '8d80b978dfbf4921ae28576708afedd9', NULL, 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', NULL, 1, 0, 1, 0, 0, 1, NULL, 'system', '办公请假实例', 'sid-DEF246EB-BA2C-43B3-B980-B72AD1140EBB', '2020-06-23 02:05:41.896', '1275318721723772930', NULL, 1, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL), ('f35132eab51f11eab5491a94429025f9', 1, 'f3504885b51f11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, 'f3504885b51f11eab5491a94429025f9', 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', 1, 0, 0, 0, 0, 1, NULL, 'system', NULL, NULL, '2020-06-23 02:05:41.902', NULL, NULL, 1, 0, 1, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Records of act_ru_external_job
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -266,7 +272,7 @@ COMMIT;
 -- Records of act_ru_identitylink
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_ru_identitylink` VALUES ('f3506f96b51f11eab5491a94429025f9', 1, NULL, 'starter', '1275318721723772930', NULL, 'f3504885b51f11eab5491a94429025f9', NULL, NULL, NULL, NULL), ('f35acfe2b51f11eab5491a94429025f9', 1, '1275313504231895041', 'candidate', NULL, 'f35aa8d1b51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `act_ru_identitylink` VALUES ('f3506f96b51f11eab5491a94429025f9', 1, NULL, 'starter', '1275318721723772930', NULL, 'f3504885b51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, NULL), ('f35acfe2b51f11eab5491a94429025f9', 1, '1275313504231895041', 'candidate', NULL, 'f35aa8d1b51f11eab5491a94429025f9', NULL, NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -285,7 +291,7 @@ COMMIT;
 -- Records of act_ru_task
 -- ----------------------------
 BEGIN;
-INSERT INTO `act_ru_task` VALUES ('f35aa8d1b51f11eab5491a94429025f9', 1, 'f35132eab51f11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, NULL, NULL, NULL, NULL, '部门经理审核', NULL, NULL, 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', NULL, NULL, NULL, 50, '2020-06-23 02:05:41.964', NULL, NULL, 1, 'system', NULL, NULL, 1, 0, 1, 0);
+INSERT INTO `act_ru_task` VALUES ('f35aa8d1b51f11eab5491a94429025f9', 1, 'f35132eab51f11eab5491a94429025f9', 'f3504885b51f11eab5491a94429025f9', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', NULL, NULL, NULL, NULL, NULL, '部门经理审核', NULL, NULL, 'sid-1B817F75-A8AF-46F5-8F02-17303B37D3F5', NULL, NULL, NULL, 50, '2020-06-23 02:05:41.964', NULL, NULL, 1, 'system', NULL, NULL, 1, 0, 1, 0, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -305,14 +311,64 @@ COMMIT;
 -- Records of bpm_oa_form
 -- ----------------------------
 BEGIN;
-INSERT INTO `bpm_oa_form` VALUES ('8d80b978dfbf4921ae28576708afedd9', 'f3504885b51f11eab5491a94429025f9', '1275318721723772930', '孙权', '2020-06-22 11:00:00', '2020-06-26 11:00:00', 4, '0', '我今天有事情要请假', '0', '0', '00006', NULL, NULL, '2020-06-23 02:05:42', '');
+INSERT INTO `bpm_oa_form` VALUES ('8d80b978dfbf4921ae28576708afedd9', 'f3504885b51f11eab5491a94429025f9', '1275318721723772930', '孙权', '2020-06-22 11:00:00', '2020-06-26 11:00:00', 4, '0', '我今天有事情要请假', '0', '0', '00006', NULL, NULL, '2020-06-23 02:05:42', '', NULL);
 COMMIT;
 
 -- ----------------------------
 -- Records of bpm_task_from
 -- ----------------------------
 BEGIN;
-INSERT INTO `bpm_task_from` VALUES (1275322051812405249, '办公请假实例', 'bpm/form', '0', '1', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'v1', 'leave3', '2020-06-23 01:57:26', '2020-06-23 02:04:14', '00001', '00001', NULL);
+INSERT INTO `bpm_task_from` VALUES (1275322051812405249, '办公请假实例', 'bpm/form', '0', '1', 'leave3:1:9e345ea4b51e11eab5491a94429025f9', 'v1', 'leave3', '2020-06-23 01:57:26', '2020-06-23 02:04:14', '00001', '00001', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_channel_definition
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_ev_databasechangelog
+-- ----------------------------
+BEGIN;
+INSERT INTO `flw_ev_databasechangelog` VALUES ('1', 'flowable', 'org/flowable/eventregistry/db/liquibase/flowable-eventregistry-db-changelog.xml', '2021-08-15 16:40:05', 1, 'EXECUTED', '8:1b0c48c9cf7945be799d868a2626d687', 'createTable tableName=FLW_EVENT_DEPLOYMENT; createTable tableName=FLW_EVENT_RESOURCE; createTable tableName=FLW_EVENT_DEFINITION; createIndex indexName=ACT_IDX_EVENT_DEF_UNIQ, tableName=FLW_EVENT_DEFINITION; createTable tableName=FLW_CHANNEL_DEFIN...', '', NULL, '3.8.9', NULL, NULL, '9016805156');
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_ev_databasechangeloglock
+-- ----------------------------
+BEGIN;
+INSERT INTO `flw_ev_databasechangeloglock` VALUES (1, b'0', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_event_definition
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_event_deployment
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_event_resource
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_ru_batch
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Records of flw_ru_batch_part
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

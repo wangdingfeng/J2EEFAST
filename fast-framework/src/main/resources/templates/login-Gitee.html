@@ -440,6 +440,7 @@
                     var data = {"username":s4.encryptData_ECB(vm.username),
                         "password":s4.encryptData_ECB(vm.password),
                         "captcha":vm.captcha,
+                        "tenantId":vm.tenantId,
                         "rememberMe":vm.rememberme};
                     data = $.extend(data, params);
                     that.postLogin(data,false);

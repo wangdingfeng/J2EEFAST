@@ -56,7 +56,7 @@ public final class ConfigConstant {
 			"sys_job_log","sys_notice","sys_msg_push","sys_msg_push_user","sys_file_upload","sys_msg_cc_user",
 			"extended_properties",
 			"act_*", /* 所有工作流表*/
-			"sys_login_infor","gen_table","sys_database"
+			"gen_table","sys_database"
 	);
 
 	/**

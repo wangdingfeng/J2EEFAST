@@ -41,9 +41,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Consumer;
 /**
@@ -224,9 +222,9 @@ public class SqlSessionFactoryCreator {
 		if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
 			Resource[] resource = this.properties.resolveMapperLocations();
 			Resource[] resource1 = new Resource[0];
-//			Resource[] resource2 = new Resource[0];
+			Resource[] resource2 = new Resource[0];
 			if(dbName.equals(DataSourceContext.FLOWABLE_DATASOURCE_NAME)){
-//				Resource[] resource3 = new Resource[0];
+				Resource[] resource3 = new Resource[0];
 				try {
 					resource1 = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 							getResources("classpath*:/META-INF/modeler-mybatis-mappings/*.xml");
@@ -234,9 +232,9 @@ public class SqlSessionFactoryCreator {
 //							getResources("classpath*:mapper/bpm/*.xml");
 //					resource3  = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 //							getResources("classpath*:mapper/generator/*.xml");
+//					Resource[] mapper = ArrayUtils.addAll(resource1, resource2);
+//					Resource[] mapperLocations = ArrayUtils.addAll(mapper,resource3);
 					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource);
-//					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource2);
-//					Resource[] mapper = ArrayUtils.addAll(mapperLocations,resource2);
 					factory.setMapperLocations(mapperLocations);
 				} catch (IOException e) {
 					log.error("异常");
