@@ -1,0 +1,126 @@
+<!-- 系统自动生成 Date:2021-02-21 22:43 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+    <@header title="新增内部消息" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","ueditor"]/>
+    <div class="wrapper wrapper-content ibox-content">
+        <@f.form id="form-msg-edit"  class="form-horizontal">
+            <@f.hidden name="id" value="${sysMsgPush.id}"/>
+            <h4 class="form-header h4"><@ctx.i18n text = "基本信息"/>&nbsp;<i class="fa-fw fa fa-envelope-open"></i></h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">
+                                <span style="color: red; ">* </span>
+                                <@ctx.i18n text = "收件人"/>：
+                            </label>
+                            <div class="col-sm-8">
+                                <@f.tableselect name="userCode" required=true labelName="userCodeName" value="${pushUserId}" labelValue="${pushUserName}" butClass="fa fa-fw fa-user-o" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                   {field:'status',title:'状态',dict:'sys_user_show_hide',query: true},{field:'createTime',title:'创建时间'}]"  placeholder="请选择收件人" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">
+                                <span style="color: red; ">* </span>
+                                <@ctx.i18n text = "抄送人"/>：
+                            </label>
+                            <div class="col-sm-8">
+                                <@f.tableselect name="ccUserCode" labelName="ccUserCodeName"  value="${ccUserId}" labelValue="${ccUserName}" butClass="fa fa-fw fa-user-circle" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                   {field:'status',title:'状态',dict:'sys_user_show_hide',query: true},{field:'createTime',title:'创建时间'}]"  placeholder="请选择抄送人" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "消息等级"/>：
+                        </label>
+                        <div class="col-sm-8">
+                            <@f.radio name="msgLevel" value="${sysMsgPush.msgLevel}" dictType="sys_notice_level"  required=true />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "是否开放评论"/>：
+                        </label>
+                        <div class="col-sm-8">
+                            <@f.radio name="isComments" value="${sysMsgPush.isComments}" dictType="sys_msg_comments"  required=true />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            <span style="color: red; ">* </span>
+                            <@ctx.i18n text = "主题"/>：
+                        </label>
+                        <div class="col-sm-10">
+                            <@f.input name="msgTitle"  value="${sysMsgPush.msgTitle}" required=true />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span style="color: red; ">*</span>正文：</label>
+                        <div class="col-sm-10">
+                            <@f.ueditor name="msgContent" value="${sysMsgPush.msgContent?html}" toolbars="'simpleupload','fullscreen'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4 class="form-header h4"><@ctx.i18n text = "附件上传"/>&nbsp;<i class="fa-fw fa icon-cloud-upload"></i></h4>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><@ctx.i18n text = "附件上传"/>：
+                        </label>
+                        <div class="col-sm-10">
+                            <@f.fileupload name="upload_file" bizId="${sysMsgPush.id}" bizType="sys_msg_push_file" tipTitle="<i class='fa fa-paperclip'></i> <span style='color:#000'>附件</span>:" isLazy=true preview="true" uploadType="all"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </@f.form>
+        <div class="hr-line-dashed"></div>
+        <div class="row" id="_addTab">
+            <div class="col-sm-offset-5 col-sm-10">
+                <button type="button" class="btn btn-sm btn-primary" onclick="opt.form.submit()"><i class="fa fa-send"></i> <@ctx.i18n text = "修改"/></button>&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i> <@ctx.i18n text = "关闭"/></button>
+            </div>
+        </div>
+    </div>
+    <@footer>
+        <script type="text/javascript">
+            var prefix = baseURL + "sys/msg";
+            /**表单验证*/
+            <@compress single_line=true>
+            $("#form-msg-add").validate({
+                focusCleanup: true
+            });
+            </@compress>
+
+            function submitHandler() {
+                if (opt.validate.form()) {
+                    opt.operate.saveTab(prefix + "/edit", $('#form-msg-edit').serialize());
+                }
+            }
+        </script>
+    </@footer>
+</@pageTheme>

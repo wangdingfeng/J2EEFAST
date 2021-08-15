@@ -1,0 +1,126 @@
+<!-- 系统自动生成 Date:2021-02-21 22:43 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="查看内部消息" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","comments"]>
+<style>
+    .article-title {
+        padding: 25px 10px 30px 10px;
+        margin: 0;
+        text-align: center;
+    }
+    .content-info {
+        list-style: none;
+        padding: 8px 0;
+        border: solid 1px #d6d6d6;
+        border-width: 1px 0;
+    }
+    .content-info_hide {
+        list-style: none;
+        padding: 8px 0;
+        margin: 0px;
+        border-bottom: solid 1px #d6d6d6;
+    }
+    .article-view {
+        padding: 0 50px 10px 50px;
+        font-family: "Helvetica Neue",Helvetica,Arial;
+    }
+    .content-info li {
+        padding: 0 10px 0 6px;
+        border-right: solid 1px #d6d6d6;
+        line-height: 20px;
+        color: #555;
+        font-size: 13px;
+        display: inline-block;
+    }
+    .content-info_hide li {
+        padding: 0 10px 0 6px;
+        line-height: 20px;
+        color: #555;
+        font-size: 13px;
+        display: inline-block;
+        border-right: solid 1px #d6d6d6;
+    }
+    .content-info_hide li:last-child {
+        border-right: 0;
+    }
+    .content-info li:last-child {
+        border-right: 0;
+    }
+
+    .content-info li>i.fa-user {
+        color: #1c84c6
+    }
+    .content-info li>i.fa-calendar {
+        color: #c84ac3;
+    }
+    .content-info li>i.fa-comments-o {
+        color: #00a157
+    }
+    .content-info_hide li>i.fa-address-book-o {
+        color: #00a7d0;
+    }
+    .content-text{
+        padding-bottom: 20px;
+        padding-top: 20px;
+        min-height: 160px;
+    }
+</style>
+</@header>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-msg-edit"  class="form-horizontal">
+    <@f.hidden name="id" value="${sysMsgPush.id}"/>
+    <div class="box-body article-view">
+        <h2 class="article-title">${sysMsgPush.msgTitle?default('')}</h2>
+        <ul class="content-info">
+            <li><i class="fa fa-user"></i> 发送者：超级管理员</li>
+            <li><i class="fa fa-calendar"></i> 发送时间：2019-07-09 02:52</li>
+            <li><i class="fa fa-bookmark-o"></i> 等级：${dict.getLabel("sys_notice_level","${sysMsgPush.msgLevel?default('')}")}</li>
+            <li><i class="fa fa-comments-o"></i> 是否开放评论：${dict.getLabel("sys_msg_comments","${sysMsgPush.isComments?default('')}")}</li>
+            <li><a data-toggle="collapse" href="#c_hidden" aria-expanded="true">接收者 <i class="fa fa-angle-double-down"></i></a></li>
+        </ul>
+        <ul class="content-info_hide panel-collapse collapse" id="c_hidden">
+            <li><i class="fa fa-address-book-o"></i>
+                接收者:
+                <#list pushUserList as pushUser>
+                    ${pushUser.userName} <#if pushUser.isRead == "0"><span style="font-weight: bold">(未阅)</span></#if><#if pushUser?counter != pushUserList?size>,</#if>
+                </#list>
+            </li>
+            <li><i class="fa fa-address-book-o"></i>
+                抄送者:
+                <#list ccUserList as ccUser>
+                    ${ccUser.userName} <#if ccUser.isRead == "0"><span style="font-weight: bold">(未阅)</span></#if><#if ccUser?counter != ccUserList?size>,</#if>
+                </#list>
+            </li>
+        </ul>
+        <div class="content-text">
+            ${sysMsgPush.msgContent?default('')}
+        </div>
+        <@f.fileupload name="upload_file" bizId="${sysMsgPush.id}" bizType="sys_msg_push_file" tipTitle="<i class='fa fa-paperclip'></i> <span style='color:#000'>附件</span>:" isLazy=true preview="true" readonly=true uploadType="all"/>
+        <#if sysMsgPush.isComments?default('') == '1'>
+            <@f.comment name="commentId" msgId="${sysMsgPush.id}"/>
+        </#if>
+</@f.form>
+<div class="hr-line-dashed"></div>
+<div class="row" id="_addTab">
+    <div class="col-sm-offset-5 col-sm-10">
+<#--        <button type="button" class="btn btn-sm btn-danger" onclick="opt.modal.closeTab()"><i class="fa fa-reply-all"></i><@ctx.i18n text = "关闭"/></button>-->
+    </div>
+</div>
+</div>
+<@footer>
+<script type="text/javascript">
+    <#--var prefix = baseURL + "sys/msg";-->
+    <#--/**表单验证*/-->
+    <#--<@compress single_line=true>-->
+    <#--$("#form-msg-edit").validate({-->
+    <#--    focusCleanup: true-->
+    <#--});-->
+    <#--</@compress>-->
+    <#--function submitHandler() {-->
+    <#--    if (opt.validate.form()) {-->
+    <#--        opt.operate.saveTab(prefix + "/edit", $('#form-msg-edit').serialize());-->
+    <#--    }-->
+    <#--}-->
+</script>
+</@footer>
+</@pageTheme>
