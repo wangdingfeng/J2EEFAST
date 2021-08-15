@@ -30,6 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import cn.hutool.core.util.NumberUtil;
@@ -46,6 +49,42 @@ public class ToolUtil{
 
 	private static int 							counter 							= 0;
 
+    public static final String[] DEFAULT_ALLOWED_EXTENSION = {
+            // 图片
+            "bmp", "gif", "jpg", "jpeg", "png",
+            // word excel powerpoint
+            "doc", "docx", "xls", "xlsx", "ppt", "pptx", "html", "htm", "txt",
+            // 压缩文件
+            "rar", "zip", "gz", "bz2",
+            // 视频格式
+            "mp4", "avi", "rmvb",
+            // pdf
+            "pdf" };
+
+
+    /**
+     * 检查文件是否可下载
+     *
+     * @param resource 需要下载的文件
+     * @return true 正常 false 非法
+     */
+    public static boolean checkAllowDownload(String resource)
+    {
+        // 禁止目录上跳级别
+        if (StringUtils.contains(resource, ".."))
+        {
+            return false;
+        }
+
+        // 检查允许下载的文件规则
+        if (ArrayUtils.contains(DEFAULT_ALLOWED_EXTENSION, FileUtil.extName(resource)))
+        {
+            return true;
+        }
+
+        // 不在允许下载的文件规则
+        return false;
+    }
 	
 	/**
      * 获取随机字符,自定义长度
@@ -81,6 +120,27 @@ public class ToolUtil{
 			throw new RxcException(message,code);
 		}
 	}
+
+    /**
+     * 字符串大写字母个数
+     * @param str
+     * @return
+     */
+	public static int charUpperCaseLen(String str){
+        if (isEmpty(str)) {
+            return 0;
+        }
+        int len = 0;
+        char[] buffer = str.toCharArray();
+        for (int i = 0; i < buffer.length; i++) {
+             char ch = buffer[i];
+            if (Character.isUpperCase(ch)) {
+                len ++;
+            }
+        }
+        return len;
+    }
+
 
 	
 	/**

@@ -5,14 +5,16 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 /**
  * 线程池配置
- * @author zhouzhou
- * @date 2017-03-12 16:33
- */
+ *
+ * @author ruoyi
+ **/
+@Configuration
 public class ThreadPoolConfig {
 	
 	/**

@@ -34,8 +34,8 @@ public class SQLFilter {
 		String temp = str.toLowerCase();
 
 		// 非法字符 purgingTime purgingTime
-		String[] keywords = { "master", "truncate", "insert", "select", "delete", "update", "declare", "alter", 
-				"drop","like","limit","in","or"};
+		String[] keywords = {"truncate", "insert", "select", "delete", "update", "declare", "alter",
+				"drop","like","limit","in","or","and"};
 
 		// 判断是否包含非法字符
 		for (String keyword : keywords) {
@@ -45,6 +45,32 @@ public class SQLFilter {
 			}
 		}
 		return escapeOrderBySql(str);
+	}
+
+	public static String paramsVerify(String str) {
+		if (StringUtils.isBlank(str)) {
+			return null;
+		}
+		// 去掉'|"|;|\字符
+		str = StringUtils.replace(str, "'", "");
+		str = StringUtils.replace(str, "\"", "");
+		str = StringUtils.replace(str, ";", "");
+		str = StringUtils.replace(str, "\\", "");
+
+		// 转换成小写
+		String temp = str.toLowerCase();
+
+		// 非法字符 purgingTime purgingTime
+		String[] keywords = {"truncate", "insert", "select", "delete", "update", "declare", "alter",
+				"drop","like","limit","in","or","and"};
+
+		// 判断是否包含非法字符
+		for (String keyword : keywords) {
+			if (temp.equals(keyword)) {
+				throw new RxcException("包含非法字符");
+			}
+		}
+		return str;
 	}
 
 	/**
