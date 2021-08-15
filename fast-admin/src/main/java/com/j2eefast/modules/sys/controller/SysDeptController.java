@@ -152,6 +152,21 @@ public class SysDeptController extends BaseController {
 	}
 
 	/**
+	 * 校验编码
+	 * @param comp
+	 * @return
+	 */
+	@RequestMapping(value = "/checkCompCodeUnique", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData checkCompCodeUnique(SysCompEntity comp){
+		if(sysCompService.checkCompCodeUnique(comp)){
+			return success();
+		}else {
+			return error("已经存在!");
+		}
+	}
+
+	/**
 	 * 选择部门 -- >> 通过组件联动获取指定公司下所有信息
 	 */
 	@RequestMapping("/selectZtree")

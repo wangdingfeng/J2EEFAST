@@ -20,13 +20,19 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label class="col-sm-3 control-label"><span style="color: red; ">*</span>公司编码：</label>
+		<div class="col-sm-8">
+			<@f.input name="code" required=true/>
+		</div>
+	</div>
+	<div class="form-group">
 		<label class="col-sm-3 control-label"><span style="color: red; ">*</span>公司全称：</label>
 		<div class="col-sm-8">
 			<@f.input name="fullName" required=true/>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-3 control-label "><span style="color: red; ">*</span>归属地区：</label>
+		<label class="col-sm-3 control-label ">归属地区：</label>
 		<div class="col-sm-8">
 			<@f.treeselect id="areaId" name="areaIds" boxTitle="请选择管理地区" url="sys/area/treeData"
 			checked=true correlationId="parentId" placeholder="请选择管理地区"/>
@@ -77,12 +83,31 @@
 					}
 				}
 			},
+			code:{
+				/* 数据校验*/
+				remote: {
+					url: prefix + "/checkCompCodeUnique",
+					type: "POST",
+					dataType: "html",
+					data: {
+						"code": function() {
+							return opt.common.trim($("#code").val());
+						}
+					},
+					dataFilter: function(data, type) {
+						return opt.validate.unique(data);
+					}
+				}
+			},
 			orderNum:{
 				digits:true
 			}
 		},
 		messages: {
 			"name": {
+				remote: "已经存在"
+			},
+			"code":{
 				remote: "已经存在"
 			}
 		},

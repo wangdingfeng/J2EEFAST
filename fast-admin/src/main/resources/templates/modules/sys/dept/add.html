@@ -25,6 +25,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构编码：</label>
+        <div class="col-sm-8">
+            <@f.input name="code" required=true/>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-3 control-label"><span style="color: red; ">*</span>机构全称：</label>
         <div class="col-sm-8">
             <@f.input name="fullName" required=true/>
@@ -75,12 +81,31 @@
                     }
                 }
             },
+            code:{
+                /* 数据校验*/
+                remote: {
+                    url: prefix + "/checkCompCodeUnique",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        "code": function() {
+                            return opt.common.trim($("#code").val());
+                        }
+                    },
+                    dataFilter: function(data, type) {
+                        return opt.validate.unique(data);
+                    }
+                }
+            },
             orderNum:{
                 digits:true
             }
         },
         messages: {
             "name": {
+                remote: "已经存在"
+            },
+            "code":{
                 remote: "已经存在"
             }
         },
