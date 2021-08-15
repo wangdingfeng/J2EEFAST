@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.framework.sys.mapper.SysMsgPushUserMapper">
+
+    <resultMap type="SysMsgPushUserEntity" id="SysMsgPushUserResult">
+        <result property="id" column="id"/>
+        <result property="msgId" column="msg_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="isRead" column="is_read"/>
+        <result property="readDate" column="read_date"/>
+    </resultMap>
+    
+    <!--  实体栏位  --> 
+    <sql id="sysMsgPushUserColumns">
+         a.id AS "id" ,
+         a.msg_id AS "msgId" ,
+         a.user_id AS "userId" ,
+         a.user_name AS "userName" ,
+         a.is_read AS "isRead" ,
+         a.read_date AS "readDate" 
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findSysMsgPushUserById"  resultType="com.j2eefast.framework.sys.entity.SysMsgPushUserEntity" >
+        SELECT
+        <include refid="sysMsgPushUserColumns"/>
+		FROM  sys_msg_push_user a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.framework.sys.entity.SysMsgPushUserEntity">
+        SELECT
+        <include refid="sysMsgPushUserColumns"/>
+        FROM sys_msg_push_user a
+		<where>
+            <if test="msgId != null "> AND a.msg_id = #{msgId} </if>
+            <if test="userCode != null  and userCode != ''"> AND a.user_code = #{userCode} </if>
+            <if test="userName != null  and userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{userName},'%')
+            </if>
+            <if test="isRead != null  and isRead != ''"> AND a.is_read = #{isRead} </if>
+            <if test="readDate != null "> AND a.read_date = #{readDate} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysMsgPushUserEntity">
+        SELECT
+        <include refid="sysMsgPushUserColumns"/>
+        FROM sys_msg_push_user a
+        <where>
+            <if test="sysMsgPushUser.msgId != null "> AND a.msg_id = #{sysMsgPushUser.msgId} </if>
+            <if test="sysMsgPushUser.userCode != null  and sysMsgPushUser.userCode != ''"> AND a.user_code = #{sysMsgPushUser.userCode} </if>
+            <if test="sysMsgPushUser.userName != null  and sysMsgPushUser.userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{sysMsgPushUser.userName},'%')
+            </if>
+            <if test="sysMsgPushUser.isRead != null  and sysMsgPushUser.isRead != ''"> AND a.is_read = #{sysMsgPushUser.isRead} </if>
+            <if test="sysMsgPushUser.readDate != null "> AND a.read_date = #{sysMsgPushUser.readDate} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 修改接收者阅读标志 -->
+    <update id="setIsRead">
+        UPDATE sys_msg_push_user
+        <set>
+            <if test="isRead != null and isRead != ''">is_read = #{isRead,jdbcType=VARCHAR},</if>
+            <if test="_databaseId == 'mysql'">read_date = SYSDATE()</if>
+            <if test="_databaseId == 'postgresql'">read_date = CLOCK_TIMESTAMP()</if>
+            <if test="_databaseId == 'sqlserver'">read_date = GETDATE()</if>
+            <if test="_databaseId == 'oracle'">read_date = TO_TIMESTAMP(TO_CHAR(SYSDATE,'YYYY-MM-DD')||TO_CHAR(SYSDATE,'hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')</if>
+        </set>
+        WHERE msg_id = #{msgId} AND user_id = #{userId}
+    </update>
+</mapper>

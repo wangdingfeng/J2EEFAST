@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.framework.sys.mapper.SysMsgPushMapper">
+
+    <resultMap type="SysMsgPushEntity" id="SysMsgPushResult">
+        <result property="id" column="id"/>
+        <result property="msgTitle" column="msg_title"/>
+        <result property="msgContent" column="msg_content"/>
+        <result property="msgLevel" column="msg_level"/>
+        <result property="isComments" column="is_comments"/>
+        <result property="sendUserId" column="send_user_id"/>
+        <result property="sendUserName" column="send_user_name"/>
+        <result property="pushDate" column="push_date"/>
+    </resultMap>
+    
+    <!--  实体栏位  --> 
+    <sql id="sysMsgPushColumns">
+         a.id AS "id" ,
+         a.msg_title AS "msgTitle" ,
+         a.msg_content AS "msgContent" ,
+         a.msg_level AS "msgLevel" ,
+         a.is_comments AS "isComments" ,
+         a.send_user_id AS "sendUserId" ,
+         a.send_user_name AS "sendUserName" ,
+         a.push_date AS "pushDate" 
+    </sql>
+
+    <sql id="sysUserMsgPushColumns">
+         a.id AS "id" ,
+         a.msg_title AS "msgTitle" ,
+         a.msg_level AS "msgLevel" ,
+         a.is_comments AS "isComments" ,
+         a.push_date AS "pushDate"
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findSysMsgPushById"  resultType="com.j2eefast.framework.sys.entity.SysMsgPushEntity" >
+        SELECT
+        <include refid="sysMsgPushColumns"/>
+		FROM  sys_msg_push a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.framework.sys.entity.SysMsgPushEntity">
+        SELECT
+        <include refid="sysMsgPushColumns"/>
+        FROM sys_msg_push a
+		<where>
+            <if test="msgTitle != null  and msgTitle != ''"> AND a.msg_title = #{msgTitle} </if>
+            <if test="msgLevel != null  and msgLevel != ''"> AND a.msg_level = #{msgLevel} </if>
+            <if test="isComments != null  and isComments != ''"> AND a.is_comments = #{isComments} </if>
+            <if test="sendUserName != null  and sendUserName != ''"> AND a.send_user_name = #{sendUserName} </if>
+            <if test="sendUserId != null  and sendUserId != ''"> AND a.send_user_id = #{sendUserId} </if>
+        </where>
+    </select>
+
+    <select id="findUserList" resultType="com.j2eefast.framework.sys.entity.SysMsgPushEntity">
+        SELECT
+        <include refid="sysUserMsgPushColumns"/>
+        , d.is_read AS isRead
+        FROM sys_msg_push a
+        LEFT JOIN (SELECT * FROM sys_msg_push_user u
+        UNION ALL SELECT * FROM sys_msg_cc_user c ) d on a.id = d.msg_id
+        <where>
+            <if test="msgTitle != null  and msgTitle != ''"> AND a.msg_title = #{msgTitle} </if>
+            <if test="msgLevel != null  and msgLevel != ''"> AND a.msg_level = #{msgLevel} </if>
+            <if test="isComments != null  and isComments != ''"> AND a.is_comments = #{isComments} </if>
+            <if test="sendUserName != null  and sendUserName != ''"> AND a.send_user_name = #{sendUserName} </if>
+            <if test="sendUserId != null  and sendUserId != ''"> AND a.send_user_id = #{sendUserId} </if>
+            <if test="userId != null"> AND d.user_id = #{userId} </if>
+            <if test="isRead != null"> AND d.is_read = #{isRead} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysMsgPushEntity">
+        SELECT
+        <include refid="sysMsgPushColumns"/>
+        FROM sys_msg_push a
+        <where>
+            <if test="sysMsgPush.msgTitle != null  and sysMsgPush.msgTitle != ''"> AND a.msg_title = #{sysMsgPush.msgTitle} </if>
+            <if test="sysMsgPush.sendUserId != null  and sysMsgPush.sendUserId != ''"> AND a.send_user_id = #{sysMsgPush.sendUserId} </if>
+            <if test="sysMsgPush.msgLevel != null  and sysMsgPush.msgLevel != ''"> AND a.msg_level = #{sysMsgPush.msgLevel} </if>
+            <if test="sysMsgPush.isComments != null  and sysMsgPush.isComments != ''"> AND a.is_comments = #{sysMsgPush.isComments} </if>
+            <if test="sysMsgPush.sendUserName != null  and sysMsgPush.sendUserName != ''"> AND a.send_user_name = #{sysMsgPush.sendUserName} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findUserPage" resultType="com.j2eefast.framework.sys.entity.SysMsgPushEntity">
+        SELECT
+        <include refid="sysMsgPushColumns"/>
+        , d.is_read AS isRead
+        FROM sys_msg_push a
+        LEFT JOIN (SELECT * FROM sys_msg_push_user u
+        UNION ALL SELECT * FROM sys_msg_cc_user c ) d on a.id = d.msg_id
+        <where>
+            <if test="sysMsgPush.msgTitle != null  and sysMsgPush.msgTitle != ''"> AND a.msg_title = #{sysMsgPush.msgTitle} </if>
+            <if test="sysMsgPush.sendUserId != null  and sysMsgPush.sendUserId != ''"> AND a.send_user_id = #{sysMsgPush.sendUserId} </if>
+            <if test="sysMsgPush.msgLevel != null  and sysMsgPush.msgLevel != ''"> AND a.msg_level = #{sysMsgPush.msgLevel} </if>
+            <if test="sysMsgPush.isComments != null  and sysMsgPush.isComments != ''"> AND a.is_comments = #{sysMsgPush.isComments} </if>
+            <if test="sysMsgPush.sendUserName != null  and sysMsgPush.sendUserName != ''"> AND a.send_user_name = #{sysMsgPush.sendUserName} </if>
+            <if test="sysMsgPush.userId != null"> AND d.user_id = #{sysMsgPush.userId} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
