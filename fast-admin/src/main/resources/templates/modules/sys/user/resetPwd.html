@@ -7,13 +7,20 @@
 	<div class="form-group">
 		<label class="col-sm-3 control-label "><@ctx.i18n text = "登陆账号"/>：</label>
 		<div class="col-sm-8">
-			<input class="form-control" type="text" readonly="true" name="username" value="${user.username}"/>
+			<p class="form-control-plaintext">${user.username?default('')}</p>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-3 control-label"><@ctx.i18n text = "密码"/>：</label>
 		<div class="col-sm-8">
-			<input class="form-control" type="password" name="password" id="password" value="${config.getKey('SYS_USER_INITPASSWORD')}">
+			<div class="input-group">
+				<@f.input name="password" placeholder="请输入登录密码" required=true type="password" value="${config.getKey('SYS_USER_INITPASSWORD')}"/>
+				<span class="input-group-addon" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
+					  data-toggle="tooltip"
+					  data-placement="top" data-custom-class="tooltip-warning"
+					  onmousedown="$('#password').attr('type','text')"
+					  onmouseup="$('#password').attr('type','password')"><i class="fa fa-fw fa-key"></i></span>
+			</div>
 		</div>
 	</div>
 </@f.form>
