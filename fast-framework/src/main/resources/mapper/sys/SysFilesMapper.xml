@@ -4,21 +4,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysFileMapper">
 
-    <resultMap type="SysFilesEntity" id="sysFilesEntityResult">
-        <result property="id"    column="id"    />
-        <result property="fileMd5"    column="file_md5"    />
-        <result property="filePath"    column="file_path"    />
-        <result property="fileName"    column="file_name"    />
-        <result property="fileSize"    column="file_size"    />
-        <result property="ossType"    column="oss_type"    />
-        <result property="classify"    column="classify"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="remark"    column="remark"    />
-        <result property="createTime"    column="create_time"    />
-    </resultMap>
-    
     <!--  实体栏位  --> 
     <sql id="sysFilesColumns">
          a.id AS "id"   ,

@@ -4,22 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.framework.sys.mapper.SysNoticeMapper">
 
-    <resultMap type="sysNoticeEntity" id="sysNoticeResult">
-        <result property="id"    column="id"    />
-        <result property="noticeTitle"    column="notice_title"    />
-        <result property="noticeTipTitle"    column="notice_tip_title"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="status"    column="status"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="htmlNo"    column="html_no"    />
-        <result property="noticeType"    column="notice_type"    />
-    </resultMap>
-
     <sql id="selectsysNoticeVo">
         SELECT id, notice_title, notice_tip_title, start_time, end_time, status, create_by,
         create_time, update_by, update_time, remark, html_no, notice_type FROM sys_notice

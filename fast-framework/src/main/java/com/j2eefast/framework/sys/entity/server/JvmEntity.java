@@ -1,9 +1,8 @@
 package com.j2eefast.framework.sys.entity.server;
 
-import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
-
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 
@@ -117,6 +116,6 @@ public class JvmEntity
     public String getRunTime()
     {
     	long time = ManagementFactory.getRuntimeMXBean().getStartTime();
-        return DateUtil.formatBetween(new Date(time),DateUtil.date(),Level.MILLSECOND);
+        return DateUtil.formatBetween(new Date(time),DateUtil.date(),Level.MILLISECOND);
     }
 }

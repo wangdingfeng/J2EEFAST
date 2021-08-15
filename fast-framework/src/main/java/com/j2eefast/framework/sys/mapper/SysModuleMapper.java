@@ -40,5 +40,6 @@ public interface SysModuleMapper extends BaseMapper<SysModuleEntity>{
 	 * 修改版本
 	 */
 	int setVersion(@Param("id") Long id,
-				   @Param("currentVersion") String currentVersion);
+				   @Param("currentVersion") String currentVersion,
+				   @Param("upgradeInfo") String upgradeInfo);
 }
