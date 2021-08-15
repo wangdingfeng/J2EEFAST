@@ -9,11 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import com.baomidou.mybatisplus.core.toolkit.Sequence;
-import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.context.DataSourceContext;
+import com.j2eefast.common.db.utils.DbUtil;
 import com.j2eefast.framework.utils.UserUtils;
 import com.j2eefast.generator.gen.config.GenConfig;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
@@ -92,12 +91,11 @@ public class VelocityUtils{
 
         velocityContext.put("importList", getImportList(genTable.getColumns()));
         velocityContext.put("gen_copyright","<!-- 系统自动生成 Date:"+DateUtil.format(new Date(),DatePattern.NORM_DATETIME_MINUTE_PATTERN)+" -->");
-        Sequence n =  new Sequence();
         if(ToolUtil.isEmpty(genTable.getMenuId())){
-            velocityContext.put("menuId",n.nextId());
+            velocityContext.put("menuId", DbUtil.getDbId());
         }
         for(int i=0; i< 4; i++){
-            velocityContext.put("mId"+i, n.nextId());
+            velocityContext.put("mId"+i, DbUtil.getDbId());
         }
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("columns", genTable.getColumns());

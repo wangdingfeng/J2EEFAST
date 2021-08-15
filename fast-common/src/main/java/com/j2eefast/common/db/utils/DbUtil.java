@@ -4,8 +4,10 @@
  * No deletion without permission
  */
 package com.j2eefast.common.db.utils;
+
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.core.toolkit.Sequence;
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.io.PropertiesUtils;
@@ -13,6 +15,8 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.common.db.dao.sql.AllTableListSql;
 import com.j2eefast.common.db.entity.SysDatabaseEntity;
 import lombok.extern.slf4j.Slf4j;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -175,6 +179,20 @@ public class DbUtil{
 			}
 		} catch (Exception e) {
 			throw new RxcException("连接数据库失败!请检查参数是否配置有误!");
+		}
+	}
+	
+	/**
+	 * 数据库获取主键ID
+	 * @author ZhouZhou
+	 * @date 2021-07-31 16:34
+	 * @return
+	 */
+	public static long getDbId() {
+		try {
+			return new Sequence(InetAddress.getLocalHost()).nextId();
+		} catch (UnknownHostException e) {
+			throw new MybatisPlusException(e);
 		}
 	}
 }
