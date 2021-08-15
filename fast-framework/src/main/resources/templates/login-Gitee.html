@@ -2,7 +2,7 @@
 * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
 * No deletion without permission
 * @author ZhouZhou
-* @version 2020-09-28
+* @version 2021-07-24
 -->
 <#include "/common/defaultEngine.html">
 <@pageTheme mark=true>
@@ -13,14 +13,16 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
 <#--animate 样式-->
 <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
-<link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
-<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
-<link href="${ctxStatic}/static/css/login2.min.css" media="screen" rel="stylesheet">
 <#-- iCheck -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
+<#if tenantModel>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2.min.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2-bootstrap.css"/>
+</#if>
 <#if verification>
 <link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
 </#if>
+<link rel="stylesheet" href="${ctxStatic}/static/css/login2.min.css?V=${config.getDvVersion()}">
 <style>[v-cloak]{display:none !important;}
 <#--.login-body {-->
 <#--    background-image: url(${ctxStatic}/static/img/login/bg4.jpg);-->
@@ -99,6 +101,15 @@
                             <div class="login-login__body">
                                 <div class="login-form__fields">
                                     <div class="git-login-form-fields">
+                                        <#if tenantModel>
+									     <div class="login-title">
+									          <div class="form-tenant">
+									              <div class="login-select">
+									                  <@f.select name="tenantId" blankValue="" blankLabel="" status=false items=loginTenantList itemLabel="tenantName" itemValue="tenantId"/>
+									              </div>
+									          </div>
+									      </div>
+								        </#if> 
                                         <div class="field">
                                             <input class="login-password__account-input" id="username" v-model="username" placeholder="<@ctx.i18n text = "账号/邮箱/手机号码"/>" type="text">
                                         </div>
@@ -225,6 +236,9 @@
 </div>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
+<#if tenantModel>
+<script src="${ctxStatic}/static/plugins/select2/select2.min.js"></script>
+</#if>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
 <script src="${ctxStatic}/static/libs/icheck.min.js"></script>
@@ -235,8 +249,8 @@
 <script src="${ctxStatic}/static/plugins/captcha/verify.min.js"></script>
 <#else>
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.min.js"></script>
+<#--<script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js"></script>-->
 </#if>
-<#--<script src="${ctxStatic}/static/libs/jquery.particleground.min.js"></script>-->
 <script>var ctx = "${ctxStatic}/", _secretKey = "${_secretKey}";</script>
 <script>
     var vm = new Vue({
@@ -248,7 +262,10 @@
             /*errorMsg: '',*/
             rememberme : false,
             loadcode : false,
-            src: 'captcha.gif'
+            src: 'captcha.gif',
+            tenantId: '',
+            tenantData: [],
+            tenantLabel: '请选择租户'
         },
         beforeCreate: function(){
             if(self != top){
@@ -274,15 +291,21 @@
                 if(vm.username.length < 3 ||  vm.password.length < 3){
                     return that.errrInfo('<@ctx.i18n text = "账号或者密码输入有误"/>');
                 }
+                <#if tenantModel>
+                if(vm.tenantId.length == 0){
+                    return that.errrInfo('<@ctx.i18n text = "请选择租户号"/>');
+                }
+                </#if>
                 <#if verification>
                 $("#verfyImg").find(".mask").css("display","block");
                 <#else>
-                $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
+                $(window).block({ message: '<div class="loaderbox"><div class="loading-circle"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
                 var s4=new SM4Util(that.getCookie("_secretKey"));
                 var data = {"username":s4.encryptData_ECB(vm.username),
                     "password":s4.encryptData_ECB(vm.password),
                     "captcha":vm.captcha,
+                    "tenantId":vm.tenantId,
                     "rememberMe":vm.rememberme};
                 that.postLogin(data,true);
                 </#if>
@@ -363,7 +386,13 @@
             }else{
                 $("input[name='rememberUserCode']").iCheck('uncheck');
             }
-
+            
+            <#if tenantModel>
+            if(window.localStorage.getItem('tenantId') && window.localStorage.getItem('tenantId') != ""){
+                this.tenantId = window.localStorage.getItem('tenantId');
+                $("#tenantId").val(this.tenantId).select2();
+            }
+            </#if>
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
@@ -392,6 +421,15 @@
                 $(this).tooltip();
             });
 
+			<#if tenantModel>
+            /* 设置租户选择*/
+            if ($.fn.select2 !== undefined) {
+                $.fn.select2.defaults.set( "theme", "bootstrap" );
+                $("select.form-control:not(.noselect2)").each(function () {
+                    $(this).select2({allowClear: false,placeholder:"请选择租户"});
+                })
+            }
+            </#if>
             <#if verification>
             /** 初始化验证码  弹出式 */
             $('#verfyImg').slideVerify({
@@ -422,6 +460,18 @@
             };
         }
     });
+    
+    <#if tenantModel>
+    /**
+     * 选择回调
+     */
+    function selectCallback(id, event, data) {
+        if(id == 'tenantId'){
+            vm.tenantId = data[0].id;
+            window.localStorage.setItem('tenantId',data[0].id);
+        }
+    }
+    </#if>
 </script>
 </body>
 </html>

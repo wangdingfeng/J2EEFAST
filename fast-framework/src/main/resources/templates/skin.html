@@ -9,8 +9,7 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css">
 <#-- Theme style -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css?V=${config.getDvVersion()}">
-<link rel="stylesheet" href="${ctxStatic}/static/css/style.css?V=${config.getDvVersion()}">
-<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.css?V=${config.getDvVersion()}"/>
+<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}"/>
 <style type="text/css">
 .list-unstyled{margin:10px;}
 .full-opacity-hover{opacity:1;filter:alpha(opacity=1);border:1px solid #fff}
@@ -188,7 +187,10 @@ $(function () {
         '<span  class="checkbox check-box">' +
         '<label style="padding-left: 10px;"><input name="tabRef" type="checkbox" style="margin-right:20px"><@ctx.i18n text = "Tab 切换刷新"/></label>' +
         '</li>');
-
+	$skinsList.append('<li style="float:left; width: 33.33333%; padding: 5px;">' +
+			'<span  class="checkbox check-box">' +
+			'<label style="padding-left: 10px;font-weight: bold;color:#000;"><input name="closefooter" type="checkbox" style="margin-right:20px;"><@ctx.i18n text = "是否关闭页脚"/></label>' +
+			'</li>');
 	$skinsList.append('<li style="float:left; width: 33.33333%; padding: 5px;">' +
 			'<span  class="checkbox check-box">' +
 			'<label style="padding-left: 10px;font-weight: bold;color:#000;"><input name="grayMode" type="checkbox" style="margin-right:20px;"><@ctx.i18n text = "灰色模式(新)"/></label>' +
@@ -197,6 +199,7 @@ $(function () {
 			'<span  class="checkbox check-box">' +
 			'<label style="padding-left: 10px;font-weight: bold;color:#000;"><input name="colorWeak" type="checkbox" style="margin-right:20px;"><@ctx.i18n text = "色弱模式(新)"/></label>' +
 			'</li>');
+
 
 	$(".gray-bg").html($skinsList);
 
@@ -215,6 +218,8 @@ $(function () {
     var _tabRef = get("_tabRef");
 
 	var mode = get("mode",0);
+
+	var footer = get("_footer");
 
 	if(temp){
         if(temp === "0"){
@@ -251,6 +256,14 @@ $(function () {
 			$("input[name='grayMode']").iCheck('uncheck');
 		}else{
 			$("input[name='grayMode']").iCheck('check');
+		}
+	}
+
+	if(typeof footer !== 'undefined' &&  footer && footer.length >0){
+		if(footer == 1){
+			$("input[name='closefooter']").iCheck('check');
+		}else{
+			$("input[name='closefooter']").iCheck('uncheck');
 		}
 	}
 
@@ -338,6 +351,17 @@ $(function () {
 				}
 			}
 		}
+
+		if($(this).attr("name") == "closefooter"){
+			if($(this).is(':checked')){
+				store("_footer","1");
+				parent.jQuery('body').find('.main-footer').addClass("hidden");
+			}else{
+				store("_footer","0");
+				parent.jQuery('body').find('.main-footer').removeClass("hidden");
+			}
+		}
+
     });
 
 
