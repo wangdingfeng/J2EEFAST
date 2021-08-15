@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
+import com.j2eefast.common.core.base.entity.LoginTenantEntity;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.controller.BaseController;
@@ -22,6 +23,7 @@ import com.j2eefast.framework.shiro.LoginType;
 import com.j2eefast.framework.shiro.UserToken;
 import com.j2eefast.framework.sys.entity.SysDictDataEntity;
 import com.j2eefast.framework.sys.service.SysDictDataService;
+import com.j2eefast.framework.sys.service.SysTenantService;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
 import com.wf.captcha.ArithmeticCaptcha;
@@ -61,12 +63,21 @@ public class SysLoginController extends BaseController {
 	private RedisUtil redisUtil;
 	@Autowired
 	private CaptchaService captchaService;
+	@Autowired
+	private SysTenantService sysTenantService;
+
 	/**
 	 * 是否开启记住我功能
 	 */
-	@Value("${shiro.rememberMe.enabled: false}")
+	@Value("#{ @environment['shiro.rememberMe.enabled'] ?: false }")
 	private boolean rememberMe;
 	
+	/**
+	 * 系统是否开启多租户模式
+	 */
+	@Value("#{ @environment['fast.tenantModel.enabled'] ?: false }")
+	private boolean enabled;
+
 	/**
 	 * <p>生成验证码图片 系统参数管理配置</p>
 	 * <p>默认0 图形 1 算数 2 图形算数随机出现</p>
@@ -152,10 +163,23 @@ public class SysLoginController extends BaseController {
 		mmp.put("verification",Global.getDbKey(ConfigConstant.SYS_LOGIN_VERIFICATION,Constant.SYS_DEFAULT_VALUE_ONE)
 				.equals(Constant.SYS_DEFAULT_VALUE_ONE));
 		mmp.put("rememberMe",rememberMe);
+		mmp.put("tenantModel",enabled);
+		List<LoginTenantEntity>  loginTenantList = sysTenantService.getLoginTenantList();
+		mmp.put("loginTenantList",loginTenantList);
 		return "login-" + view;
 	}
 
 
+	/**
+	 * 查询租户信息
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/tenant/list", method = RequestMethod.GET)
+	public ResponseData tenantList(){
+		List<LoginTenantEntity>  loginTenantList = sysTenantService.getLoginTenantList();
+		return success(loginTenantList);
+	}
 
 
 	/**
