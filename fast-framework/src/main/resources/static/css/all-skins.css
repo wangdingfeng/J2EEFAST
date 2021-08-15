@@ -345,6 +345,11 @@
     background-color: #e1f1ff;
 }
 
+.skin-blue-light .tree-link>a.active{
+    color: #1890ff !important;
+    background-color: #e1f1ff !important;
+}
+
 .skin-blue-light .table-striped table thead{
     color: #1890ff !important;
     background-color: #e1f1ff;
@@ -595,6 +600,11 @@
 .skin-black .treeview-menu>li.active>a{
     background-color: #ffffff;
     color:#0a0a0a;
+}
+
+.skin-black .tree-link>a.active{
+    background-color: #ffffff !important;
+    color:#0a0a0a !important;
 }
 
 .skin-black .layui-layer-btn .layui-layer-btn0 {
@@ -852,7 +862,12 @@
 .skin-black-light .treeview-menu>li.active>a{
     background-color: #fff;
 }
-.skin-black-light .treeview-menu>li.active>a,.skin-black-light .treeview-menu>li>a:hover {
+
+.skin-black-light .tree-link>a.active{
+    background-color: #fff !important;
+}
+
+.skin-black-light .treeview-menu>li.active>a,.skin-black-light .tree-link>a.active,.skin-black-light .treeview-menu>li>a:hover {
     color:#000
 }
 .skin-black-light .treeview-menu>li.active>a {
@@ -1015,6 +1030,11 @@
 .skin-green .treeview-menu>li.active>a{
     background-color: #00a65a;
     color: rgba(255,255,255,1);
+}
+
+.skin-green .tree-link>a.active{
+    background-color: #00a65a !important;
+    color: rgba(255,255,255,1) !important;
 }
 /*弹出提示框标题*/
 .skin-green .layui-layer-title{
@@ -1398,6 +1418,10 @@
 
 .skin-red .treeview-menu>li.active>a{
     background-color: #dd4b39;
+}
+
+.skin-red .tree-link>a.active{
+    background-color: #dd4b39 !important;
 }
 
 .skin-red .table-striped table thead{
@@ -1786,6 +1810,11 @@
 .skin-yellow .treeview-menu>li.active>a{
     background-color: #f39c12;
     color: rgba(255,255,255,1);
+}
+
+.skin-yellow .tree-link>a.active{
+    background-color: #f39c12 !important;
+    color: rgba(255,255,255,1) !important;
 }
 
 /*TAB默认*/

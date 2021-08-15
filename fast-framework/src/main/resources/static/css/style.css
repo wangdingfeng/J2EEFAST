@@ -47,6 +47,10 @@ a:focus {
     width: 150px !important;
 }
 
+.width-950{
+    width: 950px !important;
+}
+
 .nav>li>a {
     color: #a7b1c2;
     font-weight: 600;
@@ -148,7 +152,7 @@ body.body-small .navbar-top-links li:last-child {
     box-shadow: 0 0 3px rgba(86, 96, 117, 0.3);
 }
 
-.dropdown-menu>li>a {
+.tasks-menu>.dropdown-menu>li>a {
     border-radius: 3px;
     color: inherit;
     line-height: 20px;
@@ -190,30 +194,37 @@ body.body-small .navbar-top-links li:last-child {
 .callout.callout-warning {
     border-color:#c87f0a
 }
-.callout.callout-info {
-    border-color:#0097bc
+.bg-blue,.callout.callout-info {
+    border-color:#0073b7!important;
 }
 .callout.callout-success {
     border-color:#00733e
 }
 
-.callout.callout-success{
+.bg-green,.callout.callout-success{
     background-color:#00a65a !important
 }
 
-.callout.callout-warning{
+.bg-yellow,.callout.callout-warning{
     background-color:#f39c12 !important
 }
 
-.callout.callout-danger{
+.bg-red,.callout.callout-danger{
     background-color:#dd4b39 !important
 }
 
-.callout.callout-info{
+bg-aqua,.callout.callout-info{
     background-color:#00c0ef !important
 }
 
-.callout.callout-warning,.callout.callout-danger,.callout.callout-info,.callout.callout-success  {
+.bg-blue{
+    background-color:#0073b7!important;
+}
+
+.bg-maroon {
+    background-color: #d81b60 !important;
+}
+.bg-maroon,.bg-red,.bg-blue,.bg-aqua,.bg-green,.bg-yellow,.callout.callout-warning,.callout.callout-danger,.callout.callout-info,.callout.callout-success  {
     color:#fff !important
 }
 
@@ -3519,14 +3530,14 @@ ul.unstyled, ol.unstyled {
     color: #e5e6e7;
 }
 /* FOOTER */
-.footer {
-    background: none repeat scroll 0 0 white;
-    border-top: 1px solid #e7eaec;
-    overflow: hidden;
-    padding: 10px 20px;
-    margin: 0 -15px;
-    height: 36px;
-}
+/*.footer {*/
+/*    background: none repeat scroll 0 0 white;*/
+/*    border-top: 1px solid #e7eaec;*/
+/*    overflow: hidden;*/
+/*    padding: 10px 20px;*/
+/*    margin: 0 -15px;*/
+/*    height: 36px;*/
+/*}*/
 
 .footer.fixed_full {
     position: fixed;
@@ -7589,6 +7600,11 @@ span[data-index=_new]{
 .icon-size{
     font-size: 15px !important;
 }
+
+.close-footer .main-footer{
+    display: none !important;
+}
+
 body.color-weak, html.color-weak {
     -webkit-filter: invert(80%);
     filter: invert(80%);
@@ -7598,6 +7614,102 @@ body.gray-mode, html.gray-mode {
     filter: grayscale(100%);
     -webkit-filter: grayscale(100%);
 }
+
+/**
+ * 表格中的输入信息样式
+ */
+
+.from-table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.form-table td {
+    padding: 6px;
+    border: 0.2em solid #000;
+    min-width: 30%;
+    position: relative;
+}
+
+.form-table .form-label{
+    margin-bottom: 0;
+    position: static;
+    text-align: center;
+    padding: 5px;
+    min-width: 20%;
+    font-size: 14px;
+}
+
+.form-table .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-top: 3px;
+}
+
+.form-table .select2-container--bootstrap.select2-container--focus .select2-selection, .select2-container--bootstrap.select2-container--open .select2-selection {
+    box-shadow:0 0 0 0;
+}
+
+.form-table .input-group-addon {
+    border: 0px;
+    border-radius: 0px;
+    background-color: transparent;
+}
+
+.form-table input, .form-table select, .form-table textarea, .form-table  .form-control, .form-table .select2-selection {
+    border: 0;
+    border-bottom: 1px dotted #cdcdcd;
+    background-color: transparent;
+    color: #333;
+    resize: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.form-table .form-title {
+    background-color: #f5f5f5;
+    color: #466172;
+    font-weight: bold;
+    height: 40px;
+    font-size: 14px;
+}
+.form-table .cap-head:hover:after{
+    content:'\f030';
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    color:#eee;
+    background:rgba(0,0,0,0.5);
+    font-family:FontAwesome;
+    font-size:24px;
+    font-style:normal;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    cursor:pointer;line-height:110px;
+    border-radius:0%;
+}
+
+.form-table .img-circle{
+    border-radius: 0%;
+}
+
+.form-table-div{
+    min-width: 760px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.form-table-div table {
+    width: 100%;
+}
+
+.form-table-div h3 {
+    text-align: center;
+    padding: 10px;
+    color: black;
+    font-weight: bold;
+}
+
 @keyframes jump {
     from {
         transform:scale3d(1,1,1) translateY(0)

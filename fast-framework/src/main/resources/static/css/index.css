@@ -1,3 +1,8 @@
+/*!
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ * @author ZhouZhou
+ */
 @charset "utf-8";
 .login-page .login-box-body .form-control-feedback {
     cursor: pointer;
@@ -408,59 +413,59 @@
     line-height: 20px;
     text-align: right;
 }
-/** 遮罩层 **/
-.loaderbox {
-    display: inline-block;
-    min-width: 125px;
-    padding: 10px;
-    margin: 0 auto;
-    color: #000 !important;
-    font-size: 13px;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    /*border: 1px solid #ddd;*/
-    background-color: #eee;
-    /*-webkit-border-radius: 2px;*/
-    /*-moz-border-radius: 2px;*/
-    /*-ms-border-radius: 2px;*/
-    /*-o-border-radius: 2px;*/
-    /*border-radius: 2px;*/
-    -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-}
+/*!** 遮罩层 **!*/
+/*.loaderbox {*/
+/*    display: inline-block;*/
+/*    min-width: 125px;*/
+/*    padding: 10px;*/
+/*    margin: 0 auto;*/
+/*    color: #000 !important;*/
+/*    font-size: 13px;*/
+/*    font-weight: 400;*/
+/*    text-align: center;*/
+/*    vertical-align: middle;*/
+/*    !*border: 1px solid #ddd;*!*/
+/*    background-color: #eee;*/
+/*    !*-webkit-border-radius: 2px;*!*/
+/*    !*-moz-border-radius: 2px;*!*/
+/*    !*-ms-border-radius: 2px;*!*/
+/*    !*-o-border-radius: 2px;*!*/
+/*    !*border-radius: 2px;*!*/
+/*    -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);*/
+/*    -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);*/
+/*    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
-.main-footer{
-    bottom: 0px;
-    position: fixed;
-    width: 100%;
-    left: 0px;
-}
+/*.main-footer{*/
+/*    bottom: 0px;*/
+/*    position: fixed;*/
+/*    width: 100%;*/
+/*    left: 0px;*/
+/*}*/
 
-.loaderbox .loading-activity {
-    float: left;
-    width: 18px;
-    height: 18px;
-    border: solid 2px transparent;
-    border-top-color: #000;
-    border-left-color: #000;
-    border-radius: 10px;
-    -webkit-animation: pace-spinner 400ms linear infinite;
-    -moz-animation: pace-spinner 400ms linear infinite;
-    -ms-animation: pace-spinner 400ms linear infinite;
-    -o-animation: pace-spinner 400ms linear infinite;
-    animation: pace-spinner 400ms linear infinite;
-    margin-right: 10px;
-}
-@keyframes pace-spinner {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
+/*.loaderbox .loading-activity {*/
+/*    float: left;*/
+/*    width: 18px;*/
+/*    height: 18px;*/
+/*    border: solid 2px transparent;*/
+/*    border-top-color: #000;*/
+/*    border-left-color: #000;*/
+/*    border-radius: 10px;*/
+/*    -webkit-animation: pace-spinner 400ms linear infinite;*/
+/*    -moz-animation: pace-spinner 400ms linear infinite;*/
+/*    -ms-animation: pace-spinner 400ms linear infinite;*/
+/*    -o-animation: pace-spinner 400ms linear infinite;*/
+/*    animation: pace-spinner 400ms linear infinite;*/
+/*    margin-right: 10px;*/
+/*}*/
+/*@keyframes pace-spinner {*/
+/*    0% {*/
+/*        transform: rotate(0deg);*/
+/*    }*/
+/*    100% {*/
+/*        transform: rotate(360deg);*/
+/*    }*/
+/*}*/
 
 .btn-primary{
     background-color: #1890ff!important;
