@@ -1,19 +1,20 @@
 <#--使用宏递归输出菜单-->
 <#macro showMenu menuList, key>
     <#list menuList as m>
-        <#if m.type == 1>
+        <#if m.type == 1> <#--菜单 -->
             <li>
-                <a href="javascript:;" data-url="${m.url}" data-module="${key}" data-target="${m.target?default("")}" data-id="${m.MId}" title="<@ctx.i18n text = "${m.name}" />">
-                    <#if m.icon??><i class="${m.icon}" data-icon="${m.icon}"></i></#if>
+                <a href="javascript:;" data-url="${m.url}" data-module="<#if m.name == "首页">_main<#else>${key}</#if>" data-target="${m.target?default("")}" data-id="<#if m.name == "首页">0<#else>${m.MId}</#if>" title="<@ctx.i18n text = "${m.name}" />">
+<#--                    <#if m.icon??><i class="${m.icon}" data-icon="${m.icon}"></i></#if>-->
+                    <#if m.icon??><#if m.icon?starts_with("http")><img src="${m.icon}" height="13" width="20"><#else><i class="${m.icon}" data-icon="${m.icon}"></i></#if></#if>
                     <span><@ctx.i18n text = "${m.name}" /></span>
                     <#if m.MNew><span class="pull-right-container"><small data-index="_new" class="label pull-right bg-red"><@ctx.i18n text = "新" /></small></span></#if>
                 </a>
             </li>
         </#if>
-        <#if m.type == 0>
+        <#if m.type == 0> <#--目录 -->
             <li class="treeview">
                 <a href="javascript:;" title="<@ctx.i18n text = "${m.name}" />">
-                    <#if m.icon??><i class="${m.icon}"></i></#if>
+                    <#if m.icon??><#if m.icon?starts_with("http")><img src="${m.icon}" height="14" width="20"><#else><i class="${m.icon}"></i></#if></#if>
                     <span><@ctx.i18n text = "${m.name}" /></span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
@@ -33,19 +34,27 @@
         <li class="header"></li>
         <#if menuList[key]?? && (menuList[key]?size > 0) >
             <#list menuList[key] as menu>
-            <li class="treeview">
                 <#if menu.type == 0>
+            <li class="treeview">
                     <a href="javascript:;" title="<@ctx.i18n text = " ${menu.name}"/>">
                     <#if menu.icon??><i class="${menu.icon}"></i></#if>
                      <span><@ctx.i18n text = "${menu.name}" /></span>
                      <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                      </a>
+                    <ul class="treeview-menu">
+                        <#if menu.children?? && (menu.children?size>0)>
+                            <@showMenu menu.children, key />
+                        </#if>
+                    </ul>
                 </#if>
-                <ul class="treeview-menu">
-                    <#if menu.children?? && (menu.children?size>0)>
-                    <@showMenu menu.children, key />
-                    </#if>
-                </ul>
+                <#if menu.type == 1>
+             <li class="tree-link">
+                    <a href="javascript:;" data-url="${menu.url}" data-module="<#if menu.name == "首页">_main<#else>${key}</#if>" data-target="${menu.target?default("")}" data-id="<#if menu.name == "首页">0<#else>${menu.MId}</#if>" title="<@ctx.i18n text = "${menu.name}" />">
+                        <#if menu.icon??><i class="${menu.icon}" data-icon="${menu.icon}"></i></#if>
+                        <span><@ctx.i18n text = "${menu.name}" /></span>
+                        <#if menu.MNew><span class="pull-right-container"><small data-index="_new" class="label pull-right bg-red"><@ctx.i18n text = "新" /></small></span></#if>
+                    </a>
+                </#if>
              </li>
              </#list>
         </#if>
