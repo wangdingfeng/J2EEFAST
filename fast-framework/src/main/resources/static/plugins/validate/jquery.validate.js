@@ -1560,7 +1560,7 @@ $.extend( $.validator, {
 				validator, data, optionDataString;
 
 			var flag = false;
-			if ( !this.settings.messages[ element.name ] ) {
+			if (!this.settings.messages || !this.settings.messages[ element.name ] ) {
 				this.settings.messages[ element.name ] = {};
 				flag = true;
 			}
@@ -1577,7 +1577,10 @@ $.extend( $.validator, {
 			validator = this;
 			this.startRequest( element );
 			data = {};
-			data[ element.name ] = value;
+			//TODO 针对特殊验证 当param.self=false 自身数据不提交
+			if(typeof param.self == "undefined" || param.self != false){
+				data[ element.name ] = value;
+			}
 			var config = {
 				mode: "abort",
 				port: "validate" + element.name,
