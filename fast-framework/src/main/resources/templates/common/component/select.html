@@ -1,0 +1,229 @@
+<#--
+  //form select 下拉框标签
+-->
+<#macro select  name <#--如果name不传则于id一直-->
+                id = "" <#-- ID 如果ID 不传则跟name一致-->
+                value = ""
+                required= false <#-- 是否必输-->
+                class = "form-control" <#-- 输入框样式-->
+                butClass = "" <#-- 是否带提示样式-->
+                helpTip = ""  <#--帮助提示 -->
+                dictType = "" <#-- 字典类型，从字典里获取 -->
+                items = "" <#-- 列表数据，可接受对象集合  -->
+                itemLabel = ""	<#--  指定列表数据中的什么属性名作为option的标签名 -->
+                itemValue =  ""	<#-- 指定列表数据中的什么属性名作为option的value值 -->
+                status = true <#-- 检测状态-->
+                multiple= false <#--  是否为多选框 -->
+                blankValue =  "false" <#-- 是否默认有个空白选择项目 -->
+                blankLabel =  "" <#-- 空白选择默认值 -->
+                placeholder=""
+                readonly = false <#-- 是否只读-->
+                viewMode =false
+                viewClass="label label-default"
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+
+    <#if viewMode>    <#-- view 用法 <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id" required=true view=true />    -->
+        <#if dictType !="">    <#-- dictType !=""  -->
+            <#list dict.getType('${dictType}') as d>
+                <#list value?split(",") as k>
+                    <#if k == (d['${dictValue}']?c)>
+                        <span class="${viewClass}"><@ctx.i18n text = "${d['${dictLabel}']}"/></span>
+                    </#if>
+                </#list>
+            </#list>
+        <#else>  <#-- else <#-- dictType !=""   -->
+            <#list items as d>
+                <#list value?split(",") as k>
+                    <#if k?string == d['${itemValue}']?string>
+                        <span class="${viewClass}"><@ctx.i18n text = "${d['${itemLabel}']}"/></span>
+                    </#if>
+                </#list>
+            </#list>
+        </#if>   <#-- end dictType !=""  -->
+    <#else>  <#-- view else -->
+
+        <#if !multiple>
+            <select id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class}" <#if required> required</#if><#if readonly> disabled="disabled"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>>
+                <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
+                <#if dictType !="">
+                    <#list dict.getType('${dictType}')>
+                        <#items as d>
+                            <#if status  && d.status?default('') !=''>
+                                <#if d.status =='0' >
+                                    <#if value == "" && blankValue == "false">
+                                        <option value="${d.dictValue}" <#if d.isDefault =='Y' >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                    <#else>
+                                        <#assign a=0 />
+                                        <#list value?split(",") as x>
+                                            <#if x == d.dictValue>
+                                                <#assign a=1 />
+                                            </#if>
+                                        </#list>
+                                        <option value="${d.dictValue}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                    </#if>
+                                </#if>
+                            <#else>
+                                <#if value == "" && blankValue == "false">
+                                    <option value="${d.dictValue}" <#if d.isDefault =='Y' >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                <#else>
+                                    <#assign a=0 />
+                                    <#list value?split(",") as x>
+                                        <#if x == d.dictValue>
+                                            <#assign a=1 />
+                                        </#if>
+                                    </#list>
+                                    <option value="${d.dictValue}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                </#if>
+                            </#if>
+                        </#items>
+                    </#list>
+                <#else>
+                    <#list items>
+                        <#items as d>
+                            <#if status && d.status?default('') !=''>
+                                <#if d.status =='0' >
+                                    <#if value == "">
+                                        <option value="${d['${itemValue}']}"><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                    <#else>
+                                        <#assign a=0 />
+                                        <#list value?split(",") as x>
+                                            <#if x == "${d['${itemValue}']}">
+                                                <#assign a=1 />
+                                            </#if>
+                                        </#list>
+                                        <option value="${d['${itemValue}']}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                    </#if>
+                                </#if>
+                            <#else>
+                                <#if value == "">
+                                    <option value="${d['${itemValue}']?default('')}"><@ctx.i18n text = "${d['${itemLabel}']?default('')}"/></option>
+                                <#else>
+                                    <#assign a=0 />
+                                    <#list value?split(",") as x>
+                                        <#if x == "${d['${itemValue}']}">
+                                            <#assign a=1 />
+                                        </#if>
+                                    </#list>
+                                    <option value="${d['${itemValue}']}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                </#if>
+                            </#if>
+                        </#items>
+                    </#list>
+                </#if>
+            </select>
+        <#--        <@compress single_line=true>-->
+            <script type="text/javascript">
+                $(function() {
+                    $("#${AssId?replace(".","_")}").on("change",function(e){
+                        /* 选择框回调事件*/
+                        if(typeof selectCallback == 'function'){
+                            var data = $("#${AssId?replace(".","_")}").select2("data");
+                            selectCallback('${Assname?replace(".","_")}', 'change', data);
+                        }
+                    });
+                })
+            </script>
+        <#--        </@compress>-->
+        </#if>
+
+        <#if multiple>
+            <input id="${AssId?replace(".","_")}" type="hidden" name="<#if id == "">${name}<#else>${AssId}</#if>"/>
+            <select id="__${AssId?replace(".","_")}slt" class="${class}" multiple="true" <#if class= "selectpicker">data-none-selected-text="请选择"</#if> <#if required> required</#if> <#if readonly> disabled="disabled"</#if>>
+                <#if blankValue !="false"><option value="${blankValue}"><@ctx.i18n text = "${blankLabel}"/></option></#if>
+                <#if dictType !="">
+                    <#list dict.getType('${dictType}')>
+                        <#items as d>
+                            <#if status>
+                                <#if d.status =='0' >
+                                    <#if value == "" && blankValue == "false">
+                                        <option value="${d.dictValue}" <#if d.isDefault =='Y' >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                    <#else>
+                                        <#assign a=0 />
+                                        <#list value?split(",") as x>
+                                            <#if x == d.dictValue>
+                                                <#assign a=1 />
+                                            </#if>
+                                        </#list>
+                                        <option value="${d.dictValue}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                    </#if>
+                                </#if>
+                            <#else>
+                                <#if value == "" && blankValue == "false">
+                                    <option value="${d.dictValue}" <#if d.isDefault =='Y' >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                <#else>
+                                    <#assign a=0 />
+                                    <#list value?split(",") as x>
+                                        <#if x == d.dictValue>
+                                            <#assign a=1 />
+                                        </#if>
+                                    </#list>
+                                    <option value="${d.dictValue}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d.dictLabel}"/></option>
+                                </#if>
+                            </#if>
+                        </#items>
+                    </#list>
+                <#else>
+                    <#list items>
+                        <#items as d>
+                            <#if status>
+                                <#if d.status =='0' >
+                                    <#if value == "">
+                                        <option value="${d['${itemValue}']}"><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                    <#else>
+                                        <#assign a=0 />
+                                        <#list value?split(",") as x>
+                                            <#if x == "${d['${itemValue}']}">
+                                                <#assign a=1 />
+                                            </#if>
+                                        </#list>
+                                        <option value="${d['${itemValue}']}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                    </#if>
+                                </#if>
+                            <#else>
+                                <#if value == "">
+                                    <option value="${d['${itemValue}']}"><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                <#else>
+                                    <#assign a=0 />
+                                    <#list value?split(",") as x>
+                                        <#if x == "${d['${itemValue}']}">
+                                            <#assign a=1 />
+                                        </#if>
+                                    </#list>
+                                    <option value="${d['${itemValue}']}" <#if a == 1 >selected="selected"</#if>><@ctx.i18n text = "${d['${itemLabel}']}"/></option>
+                                </#if>
+                            </#if>
+                        </#items>
+                    </#list>
+                </#if>
+            </select>
+        <#--        <@compress single_line=true>-->
+            <script type="text/javascript">
+                $(function() {
+                    <#if value !="">
+                    $("#${AssId?replace(".","_")}").val(opt.form.selectSelects("__${AssId?replace(".","_")}slt"));
+                    </#if>
+                    $("#__${AssId?replace(".","_")}slt").on("change",function(e){
+                        $("#${AssId?replace(".","_")}").val(opt.form.selectSelects("__${AssId?replace(".","_")}slt"));
+                        /* 选择框回调事件*/
+                        if(typeof selectCallback == 'function'){
+                            var data = $("#__${AssId?replace(".","_")}slt").select2("data");
+                            selectCallback('${Assname?replace(".","_")}', 'change', data);
+                        }
+                    })
+                })
+            </script>
+        <#--        </@compress>-->
+        </#if>
+    </#if>  <#-- view end if -->
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+</#macro>

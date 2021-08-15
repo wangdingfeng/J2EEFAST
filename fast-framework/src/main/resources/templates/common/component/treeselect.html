@@ -1,0 +1,143 @@
+<#--
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ //弹窗树组件
+ //treeCallback 回调页面函数
+ //作者:zhouzhou 2020-10-11
+-->
+<#macro treeselect  name
+                    id = ""
+                    url = "sys/comp/treeData"
+                    boxTitle = ""
+                    width="380"
+                    height=""
+                    value=""
+                    labelValue=""
+                    labelName="" <#--标签名称 -->
+                    checked=false
+                    radioType="all" <#-- 当checked=false 单选时 控制同级单选互斥还是整个树互斥 all 整个树互斥 level, checked=true 多选此值无效-->
+                    required=false <#-- 是否必输-->
+                    readonly=true <#-- 是否只读模式-->
+                    correlationId="" <#-- 关联ID-->
+                    correlationValue= "-1"  <#-- 关联默认值-->
+                    class = "form-control" <#-- 输入框样式-->
+                    butClass = "fa fa-fw fa-search"
+                    expandLevel = false <#--是否展开树 -->
+                    isParentIds = false <#-- 单选是否需要获取树的父节点集合-->
+                    parenName = "parentIds" <#-- 单选父节点集合Name-->
+                    parenIdsValue = "" <#-- 所有父节点集合默认值-->
+                    isSelectParent = false <#-- 是否只能选中叶子节点-->
+                    isInput = false <#-- 是否允许手动label框输入 -->
+                    isClear = true <#-- 弹出是否出现清除按钮-->
+                    template = false <#-- 控件是否做template用-->
+                    keyId = "id" <#--指定获取树数据值 -->
+                    placeholder=""
+                    helpTip = ""  <#--帮助提示 -->
+                    callbackFunName = "treeCallback" <#--自定义确认回调函数名称 -->
+                    ext...>
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <div class="input-group" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div" data-url="${url}">
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" placeholder="${placeholder}" class="${class} inputZtree" value="${labelValue}" <#if readonly> readonly = "readonly"</#if> <#if required> required</#if>/>
+        <#if isParentIds?string == "true">
+            <input name="${parenName}" <#if parenIdsValue!="">value="${parenIdsValue}"</#if> type="hidden"/>
+        </#if>
+        <span class="input-group-btn" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+    </div>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+<#--    <@compress single_line=true>-->
+    <script type="text/javascript">
+        $(function(){
+            $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").unbind('click').on('click',function(){
+                var treeId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val();
+                <#if keyId != "id">
+                treeId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").attr('data-id');
+                </#if>
+                var treeName =  $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val();
+                <#if correlationId !="">
+                var correlationId = $("#${correlationId}").val() == "" ? "${correlationValue}": $("#${correlationId}").val();
+                if(opt.common.isEmpty(correlationId) || correlationId == '-1'){
+                    opt.error("<@ctx.i18n text = "关联信息不能为空"/>");
+                    return;
+                }
+                <#else>
+                var correlationId = "";
+                </#if>
+                var options = {
+                    title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
+                    width: "${width}",
+                    <#if height != "">
+                    height: ${height},
+                    </#if>
+                    url: baseURL + "sys/component/treeselect",
+                    <#-- POST提交组件控制类参数-->
+                    fromData:{
+                        url: $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div").data("url"),
+                        treeId: treeId,
+                        treeName: treeName,
+                        expandLevel: <#if expandLevel?string == "true">"true"<#else>"false"</#if>,
+                        isSelectParent: <#if isSelectParent?string == "true">"true"<#else>"false"</#if>,
+                        correlationId: correlationId,
+                        checked: <#if checked?string == "true">"true"<#else>"false"</#if>,
+                        <#if isParentIds?string == "true">
+                        parentIds: $('input[name="${parenName}"]').val(),
+                        </#if>
+                        radioType: "${radioType}"
+
+                    },
+                    callBack: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit,
+                    cancel:  func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel
+                    <#if isClear?string == "true">, clear: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear</#if>
+                };
+                opt.modal.openOptions(options);
+            });
+
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit(index, layero,selfLayer) {
+                var nodes = $.tree.callBackTree(layero,index);
+                <#if keyId != "id">
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").attr('data-id',nodes.id);
+                </#if>
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(nodes.${keyId}).change(); /* 赋值主页面隐藏ID */
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val(nodes.title).change();/* 回显主页面控件 */
+                <#if isParentIds>
+                $('input[name="${parenName}"]').val(nodes.parentIds).change();
+                </#if>
+                if(typeof ${callbackFunName} == 'function'){
+                    ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'ok', index, layero, nodes);
+                }
+                selfLayer.close(index);
+            };
+            <#if isClear?string == "true">
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear(index, layero,selfLayer) {
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val("").change();
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val("").change();
+                <#if isParentIds>
+                $('input[name="${parenName}"]').val("").change();
+                </#if>
+                if(typeof ${callbackFunName}  == 'function'){
+                    ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'clear', index, layero, '');
+                }
+                selfLayer.close(index);
+            };
+            </#if>
+
+
+            function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
+                if(typeof ${callbackFunName} == 'function'){
+                    ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, '');
+                }
+            }
+        })
+    </script>
+<#--    </@compress>-->
+</#macro>

@@ -1,0 +1,88 @@
+<#--
+    //form 图标选择控件
+-->
+<#macro iconselect  name
+                    id=""
+                    placeholder="请输入值"
+                    class = "form-control" <#-- 输入框样式-->
+                    butClass = "fa fa-fw fa-search"
+                    required = false
+                    readonly = false
+                    value = ""
+                    width=""
+                    height=""
+                    type = "text"
+                    isClear = true <#-- 弹出是否出现清除按钮-->
+                    boxTitle = ""
+                    helpTip =""
+                    >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <div class="input-group">
+        <span class="input-group-addon"><i id="menuIcon${AssId?replace(".","_")}" class="fa fa-fw ${value}"></i></span>
+        <input id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>" class="${class} iconselect" type="${type}" value="${value}" class="${class}" <#if readonly> readonly = "readonly"</#if> placeholder="${placeholder}" <#if required> required</#if>>
+        <span class="input-group-btn"><a id="menuIconButton${AssId?replace(".","_")}" href="javascript:"><i class="${butClass}"></i></a></span>
+        <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+    </div>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $("#menuIconButton${AssId?replace(".","_")}").unbind('click').on('click',function(){
+                var var_${AssId?replace(".","_")}iconValue =  $("#${AssId?replace(".","_")}").val();
+                var options = {
+                    title: <#if boxTitle =="">"<@ctx.i18n text = "图标选择"/>" <#else>"${boxTitle}"</#if>,
+                    url: baseURL + "sys/component/iconselect",
+                    width: "${width}",
+                    <#if height != "">
+                    height: ${height},
+                    </#if>
+                    <#-- POST提交组件控制类参数-->
+                    fromData:{
+                        iconValue: var_${AssId?replace(".","_")}iconValue
+                    },
+                    callBack: func_${AssId?replace(".","_")}doSubmit,
+                    cancel:  func_${AssId?replace(".","_")}cancel
+                    <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                };
+                opt.modal.openMainWin(options);
+            });
+
+            function func_${AssId?replace(".","_")}doSubmit(index, layero,_layer) {
+                var body = _layer.getChildFrame('body', index);
+                var icon = body.find('#icon').val();
+                $("#<#if id == "">menuIcon${name}<#else>menuIcon${id}</#if>").attr("class",'fa fa-fw '+icon);
+                $("#<#if id == "">${name}<#else>${id}</#if>").val(icon).change();
+                _layer.close(index);
+                if(typeof iconCallback == 'function'){
+                    iconCallback('${Assname?replace(".","_")}', 'ok', index, layero, icon);
+                }
+                _layer.close(index);
+            };
+            <#if isClear>
+            function func_${AssId?replace(".","_")}clear(index, layero,_layer) {
+                $("#<#if id == "">menuIcon${name}<#else>menuIcon${id}</#if>").attr("class",'fa fa-fw ');
+                var temp = opt.common.nullToStr($("#<#if id == "">${name}<#else>${id}</#if>").val(),"");
+                $("#<#if id == "">${name}<#else>${id}</#if>").val("").change();
+                if(typeof iconCallback == 'function'){
+                    iconCallback('${Assname?replace(".","_")}', 'clear', index, layero, temp);
+                }
+                _layer.close(index);
+            };
+            </#if>
+
+
+            function func_${AssId?replace(".","_")}cancel(index, layero) {
+                if(typeof iconCallback == 'function'){
+                    iconCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+                }
+            }
+        </script>
+    </@compress>
+</#macro>

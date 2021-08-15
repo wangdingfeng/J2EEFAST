@@ -1,0 +1,83 @@
+<#--
+    //form checkbox 复选框
+-->
+<#macro checkbox    name <#-- 如果name不传则于id一直-->
+                    id = "" <#-- ID 如果ID 不传则跟name一致-->
+                    value = ""
+                    required=false <#-- 是否必输-->
+                    class = "check-box" <#-- 输入框样式-->
+                    butClass = "" <#-- 是否带提示样式-->
+                    helpTip = ""  <#--帮助提示 -->
+                    dictType = "" <#-- 字典类型，从字典里获取 -->
+                    items = "" <#-- 列表数据，可接受对象集合  -->
+                    itemLabel = ""	<#--  指定列表数据中的什么属性名作为option的标签名 -->
+                    itemValue =  ""	<#-- 指定列表数据中的什么属性名作为option的value值 -->
+                    selectValue = "flag" <#-- 指定列表数据中选中属性值 -->
+                    status = "status" <#-- 检测状态-->
+                    >
+    <#if dictType !="">
+        <#list dict.getType('${dictType}')>
+            <#items as d>
+                <#if status == "status">
+                    <#if d.status =='0' >
+                        <#if value == "">
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                        <#else>
+                            <#assign a=0 />
+                            <#list value?split(",") as x>
+                                <#if x == d.dictValue>
+                                    <#assign a=1 />
+                                </#if>
+                            </#list>
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if a== 1>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                        </#if>
+                    </#if>
+                <#else>
+                    <#if value == "">
+                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    <#else>
+                        <#assign a=0 />
+                        <#list value?split(",") as x>
+                            <#if x == d.dictValue>
+                                <#assign a=1 />
+                            </#if>
+                        </#list>
+                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if a== 1>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    </#if>
+                </#if>
+            </#items>
+        </#list>
+    <#else>
+        <#list items>
+            <#items as d>
+                <#if status == "status">
+                    <#if d.status =='0' >
+                        <#if value == "">
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d['${itemValue}']}" <#if required> required</#if>/><@ctx.i18n text = "${d['${itemLabel}']}" /></label>
+                        <#else>
+                            <#assign a=0 />
+                            <#list value?split(",") as x>
+                                <#if x == d['${itemValue}']>
+                                    <#assign a=1 />
+                                </#if>
+                            </#list>
+                            <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d['${itemValue}']}" <#if a== 1>checked</#if> <#if required> required</#if>/><@ctx.i18n text = "${d['${itemLabel}']}" /></label>
+                        </#if>
+                    </#if>
+                <#else>
+                    <#if value == "">
+                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d['${itemValue}']}" <#if required> required</#if>/><@ctx.i18n text = "${d['${itemLabel}']}" /></label>
+                    <#else>
+                        <#assign a=0 />
+                        <#list value?split(",") as x>
+                            <#if x == "${d['${itemValue}']}">
+                                <#assign a=1 />
+                            </#if>
+                        </#list>
+                        <label class="${class}"><input type="checkbox" name="<#if id == "">${name}<#else>${id}</#if>" value="${d['${itemValue}']}" <#if a== 1>checked</#if> <#if required> required</#if>/><@ctx.i18n text = "${d['${itemLabel}']}" /></label>
+                    </#if>
+                </#if>
+            </#items>
+        </#list>
+    </#if>
+</#macro>

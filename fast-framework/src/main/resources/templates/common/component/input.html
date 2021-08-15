@@ -1,0 +1,216 @@
+<#--
+    //下划线显示
+-->
+<#macro plaintext value=""
+                  defaulValue="暂无">
+    <#if value == "">
+        <p class="form-control-plaintext-no-content">${defaulValue}</p>
+    <#else>
+        <p class="form-control-plaintext">${value}</p>
+    </#if>
+</#macro>
+
+
+<#--
+    //form hidden 隐藏域标签
+-->
+<#macro hidden  name
+                id = "" <#-- ID 如果ID 不传则跟name一致-->
+                value = ""
+                type = "hidden"
+                refresh = true <#-- 隐藏域在from 表单中能否被重置按钮清空-->
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" <#if !refresh> data-refresh="false"</#if>  type="${type}" value="${value}"/>
+</#macro>
+
+<#--
+    //form input 输入框标签
+-->
+<#macro input   name
+                id = "" <#-- ID 如果ID 不传则跟name一致-->
+                value = ""
+                type = "text" <#--多增加 date -->
+                dataFormat = "" <#-- 时间格式化-->
+                dataType = "date" <#-- 控件显示-->
+                dataCallback = "" <#-- 日期控件回调函数-->
+                required=false <#-- 是否必输-->
+                class = "form-control" <#-- 输入框样式-->
+                placeholder=""
+                autocomplete="" <#-- off 禁止历史数据-->
+                butClass = "" <#-- 小按钮class样式-->
+                butStyle = "" <#-- 小按钮style样式-->
+                helpTip = ""  <#--帮助提示 -->
+                readonly = false <#-- 不可编辑-->
+                maxlength = "" <#--输入最大长度 -->
+                >
+        <#local  Assname="${id}"/>
+        <#if name != "">
+            <#local Assname="${name}"/>
+        </#if>
+        <#local AssId=""/>
+        <#if id == "">
+            <#local AssId="${Assname}"/>
+        <#else>
+            <#local AssId="${id}"/>
+        </#if>
+        <#if butClass!="">
+            <div class="input-group">
+                <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if> <#if type == "date" && dataCallback !="">data-callback="${dataCallback}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+                       type="<#if type == "date">text<#else>${type}</#if>" <#if type=="password" || autocomplete == "off">autocomplete="off"</#if> value="${value}" <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+                <span class="input-group-addon"><i class="${butClass}" <#if butStyle!="">style="${butStyle}"</#if>></i></span>
+            </div>
+            <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+        <#else>
+            <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" <#if class != "">class="${class}<#if type == "date"> time-input</#if>"</#if> <#if dataFormat !="">data-format="${dataFormat}"</#if><#if type == "date" && dataCallback !="">data-callback="${dataCallback}"</#if> <#if type == "date" && dataType !="">data-type="${dataType}"</#if><#rt>
+                   type="<#if type == "date">text<#else>${type}</#if>" value="${value}" <#if type=="password" || autocomplete == "off">autocomplete="off"</#if> <#if placeholder != "">placeholder="<@ctx.i18n text = "${placeholder}"/>"</#if>   <#if maxlength !=""> maxlength = "${maxlength}"</#if> <#if readonly> readonly = true</#if> <#if required> required </#if>/>
+            <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+        </#if>
+</#macro>
+
+<#--
+    //form textarea
+-->
+<#macro textarea    name
+                    id = ""
+                    class = "form-control"
+                    value = ""
+                    readonly = false
+                    rows = "5"
+                    required = false
+                    helpTip = ""  <#--帮助提示 -->
+                    >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <textarea id="${AssId?replace(".","_")}" name="<#if id == "">${name}<#else>${AssId}</#if>"  class="${class}" rows="${rows}" <#if readonly>readonly = "true"</#if> <#if required> required</#if>><#if value != "">${value}</#if></textarea>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+</#macro>
+
+
+<#--
+    //form radio 单选按钮
+-->
+<#macro radio   name <#-- 如果name不传则于id一直-->
+                id = "" <#-- ID 如果ID 不传则跟name一致-->
+                value = ""
+                required=false <#-- 是否必输-->
+                class = "radio-box" <#-- 输入框样式-->
+                butClass = "" <#-- 是否带提示样式-->
+                helpTip = ""  <#--帮助提示 -->
+                dictType = "" <#-- 字典类型，从字典里获取 -->
+                items = "" <#-- 列表数据，可接受对象集合 -->
+                >
+    <#if dictType !="">
+        <#list dict.getType('${dictType}')>
+            <#items as d>
+                <#if d.status =='0' >
+                    <#if value == "">
+                        <label class="${class}"><input type="radio" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.isDefault =='Y'>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    <#else>
+                        <label class="${class}"><input type="radio" name="<#if id == "">${name}<#else>${id}</#if>" value="${d.dictValue}" <#if d.dictValue ==value>checked</#if>><@ctx.i18n text = "${d.dictLabel}"/></label>
+                    </#if>
+                </#if>
+            </#items>
+        </#list>
+    </#if>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function(){
+                $('input[name="<#if id == ''>${name}<#else>${id}</#if>"]').on('ifCreated ifChecked', function(event){
+                    /* 选择redio 回调事件*/
+                    if(typeof redioCallback == 'function'){
+                        redioCallback("<#if id == ''>${name}<#else>${id}</#if>", this, event);
+                    }
+                }).change();
+            })
+        </script>
+    </@compress>
+</#macro>
+
+<#--
+    //form switch 开关组件
+-->
+<#macro switch  name
+                id = ""
+                value = "" <#-- 开关组件默认 0 1 值-->
+                default = true <#-- 默认开-->
+                judgeValue = "0" <#-- 判断值默认0 开-->
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <label class="toggle-switch switch-solid">
+        <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
+        <input type="checkbox" id="__${AssId?replace(".","_")}swh" <#if value == "" && default>checked="true"</#if> <#if value != "" && value == judgeValue>checked="true"</#if>/>
+        <span></span>
+    </label>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function(){
+                $('#__${AssId?replace(".","_")}swh').unbind('click').on('click',function(e){
+                    var _value = "0";
+                    if($(this).is(':checked') == true){
+                        $('#${AssId?replace(".","_")}').val("0");
+                    }else{
+                        $('#${AssId?replace(".","_")}').val("1");
+                        _value = "1";
+                    }
+                    if(typeof switchCallback == 'function'){
+                        switchCallback("<#if name != "">${name}<#else>${AssId}</#if>", this, e,_value);
+                    }
+                });
+            })
+        </script>
+    </@compress>
+</#macro>
+
+
+<#--
+    页面提示框组件
+-->
+<#macro tip class = "info" <#--样式 默认info -->
+            icon = "fa fa-info" <#-- 提示语句前的小图标-->
+            animated = "animated bounceInDown"
+            >
+    <div class="alert alert-dismissible callout callout-${class} ${animated}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p><i class="icon ${icon}"></i><#nested></p>
+    </div>
+</#macro>
+
+<#--
+    页面代码格式化组件
+    参数: codeType 不是必输 默认 html
+-->
+<#macro code codeType = "html">
+    <pre class="line-numbers">
+        <code  class="language-${codeType}">
+            <#nested>
+        </code>
+    </pre>
+</#macro>

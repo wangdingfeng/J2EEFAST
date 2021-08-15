@@ -1,0 +1,143 @@
+<#-- 数据联动 -->
+<#macro selectLinkage
+                    name <#-- 表单控件Name-->
+                    id = ""
+                    linkNum = 3 <#-- 多级联动联动等级 默认三级 最大5级 最小2级-->
+                    items = ["选择省份","选择市","选择地区"]
+                    url = "sys/area/load" <#--联动数据请求URL -->
+                    split = "," <#--数据分割符-->
+                    readonly = false
+                    value = ""
+                    >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <div class="col-sm-<#if linkNum gt 3>12<#else>10</#if> pl0">
+        <input type="hidden" name="${Assname}" id="<#if id == "">${name}<#else>${AssId}</#if>" value="<#if value !="">${value}</#if>"/>
+        <#list items as x>
+            <div class="col-md-4 pl0">
+                <input id="<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}" class="form-control" type="text" value="<#if value != ""><#rt>
+            <#list value?split("${split}") as a>
+                <#if x?index == a?index>
+                    <#lt>${a}<#rt>
+               <#lt></#if>
+            <#lt></#list><#rt>
+        <#lt></#if>" placeholder="${x}" />
+            </div>
+        </#list>
+    </div>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            var<#rt>
+                <#list items as x>
+                _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value = "<#if value != ""><#rt>
+            <#list value?split("${split}") as a>
+            <#if x?index == a?index>
+            <#lt>${a}<#rt>
+            <#lt></#if>
+            <#lt></#list><#rt>
+            <#lt></#if>",
+            _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}name = ""
+                <#if x?has_next>
+                ,<#rt>
+            <#else>
+            ;<#rt>
+            </#if>
+            </#list>
+            $(function() {
+                <#list items as x>
+                $('#<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}').selectPage({
+                    showField: 'name',
+                    keyField: 'id',
+                    data: baseURL+"${url}",
+                    params:  function(){
+                        <#if x?index == 0>
+                        return { '__seletPage':'true','type':'${x?index + 1}' }
+                        <#else>
+                        if (_<#if id == "">${name}<#else>${AssId}</#if>${x?index}value != ''){
+                            return {'__seletPage':'true','type':'${x?index + 1}','pId':_<#if id == "">${name}<#else>${AssId}</#if>${x?index}value}
+                        }else{
+                            return {'__seletPage':'true','type':'-1'}
+                        }
+                        </#if>
+                    },
+                    eAjaxSuccess: function (res) {
+                        var result = "";
+                        if (res.code == opt.variable.web_status.SUCCESS) {
+                            result =  {"pageNumber": res.data.currPage,"pageSize":res.data.pageSize,
+                                "totalRow":res.data.totalCount,"totalPage":res.data.totalPage,"list":res.data.list};
+                        }else{
+                            result =  {"pageNumber": 0,"pageSize":0,
+                                "totalRow":0,"totalPage":0,"list":[]};
+                        }
+                        if(typeof selectLinkageCallback == 'function'){
+                            selectLinkageCallback('${Assname?replace(".","_")}',"<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}", 'load', result);
+                        }
+                        return  result;
+                    },
+                    eSelect: function (data) {/*选择时*/
+                        if (data){
+                            _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value = data.id;
+                            _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}name = data.name;
+                            <#list items as t>
+                            <#if (t?index + 1) gt (x?index + 1)>
+                            $('#<#if id == "">${name}<#else>${AssId}</#if>${t?index + 1}').selectPageClear();
+                            </#if>
+                            </#list>
+                            var value = "";
+                            var name = "";
+                            <#list items as x>
+                            if(_<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value){
+                                value += _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value + "${split}";
+                                name += _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}name + "${split}";
+                            }
+                            </#list>
+                            value = opt.common.isEmpty(value)?"":value.substring(0,value.length-1);
+                            name = opt.common.isEmpty(name)?"":name.substring(0,name.length-1);
+                            $("#<#if id == "">${name}<#else>${AssId}</#if>").val(value);
+                            if(typeof selectLinkageCallback == 'function'){
+                                selectLinkageCallback('${Assname?replace(".","_")}',"<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}", 'select', {"id":value,"name":name});
+                            }
+                        }
+                    },
+                    eClear: function () {/*清空时*/
+                        _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value = '';
+                        _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}name = '';
+                        <#list items as t>
+                        <#if (t?index + 1) gt (x?index + 1)>
+                        $('#<#if id == "">${name}<#else>${AssId}</#if>${t?index + 1}').selectPageClear();
+                        _<#if id == "">${name}<#else>${AssId}</#if>${t?index + 1}value = '';
+                        _<#if id == "">${name}<#else>${AssId}</#if>${t?index + 1}name = '';
+                        </#if>
+                        </#list>
+                        var value = "";
+                        var name = "";
+                        <#list items as x>
+                        if(_<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value){
+                            value += _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}value + "${split}";
+                            name += _<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}name + "${split}";
+                        }
+                        </#list>
+                        value = opt.common.isEmpty(value)?"":value.substring(0,value.length-1);
+                        name = opt.common.isEmpty(name)?"":name.substring(0,name.length-1);
+                        $("#<#if id == "">${name}<#else>${AssId}</#if>").val(value);
+                        if(typeof selectLinkageCallback == 'function'){
+                            selectLinkageCallback('${Assname?replace(".","_")}',"<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}", 'clear', {"id":value,"name":name});
+                        }
+                    }
+                });
+                <#if readonly>
+                $('#<#if id == "">${name}<#else>${AssId}</#if>${x?index + 1}').selectPageDisabled(true);
+                </#if>
+                </#list>
+            })
+        </script>
+    </@compress>
+</#macro>
