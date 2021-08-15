@@ -138,16 +138,7 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		List<SysMenuEntity> menuList = sysMenuMapper.findListmoduleParentId(parentId,models);
 		if (menuIdList == null) {
 			for (SysMenuEntity menu : menuList) {
-				menu.setMId(Base64.encode(models+menu.getId()));
-				/*
-				 *判断是否市新的
-				 */
-				if(ToolUtil.isNotEmpty(menu.getIsNew()) && menu.getIsNew().equals(Constant.SYS_DEFAULT_VALUE_YES)
-						&& ToolUtil.isNotEmpty(menu.getCreateTime())){
-					menu.setMNew(DateUtil.betweenDay(menu.getCreateTime(),new Date(),true) <= 7);
-				}else{
-					menu.setMNew(false);
-				}
+				setMNew(menu,models);
 			}
 			return menuList;
 		}
@@ -155,19 +146,29 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		List<SysMenuEntity> userMenuList = new ArrayList<>();
 		for (SysMenuEntity menu : menuList) {
 			if (menuIdList.contains(menu.getId())) {
-				menu.setMId(Base64.encode(models+menu.getId()));
-				/*
-				 *判断是否市新的
-				 */
-				if(ToolUtil.isNotEmpty(menu.getCreateTime())){
-					menu.setMNew(DateUtil.betweenDay(menu.getCreateTime(),new Date(),true) <= 7);
-				}else{
-					menu.setMNew(false);
-				}
+				setMNew(menu,models);
 				userMenuList.add(menu);
 			}
 		}
 		return userMenuList;
+	}
+
+	/**
+	 * 设置菜单是否需要显示新
+	 * @param menu
+	 * @param models
+	 */
+	public void setMNew(SysMenuEntity menu,String models){
+		menu.setMId(Base64.encode(models+menu.getId()));
+		/*
+		 *判断是否市新的
+		 */
+		if(ToolUtil.isNotEmpty(menu.getIsNew()) && menu.getIsNew().equals(Constant.SYS_DEFAULT_VALUE_YES)
+				&& ToolUtil.isNotEmpty(menu.getCreateTime())){
+			menu.setMNew(DateUtil.betweenDay(menu.getCreateTime(),new Date(),true) <= 7);
+		}else{
+			menu.setMNew(false);
+		}
 	}
 
 
@@ -302,8 +303,8 @@ public class SysMenuService  extends ServiceImpl<SysMenuMapper, SysMenuEntity> {
 		for (SysMenuEntity menu : menuList)
 		{
 			Ztree ztree = new Ztree();
-			ztree.setId(menu.getId());
-			ztree.setpId(menu.getParentId());
+			ztree.setId(String.valueOf(menu.getId()));
+			ztree.setpId(String.valueOf(menu.getParentId()));
 			ztree.setName(menu.getName());
 			ztree.setTitle(transMenuName(menu, permsFlag));
 			if (isCheck)
