@@ -61,4 +61,20 @@ public class RabbitInfo {
         heads.put("msgHead","DELROLE");
         return heads;
     }
+
+    /**
+     * 同步用户
+     * @return
+     */
+    public static Map<String, Object> synchronizationUser(){
+        Map<String, Object> heads = new HashMap<>();
+        heads.put("msgHead","SYNCHRONIZATIONUSER");
+        return heads;
+    }
+
+    public static Map<String, Object> synchronizationRole(){
+        Map<String, Object> heads = new HashMap<>();
+        heads.put("msgHead","SYNCHRONIZATIONROLE");
+        return heads;
+    }
 }

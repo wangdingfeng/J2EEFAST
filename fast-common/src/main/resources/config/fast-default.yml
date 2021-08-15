@@ -234,6 +234,20 @@ fast:
     ignoreTable: ~
 #web页面相关
 web:
+   view:
+      #角色登录对应main主页 key 角色字符支持 | & 符号 value 相当于Controller控制器的指向路径
+      #例如 'USER|DEPT': 'modules/demo/addrpert' 意思为登录用户为 USER 或者 DEPT 角色的用户 访问modules/demo/main0 首页、注意所有Key角色不能有重复
+      roleMain: "{
+                  'USER|DEPT': 'modules/sys/demo/addrpert',
+                  'HR': 'modules/demo/main1'
+                  }"
+   adapter:
+      # 子系统 自定义HandlerInterceptorAdapter 适配器拦截器 添加配置 list map形式
+      # 例如: {'lockHandlerInterceptorAdapter':'/**'}  key为适配器类, value 为拦截地址
+      registry: ~
+      # 是否打印全局响ResponseData应数据拦截日志此处用途在比较重要的或者特殊的交易api时开启
+      # 在配合日志配置(com.j2eefast.common.core.listener.LicenseResponseBodyAdvice)指定输出到文件方便查看
+      # urlPatterns 需要拦截的数据的url 例如 /api/app/** 系统就会打印出所有访问此匹配的url系统处理返回的数据都会打印
    response:
       enabled: true
       urlPatterns: /demo/testData/**
