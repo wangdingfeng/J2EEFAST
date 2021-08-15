@@ -25,6 +25,8 @@ public final class ConfigConstant {
 	public static String 						FAST_OS_SN							= "";
 	public static Boolean						FAST_IPIS							= true;
 	public static List<String> 					FAST_IPS							= null;
+	public static final String 					POST								= "POST";
+	public static final String 					GET									= "GET";
 	public static byte[] 						FAST_MAC_KEY						= HexUtil.decodeHex("BF8F83A656BD75925379384E454DD174");
 	public static byte[] 						FAST_KEY							= HexUtil.decodeHex("62D95F5BA8E44064231018DF8A9EE027");
 	public static String 						KEY									= "D605C20574179E9F3526BC9076D77AE9";

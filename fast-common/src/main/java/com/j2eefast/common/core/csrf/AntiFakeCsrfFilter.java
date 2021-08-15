@@ -116,7 +116,7 @@ public class AntiFakeCsrfFilter {
                 String referer = request.getHeader("Referer");
                 if(ToolUtil.isNotEmpty(urlReferer)){
                    boolean flag = false;
-                   String[] urlReferers =  StrUtil.split(urlReferer,",");
+                   List<String> urlReferers =  StrUtil.split(urlReferer,StrUtil.COMMA);
                    for(String s: urlReferers){
                        if(StrUtil.startWith(referer,s)){
                            flag = true;

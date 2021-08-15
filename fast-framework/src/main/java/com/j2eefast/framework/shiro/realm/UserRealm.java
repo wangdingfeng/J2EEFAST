@@ -6,7 +6,6 @@
 package com.j2eefast.framework.shiro.realm;
 
 import java.util.*;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
@@ -35,14 +34,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.j2eefast.common.core.exception.RxcException;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.shiro.service.SysLoginService;
 import com.j2eefast.framework.utils.Constant;
-import org.springframework.context.annotation.Lazy;
-
-import javax.annotation.Resource;
 
 
 /**
@@ -52,16 +47,6 @@ import javax.annotation.Resource;
  */
 @Slf4j
 public class UserRealm extends AuthorizingRealm {
-
-//	@Autowired
-//	@Lazy
-//	private SysLoginService sysLoginService;
-//	@Resource
-//	@Lazy
-//	private SysModuleMapper sysModuleMapper;
-//	@Resource
-//	@Lazy
-//	private SysMenuMapper sysMenuMapper;
 
 
 	/**
@@ -187,7 +172,7 @@ public class UserRealm extends AuthorizingRealm {
 					Set<String> tempSet = new HashSet<>();
 					for (String permission : permissions) {
 						if (ToolUtil.isNotEmpty(permission)) {
-							String[] perm = StrUtil.split(permission,",");
+							String[] perm = StrUtil.splitToArray(permission,",");
 							for(String s: perm){
 								permissionSet.add(s);
 								tempSet.add(s);

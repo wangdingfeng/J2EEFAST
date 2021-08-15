@@ -183,7 +183,7 @@ public class SysMenuController extends BaseController {
 	 * 管理员查看用户已获取的菜单权限
 	 */
 	@GetMapping("/menuUserTreeData")
-	@RequiresPermissions("sys:menu:view")
+	@RequiresPermissions("sys:user:list")
 	@ResponseBody
 	public List<Ztree> menuUserTreeData(Long userId) {
 		List<Ztree> ztrees = new ArrayList<Ztree>();

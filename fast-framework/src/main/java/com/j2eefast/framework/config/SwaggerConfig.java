@@ -18,7 +18,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Swagger配置 /fast/swagger-ui.html 或者 fast/doc.html
+ * Swagger2 UI访问地址 /fast/swagger-ui.html 或者 fast/doc.html
+ * Swagger3 UI访问地址 /fast/swagger-ui/index.html 或者 fast/doc.html
  */
 @Configuration
 @EnableSwagger2
