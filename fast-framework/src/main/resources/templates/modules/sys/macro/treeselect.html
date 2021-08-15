@@ -1,13 +1,14 @@
 <#include "/common/defaultEngine.html"/>
-<@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="公司树" libs=["zTree"] bodyClass="hold-transition box box-main">
-<style>
-	body{height:auto;font-family: "Microsoft YaHei";}
-	button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
-</style>
-</@header>
+<@pageTheme mark=true>
+	<@header title="公司树" libs=["zTree"] bodyClass="hold-transition box box-main">
+		<style>
+			body{height:auto;font-family: "Microsoft YaHei";}
+			button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
+		</style>
+	</@header>
 	<@f.hidden  name="treeId" value="${treeId?default(0)}"/>
 	<@f.hidden  name="treeName" value="${treeName?default('')}"/>
+	<@f.hidden  name="treeTitle"/>
 	<@f.hidden  name="parentIds" value="${parentIds?default('')}" />
 	<@f.hidden  name="type" />
 	<div class="treeShowHideButton" onclick="$.tree.toggleSearch();">
@@ -23,27 +24,28 @@
 		<a href="#" onclick="$.tree.collapse()">折叠</a>
 	</div>
 	<div id="tree" class="ztree treeselect"></div>
-<@footer>
-	<script>
-		$(function() {
-			var url = baseURL + "${url}" + <#if correlationId=="">""<#else>"?correlationId=${correlationId}"</#if>;
-			<#if checked== "false">
+	<@footer>
+		<script>
+			$(function() {
+				var url = baseURL + "${url}" + <#if correlationId=="">""<#else>"?correlationId=${correlationId}"</#if>;
+				<#if checked== "false">
 				var options = {
 					url: url,
-					<#if expandLevel=="true">expandLevel : 2,</#if>
+					<#if expandLevel=="true">expandLevel : 2,<#else> expandLevel : 1,</#if>
 					onClick : zOnClick,
 					onCheck : onCheck,
+					onDblClick: onDblClick,
 					check: {
-						enable: true,
+						enable: false,
 						chkStyle: "radio",
 						radioType: "${radioType}"
-					},
+					}
 				};
-			<#else>
+				<#else>
 				var options = {
 					url: url,
 					_list:$("#treeId").val(),
-					<#if expandLevel=="true">expandLevel : 2,</#if>
+					<#if expandLevel=="true">expandLevel : 2,<#else> expandLevel : 1,</#if>
 					data: {
 						simpleData: {
 							enable: true,
@@ -60,64 +62,124 @@
 					onClick : zOnClick,
 					onCheck: onCheck
 				};
-			</#if>
+				</#if>
 
-			$.tree.init(options);
-		});
-		<#if checked== "false">
-		function zOnClick(event, treeId, treeNode) {
-			<#if isSelectParent== "true">
-			if(treeNode.isParent){
-				opt.error("父点击不能选择!");
-				return;
+				$.tree.init(options);
+			});
+			<#if checked== "false">
+			var _p;
+			/* 启动回调*/
+			function onLoadSuccess(obj,layero, index,_sf){
+				this._p = layero;
 			}
-			</#if>
-			$._tree.checkNode(treeNode, !treeNode.checked, null, true);
-			$("#parentIds").val($.tree.getParentIds(treeNode));
-			var treeId = treeNode.id;
-			var treeName = treeNode.name;
-			if(opt.common.isNotEmpty(treeNode.type)){
-				$("#type").val(treeNode.type);
-			}
-			$("#treeId").val(treeId);
-			$("#treeName").val(treeName);
-		}
-
-		function onCheck(event, treeId, treeNode) {
-			//选中指定节点
-			$._tree.selectNode(treeNode);
-			$("#parentIds").val($.tree.getParentIds(treeNode));
-			var treeId = treeNode.id;
-			var treeName = treeNode.name;
-			if(opt.common.isNotEmpty(treeNode.type)){
-				$("#type").val(treeNode.type);
-			}
-			$("#treeId").val(treeId);
-			$("#treeName").val(treeName);
-		}
-		<#else>
-		function zOnClick(event, treeId, treeNode) {
-			$._tree.checkNode(treeNode, !treeNode.checked, null, true);
-		}
-		function onCheck(event, treeId, treeNode) {
-
-			var _p = $._tree.getCheckedNodes();
-			var ids = "";
-			var names = "";
-			for(var i=0; i<_p.length; i++ ){
+			function zOnClick(event, treeId, treeNode) {
 				<#if isSelectParent== "true">
-				if(_p[i].isParent){
-					continue;
+				if(treeNode.isParent){
+					opt.error("父点击不能选择!");
+					return;
 				}
 				</#if>
-				ids += _p[i].id + ",";
-				names += _p[i].name + ",";
-				$._tree.selectNode(_p);
+				$._tree.checkNode(treeNode, !treeNode.checked, null, true);
+				$("#parentIds").val($.tree.getParentIds(treeNode));
+				var treeId = treeNode.id;
+				var treeName = treeNode.name;
+				var treeTitle = treeNode.title;
+				if(opt.common.isNotEmpty(treeNode.type)){
+					$("#type").val(treeNode.type);
+				}
+				$("#treeId").val(treeId);
+				$("#treeName").val(treeName);
+				$("#treeTitle").val(treeTitle);
 			}
-			$("#treeId").val(ids.substr(0,ids.length-1));
-			$("#treeName").val(names.substr(0,names.length-1));
-		}
-		</#if>
-	</script>
-</@footer>
+
+			function onCheck(event, treeId, treeNode) {
+				$._tree.selectNode(treeNode);
+				$("#parentIds").val($.tree.getParentIds(treeNode));
+				var treeId = treeNode.id;
+				var treeName = treeNode.name;
+				var treeTitle = treeNode.title;
+				if(opt.common.isNotEmpty(treeNode.type)){
+					$("#type").val(treeNode.type);
+				}
+				$("#treeId").val(treeId);
+				$("#treeName").val(treeName);
+				$("#treeTitle").val(treeTitle);
+			}
+
+			function submitHandler(index, layero,_sf){
+				var sNodes = $._tree.getSelectedNodes();
+				if (sNodes.length > 0) {
+					<#if isSelectParent== "true">
+					if(sNodes[0].isParent){
+						opt.error("父点击不能选择!");
+						return false;
+					}
+					</#if>
+					var node = sNodes[0].getParentNode();
+					if(node != null){
+						$("#parentIds").val($.tree.getParentIds(node));
+					}
+					if(opt.common.isNotEmpty(sNodes[0].type)){
+						$("#type").val(sNodes[0].type);
+					}
+					$("#treeId").val(sNodes[0].id);
+					$("#treeName").val(sNodes[0].name);
+					$("#treeTitle").val(sNodes[0].title);
+				}
+				return true;
+			}
+
+			/* 双击事件*/
+			function onDblClick(event, treeId, treeNode){
+				_p.find(".layui-layer-btn0").trigger("click");
+			}
+			<#else>
+			function zOnClick(event, treeId, treeNode) {
+				$._tree.checkNode(treeNode, !treeNode.checked, null, true);
+			}
+			function onCheck(event, treeId, treeNode) {
+				var _p = $._tree.getCheckedNodes();
+				var ids = "";
+				var names = "";
+				var titles = "";
+				for(var i=0; i<_p.length; i++ ){
+					<#if isSelectParent== "true">
+					if(_p[i].isParent){
+						continue;
+					}
+					</#if>
+					ids += _p[i].id + ",";
+					names += _p[i].name + ",";
+					titles += _p[i].title + ",";
+					$._tree.selectNode(_p);
+				}
+				$("#treeId").val(ids.substr(0,ids.length-1));
+				$("#treeName").val(names.substr(0,names.length-1));
+				$("#treeTitle").val(titles.substr(0,names.length-1));
+			}
+
+			function submitHandler(index, layero,_sf){
+				var _p = $._tree.getCheckedNodes();
+				var ids = "";
+				var names = "";
+				var titles = "";
+				for(var i=0; i<_p.length; i++ ){
+					<#if isSelectParent== "true">
+					if(_p[i].isParent){
+						continue;
+					}
+					</#if>
+					ids += _p[i].id + ",";
+					names += _p[i].name + ",";
+					titles += _p[i].title + ",";
+					$._tree.selectNode(_p);
+				}
+				$("#treeId").val(ids.substr(0,ids.length-1));
+				$("#treeName").val(names.substr(0,names.length-1));
+				$("#treeTitle").val(titles.substr(0,names.length-1));
+				return true;
+			}
+			</#if>
+		</script>
+	</@footer>
 </@pageTheme>
