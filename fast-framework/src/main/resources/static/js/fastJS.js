@@ -1702,12 +1702,12 @@ if (typeof jQuery === "undefined") {
              * @param yes [非必输] 只有在传 true 则先回调弹出层submitHandler 方法如果此submitHandler方法返回true,则再回调 callback 方法
              */
             open: function (title, url,width, height,callback,type) {
-				var full = false;
+                var full = false;
                 //如果是移动端，就使用自适应大小弹窗
                 if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                     width = 'auto';
                     height = 'auto';
-					full = true;
+                    full = true;
                 }
                 if (opt.common.isEmpty(title)) {
                     title = false;
@@ -1798,6 +1798,16 @@ if (typeof jQuery === "undefined") {
                 }
 
             },
+            /**
+             * btn : 按钮
+             * url : 访问连接
+             * title : 窗口标题
+             * width : 窗口宽
+             * height : 窗口高
+             * fromData : POST 提交的参数
+             * type : 基本层类型
+             * @param options
+             */
             // 弹出层指定参数选项
             openOptions: function (options) {
                 var _btn = opt.common.isEmpty(options.btn) ? [] : options.btn;
@@ -1807,6 +1817,21 @@ if (typeof jQuery === "undefined") {
                 var _height = opt.common.isEmpty(options.height) ? ($(window).height() - 50) : options.height;
                 var _framData = opt.common.isEmpty(options.fromData) ? {} : options.fromData;
                 var _type = opt.common.isEmpty(options.type) ? 2 : options.type;
+
+                var full = false;
+                //如果是移动端，就使用自适应大小弹窗
+                if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+                    _width = 'auto';
+                    _height = 'auto';
+                    full = true;
+                }
+                var index;
+                //自动适配窗口大小 如果传的大小比所在窗口大 则最大化
+                if(_width !== 'auto' || _height !== 'auto'){
+                    if(_width > $(window).width() || _height > $(window).height() ){
+                        full = true;
+                    }
+                }
                 if(options.clear){
                     if(_btn.length == 0){
                         _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
@@ -1818,22 +1843,22 @@ if (typeof jQuery === "undefined") {
                 }
                 var _sf;
                 if(opt.common.isNotEmpty(options.main) && options.main){
-                	_sf = opt.layer;
+                    _sf = opt.layer;
                     _height = opt.common.isEmpty(options.height) ? ($(top.window).height() - 220) : options.height;
                 }else{
-                	_sf = opt.selfLayer;
+                    _sf = opt.selfLayer;
                 }
-                
+
                 if (opt.common.isEmpty(options.yes)) {
                     options.yes = function(index, layero) {
                         var iframeWin = layero.find('iframe')[0];
                         if(typeof iframeWin.contentWindow.submitHandler == 'function'){
-                             if(iframeWin.contentWindow.submitHandler(index, layero,_sf)){
-                                 if(typeof  options.callBack == 'function'){
-                                     options.callBack(index, layero,_sf);
-                                 }
-                             }
-                             return;
+                            if(iframeWin.contentWindow.submitHandler(index, layero,_sf)){
+                                if(typeof  options.callBack == 'function'){
+                                    options.callBack(index, layero,_sf);
+                                }
+                            }
+                            return;
                         }else{
                             if(typeof  options.callBack == 'function'){
                                 options.callBack(index, layero,_sf);
@@ -1843,7 +1868,7 @@ if (typeof jQuery === "undefined") {
                     }
                 }
 
-                _sf.open({
+                index = _sf.open({
                     type: _type,
                     maxmin: true,
                     //shade: 0.3,
@@ -1889,6 +1914,10 @@ if (typeof jQuery === "undefined") {
                         return true;
                     }
                 });
+
+                if(full){
+                    _sf.full(index);
+                }
             },
             /**
              * 窗口有确定 取消按钮
@@ -1905,21 +1934,40 @@ if (typeof jQuery === "undefined") {
                 var _width = opt.common.isEmpty(options.width) ? $(top.window).width() - 100 : options.width;
                 var _height = opt.common.isEmpty(options.height) ? $(top.window).height() - 100 : options.height;
                 var _framData = opt.common.isEmpty(options.fromData) ? {} : options.fromData;
+                var full = false;
+                //如果是移动端，就使用自适应大小弹窗
+                if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+                    _width = 'auto';
+                    _height = 'auto';
+                    full = true;
+                }
+                var index;
+                //自动适配窗口大小 如果传的大小比所在窗口大 则最大化
+                if(_width !== 'auto' || _height !== 'auto'){
+                    if(_width > $(top.window).width() || _height > $(top.window).height() ){
+                        full = true;
+                    }
+                }
+
                 if(opt.common.isEmpty(options.but)){
                     options.but = true;
                 }
+
                 if(options.but){
                     if(options.clear){
                         _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-trash-o"></i> '+$.i18n.prop("清除"),'<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
                     }else{
                         _btn = ['<i class="fa fa-check"></i> '+$.i18n.prop("确定"), '<i class="fa fa-close"></i> '+$.i18n.prop("取消")];
                     }
-                    if (!opt.common.isEmpty(options.callBack)) {
+
+					if (!opt.common.isEmpty(options.callBack)) {
                         options.yes = function(index, layero) {
                             var iframeWin = layero.find('iframe')[0];
                             if(typeof iframeWin.contentWindow.submitHandler == 'function'){
                                 if(iframeWin.contentWindow.submitHandler(index, layero)){
-                                    options.callBack(index,layero,opt.layer);
+                                    window.setTimeout(function(){
+                                        options.callBack(index,layero,opt.layer);
+                                    },100);
                                 }
                             }else{
                                 /**
@@ -1930,10 +1978,20 @@ if (typeof jQuery === "undefined") {
                         }
                     }else{
                         options.yes = function(index, layero) {
-                            opt.layer.close(index);
+                            var iframeWin = layero.find('iframe')[0];
+                            if(typeof iframeWin.contentWindow.submitHandler == 'function'){
+                                if(iframeWin.contentWindow.submitHandler(index, layero)){
+                                    window.setTimeout(function(){
+                                        opt.layer.close(index);
+                                    },100);
+                                }
+                            }else{
+                                opt.layer.close(index);
+                            }
                         }
                     }
-                    opt.layer.open({
+
+                    index =  opt.layer.open({
                         type: 2,
                         maxmin: true,
                         shadeClose: true,
@@ -1972,7 +2030,7 @@ if (typeof jQuery === "undefined") {
                         }
                     });
                 }else{
-                    opt.layer.open({
+                    index =  opt.layer.open({
                         type: 2,
                         maxmin: true,
                         shadeClose: true,
@@ -1989,6 +2047,10 @@ if (typeof jQuery === "undefined") {
                             }
                         }
                     });
+                }
+
+                if(full){
+                    opt.layer.full(index);
                 }
             },
             // 弹出层全屏 本窗口
