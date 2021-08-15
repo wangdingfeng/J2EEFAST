@@ -172,6 +172,14 @@ public class SysRoleService  extends ServiceImpl<SysRoleMapper, SysRoleEntity> {
 	}
 
 
+	public  boolean bpmSynchronizationRole(){
+		List<SysRoleEntity> list = this.list();
+		rabbitmqProducer.sendSimpleMessage(RabbitInfo.synchronizationRole(), JSONObject.toJSONString(list),
+				IdUtil.fastSimpleUUID(), RabbitInfo.EXCHANGE_NAME, RabbitInfo.KEY);
+		return true;
+	}
+
+
 	public boolean checkRoleNameUnique(SysRoleEntity role) {
 		Long roleId = ToolUtil.isEmpty(role.getId())?-1L:role.getId();
 		SysRoleEntity info = this.baseMapper.checkRoleNameUnique(role.getRoleName());

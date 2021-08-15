@@ -68,6 +68,7 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		String email = (String) params.get("email");
 		String compId = (String) params.get("compId");
 		String deptId = (String) params.get("deptId");
+		String roleKey = (String) params.get("roleKey");
 		Page<SysUserEntity> page = sysUserMapper.findPage(	new Query<SysUserEntity>(params).getPage(),
 															StrUtil.nullToDefault(username,""),
 															StrUtil.nullToDefault(status,""),
@@ -76,6 +77,7 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 															StrUtil.nullToDefault(compId,""),
 															StrUtil.nullToDefault(deptId,""),
 															StrUtil.nullToDefault(name,""),
+															StrUtil.nullToDefault(roleKey,""),
 															(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}
@@ -180,6 +182,20 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 		}
 
 		return false;
+	}
+
+	/**
+	 * 同步用户到工作流
+	 * @return
+	 */
+	public boolean bpmSynchronizationUser(){
+		List<SysUserEntity> userList = this.list();
+		userList.forEach(e->{
+			e.setRoleIdList(sysUserRoleService.findRoleIdList(e.getId()));
+		});
+		rabbitmqProducer.sendSimpleMessage(RabbitInfo.synchronizationUser(),JSONArray.toJSONString(userList),
+				IdUtil.fastSimpleUUID(),RabbitInfo.EXCHANGE_NAME, RabbitInfo.KEY);
+		return true;
 	}
 
 	/**
@@ -297,8 +313,8 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	 * @param username
 	 * @return
 	 */
-	public SysUserEntity findUserByUserName(String username){
-		return sysUserMapper.findUserByUserName(username);
+	public SysUserEntity findUserByUserName(String username,String tenantId){
+		return sysUserMapper.findUserByUserName(username,tenantId);
 	}
 
 	/**
@@ -306,8 +322,8 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	 * @param mobile
 	 * @return
 	 */
-	public SysUserEntity findUserByMobile(String mobile){
-		return sysUserMapper.findUserByMobile(mobile);
+	public SysUserEntity findUserByMobile(String mobile,String tenantId){
+		return sysUserMapper.findUserByMobile(mobile,tenantId);
 	}
 
 	/**
@@ -315,8 +331,8 @@ public class SysUserService  extends ServiceImpl<SysUserMapper,SysUserEntity> {
 	 * @param email
 	 * @return
 	 */
-	public SysUserEntity findUserByEmail(String email){
-		return sysUserMapper.findUserByEmail(email);
+	public SysUserEntity findUserByEmail(String email,String tenantId){
+		return sysUserMapper.findUserByEmail(email,tenantId);
 	}
 
 	public boolean changeStatus(SysUserEntity user) {
