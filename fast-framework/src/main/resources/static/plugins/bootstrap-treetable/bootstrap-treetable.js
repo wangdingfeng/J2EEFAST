@@ -306,7 +306,7 @@
             // 先清空
             $tbody.html("");
             if (!data || data.length <= 0) {
-                var _empty = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;">没有找到匹配的记录</div></td></tr>'
+                var _empty = '<tr class="no-records-found"><td colspan="' + options.columns.length + '">'+formatNoMatches()+'</td></tr>'
                 $tbody.html(_empty);
                 return;
             }
@@ -796,18 +796,18 @@
                         //     // 只在字段没有formatter时才添加title属性
                         //     $td.attr("title",item[column.field]);
                         // }
-                        if(options.showTitle){
-                            if(column.field){
-                               var  reg = /<[^>]+>/g;
-                               if(reg.test(value)){
-                                   if($(value).is('span')){
-                                     $td.attr("title",$(value).html());
-                                   }
-                               }else{
-                                   $td.attr("title",value);
-                               }
-                            }
-                        }
+                        // if(options.showTitle){
+                        //     if(column.field){
+                        //        var  reg = /<[^>]+>/g;
+                        //        if(reg.test(value)){
+                        //            if($(value).is('span')){
+                        //              $td.attr("title",$(value).html());
+                        //            }
+                        //        }else{
+                        //            $td.attr("title",value);
+                        //        }
+                        //     }
+                        // }
                     } else {
                         var value = getItemField(item, column.field);
                         if(options.showTitle){
@@ -1189,7 +1189,7 @@
             }
             return value;
         };
-        // ruoyi 发起对目标(target)函数的调用
+        //拷贝 表格函数
         var calculateObjectValue = function (self, name, args, defaultValue) {
             var func = name;
 
@@ -1215,6 +1215,21 @@
                 return sprintf.apply(this, [name].concat(args));
             }
             return defaultValue;
+        };
+
+        var formatNoMatches = function(){
+                return  '<div class="table-empty"><div class="table-empty__image" style="height: 50px;">' +
+                    '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNDEiIHhtbG5zPSJod' +
+                    'HRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxKSIgZmlsbD0' +
+                    'ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgIDxlbGxpcHNlIGZpbGw9IiNGNUY1RjUiIGN4PSIzMiIgY3' +
+                    'k9IjMzIiByeD0iMzIiIHJ5PSI3Ii8+CiAgICA8ZyBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0iI0Q5RDlEO' +
+                    'SI+CiAgICAgIDxwYXRoIGQ9Ik01NSAxMi43Nkw0NC44NTQgMS4yNThDNDQuMzY3LjQ3NCA0My42NTYgMCA0Mi45MD' +
+                    'cgMEgyMS4wOTNjLS43NDkgMC0xLjQ2LjQ3NC0xLjk0NyAxLjI1N0w5IDEyLjc2MVYyMmg0NnYtOS4yNHoiLz4KICAgI' +
+                    'CAgPHBhdGggZD0iTTQxLjYxMyAxNS45MzFjMC0xLjYwNS45OTQtMi45MyAyLjIyNy0yLjkzMUg1NXYxOC4xMzdDNTUgM' +
+                    'zMuMjYgNTMuNjggMzUgNTIuMDUgMzVoLTQwLjFDMTAuMzIgMzUgOSAzMy4yNTkgOSAzMS4xMzdWMTNoMTEuMTZjMS4yMz' +
+                    'MgMCAyLjIyNyAxLjMyMyAyLjIyNyAyLjkyOHYuMDIyYzAgMS42MDUgMS4wMDUgMi45MDEgMi4yMzcgMi45MDFoMTQuNzU' +
+                    'yYzEuMjMyIDAgMi4yMzctMS4zMDggMi4yMzctMi45MTN2LS4wMDd6IiBmaWxsPSIjRkFGQUZBIi8+CiAgICA8L2c+CiAgP' +
+                    'C9nPgo8L3N2Zz4K" alt=""></div><p class="table-empty__desc">'+$.i18n.prop('暂无数据')+'</p></div>';
         };
         // 初始化
         init();
@@ -1324,7 +1339,7 @@
         async: false,              //异步加载数据
         asynUrl: null,             //异步加载数据URL
         responseHandler: function(res) {
-            return false;
+            return res;
         }
     };
 })(jQuery);

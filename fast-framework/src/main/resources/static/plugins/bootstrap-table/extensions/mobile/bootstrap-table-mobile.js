@@ -81,6 +81,7 @@
         }
 
         var that = this;
+
         $(window).resize(function () {
             changeView(that, $(this).width(), $(this).height())
         });

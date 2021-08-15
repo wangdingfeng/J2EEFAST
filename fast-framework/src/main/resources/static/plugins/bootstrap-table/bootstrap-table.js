@@ -7,7 +7,7 @@
 /*!
  * 基于源码修改
  * @author ZhouHuan
- * @version 2020-12-04
+ * @version 2021-06-04
  * --------------------------------------------------
  * 1.后台分页时前台删除最后一页所有数据refresh刷新后无数据问题
  * 2.新增表格头自动居中适配问题
@@ -72,17 +72,19 @@
         });
         return index;
     };
-
+    //TODO J2eeFAST 修复隐藏列下标问题
     // http://jsfiddle.net/wenyi/47nz7ez9/3/
     var setFieldIndex = function (columns) {
         var i, j, k,
-            totalCol = 0,
-            flag = [];
+            totalCol = 0, //总列
+            flag = []; // 每个表头单位格标志
 
         for (i = 0; i < columns[0].length; i++) {
+            //console.log(columns[0][i].visible);
+            //totalCol +=((typeof columns[0][i].visible === 'undefined' || columns[0][i].visible) ? (columns[0][i].colspan || 1) : 0);
             totalCol += columns[0][i].colspan || 1;
         }
-
+        //循环表头
         for (i = 0; i < columns.length; i++) {
             flag[i] = [];
             for (j = 0; j < totalCol; j++) {
@@ -92,11 +94,14 @@
 
         for (i = 0; i < columns.length; i++) {
             for (j = 0; j < columns[i].length; j++) {
+                //debugger;
                 var r = columns[i][j],
-                    rowspan = r.rowspan || 1,
-                    colspan = r.colspan || 1,
-                    index = $.inArray(false, flag[i]);
+                    rowspan = r.rowspan || 1, //合并行
+                    colspan = r.colspan || 1, //合并列
 
+                    index = $.inArray(false, flag[i]);
+                //TODO 复杂表头 列有隐藏 直接剔除
+                if(typeof r.visible != 'undefined' && !r.visible && columns.length > 1) continue;
                 if (colspan === 1) {
                     r.fieldIndex = index;
                     // when field is undefined, use index instead
@@ -711,25 +716,22 @@
         }
         this.options.columns = $.extend(true, [], columns, this.options.columns);
         this.columns = [];
-
         setFieldIndex(this.options.columns);
         $.each(this.options.columns, function (i, columns) {
+
             $.each(columns, function (j, column) {
                 column = $.extend({}, BootstrapTable.COLUMN_DEFAULTS, column);
 
                 if (typeof column.fieldIndex !== 'undefined') {
                     that.columns[column.fieldIndex] = column;
                 }
-
                 that.options.columns[i][j] = column;
             });
         });
-
         // if options.data is setting, do not process tbody data
         if (this.options.data.length) {
             return;
         }
-
         var m = [];
         this.$el.find('>tbody>tr').each(function (y) {
             var row = {};
@@ -773,6 +775,9 @@
         if (data.length) this.fromHtml = true;
     };
 
+    /**
+     * 初始化表头
+     */
     BootstrapTable.prototype.initHeader = function () {
         var that = this,
             visibleColumns = {},
@@ -791,8 +796,7 @@
         };
 
         //
-
-
+        //循环options.columns 组建表头
         $.each(this.options.columns, function (i, columns) {
             html.push('<tr>');
 
@@ -834,7 +838,9 @@
                     '36px' : (width ? width + unitWidth : undefined));
                 //设置复杂表头合并列数据居中
                 style += column.rowspan ? 'vertical-align: inherit; ':'';
-                if (typeof column.fieldIndex !== 'undefined') {
+
+                if (typeof column.fieldIndex !== 'undefined'
+                    || typeof column.visible != 'undefined') {
                     that.header.fields[column.fieldIndex] = column.field;
                     that.header.styles[column.fieldIndex] = align + style;
                     that.header.classes[column.fieldIndex] = class_;
@@ -937,7 +943,9 @@
             this.$tableHeader.show();
             this.$tableLoading.css('top', this.$header.outerHeight() + 1);
             // Assign the correct sortable arrow
+            // 表头设置排序箭头
             this.getCaret();
+            //设置监听事件
             $(window).on('resize.bootstrap-table', $.proxy(this.resetWidth, this));
         }
 
@@ -988,7 +996,7 @@
         this.initSort();
     };
 
-     BootstrapTable.prototype.initSort = function () {
+    BootstrapTable.prototype.initSort = function () {
         var that = this,
             name = this.options.sortName,
             order = this.options.sortOrder === 'desc' ? -1 : 1,
@@ -1088,6 +1096,9 @@
         this.initBody();
     };
 
+    /**
+     * 初始化表格工具栏
+     */
     BootstrapTable.prototype.initToolbar = function () {
         var that = this,
             html = [],
@@ -1154,7 +1165,8 @@
                 '</button>');
         }
 
-        if (this.options.showColumns) {
+        //是否隐藏列下拉工具 如果是复杂表头不显示
+        if (this.options.showColumns && this.options.columns.length == 0) {
             html.push(sprintf('<div class="keep-open btn-group" title="%s">',
                 this.options.formatColumns()),
                 '<button type="button" class="btn' +
@@ -1165,7 +1177,6 @@
                 ' <span class="caret"></span>',
                 '</button>',
                 '<ul class="dropdown-menu" role="menu">');
-
             $.each(this.columns, function (i, column) {
                 if (column.radio || column.checkbox) {
                     return;
@@ -1362,6 +1373,7 @@
         }
     };
 
+    //初始化分页条
     BootstrapTable.prototype.initPagination = function () {
         if (!this.options.pagination) {
             this.$pagination.hide();
@@ -1676,6 +1688,7 @@
         this.trigger('pre-body', data);
 
         this.$body = this.$el.find('>tbody');
+
         if (!this.$body.length) {
             this.$body = $('<tbody></tbody>').appendTo(this.$el);
         }
@@ -1744,7 +1757,6 @@
                     '</a>',
                     '</td>');
             }
-
             $.each(this.header.fields, function (j, field) {
 
                 var text = '',
@@ -1761,11 +1773,9 @@
                 if (that.fromHtml && typeof value === 'undefined') {
                     return;
                 }
-
                 if (!column.visible) {
                     return;
                 }
-
                 if (that.options.cardView && !column.cardVisible) {
                     return;
                 }
@@ -1891,6 +1901,7 @@
 
         // show no records
         if (!html.length) {
+            // 如果没有数据
             html.push('<tr class="no-records-found">',
                 sprintf('<td colspan="%s">%s</td>',
                     this.$header.find('th').length, this.options.formatNoMatches()),
@@ -1914,10 +1925,10 @@
                 column = that.columns[getFieldIndex(that.columns, field)],
                 value = getItemField(item, field, that.options.escape);
 
-            if(that.options.fixedColumns){
-                $("#"+that.options.id+"-left-fixed-body-columns").find('tbody').find('tr[data-index="'+$tr.data('index')+'"]')
-                    .children(".bs-checkbox").find("input[name=btSelectItem]").trigger("click");
-            }else{
+            // if(that.options.fixedColumns){
+            //     $("#"+that.options.id+"-left-fixed-body-columns").find('tbody').find('tr[data-index="'+$tr.data('index')+'"]')
+            //         .children(".bs-checkbox").find("input[name=btSelectItem]").trigger("click");
+            // }else{
                 if ($td.find('.detail-icon').length) {
                     return;
                 }
@@ -1932,7 +1943,7 @@
                         $selectItem[0].click(); // #144: .trigger('click') bug
                     }
                 }
-            }
+            // }
         });
 
         this.$body.find('> tr[data-index] > td > .detail-icon').off('click').on('click', function () {
@@ -1956,15 +1967,40 @@
                 }
                 that.trigger('expand-row', index, row, $element);
             }
-            that.resetView();
+            //that.resetView();
         });
 
         this.$selectItem = this.$body.find(sprintf('[name="%s"]', this.options.selectItemName));
         this.$selectItem.off('click').on('click', function (event) {
 
-            //勾选点击事件
-            event.stopImmediatePropagation();
+             // 允许其他监听
+            //event.stopImmediatePropagation();
+            //
+            // var $this = $(this),
+            //     checked = $this.prop('checked'),
+            //     row = that.data[$this.data('index')];
+            //
+            // if ($(this).is(':radio') || that.options.singleSelect) {
+            //     $.each(that.options.data, function (i, row) {
+            //         row[that.header.stateField] = false;
+            //     });
+            // }
+            //
+            // row[that.header.stateField] = checked;
+            //
+            // if (that.options.singleSelect) {
+            //     that.$selectItem.not(this).each(function () {
+            //         that.data[$(this).data('index')][that.header.stateField] = false;
+            //     });
+            //     that.$selectItem.filter(':checked').not(this).prop('checked', false);
+            // }
+            //
+            // that.updateSelected();
+            // that.trigger(checked ? 'check' : 'uncheck', row, $this);
 
+
+            //勾选点击事件
+            //event.stopImmediatePropagation();
             var $this = $(this),
                 checked = $this.prop('checked'),
                 row = that.data[$this.data('index')];
@@ -1974,8 +2010,16 @@
                 var index = $this.data('index');
                 // checked? that.$body.find('tr[data-index="'+index+'"]').addClass('selected'): that.$body.find('tr[data-index="'+index+'"]').removeClass('selected');
                 // console.log("----"+that.$body.find('tr[data-index="'+index+'"]').children(".bs-checkbox").html());
+                // if(that.options.rightFixedColumns){
+                //     that.$rightfixedBody.find('tr[data-index="'+index+'"]').each(function () {
+                //         checked  ? $(this).addClass('selected') : $(this).removeClass('selected');
+                //     })
+                // }
+
+
                 $this.parent().parent('tr[data-index="'+index+'"]').toggleClass("selected");
                 that.$body.find('tr[data-index="'+index+'"]').children(".bs-checkbox").find("input[name=btSelectItem]").prop('checked', checked);
+
                 if (that.options.maintainSelected && $(this).is(':radio')) {
                     $.each(that.options.data, function (i, row) {
                         row[that.header.stateField] = false;
@@ -2014,6 +2058,7 @@
                 that.updateSelected();
                 that.trigger(checked ? 'check' : 'uncheck', row, $this);
             }
+
         });
 
         $.each(this.header.events, function (i, events) {
@@ -2053,7 +2098,23 @@
         });
 
         this.updateSelected();
+
+        if(data.length == 0) return;
+
         this.resetView();
+
+        //TODO 监听窗体变化重置表格大小
+        this.$tableBodyResizeWidth = this.$tableBody.width();
+        this.$tableBody.off('resize').on('resize',function(){
+
+            if($(this).width() == 0 || that.$tableBodyResizeWidth == $(this).width()){
+                return;
+            }
+
+            that.$tableBodyResizeWidth = $(this).width();
+            //重置视图
+            setTimeout(that.resetView(), 100);
+        });
 
         this.trigger('post-body', data);
     };
@@ -2075,6 +2136,7 @@
         }
 
         if (!this.options.firstLoad && !_isFirstLoad.includes(this.options.id)) {
+
             //设置复杂表头表格添加边框
             if(this.options.showBorder && _isFirstLoad.length == 0){
                 //首次
@@ -2138,23 +2200,18 @@
         if (data === false) {
             return;
         }
-
         if (!silent) {
             //TODO 冻结列扩展
-            if(this.options.fixedColumns){
-                if($("#"+this.options.id + "-left-fixed-table-columns")){
-                    $("#"+this.options.id + "-left-fixed-table-columns").hide();
-                }
-                if($("#"+this.options.id + "-left-fixed-body-columns")){
-                    $("#"+this.options.id + "-left-fixed-body-columns").hide();
-                }
-            }
-            if(this.options.rightFixedColumns){
-                if($("#"+this.options.id + "-right-fixed-table-columns")){
-                    $("#"+this.options.id + "-right-fixed-table-columns").hide();
-                }
-            }
-            //
+            // if(this.options.fixedColumns){
+            //     if($("#"+this.options.id + "-left-fixed-table-columns")){
+            //         $("#"+this.options.id + "-left-fixed-table-columns").hide();
+            //     }
+            // }
+            // if(this.options.rightFixedColumns){
+            //     if($("#"+this.options.id + "-right-fixed-table-columns")){
+            //         $("#"+this.options.id + "-right-fixed-table-columns").hide();
+            //     }
+            // }
             this.$tableLoading.show();
         }
         request = $.extend({}, calculateObjectValue(null, this.options.ajaxOptions), {
@@ -2193,9 +2250,16 @@
                 that.$tableLoading.hide();
             },
             error: function (xhr, textStatus) {
-                opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
-                that.trigger('load-error', JSON.parse(xhr.responseText).msg || xhr.responseText, xhr);
-               that.$tableLoading.hide();
+            	try{
+            		opt.error(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                    that.trigger('load-error', JSON.parse(xhr.responseText).msg || xhr.responseText, xhr);
+                    that.$tableLoading.hide();
+            	}catch(e){
+            		console.error(xhr);
+            		that.trigger('load-error', '交易异常');
+                    that.$tableLoading.hide();
+            	}
+                
             }
         });
         if($('meta[name="csrf-token"]').attr("content")){
@@ -2279,7 +2343,7 @@
         // fix #61: the hidden table reset header bug.
         // fix bug: get $el.css('width') error sometime (height = 500)
         clearTimeout(this.timeoutId_);
-        this.timeoutId_ = setTimeout($.proxy(this.fitHeader, this), this.$el.is(':hidden') ? 100 : 0);
+        this.timeoutId_ = setTimeout($.proxy(this.fitHeader, this), this.$el.is(':hidden') ? 500 : 0);
     };
 
     BootstrapTable.prototype.fitHeader = function () {
@@ -2317,12 +2381,13 @@
 
         this.$header_ = this.$header.clone(true, true);
         this.$selectAll_ = this.$header_.find('[name="btSelectAll"]');
+
         this.$tableHeader.css({
             'margin-right': scrollWidth
-        }).find('table').css('width', this.$el.outerWidth())
+        }).find('table')
+            .css('width', this.$el.width())
             .html('').attr('class', this.$el.attr('class'))
             .append(this.$header_);
-
 
         focusedTemp = $('.focus-temp:visible:eq(0)');
         if (focusedTemp.length > 0) {
@@ -2341,7 +2406,7 @@
         this.$body.find('>tr:first-child:not(.no-records-found) > *').each(function (i) {
             var $this = $(this),
                 index = i;
-
+            //console.log(index);
             if (that.options.detailView && !that.options.cardView) {
                 if (i === 0) {
                     that.$header_.find('th.detail').find('.fht-cell').width($this.innerWidth());
@@ -2350,9 +2415,10 @@
             }
 
             var $th = that.$header_.find(sprintf('th[data-field="%s"]', visibleFields[index]));
-            if ($th.length > 1) {
-                $th = $($ths[$this[0].cellIndex]);
-            }
+            //console.log($th.length);
+            // if ($th.length > 1) {
+            //     $th = $($ths[$this[0].cellIndex]);
+            // }
 
             $th.find('.fht-cell').width($this.innerWidth());
         });
@@ -2360,11 +2426,12 @@
         // TODO: it's probably better improving the layout than binding to scroll event
         this.$tableBody.off('scroll').on('scroll', function () {
             that.$tableHeader.scrollLeft($(this).scrollLeft());
-
+            //that
             if (that.options.showFooter && !that.options.cardView) {
                 that.$tableFooter.scrollLeft($(this).scrollLeft());
             }
         });
+
         that.trigger('post-header');
     };
 
@@ -2373,7 +2440,9 @@
             data = that.getData(),
             colspan = 0,
             html = [];
-
+        if(data && data.length == 0){
+            return;
+        }
         if (!this.options.showFooter || this.options.cardView) { //do nothing
             return;
         }
@@ -2384,7 +2453,9 @@
         if(this.$body.find('tr:last').data('index') == '-99999'){
             return;
         }
+        //console.log(this.columns);
         $.each(this.columns, function (i, column) {
+
             var key,
                 falign = '', // footer align style
                 valign = '',
@@ -2412,8 +2483,10 @@
                 pywh += column.width;
             }
             var widthpx = sprintf('width: %s; ', (column.checkbox || column.radio) && !width ?
-            '36px' : (width ? width + unitWidth : undefined));
+                '36px' : (width ? width + unitWidth : undefined));
+
             if (!column.visible) {
+                colspan++;
                 return;
             }
 
@@ -2429,16 +2502,15 @@
                     csses.push(key + ': ' + style.css[key]);
                 }
             }
-            //console.log(style);
             var flag = false;
 
             if(column.footColspan){
-                colspan = column.footColspan + i;
-               flag = true;
+                colspan = colspan + column.footColspan;
+                flag = true;
             }
-
+            //console.log("i:"+i + " colspan:"+colspan);
             if(flag){
-                html.push('<td', class_, sprintf(' style="%s"', falign + valign + widthpx + csses.concat().join('; ')),sprintf('colspan="%s"',column.footColspan), '>');
+                html.push('<td', class_,sprintf(' title="%s"',column.title) ,sprintf(' style="%s"', falign + valign + widthpx + csses.concat().join('; ')),sprintf('colspan="%s"',column.footColspan), '>');
                 // html.push('<div>');
                 html.push(calculateObjectValue(column, column.footerFormatter, [data], '') || '');//&nbsp;
                 // html.push('</div>');
@@ -2447,7 +2519,7 @@
                 html.push('</td>');
             }else{
                 if(i >= colspan){
-                    html.push('<td', class_, sprintf(' style="%s"', falign + valign + widthpx + csses.concat().join('; ')), '>');
+                    html.push('<td', class_,sprintf(' title="%s"',column.title), sprintf(' style="%s"', falign + valign + widthpx + csses.concat().join('; ')), '>');
                     // html.push('<div>');
                     html.push(calculateObjectValue(column, column.footerFormatter, [data], '') || '');//&nbsp;
                     // html.push('</div>');
@@ -2457,7 +2529,6 @@
                 }
             }
         });
-
         this.$body.find('tr:last').after($('<tr data-index="-99999" style="background-color: #eaeaea;"></tr>').append(html.join('')));
         // this.$tableFooter.find('tr').html(html.join(''));
         // this.$tableFooter.show();
@@ -2564,7 +2635,7 @@
             // console.log("--->>>>this.options.height:" + this.options.height);
             // console.log("--->>>>height:" + height);
             // this.$el.css('height',this.options.height + 'px');
-                //.css('overflow-y', 'hidden');
+            //.css('overflow-y', 'hidden');
         }
 
         if (this.options.cardView) {
@@ -2755,7 +2826,7 @@
         this.initBody(true);
     };
 
-    BootstrapTable.prototype.insertRow = function (params) {
+    BootstrapTable.prototype.insertRow = function (params,callback) {
         if (!params.hasOwnProperty('index') || !params.hasOwnProperty('row')) {
             return;
         }
@@ -2764,6 +2835,9 @@
         this.initPagination();
         this.initSort();
         this.initBody(true);
+        if(typeof callback == "function"){
+            calculateObjectValue(this, callback, [params.row], '');
+        }
     };
 
     BootstrapTable.prototype.updateRow = function (params) {
@@ -3292,19 +3366,19 @@ var _isFirstLoad = [];
 var union = function (b, a,k) {
     if ($.isArray(a)) {
         $.each(a, function (c, d) {
-        	if(opt.common.isPrimitive(d)){
-        		if ($.inArray(d, b) == -1) {
+            if(opt.common.isPrimitive(d)){ //判断是否
+                if ($.inArray(d, b) == -1) {
                     b[b.length] = d
                 }
-        	}else{
-        		if(b.length === 0){
+            }else{
+                if(b.length === 0){
                     b[b.length] = d
                 }else{
                     if(!array_isf(b,d,k)){
                         b[b.length] = d
                     }
                 }
-        	}
+            }
         })
     } else {
         if(b.length === 0){
@@ -3320,14 +3394,14 @@ var union = function (b, a,k) {
 var difference = function (c, b,k) {
     if ($.isArray(b)) { //是否是数组
         $.each(b, function (e, f) {
-        	if(opt.common.isPrimitive(f)){
-        		var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
+            if(opt.common.isPrimitive(f)){
+                var d = $.inArray(f, c); //搜索指定的值,并返回其索引值
                 if (d != -1) {
                     c.splice(d, 1)
                 }
-        	}else{
-        		array_diff(c,f,k);
-        	}
+            }else{
+                array_diff(c,f,k);
+            }
         })
     } else {
         array_diff(c,b,k);
@@ -3356,3 +3430,79 @@ var _ = {
     "union": union,
     "difference": difference
 };
+
+//监听div大小变化
+(function($, h, c) {
+    var a = $([]),
+        e = $.resize = $.extend($.resize, {}),
+        i,
+        k = "setTimeout",
+        j = "resize",
+        d = j + "-special-event",
+        b = "delay",
+        f = "throttleWindow";
+    e[b] = 250;
+    e[f] = true;
+    $.event.special[j] = {
+        setup: function() {
+            if (!e[f] && this[k]) {
+                return false;
+            }
+            var l = $(this);
+            a = a.add(l);
+            $.data(this, d, {
+                w: l.width(),
+                h: l.height()
+            });
+            if (a.length === 1) {
+                g();
+            }
+        },
+        teardown: function() {
+            if (!e[f] && this[k]) {
+                return false;
+            }
+            var l = $(this);
+            a = a.not(l);
+            l.removeData(d);
+            if (!a.length) {
+                clearTimeout(i);
+            }
+        },
+        add: function(l) {
+            if (!e[f] && this[k]) {
+                return false;
+            }
+            var n;
+            function m(s, o, p) {
+                var q = $(this),
+                    r = $.data(this, d);
+                r.w = o !== c ? o: q.width();
+                r.h = p !== c ? p: q.height();
+                n.apply(this, arguments);
+            }
+            if ($.isFunction(l)) {
+                n = l;
+                return m;
+            } else {
+                n = l.handler;
+                l.handler = m;
+            }
+        }
+    };
+    function g() {
+        i = h[k](function() {
+                a.each(function() {
+                    var n = $(this),
+                        m = n.width(),
+                        l = n.height(),
+                        o = $.data(this, d);
+                    if (m !== o.w || l !== o.h) {
+                        n.trigger(j, [o.w = m, o.h = l]);
+                    }
+                });
+                g();
+            },
+            e[b]);
+    }
+})(jQuery, this);

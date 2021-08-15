@@ -43,6 +43,7 @@
 }
 
 .fixed-table-footer,
+
 .fixed-table-header {
     overflow: hidden;
 }
@@ -255,6 +256,11 @@
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-dot {
     animation-delay: .3s;
 }
+.left-fixed-table-columns .fixed-table-body {
+    overflow: hidden;
+    height: 100%;
+}
+
 .fixed-table-body .card-view .title {
     font-weight: bold;
     display: inline-block;
@@ -264,6 +270,10 @@
 
 /* support bootstrap 2 */
 .fixed-table-body thead th .th-inner {
+    box-sizing: border-box;
+}
+
+.fixed-table-header thead th .th-inner {
     box-sizing: border-box;
 }
 
