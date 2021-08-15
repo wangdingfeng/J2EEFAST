@@ -6,10 +6,12 @@
 package com.j2eefast.framework.sys.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.j2eefast.common.core.base.entity.TableEntity;
+import com.j2eefast.common.core.base.entity.TableZtreeEntity;
 import com.j2eefast.common.core.controller.BaseController;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class SysComponentController extends BaseController {
 		mmap.put("parentIds",super.getPara("parentIds",""));
 		return urlPrefix + "/treeselect";
 	}
-	
+
 	/**
 	 * 跳转表格选择页面
 	 * @param mmap
@@ -69,20 +71,20 @@ public class SysComponentController extends BaseController {
 	 */
 	@RequestMapping(value = "/tableselect", method = RequestMethod.POST)
 	public String tableselect(ModelMap mmap) {
-		
-		
+
 		// 结构数据URL
 		mmap.put("url",super.getPara("url"));
 		// 选中ID
 		mmap.put("selectId",super.getPara("selectId"));
 		//节点名称
 		mmap.put("selectName",super.getPara("selectName"));
-		
+
 		//表格展示信息
 		String talbeInfo = super.getPara("tableInfo");
 		JSONArray json = JSONUtil.parseArray(talbeInfo);
 		List<TableEntity> tablelsit = new ArrayList<TableEntity>(json.size());
 		boolean query = false;
+		int queryNum = 0;
 		for(int i=0; i<json.size(); i++) {
 			JSONObject o =  (JSONObject) json.get(i);
 			TableEntity t = new TableEntity();
@@ -90,13 +92,35 @@ public class SysComponentController extends BaseController {
 			t.setDict(o.getStr("dict",""));
 			t.setQuery(o.getStr("query","").equals("true"));
 			t.setTitle(o.getStr("title",""));
+			if(o.containsKey("zTree")){
+				JSONObject ztree = o.getJSONObject("zTree");
+				TableZtreeEntity ztreeEntity = new TableZtreeEntity();
+				ztreeEntity.setClear(ztree.getBool("isClear",true));
+				ztreeEntity.setUrl(ztree.getStr("url",""));
+				ztreeEntity.setName(ztree.getStr("name",t.getTitle()));
+				ztreeEntity.setKeyId(ztree.getStr("keyId","id"));
+				ztreeEntity.setExpandLevel(ztree.getBool("expandLevel",false));
+				ztreeEntity.setSelectParent(ztree.getBool("isSelectParent",false));
+				ztreeEntity.setChecked(ztree.getBool("checked",false));
+				t.setZtree(ztreeEntity);
+				t.setFiledQueryZtree(true);
+			}else{
+				t.setFiledQueryZtree(false);
+			}
 			if(t.isQuery()) {
 				query = true;
+				queryNum++;
 			}
 			tablelsit.add(t);
 		}
 		mmap.put("tableInfo",tablelsit);
-		
+
+		if(super.getPara("checked").equals("true")){
+			queryNum++;
+		}
+		//查询字段数量
+		mmap.put("queryNum",queryNum);
+
 		//是否可复选 单选还是多选
 		mmap.put("checked", super.getPara("checked").equals("true"));
 		//是否有机构查询
@@ -107,9 +131,11 @@ public class SysComponentController extends BaseController {
 		mmap.put("keyName",super.getPara("keyName"));
 
 		mmap.put("separator",super.getPara("separator"));
+
+		mmap.put("layout", StrUtil.blankToDefault(super.getPara("layout"),""));
 		//是否需要查询
 		mmap.put("query", query);
-		
+
 		return urlPrefix + "/tableselect";
 	}
 
@@ -131,6 +157,7 @@ public class SysComponentController extends BaseController {
 		String extName = FileUtil.extName(fileName);
 		mmap.put("fileUrl",fileUrl);
 		mmap.put("extName",extName);
+		mmap.put("fileName",fileName);
 		return urlPrefix + "/fileView";
 	}
 
