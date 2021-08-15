@@ -11,6 +11,7 @@ import java.util.Map;
  * @description: 由于SimpleSession lastAccessTime更改后也会调用SessionDao update方法，
  * 增加标识位，如果只是更新lastAccessTime SessionDao update方法直接返回
  */
+@Deprecated
 public class ShiroSession extends SimpleSession implements Serializable {
     
 	private static final long serialVersionUID = 1L;

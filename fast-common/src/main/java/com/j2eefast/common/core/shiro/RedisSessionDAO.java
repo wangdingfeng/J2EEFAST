@@ -16,6 +16,10 @@ import org.springframework.data.redis.serializer.SerializationException;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * 实现shiro Session 共享存放 redis
+ * @author huanzhou
+ */
 @Slf4j
 public class RedisSessionDAO extends AbstractSessionDAO {
 
@@ -27,7 +31,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     @Autowired
     @Lazy
     private RedisUtil redisUtil;
-    @Value("${fast.csrf.enabled: false}")
+    @Value("#{ @environment['fast.csrf.enabled'] ?: false }")
     private boolean csrfEnabled;
 
     /**
@@ -42,20 +46,17 @@ public class RedisSessionDAO extends AbstractSessionDAO {
 
     private boolean sessionInMemoryEnabled = DEFAULT_SESSION_IN_MEMORY_ENABLED;
 
-    // expire time in seconds
-    private static final int DEFAULT_EXPIRE = -2;
-    private static final int NO_EXPIRE = -1;
-
-    /**
-     * Please make sure expire is longer than sesion.getTimeout()
-     */
-    private int expire = DEFAULT_EXPIRE;
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
     @SuppressWarnings("rawtypes")
-	private static ThreadLocal sessionsInThread = new ThreadLocal();
+    private static ThreadLocal sessionsInThread = new ThreadLocal();
 
+    /**
+     * 更新到redis
+     * @param session
+     * @throws UnknownSessionException
+     */
     @Override
     public void update(Session session) throws UnknownSessionException {
         //如果会话过期/停止 没必要再更新了
@@ -63,17 +64,6 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
                 return;
             }
-
-            if (session instanceof ShiroSession) {
-                // 如果没有主要字段(除lastAccessTime以外其他字段)发生改变
-                ShiroSession ss = (ShiroSession) session;
-                if (!ss.isChanged()) {
-                    return;
-                }
-                //如果没有返回 证明有调用 setAttribute往redis 放的时候永远设置为false
-                ss.setChanged(false);
-            }
-
             this.saveSession(session);
             if (this.sessionInMemoryEnabled) {
                 this.setSessionToThreadLocal(session.getId(), session);
@@ -95,13 +85,6 @@ public class RedisSessionDAO extends AbstractSessionDAO {
                 if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
                     break;
                 }
-                if (session instanceof ShiroSession) {
-                    // 如果没有主要字段(除lastAccessTime以外其他字段)发生改变
-                    ShiroSession ss = (ShiroSession) session;
-                    if (!ss.isChanged()) {
-                        break;
-                    }
-                }
                 Subject s = new Subject.Builder().session(session).buildSubject();
                 if(s.isAuthenticated()){
                     flag ++;
@@ -119,31 +102,23 @@ public class RedisSessionDAO extends AbstractSessionDAO {
      * @throws UnknownSessionException
      */
     private void saveSession(Session session) throws UnknownSessionException {
+        log.info("更新保存:{}",session.getId());
         if (session == null || session.getId() == null) {
             log.error("session or session id is null");
             throw new UnknownSessionException("session or session id is null");
         }
         String key = getRedisSessionKey(session.getId());
-        if (expire == DEFAULT_EXPIRE) {
-            this.redisUtil.setSession(key, session, (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
-            if(csrfEnabled) {
-                this.redisUtil.setSession("sys_csrfToken:" + key, Base64Encoder.encode(MD5.create().digestHex16(session.getId().toString())) + Base64Encoder.encode(session.getId().toString()), (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
-            }
-            return;
-        }
-        if (expire != NO_EXPIRE && expire * MILLISECONDS_IN_A_SECOND < session.getTimeout()) {
-            log.warn("Redis session expire time: "
-                    + (expire * MILLISECONDS_IN_A_SECOND)
-                    + " is less than Session timeout: "
-                    + session.getTimeout()
-                    + " . It may cause some problems.");
-        }
-        this.redisUtil.setSession(key, session, expire);
+        this.redisUtil.setSession(key, session, (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
         if(csrfEnabled) {
-            this.redisUtil.setSession("sys_csrfToken:" + key, Base64Encoder.encode(MD5.create().digestHex16(session.getId().toString())) + Base64Encoder.encode(session.getId().toString()), expire);
+            this.redisUtil.setSession("sys_csrfToken:" + key, Base64Encoder.encode(MD5.create().digestHex16(session.getId().toString())) + Base64Encoder.encode(session.getId().toString()), (int) (session.getTimeout() / MILLISECONDS_IN_A_SECOND));
         }
+        return;
     }
 
+    /**
+     * 删除会话
+     * @param session
+     */
     @Override
     public void delete(Session session) {
         if (session == null || session.getId() == null) {
@@ -160,6 +135,10 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         }
     }
 
+    /**
+     * 获取所有活跃的会话
+     * @return
+     */
     @Override
     public Collection<Session> getActiveSessions() {
         Set<Session> sessions = new HashSet<Session>();
@@ -188,7 +167,11 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     }
 
 
-
+    /**
+     * 创建会话
+     * @param session
+     * @return
+     */
     @Override
     protected Serializable doCreate(Session session) {
         if (session == null) {
@@ -201,20 +184,24 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         return sessionId;
     }
 
+    /**
+     * 读取Session 会话
+     * @param sessionId
+     * @return
+     */
     @Override
     protected Session doReadSession(Serializable sessionId) {
+        log.debug("doReadSession-sessionId:{}",sessionId);
         if (sessionId == null) {
-            log.warn("session id is null");
+            log.info("session id is null");
             return null;
         }
-
         if (this.sessionInMemoryEnabled) {
             Session session = getSessionFromThreadLocal(sessionId);
             if (session != null) {
                 return session;
             }
         }
-
         Session session = null;
         log.debug("read session from redis");
         try {
@@ -228,16 +215,16 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         return session;
     }
 
+
+    /*** 单次请求只服务器redis一次限制**/
     @SuppressWarnings("unchecked")
-	private void setSessionToThreadLocal(Serializable sessionId, Session s) {
-		Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
+    private void setSessionToThreadLocal(Serializable sessionId, Session s) {
+        Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
         if (sessionMap == null) {
             sessionMap = new HashMap<Serializable, SessionInMemory>();
             sessionsInThread.set(sessionMap);
         }
-
         removeExpiredSessionInMemory(sessionMap);
-
         SessionInMemory sessionInMemory = new SessionInMemory();
         sessionInMemory.setCreateTime(new Date());
         sessionInMemory.setSession(s);
@@ -261,13 +248,11 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     }
 
     private Session getSessionFromThreadLocal(Serializable sessionId) {
-
         if (sessionsInThread.get() == null) {
             return null;
         }
-
         @SuppressWarnings("unchecked")
-		Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
+        Map<Serializable, SessionInMemory> sessionMap = (Map<Serializable, SessionInMemory>) sessionsInThread.get();
         SessionInMemory sessionInMemory = sessionMap.get(sessionId);
         if (sessionInMemory == null) {
             return null;
@@ -277,7 +262,6 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             sessionMap.remove(sessionId);
             return null;
         }
-
         log.debug("read session from memory");
         return sessionInMemory.getSession();
     }
@@ -289,42 +273,5 @@ public class RedisSessionDAO extends AbstractSessionDAO {
 
     private String getRedisSessionKey(Serializable sessionId) {
         return this.keyPrefix + sessionId;
-    }
-
-    public String getKeyPrefix() {
-        return keyPrefix;
-    }
-
-    public void setKeyPrefix(String keyPrefix) {
-        this.keyPrefix = keyPrefix;
-    }
-
-    public long getSessionInMemoryTimeout() {
-        return sessionInMemoryTimeout;
-    }
-
-    public void setSessionInMemoryTimeout(long sessionInMemoryTimeout) {
-        this.sessionInMemoryTimeout = sessionInMemoryTimeout;
-    }
-
-    public int getExpire() {
-        return expire;
-    }
-
-    public void setExpire(int expire) {
-        this.expire = expire;
-    }
-
-    public boolean getSessionInMemoryEnabled() {
-        return sessionInMemoryEnabled;
-    }
-
-    public void setSessionInMemoryEnabled(boolean sessionInMemoryEnabled) {
-        this.sessionInMemoryEnabled = sessionInMemoryEnabled;
-    }
-
-    @SuppressWarnings("rawtypes")
-	public static ThreadLocal getSessionsInThread() {
-        return sessionsInThread;
     }
 }

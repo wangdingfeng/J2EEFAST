@@ -141,8 +141,6 @@ public class ShiroConfig {
 	@Bean
 	public RedisSessionDAO sessionDAO() {
 		RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-		//session在redis中的保存时间,最好大于session会话超时时间
-		redisSessionDAO.setExpire(1000 * 60 * expireTime + 100);
 		redisSessionDAO.setSessionIdGenerator(new CustomSessionIdGenerator());
 		return redisSessionDAO;
 	}
@@ -168,6 +166,10 @@ public class ShiroConfig {
 		return sessionListener;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Bean("sessionManager")
 	public SessionManager sessionManager() {
 		ShiroSessionManager sessionManager = new ShiroSessionManager();
@@ -205,6 +207,10 @@ public class ShiroConfig {
 		return modularRealmAuthenticator;
 	}
 
+	/**
+	 * 安全管理器
+	 * @return
+	 */
 	@Bean
 	public SecurityManager securityManager() {
 		
