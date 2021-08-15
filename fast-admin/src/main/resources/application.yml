@@ -58,6 +58,7 @@ shiro:
            '/sys/login': 'anon',
            '/favicon.ico': 'anon',
            '/captcha.gif': 'anon',
+           '/tenant/list': 'anon',
            '/captcha/**': 'anon',
            '/**': 'kickout,user'
            }"

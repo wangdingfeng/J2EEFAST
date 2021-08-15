@@ -6,7 +6,7 @@
 productName: J2eeFAST 开源版本
 
 # ¢此版本号最好不要改动、有助于你后期维修解决问题都会用到当前版本¢
-version: 2.2.1
+version: 2.5.0
 
 server:
   tomcat:
@@ -186,16 +186,16 @@ fast:
   demoMode:
     enabled: false
     #配置拦截规则
-    post: 'edit,del,remove,clean,updateAvatar,updateUser,add,resetPwd,updatePass,genCode,uploadLic,status,insertAuthRoles,changeStatus,insertAuthUsers,cancel,upload'
+    post: 'edit,del,remove,clean,updateAvatar,previewData,updateUser,saveReportFile,deleteReportFile,add,resetPwd,updatePass,genCode,uploadLic,status,insertAuthRoles,changeStatus,insertAuthUsers,cancel,upload'
     get: 'del,remove,clean,dirTreeData'
-    urlPatterns: '/sys/*,/tool/*,/file/ueditor/*,/bpm/procdef/*,/bpm/model/*,/app/rest/models,/bpm/processInstance/*,/gen/test/*,/sys/comm/*'
+    urlPatterns: '/sys/*,/tool/*,/file/ueditor/*,/bpm/procdef/*,/bpm/model/*,/app/rest/models,/bpm/processInstance/*,/gen/test/*,/sys/comm/*,/ureport/*'
     ip:
   #是否开启HTTPS false 则以server:port
   ssl:
     enabled: false
   #是否开启ureport2报表功能
   ureport:
-    enabled: true
+    enabled: false
     mysql:
       provider:
          prefix: fast-
@@ -210,7 +210,7 @@ fast:
     # 过滤开关
     enabled: true
     # 排除链接（多个用逗号分隔）
-    excludes: /sys/notice/*,/sys/database/add,/sys/msg/*,/sys/area/load
+    excludes: /sys/notice/*,/sys/database/add,/sys/msg/*,/sys/area/load,/tool/gen/column/*
     # 匹配链接
     urlPatterns: /sys/*,/tool/*
   #是否开启csrf 防护,此开启针对需要系统授权所有的POST请求
@@ -219,14 +219,13 @@ fast:
     #防盗链允许的网站来源地址配置多个URL , 分割
     #urlReferer: 'http:127.0.0.1, http:loclhost'
     # 排除链接（多个用逗号分隔）
-    #excludes: /ureport/*
+    excludes: /ureport/*
   #JTA 分布式事务，建议启用多数据源的时候开启
   jta:
     enabled: false
   #是否数据库脚本字段升级
   updateDb:
     auto: false
-
   #是否开启多租户模式（SAAS模式）
   tenantModel:
     enabled: false
@@ -249,7 +248,7 @@ web:
       # 在配合日志配置(com.j2eefast.common.core.listener.LicenseResponseBodyAdvice)指定输出到文件方便查看
       # urlPatterns 需要拦截的数据的url 例如 /api/app/** 系统就会打印出所有访问此匹配的url系统处理返回的数据都会打印
    response:
-      enabled: true
+      enabled: false
       urlPatterns: /demo/testData/**
 #日志路径配置
 logging:

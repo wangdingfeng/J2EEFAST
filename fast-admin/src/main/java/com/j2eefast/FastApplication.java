@@ -5,6 +5,7 @@
  */
 package com.j2eefast;
 
+import com.bstek.ureport.console.UReportServlet;
 import com.j2eefast.common.core.io.PropertiesUtils;
 import com.j2eefast.framework.utils.Constant;
 import org.slf4j.Logger;
@@ -12,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportResource;
+import javax.servlet.Servlet;
 
 /**
  * @Description:项目启动入口
@@ -24,7 +28,8 @@ import org.springframework.cache.annotation.EnableCaching;
  */
 @EnableCaching
 @SpringBootApplication (exclude = {
-		SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class})
+		//SecurityAutoConfiguration.class,
+		DataSourceAutoConfiguration.class})
 public class FastApplication extends SpringBootServletInitializer {
 
 	static Logger log = LoggerFactory.getLogger(FastApplication.class);
@@ -52,13 +57,12 @@ public class FastApplication extends SpringBootServletInitializer {
 						+ "//              ┗┓┓┏━┳┓┏┛				//\n"
 						+ "//               ┃┫┫  ┃┫┫				//\n"
 						+ "//               ┗┻┛  ┗┻┛				//\n"
-						+ "------------------------------------------------------------------- \n");
+						+ "-------------------------------------------------------------------");
 			}
 		}catch (Exception e) {
 			log.error("项目启动异常:",e);
 		}
 	}
-	
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
