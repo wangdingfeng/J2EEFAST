@@ -75,6 +75,11 @@ public class SysOperLogEntity implements Serializable {
 
 	/** 操作地点 */
 	private String operLocation;
+	
+	/**
+	 * 用户代理
+	 */
+	private String userAgent;
 
 	/** 请求参数 */
 	private String operParam;

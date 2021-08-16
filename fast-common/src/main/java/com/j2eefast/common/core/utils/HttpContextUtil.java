@@ -17,12 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 /**
  * <p>获取HttpServletRequest,HttpServletResponse</p>
- *
+ * 弃用----
+ * ---- 使用 com.j2eefast.common.core.utils.ServletUtil 类代替
  * @author: zhouzhou
  * @date: 2019-04-01 20:24
  * @web: http://www.j2eefast.com
  * @version: 1.0.1
  */
+@Deprecated
 public class HttpContextUtil {
     /**
      * 获取请求的ip地址

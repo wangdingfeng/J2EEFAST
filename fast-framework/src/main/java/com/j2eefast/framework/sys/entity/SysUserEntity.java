@@ -255,6 +255,9 @@ public class SysUserEntity extends BaseEntity {
 	@JsonListFiledIgnore
 	private String sid;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private String tenantId;
 
-
+	@TableField(exist = false)
+	private String tenantName;
 }

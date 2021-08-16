@@ -12,6 +12,7 @@ import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.flowable.bpm.entity.CommentEntity;
 import com.j2eefast.flowable.bpm.entity.CompleteTaskEntity;
+import com.j2eefast.flowable.bpm.entity.FlowNodeEntity;
 import com.j2eefast.flowable.bpm.entity.RevokeProcessEntity;
 import com.j2eefast.flowable.bpm.service.FlowableCommentService;
 import com.j2eefast.flowable.bpm.service.IFlowableTaskService;
@@ -20,6 +21,7 @@ import com.j2eefast.framework.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +39,7 @@ import java.util.Map;
 @RequestMapping("/bpm/task")
 public class TaskController extends BaseController {
 
-	private String urlPrefix = "modules/bpm/task";
+	private String prefix = "modules/bpm/task";
 
 	@Autowired
 	private IFlowableTaskService flowableTaskService;
@@ -48,13 +50,13 @@ public class TaskController extends BaseController {
 	@RequiresPermissions("bpm:task:view")
 	@GetMapping("/applaying")
 	public String applyingTask(){
-		return urlPrefix + "/applaying";
+		return prefix + "/applaying";
 	}
 
 	@RequiresPermissions("bpm:task:view")
 	@GetMapping("/applyed")
 	public String applyedTask(){
-		return urlPrefix + "/applyed";
+		return prefix + "/applyed";
 	}
 
 
@@ -72,6 +74,20 @@ public class TaskController extends BaseController {
 		return success(page);
 	}
 
+	/**
+	 * 退回
+	 * @param processInstanceId
+	 * @param taskId
+	 * @return
+	 */
+	@GetMapping("/getBackNodesByProcessInstanceId/{processInstanceId}/{taskId}")
+	public String getBackNodesByProcessInstanceId(@PathVariable String processInstanceId,
+												  @PathVariable String taskId, ModelMap mmp) {
+		List<FlowNodeEntity> list = flowableTaskService.getBackNodesByProcessInstanceId(processInstanceId,taskId);
+		mmp.put("flowBodes",list);
+		return prefix + "/basckNodes";
+
+	}
 
 	/**
 	 * 查询已办任务
@@ -143,5 +159,4 @@ public class TaskController extends BaseController {
 		params.setUserId(UserUtils.getUserIdToStr());
 		return flowableProcessInstanceService.revokeProcess(params);
 	}
-
 }

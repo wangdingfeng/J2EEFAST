@@ -23,10 +23,6 @@
 		border-right: 1px solid #ccc!important;
 		border-top: 1px!important;
 	}
-	.fixed-table-container {
-		border: 1px solid #ddd;
-		overflow-y: hidden;
-	}
 	.table-striped .table, .table-striped .table, .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
 		border-bottom: 1px solid #e7eaec!important;
 		background-color: transparent;
@@ -502,19 +498,22 @@
 		        showColumns: false,
 				firstLoad: false,
 		        onReorderRow: onReorderRow,
-		        columns: [
-		        {
-                    title: $.i18n.prop("序号"),
-                    width: "32",
-					align: 'center',
-                    formatter: function (value, row, index) {
-                    	/*编号隐藏域*/
-                    	var idHtml = opt.common.sprintf("<input type='hidden' name='columns[%s].id' value='%s'>", index, row.id);
-                    	/*排序隐藏域*/
-                    	var sortHtml = opt.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.id);
-                    	return idHtml + sortHtml +$.table.serialNumber(index);
-                    }
-                },
+				// fixedColumns: true,
+				// fixedNumber: 4,
+		        columns:
+								[
+									{
+										title: $.i18n.prop("序号"),
+										width: "32",
+										align: 'center',
+										formatter: function (value, row, index) {
+											/*编号隐藏域*/
+											var idHtml = opt.common.sprintf("<input type='hidden' name='columns[%s].id' value='%s'>", index, row.id);
+											/*排序隐藏域*/
+											var sortHtml = opt.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.id);
+											return idHtml + sortHtml +$.table.serialNumber(index);
+										}
+									},
 				{
 					title: '<i class="fa fa-arrows" style="color:#aaa"></i>'
 							+ "<a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' " +
@@ -569,7 +568,7 @@
 		         {
 		            field: 'isPk',
 		            title: "主键",
-					hbgr:'#e8ce62',
+					style:'background-color:#e8ce62',
 					titleTooltip:'请勿修改',
 		            width: "32",
 		            formatter: function (value, row, index) {
@@ -584,7 +583,7 @@
 						title: '列表',
 						titleTooltip:'数据展示页面表格列表',
 						width: "32",
-						hbgr:'#e8ce62',
+						style:'background-color:#e8ce62',
 						formatter: function (value, row, index) {
 							var isCheck = value == 1 ? 'checked' : '';
 							var html = opt.common.sprintf("<label class='check-box'><input type='checkbox' name='columns[%s].isList' value='1' %s></label>", index, isCheck);
@@ -594,7 +593,7 @@
 					{
 						field: 'isQuery',
 						title: '查询',
-						hbgr:'#e8ce62',
+						style:'background-color:#e8ce62',
 						width: "32",
 						formatter: function (value, row, index) {
 							var isCheck = value == 1 ? 'checked' : '';
@@ -606,7 +605,7 @@
 						field: 'queryType',
 						title: "查询方式"+ "<a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' " +
 								"data-placement='right' data-html='true' data-content='<span style=\"color:red\">展示页面列表需要检索字段的查询方式!<span>'><i class='fa fa-question-circle-o' style='color: orange'></i></a>",
-						hbgr:'#e8ce62',
+						style:'background-color:#e8ce62',
 						width: "120",
 						formatter: function (value, row, index) {
 							var data = { "index": index, "queryType": value };
@@ -617,7 +616,7 @@
 						field: 'isTableSort',
 						title: "排序",
 						titleTooltip:'表格按照此字段排序展示!',
-						hbgr:'#e8ce62',
+						style:'background-color:#e8ce62',
 						width: "32",
 						formatter: function (value, row, index) {
 							var isCheck = value == 1 ? 'checked' : '';
@@ -628,7 +627,7 @@
 		        {
 		            field: 'isInsert',
 		            title: '插入',
-					hbgr:'#afcb7c',
+					style:'background-color:#afcb7c',
 					titleTooltip:'插入为新增页面需要客户录入的字段',
 		            width: "32",
 		            formatter: function (value, row, index) {
@@ -640,7 +639,7 @@
 		        {
 					field: 'isEdit',
 					title: '编辑',
-					hbgr:'#afcb7c',
+					style:'background-color:#afcb7c',
 					width: "32",
 					formatter: function (value, row, index) {
 						var isCheck = value == 1 ? 'checked' : '';
@@ -653,7 +652,7 @@
 						field: 'htmlType',
 						title: '显示类型',
 						width: "120",
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						formatter: function (value, row, index) {
 							var data = { "index": index, "htmlType": value };
 							return opt.template('htmlTypeTpl',data);
@@ -664,7 +663,7 @@
 						title: '字段说明样式',
 						titleTooltip:'字段说明样式',
 						width: "120",
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						formatter: function (value, row, index) {
 							var data = { "index": index, "circleType": value };
 							return opt.template('circleTypeTpl',data);
@@ -674,7 +673,7 @@
 						field: 'editInfo',
 						title: '字段说明',
 						width: "190",
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						formatter: function (value, row, index) {
 							var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].editInfo' value='%s' id='columns_edit_info_%s'>", index, opt.common.nullToStr(value,""), row.id);
 							return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectinputEdit(\"" + row.id +"\", this)'><i class='fa fa-fw fa-edit'></i></a></span>";
@@ -684,7 +683,7 @@
 						field: 'dictType',
 						title: '字典类型',
 						width: "170",
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						formatter: function (value, row, index) {
 							//var html = opt.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.id);
 							//return "<div class='input-group'>" + html + "<span class='input-group-btn'><a  href='javascript:;' onclick='selectDictTree(\""+ row.id+"\", this)'><i class='fa fa-fw fa-search'></i></a></span>";
@@ -695,7 +694,7 @@
 					{
 						field: 'isRequired',
 						title: '必填',
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						width: "32",
 						formatter: function (value, row, index) {
 							var isCheck = value == 1 ? 'checked' : '';
@@ -706,7 +705,7 @@
 					{
 						field: 'validation',
 						title: '字段验证',
-						hbgr:'#afcb7c',
+						style:'background-color:#afcb7c',
 						width: "250",
 						formatter: function (value, row, index) {
 							var temp = opt.common.isEmpty(value)?[]:value.split(',');
@@ -989,6 +988,7 @@
     <option value="radio" {{# if (d.htmlType ==="radio"){ }}selected{{# } }}>单选框</option>
     <option value="checkbox" {{# if (d.htmlType ==="checkbox"){ }}selected{{# } }}>复选框</option>
     <option value="datetime" {{# if (d.htmlType ==="datetime"){ }}selected{{# } }}>日期控件</option>
+    <option value="time" {{# if (d.htmlType ==="time"){ }}selected{{# } }}>时间控件</option>
     <option value="icon" {{# if (d.htmlType ==="icon"){ }}selected{{# } }}>选择图标</option>
     <option value="user" {{# if (d.htmlType ==="user"){ }}selected{{# } }}>选择用户</option>
     <option value="dept" {{# if (d.htmlType ==="dept"){ }}selected{{# } }}>选择部门</option>

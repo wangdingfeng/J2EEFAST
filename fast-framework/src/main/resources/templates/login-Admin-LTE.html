@@ -2,36 +2,27 @@
 * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
 * No deletion without permission
 * @author ZhouZhou
-* @version 2020-09-28
+* @version 2021-07-24
 -->
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="true">
-<!DOCTYPE html>
-<html>
-<head>
-<#import "/common/springctx.ftl" as ctx>
-<meta charset="utf-8">
-<title>登录 - J2eeFAST J2eefast.com</title>
-<link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
-<#--Tell the browser to be responsive to screen width -->
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<meta name="keywords" content="PoweredByJ2eeFast"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<@pageTheme mark=true>
+<@header title="登录" isPAS=false>
 <#-- Bootstrap 3.3.7 -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
 <#-- Font Awesome -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/font-awesome.min.css">
 <#--animate 样式-->
 <link rel="stylesheet" href="${ctxStatic}/static/css/animate.min.css"/>
-<#-- Theme style -->
-<link rel="stylesheet" href="${ctxStatic}/static/css/AdminLTE.min.css">
 <#-- iCheck -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css?V=${config.getDvVersion()}">
 <#-- jQuery toast 提示框  -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
-<link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
-<link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
+<#if tenantModel>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2.min.css"/>
+<link rel="stylesheet" href="${ctxStatic}/static/plugins/select2/select2-bootstrap.css"/>
+</#if>
+<link rel="stylesheet" href="${ctxStatic}/static/css/let-login.min.css?V=${config.getDvVersion()}">
+<#--<link rel="stylesheet" href="${ctxStatic}/static/css/let-login.css?V=${config.getDvVersion()}">-->
 <#if verification>
 <link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
 </#if>
@@ -43,23 +34,29 @@
 <![endif]-->
 <#-- Vue单页面刷新闪烁标签{{}}问题解决-->
 <style>[v-cloak]{display:none !important;}
-  <#--.login-page {-->
-  <#--    background-image: url(${ctxStatic}/static/img/login/bg2.png);-->
-  <#--    background-repeat: no-repeat;-->
-  <#--    background-size:100% 100%;-->
-  <#--}-->
-  /*.login-logo a, .register-logo a {*/
-  /*    color: #fff;*/
-  /*    font-weight: 400;*/
-  /*}*/
-  .footer-item, .footer-item a{
-      color: #000;
-  }
-  .footer-item a:hover{
-      color:#00a0e9;
-  }
+    <#-- .login-page {-->
+    <#--     background-image: url(${ctxStatic}/static/img/login/bg15.jpg);-->
+    <#--     background-repeat: no-repeat;-->
+    <#--     background-size:100% 100%;-->
+    <#-- }-->
+    <#-- .animated {-->
+    <#--   -webkit-animation-duration: 2.6s;-->
+    <#--   animation-duration: 2.6s;-->
+    <#--   -webkit-animation-fill-mode: both;-->
+    <#--   animation-fill-mode: both;-->
+    <#--}-->
+    <#--.login-logo a, .register-logo a {-->
+    <#--     color: #fff;-->
+    <#--     font-weight: 400;-->
+    <#-- }-->
+    <#-- .footer-item, .footer-item a{-->
+    <#--     color: #fff !important;-->
+    <#-- }-->
+    <#-- .footer-item a:hover{-->
+    <#--     color:#fff;-->
+    <#-- }-->
 </style>
-</head>
+</@header>
 <body class="hold-transition login-page">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
@@ -75,25 +72,37 @@
   <div class="login-box-body">
       <p class="login-box-msg"><@ctx.i18n text = "欢迎登录"/></p>
       <form action="#" method="post">
+      <#if tenantModel>
+      <div class="login-title">
+          <div class="form-tenant">
+              <div class="login-select">
+                  <@f.select name="tenantId" blankValue="" blankLabel="" status=false items=loginTenantList itemLabel="tenantName" itemValue="tenantId"/>
+              </div>
+          </div>
+      </div>
+      </#if>
       <div class="form-group has-feedback">
         <input type="text" class="form-control" id="username" v-model="username" placeholder="<@ctx.i18n text = "账号/邮箱/手机号码"/>">
-        <span class="glyphicon glyphicon-user form-control-feedback "></span>
+        <span class="fa icon-user form-control-feedback "></span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" id="password"  autocomplete="off" class="form-control"  v-model="password" placeholder="<@ctx.i18n text = "密码"/>">
-        <span class="glyphicon glyphicon-lock form-control-feedback" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
-              data-toggle="tooltip" data-placement="bottom" onmousedown="$('#password').attr('type','text')" onmouseup="$('#password').attr('type','password')"></span>
+        <span class="fa icon-lock form-control-feedback" title="<@ctx.i18n text = "登录密码,鼠标按下显示密码"/>"
+              data-toggle="tooltip" data-placement="bottom" onmousedown="$('#password').attr('type','text')"
+              onmouseup="$('#password').attr('type','password')"
+              onmouseenter="$(this).removeClass('icon-lock').addClass('icon-eye')"
+              onmouseout="$(this).removeClass('icon-eye').addClass('icon-lock')"></span>
       </div>
       <div  v-if="loadcode" class="form-group has-feedback">
         <input type="text" class="form-control"  v-model="captcha" copyright="J2eeFAST" placeholder="<@ctx.i18n text = "验证码"/>">
-        <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+        <span class="fa icon-info form-control-feedback"></span>
       </div>
       <div v-if="loadcode"  class="form-group has-feedback">
         <img alt="<@ctx.i18n text = "如果看不清楚，请单击图片刷新!"/>" class="img-rounded" :src="src" @click="refreshCode">
         &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode"><@ctx.i18n text = "点击刷新"/></a>
       </div>
       <div class="form-group row">
-        <div class="col-xs-6">
+        <div class="col-xs-7">
             <div class="checkbox icheck">
                 <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号"/>" data-toggle="tooltip" data-placement="bottom">
                     <input type="checkbox" name="rememberUserCode" data-style="minimal-blue" /><@ctx.i18n text = "记住账号"/>
@@ -101,7 +110,7 @@
             </div>
         </div>
         <!-- /.col -->
-        <div class="col-xs-6">
+        <div class="col-xs-5">
             <#if rememberMe>
             <div class="checkbox icheck">
                 <label title="<@ctx.i18n text = "公共场所慎用,下次登录免输账号、密码"/>" data-toggle="tooltip" data-placement="bottom">
@@ -141,35 +150,36 @@
 					</div>
           </div>
        </div>
-      <#if config.getKey("SYS_IS_OAUTH") == "0">
           <div class="social-auth-links text-center">
+              <#if config.getKey("SYS_IS_OAUTH") == "0">
               <div class="oauth-title">
                   <span class="text-muted"> 其他方式登录 </span>
               </div>
               <div class="oauth-list">
                   <div class="item" title="<@ctx.i18n text = "使用 Gitee 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/gitee">
-                          <img src="${ctxStatic}/static/img/gitee.svg"/>
+                          <img src="${ctxStatic}/static/img/login/gitee.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "使用 GitHub 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/github">
-                          <img src="${ctxStatic}/static/img/github.svg"/>
+                          <img src="${ctxStatic}/static/img/login/github.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "使用 OsChina 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                       <a href="${ctxStatic}/auth/oschina">
-                          <img src="${ctxStatic}/static/img/oschina.svg"/>
+                          <img src="${ctxStatic}/static/img/login/oschina.svg"/>
                       </a>
                   </div>
                   <div class="item" title="<@ctx.i18n text = "功能开发中..."/>" data-toggle="tooltip" data-placement="top">
                       <a href="#">
-                          <img src="${ctxStatic}/static/img/qq-no.svg"/>
+                          <img src="${ctxStatic}/static/img/login/qq-no.svg"/>
                       </a>
                   </div>
               </div>
+              </#if>
+              <#include "/common/index/compatibility.html"/>
           </div>
-      </#if>
   </div>
   <!-- /.login-box-body -->
 </div>
@@ -199,19 +209,21 @@
             <a href="http://www.beian.miit.gov.cn/" class="text-black" target="_blank">${config.getIPC()}</a>
         </span>
 </div>
-<#--jQuery 3 -->
-<script src="${ctxStatic}/static/libs/jquery.min.js"></script>
-<script src="${ctxStatic}/static/libs/jquery-migrate.min.js"></script>
 <#-- Bootstrap 3.3.7 -->
 <script src="${ctxStatic}/static/libs/bootstrap.min.js"></script>
+<#if tenantModel>
+<script src="${ctxStatic}/static/plugins/select2/select2.min.js"></script>
+</#if>
 <script src="${ctxStatic}/static/libs/SM4.min.js?V=${config.getDvVersion()}"></script>
 <#-- iCheck -->
 <script src="${ctxStatic}/static/libs/icheck.min.js"></script>
 <#-- 全局遮罩-->
 <script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.min.js?V=${config.getDvVersion()}"></script>
+<#--<script src="${ctxStatic}/static/plugins/blockUI/jquery.blockUI.js?V=${config.getDvVersion()}"></script>-->
 <#-- jQuery toast 提示框  -->
 <script src="${ctxStatic}/static/libs/jquery.toast.min.js"></script>
 <script src="${ctxStatic}/static/libs/vue.min.js"></script>
+<#-- 粒子射线背景-->
 <script src="${ctxStatic}/static/libs/jquery.particleground.min.js"></script>
 <#if verification>
 <script src="${ctxStatic}/static/plugins/captcha/crypto-js.min.js"></script>
@@ -229,7 +241,10 @@
             /*errorMsg: '',*/
             rememberme : false,
             loadcode : false,
-            src: 'captcha.gif'
+            src: 'captcha.gif',
+            tenantId: '',
+            tenantData: [],
+            tenantLabel: '请选择租户'
         },
         beforeCreate: function(){
             if(self != top){
@@ -255,19 +270,30 @@
                 if(vm.username.length < 3 ||  vm.password.length < 3){
                     return that.errrInfo('<@ctx.i18n text = "账号或者密码输入有误"/>');
                 }
+                <#if tenantModel>
+                if(vm.tenantId.length == 0){
+                    return that.errrInfo('<@ctx.i18n text = "请选择租户号"/>');
+                }
+                </#if>
                 <#if verification>
                 $("#verfyImg").find(".mask").css("display","block");
                 <#else>
-                $(window).block({ message: '<div class="loaderbox"><div class="loading-activity"></div> '
+                $(window).block({ message: '<div class="loaderbox"><div class="loading-circle"></div> '
                         + '<@ctx.i18n text = "数据正在认证,请稍后..."/>' + '</div>' });
-                var s4=new SM4Util(that.getCookie("_secretKey"));
+                var s4= new SM4Util(that.getCookie("_secretKey"));
                 var data = {"username":s4.encryptData_ECB(vm.username),
                     "password":s4.encryptData_ECB(vm.password),
                     "captcha":vm.captcha,
+                    "tenantId":vm.tenantId,
                     "rememberMe":vm.rememberme};
                 that.postLogin(data,true);
                 </#if>
                 return;
+            },
+            selecTenant: function(id,event){
+                var el = event.currentTarget;
+                vm.tenantLabel = el.innerHTML;
+                vm.tenantId = id;
             },
             errrInfo : function(text){
                 $.toast({
@@ -333,13 +359,19 @@
                             vm.password = '';
                             vm.refreshCode();
                         }
+                    },
+                    error: function(xhr, textStatus) {
+                        vm.errrInfo(JSON.parse(xhr.responseText).msg || xhr.responseText );
+                        vm.captcha = '';
+                        vm.password = '';
+                        if(flag){$(window).unblock()};
+                        vm.refreshCode();
                     }
                 });
             }
         },
         mounted :function(){
             var that = this;
-
             if(window.localStorage.getItem('rememberUserCode') && window.localStorage.getItem('rememberUserCode') != ""){
                 $("input[name='rememberUserCode']").iCheck('check');
                 this.username = window.localStorage.getItem('rememberUserCode');
@@ -347,6 +379,12 @@
                 $("input[name='rememberUserCode']").iCheck('uncheck');
             }
 
+            <#if tenantModel>
+            if(window.localStorage.getItem('tenantId') && window.localStorage.getItem('tenantId') != ""){
+                this.tenantId = window.localStorage.getItem('tenantId');
+                $("#tenantId").val(this.tenantId).select2();
+            }
+            </#if>
             /*绑定记住我样式*/
             $("input[type=checkbox]").each(function () {
                 $(this).iCheck({
@@ -362,11 +400,28 @@
                 });
             });
 
+            /* 设置页面模式*/
+            if(typeof (Storage) !== 'undefined'){
+                var css = window.localStorage.getItem('mode');
+                if(typeof  css !== 'undefined' && css && css.length > 0){
+                    $('html').addClass(css)
+                }
+            };
+
             /*设置tooltip*/
             $('[data-toggle="tooltip"]').each(function () {
                 $(this).tooltip();
             });
 
+            <#if tenantModel>
+            /* 设置租户选择*/
+            if ($.fn.select2 !== undefined) {
+                $.fn.select2.defaults.set( "theme", "bootstrap" );
+                $("select.form-control:not(.noselect2)").each(function () {
+                    $(this).select2({allowClear: false,placeholder:"请选择租户"});
+                })
+            }
+            </#if>
             /* 粒子线条背景 */
             $('#canvas').particleground({
                 dotColor:'#7ec7fd',
@@ -383,6 +438,7 @@
                     var data = {"username":s4.encryptData_ECB(vm.username),
                         "password":s4.encryptData_ECB(vm.password),
                         "captcha":vm.captcha,
+                        "tenantId":vm.tenantId,
                         "rememberMe":vm.rememberme};
                     data = $.extend(data, params);
                     that.postLogin(data,false);
@@ -392,8 +448,28 @@
             </#if>
             /*获取页面键盘事件*/
             window.document.onkeydown = that._onkeydown;
+
+            var href= location.href;
+            if(href.indexOf("kickout=2")>0){
+                that.errrInfo("您被提下线,请重新登陆!");
+            };
+            if(href.indexOf("kickout=1")>0){
+                that.errrInfo("您的账号在另一台设备上登录,如非本人操作，请立即修改密码！");
+            };
         }
     });
+
+    <#if tenantModel>
+    /**
+     * 选择回调
+     */
+    function selectCallback(id, event, data) {
+        if(id == 'tenantId'){
+            vm.tenantId = data[0].id;
+            window.localStorage.setItem('tenantId',data[0].id);
+        }
+    }
+    </#if>
 </script>
 </body>
 </html>

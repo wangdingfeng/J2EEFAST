@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.framework.sys.mapper.SysMsgCcUserMapper">
+
+    <resultMap type="SysMsgCcUserEntity" id="SysMsgCcUserResult">
+        <result property="id" column="id"/>
+        <result property="msgId" column="msg_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="isRead" column="is_read"/>
+        <result property="readDate" column="read_date"/>
+    </resultMap>
+    
+    <!--  实体栏位  --> 
+    <sql id="sysMsgCcUserColumns">
+         a.id AS "id" ,
+         a.msg_id AS "msgId" ,
+         a.user_id AS "userId" ,
+         a.user_name AS "userName" ,
+         a.is_read AS "isRead" ,
+         a.read_date AS "readDate" 
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findSysMsgCcUserById"  resultType="com.j2eefast.framework.sys.entity.SysMsgCcUserEntity" >
+        SELECT
+        <include refid="sysMsgCcUserColumns"/>
+		FROM  sys_msg_cc_user a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.framework.sys.entity.SysMsgCcUserEntity">
+        SELECT
+        <include refid="sysMsgCcUserColumns"/>
+        FROM sys_msg_cc_user a
+		<where>
+            <if test="msgId != null "> AND a.msg_id = #{msgId} </if>
+            <if test="userCode != null  and userCode != ''"> AND a.user_code = #{userCode} </if>
+            <if test="userName != null  and userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{userName},'%')
+            </if>
+            <if test="isRead != null  and isRead != ''"> AND a.is_read = #{isRead} </if>
+            <if test="readDate != null "> AND a.read_date = #{readDate} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysMsgCcUserEntity">
+        SELECT
+        <include refid="sysMsgCcUserColumns"/>
+        FROM sys_msg_cc_user a
+        <where>
+            <if test="sysMsgCcUser.msgId != null "> AND a.msg_id = #{sysMsgCcUser.msgId} </if>
+            <if test="sysMsgCcUser.userCode != null  and sysMsgCcUser.userCode != ''"> AND a.user_code = #{sysMsgCcUser.userCode} </if>
+            <if test="sysMsgCcUser.userName != null  and sysMsgCcUser.userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{sysMsgCcUser.userName},'%')
+            </if>
+            <if test="sysMsgCcUser.isRead != null  and sysMsgCcUser.isRead != ''"> AND a.is_read = #{sysMsgCcUser.isRead} </if>
+            <if test="sysMsgCcUser.readDate != null "> AND a.read_date = #{sysMsgCcUser.readDate} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+</mapper>

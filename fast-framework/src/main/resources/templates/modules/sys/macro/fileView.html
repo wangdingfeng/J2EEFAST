@@ -3,7 +3,7 @@
     J2eeFAST 二次修改
  -->
 <#include "/common/defaultEngine.html"/>
-<@pageTheme mark="true">
+<@pageTheme mark=true>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -22,6 +22,7 @@
     <script src="${ctxStatic}/static/plugins/magnify/jquery.magnify.min.js"></script>
     <script src="${ctxStatic}/static/plugins/pdf/pdfobject.min.js"></script>
     <script src="${ctxStatic}/static/plugins/video/video.js"></script>
+    <script src="${ctxStatic}/static/libs/base64.js"></script>
 </head>
 <body style="margin:0;background:#ececec;">
 <script language="javascript">
@@ -42,7 +43,7 @@
                 + '<div style="flex:1;display:flex;justify-content:center">'
                 + '该文件不支持在线预览</div></div>');
         }
-    }else if (extName == 'doc' || extName == 'xls' || extName == 'ppt' || extName == 'xlsx'){
+    }else if (extName == 'doc' || extName == 'xls' || extName == 'ppt' || extName == 'xlsx' || extName == 'docx'){
         document.write('<iframe id="mainFrame" name="mainFrame" class="box" style="border:0;"></iframe>');
         <#if fileUrl?index_of("fileUploadView?fileId=") != -1>
              var url = "${basePath}" + "/sys/comm/download?fileId=${fileUrl?keep_after_last("fileUploadView?fileId=")}";
@@ -51,6 +52,15 @@
         </#if>
         $('#mainFrame').attr('src', 'https://view.officeapps.live.com/op/view.aspx?src='
             + encodeURIComponent(url));
+<#--        <#if fileUrl?index_of("fileUploadView?fileId=") != -1>-->
+<#--             var url = "${basePath}" + "/sys/comm/download?fileId=${fileUrl?keep_after_last("fileUploadView?fileId=")}";-->
+<#--        <#else>-->
+<#--             var url = fileUrl;-->
+<#--        </#if>-->
+<#--        url = url + '&fullfilename=${fileName}';-->
+<#--        fileUrl = 'http://127.0.0.1:8888/preview?url='+encodeURIComponent(Base64.encode(url));-->
+<#--        document.write('<div id="pdfViewer" class="box"></div>');-->
+        PDFObject.embed(fileUrl, "#pdfViewer" );
     }else if (extName == 'txt' || extName == 'html'){
         document.write('<iframe id="mainFrame" name="mainFrame" class="box" style="border:0;background:#fff;"></iframe>');
         $('#mainFrame').attr('src', (fileUrl));

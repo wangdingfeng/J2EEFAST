@@ -1,0 +1,117 @@
+<#--
+  // 百度富文本
+ -->
+<#macro ueditor name
+                id = ""
+                bizType=""
+                bizId=""
+                value = ""
+                helpTip = ""  <#--帮助提示 -->
+                readonly = false 	<#-- 是否只读模式 -->
+                maxlength =  10000 <#-- 最大输入长度默认不限-->
+                height = 300 <#-- 高度-->
+                toolbars = "all" <#--工具类 默认所有 -->
+                type = ["content"] <#--获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)-->
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <input id="${AssId?replace(".","_")}" name="<#if name != "">${name}<#else>${AssId}</#if>" value="<#if value != "">${value}</#if>" type="hidden"/>
+    <script id="${AssId?replace(".","_")}ContentUE" type="text/plain" style="width:100%;height:${height}px;"></script>
+    <@compress single_line=true>
+    <script type="text/javascript">
+        $(function() {
+            if (window.UEDITOR_CONFIG === undefined) {
+                opt.error("ueditor 插件未引入,请模板引擎header Lis中引入!!");
+                return;
+            }
+            var remarksUE_${AssId?replace(".","_")} = UE.getEditor('${AssId?replace(".","_")}ContentUE', {
+                serverUrl: window.UEDITOR_CONFIG.serverUrl+"?bizType=${bizType}&bizId=${bizId}",
+                <#--maximumWords: ${maxlength},-->
+                readonly: ${readonly?string('true','false')},
+                initialFrameHeight: ${height}
+                <#if toolbars == "text" && !readonly>
+                ,toolbars: [[
+                    'source','|','undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                ]]
+                ,elementPathEnabled: false
+                ,wordCount: false
+                <#elseif readonly>
+                ,toolbars: []
+                ,elementPathEnabled: false
+                ,wordCount: false
+                ,enableContextMenu: false
+                <#elseif toolbars != "text" && toolbars!= "all" && !readonly >
+                ,toolbars: [[
+                    'source','|','undo', 'redo', '|','bold', 'italic', 'underline','forecolor','removeformat',
+                    'backcolor','fontfamily', 'fontsize','insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'
+                    ,'|',${toolbars}
+                ]]
+                ,elementPathEnabled: false
+                ,wordCount: false
+                </#if>
+            });
+            /* 更新编辑器内容  remarksUE.updateContent();*/
+            remarksUE_${AssId?replace(".","_")}.updateContent = function(){
+                var ${AssId?replace(".","_")}_html = "";
+                if (!remarksUE_${AssId?replace(".","_")}.hasContents()){
+                    $('#<#if id == "">${name}<#else>${id}</#if>').val("").change();
+                }else{
+                    <#if type[0] == "html">
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getAllHtml().replace('<!--HTML-->','');
+                    <#elseif type[0] == "content">
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getContent().replace('<!--HTML-->','');
+                    <#elseif type[0] == "txt">
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getContentTxt().replace('<!--HTML-->','');
+                    <#elseif type[0] == "plaintxt">
+                    ${AssId?replace(".","_")}_html = remarksUE_${AssId?replace(".","_")}.getPlainTxt().replace('<!--HTML-->','');
+                    </#if>
+                    $('#${AssId?replace(".","_")}').val(${AssId?replace(".","_")}_html).change();
+                }
+                if (typeof window.webuploaderRefresh == 'function'){
+                    <#assign res="" />
+                    <#list type as x>
+                    <#if x != type[0] >
+                    <#if x == "html">
+                    var ${AssId?replace(".","_")}_html${x?index} = remarksUE_${AssId?replace(".","_")}.getAllHtml().replace('<!--HTML-->','');
+                    <#elseif x == "content">
+                    var ${AssId?replace(".","_")}_html${x?index} = remarksUE_${AssId?replace(".","_")}.getContent().replace('<!--HTML-->','');
+                    <#elseif x == "txt">
+                    var ${AssId?replace(".","_")}_html${x?index} = remarksUE_${AssId?replace(".","_")}.getContentTxt().replace('<!--HTML-->','');
+                    <#elseif x == "plaintxt">
+                    var ${AssId?replace(".","_")}_html${x?index} = remarksUE_${AssId?replace(".","_")}.getPlainTxt().replace('<!--HTML-->','');
+                    </#if>
+                    <#assign res= res + ',${AssId?replace(".","_")}_html${x?index}' />
+                    </#if>
+                    </#list>
+                    window.webuploaderRefresh("${AssId?replace(".","_")}",${AssId?replace(".","_")}_html${res});
+                }
+            };
+            /* 编辑器加载完成事件*/
+            remarksUE_${AssId?replace(".","_")}.ready(function(){
+                remarksUE_${AssId?replace(".","_")}.execCommand('insertHtml', $("#${AssId?replace(".","_")}").val());
+                remarksUE_${AssId?replace(".","_")}.addListener('contentchange', function(){
+                    remarksUE_${AssId?replace(".","_")}.updateContent();
+                });
+                remarksUE_${AssId?replace(".","_")}.addListener('focus blur', function(type, arg1, arg2){
+                    if(type == 'focus'){
+                        $('#${AssId?replace(".","_")}ContentUE').addClass('_focus');
+                    }
+                    if(type == 'blur'){
+                        $('#${AssId?replace(".","_")}ContentUE').removeClass('_focus');
+                    }
+                });
+            });
+        });
+    </script>
+    </@compress>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+</#macro>

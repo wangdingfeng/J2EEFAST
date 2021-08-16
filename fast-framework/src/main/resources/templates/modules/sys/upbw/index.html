@@ -1,12 +1,6 @@
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="${'true'}">
-<!DOCTYPE html><html lang="zh-CN"><head>
-<meta charset="UTF-8" />
-<title>非常抱歉,无法兼容你浏览器版本</title>
-<meta name="keywords" content="PoweredByJ2eeFast"/>
-<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
-<meta name="renderer" content="webkit"><base target="_blank" />
-<link rel="shortcut icon" href="${ctxStatic}/static/img/favicon.ico">
+<@pageTheme mark=false>
+<@header title="非常抱歉,无法兼容你浏览器版本" isPAS=false >
 <style type="text/css">
 a{text-decoration:none;color:#0072c6;}a:hover{text-decoration:none;color:#004d8c;}
 body{width:960px;margin:0 auto;padding:10px;font-size:14px;line-height:24px;color:#454545;font-family:'Microsoft YaHei UI','Microsoft YaHei',DengXian,SimSun,'Segoe UI',Tahoma,Helvetica,sans-serif;}
@@ -19,7 +13,9 @@ span{display:block;font-size:12px;line-height:12px;}
 .browser{padding:10px 0;}
 .browser li{width:180px;height:34px;line-height:22px;float:left;list-style:none;padding-left:25px}
 .clean{clear:both;}
-</style></head><body>
+</style>
+</@header>
+<body>
 <h1>浏览器太古老啦，是时候升级您的浏览器了</h1>
 <p>您正在使用 Internet Explorer 的过期版本(IE6、IE7、IE8、IE9 内核的浏览器)。这意味着在升级浏览器前,您将无法继续访问。</p>
 <hr>
@@ -32,15 +28,16 @@ span{display:block;font-size:12px;line-height:12px;}
 <h2>为了获得更好的浏览体验,您可以选择更先进的浏览器</h2>
 <p>推荐使用以下浏览器的最新版本。如果您的电脑已有以下浏览器的最新版本则直接使用该浏览器访问 <b id="url"></b>即可。</p>
 <div class="browser"><ul>
-        <li><img src="${ctxStatic}/static/img/chrome360.jpg"><a href="http://chrome.360.cn/"> 360极速浏览器<span>360 Chrome</span></a></li>
-        <li><img src="${ctxStatic}/static/img/chrome.jpg"><a href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html"> 谷歌浏览器<span>Google Chrome</span></a></li>
-        <li><img src="${ctxStatic}/static/img/firefox.jpg"><a href="http://www.firefox.com.cn/download/"> 火狐浏览器<span>Mozilla Firefox</span></a></li>
-        <li><img src="${ctxStatic}/static/img/ie.jpg"><a href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie"> IE 11 浏览器<span>Internet Explorer</span></a></li>
+        <li><img src="${ctxStatic}/static/img/upbw/chrome360.jpg"><a href="http://chrome.360.cn/"> 360极速浏览器<span>360 Chrome</span></a></li>
+        <li><img src="${ctxStatic}/static/img/upbw/chrome.jpg"><a href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html"> 谷歌浏览器<span>Google Chrome</span></a></li>
+        <li><img src="${ctxStatic}/static/img/upbw/firefox.jpg"><a href="http://www.firefox.com.cn/download/"> 火狐浏览器<span>Mozilla Firefox</span></a></li>
+        <li><img src="${ctxStatic}/static/img/upbw/ie.jpg"><a href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie"> IE 11 浏览器<span>Internet Explorer</span></a></li>
     </ul><div class="clean"></div></div>
 <hr><br/>
 <script>
     var url = location.href; url = url.substring(0, url.indexOf('/upbw'));
     document.getElementById("url").innerHTML = '<a href="' + url + '">' + url + '</a>&nbsp;';
 </script>
-</body></html>
+</body>
+</html>
 </@pageTheme>

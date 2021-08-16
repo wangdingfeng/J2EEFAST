@@ -151,7 +151,8 @@ public class BinaryUploader {
 				}
 
 				//解决返回路径问题 j2eefast
-				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + PathFormat.format(savePath) );
+//				storageState.putInfo("url", request.getContextPath()+ ConfigConstant.RESOURCE_URLPREFIX  + PathFormat.format(savePath) );
+				storageState.putInfo("url", request.getContextPath()+ PathFormat.format(savePath) );
 				storageState.putInfo("type", suffix);
 				storageState.putInfo("fileId", sysFile.getId());
 				storageState.putInfo("original", originFileName + suffix);

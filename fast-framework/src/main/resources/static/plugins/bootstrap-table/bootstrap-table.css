@@ -43,6 +43,7 @@
 }
 
 .fixed-table-footer,
+
 .fixed-table-header {
     overflow: hidden;
 }
@@ -210,7 +211,8 @@
 }
 
 .fixed-table-loading {
-    display: none;
+    /*display: none;*/
+    display: flex;
     position: absolute;
     top: 42px;
     right: 0;
@@ -219,6 +221,44 @@
     z-index: 99;
     background-color: #fff;
     text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap {
+    align-items: baseline;
+    display: flex;
+    justify-content: center;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-wrap {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .loading-text {
+    margin-right: 6px;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-dot, .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-wrap::after, .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-wrap::before {
+    content: "";
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-name: LOADING;
+    background: #212529;
+    border-radius: 50%;
+    display: block;
+    height: 5px;
+    margin: 0 4px;
+    opacity: 0;
+    width: 5px;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-wrap::after {
+    animation-delay: .6s;
+}
+.bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading .loading-wrap .animation-dot {
+    animation-delay: .3s;
+}
+.left-fixed-table-columns .fixed-table-body {
+    overflow: hidden;
+    height: 100%;
 }
 
 .fixed-table-body .card-view .title {
@@ -230,6 +270,10 @@
 
 /* support bootstrap 2 */
 .fixed-table-body thead th .th-inner {
+    box-sizing: border-box;
+}
+
+.fixed-table-header thead th .th-inner {
     box-sizing: border-box;
 }
 
@@ -303,3 +347,4 @@ div.fixed-table-scroll-outer {
     height: 150px;
     overflow: hidden;
 }
+@keyframes LOADING{0%{opacity:0}50%{opacity:1}to{opacity:0}}

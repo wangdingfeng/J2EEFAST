@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>fast</artifactId>
 		<groupId>com.j2eefast</groupId>
-		<version>2.2.0</version>
+		<version>2.5.0</version>
 	</parent>
 
 	<packaging>jar</packaging>
@@ -20,7 +20,7 @@
 	<!-- 打包编码, 版本号, 日期-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version>2.2.0</version>
+		<version>2.5.0</version>
 		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
 	</properties>
 

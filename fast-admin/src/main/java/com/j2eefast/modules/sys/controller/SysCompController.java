@@ -87,14 +87,37 @@ public class SysCompController extends BaseController {
 		}
 	}
 
+	/**
+	 * 校验公司编码
+	 * @param comp
+	 * @return
+	 */
+	@RequestMapping(value = "/checkCompCodeUnique", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData checkCompCodeUnique(SysCompEntity comp){
+		if(sysCompService.checkCompCodeUnique(comp)){
+			return success();
+		}else {
+			return error("已经存在!");
+		}
+	}
+
+
 
 	/**
 	 * 新增公司
 	 */
 	@GetMapping("/add/{compId}")
 	public String add(@PathVariable("compId") Long compId, ModelMap mmap){
-		
-		mmap.put("comp",  sysCompService.findCompById(compId));
+		SysCompEntity compEntity = sysCompService.findCompById(compId);
+		if(ToolUtil.isEmpty(compEntity)){
+			compEntity = new SysCompEntity();
+			compEntity.setId(0L);
+			compEntity.setParentId(0L);
+			compEntity.setParentIds("1");
+			compEntity.setName("根节点");
+		}
+		mmap.put("comp",  compEntity);
 		return urlPrefix + "/add";
 	}
 

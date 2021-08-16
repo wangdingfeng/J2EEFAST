@@ -1,0 +1,96 @@
+<#--
+ //图片剪辑组件
+-->
+<#macro imageclip
+                name <#-- 控件表单name-->
+                id = "" <#-- 控件ID 如果不传则与name一致-->
+                value =""
+                imageDefault = "${ctxStatic}/static/img/user2-160x160.jpg" <#-- 默认显示-->
+                boxTitle = "" <#-- 弹出框 标题-->
+                tipHelp = "修改图片"
+                ratio = "1/1" <#-- 图片裁剪比例-->
+                viewMode = 0 <#-- 显示模式 0 允许图片无限缩小 1不允许图片缩小到图片本身大小以下-->
+                isClear = true <#-- 是否有清除按钮-->
+                width = 120 <#-- 图片显示宽度-->
+                readonly = true <#-- 是否可编辑-->
+                height = 120 <#-- 图片显示高度-->
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <div class="cropperImg">
+        <input type="hidden" name="${Assname}" id="<#if id == "">${name}<#else>${AssId}</#if>_inpt" value="" />
+        <p <#if readonly>class="cap-head"</#if> style="text-align: center;" id="<#if id == "">${Assname}<#else>${AssId}</#if>_head" ><img id="<#if id == "">${Assname}<#else>${AssId}</#if>_img" style="width: ${width}px; height: ${height};" class="img-circle" src="<#if value == "" || (value?index_of("avatar") == -1)>${imageDefault}<#else><#rt>
+<#if value?index_of("avatar") == -1>
+${value}
+<#else>
+${ctxStatic}/sys/comm/fileAvatarView?filePath=${value?url}
+</#if>
+</#if>" onerror="imgUserError();"/></p>
+        <#if readonly><p style="width: ${width}px;text-align: center;"><a href="javascript:" id="<#if id == "">${Assname}<#else>${AssId}</#if>_but"><@ctx.i18n text = "${tipHelp}"/></a></p></#if>
+    </div>
+    <#if readonly>
+        <@compress single_line=true>
+            <script type="text/javascript">
+                $(function(){
+                    $("#<#if id="">${Assname}<#else>${AssId}</#if>_but,#<#if id=="">${Assname}<#else>${AssId}</#if>_head").unbind('click').on('click',function(){
+                        var var_${AssId?replace(".","_")}_inpt =  $("#${AssId?replace(".","_")}_img").attr("src");
+                        var options = {
+                            title: "<li class='fa fa-fw fa icon-crop'></li>"+<#if boxTitle =="">"<@ctx.i18n text = "图片剪切"/>" <#else>"${boxTitle}"</#if>,
+                            url: baseURL + "sys/component/cropperImg",
+                            width: $(top.window).width() - 350,
+                            height: $(top.window).height() - 160,
+                            <#-- POST提交组件控制类参数-->
+                            fromData:{
+                                imgValue: var_${AssId?replace(".","_")}_inpt,
+                                imageDefault: "${imageDefault}",
+                                ratio: "${ratio}",
+                                viewMode: "${viewMode}"
+                            },
+                            callBack: func_${AssId?replace(".","_")}doSubmit,
+                            cancel:  func_${AssId?replace(".","_")}cancel
+                            <#if isClear>, clear: func_${AssId?replace(".","_")}clear</#if>
+                        };
+                        opt.modal.openMainWin(options);
+                    });
+
+                    function func_${AssId?replace(".","_")}doSubmit(index, layero,_layer) {
+                        var body = _layer.getChildFrame('body', index);
+                        var imageBase64 = body.find('#imageBase64').val();
+                        $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src",imageBase64);
+                        $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(imageBase64).change();
+                        if(typeof iconCallback == 'function'){
+                            imageclipCallback('${Assname?replace(".","_")}', 'ok', index, layero, imageBase64);
+                        }
+                        _layer.close(index);
+                    };
+                    <#if isClear>
+                    function func_${AssId?replace(".","_")}clear(index, layero,_layer) {
+                        $("#<#if id == "">${Assname}<#else>${AssId}</#if>_img").attr("src","${imageDefault}");
+                        var temp = opt.common.nullToStr($("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val(),"");
+                        $("#<#if id == "">${Assname}<#else>${AssId}</#if>_inpt").val("").change();
+                        if(typeof iconCallback == 'function'){
+                            imageclipCallback('${Assname?replace(".","_")}', 'clear', index, layero, temp);
+                        }
+                        _layer.close(index);
+                    };
+                    </#if>
+
+                    function func_${AssId?replace(".","_")}cancel(index, layero) {
+                        if(typeof iconCallback == 'function'){
+                            imageclipCallback('${Assname?replace(".","_")}', 'cancel', index, layero, '');
+                        }
+                    }
+                })
+            </script>
+        </@compress>
+    </#if>
+
+</#macro>

@@ -1,0 +1,40 @@
+<#--
+ //评论组件
+-->
+<#macro comment
+                name
+                msgId <#-- 消息id-->
+                id = ""
+                pushURL = "sys/msg/addCommets" <#--评论信息 -->
+                listURL = "sys/msg/commets/list" <#-- 请求数据的ajax的url-->
+                delUrl = "sys/msg/commets/del" <#-- 删除评论 -->
+                title = "评论留言"
+                titleIcon = "fa fa-fw fa-comments-o"
+                >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <textarea id="${AssId}"></textarea>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function() {
+                $('#${AssId}').comments({
+                    id:'${AssId}',
+                    msgId:'${msgId}',
+                    pushURL: '${pushURL}',
+                    listURL: '${listURL}',
+                    delUrl: '${delUrl}',
+                    title: '${title}',
+                    titleIcon: '${titleIcon}'
+                });
+            })
+        </script>
+    </@compress>
+</#macro>

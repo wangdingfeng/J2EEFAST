@@ -64,9 +64,7 @@ public class RedisUtil {
 	 *不设置过期时长 
 	 */
 	public final static long NOT_EXPIRE 			= -1;
-
-
-
+	
 	/**
 	 * 指定缓存失效时间
 	 * @param key 键

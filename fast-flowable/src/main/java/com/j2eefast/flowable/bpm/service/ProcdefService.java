@@ -17,6 +17,7 @@ import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.flowable.bpm.entity.BpmProcessDefinitionEntity;
 import com.j2eefast.flowable.bpm.mapper.ProcessDefinitionMapper;
 import com.j2eefast.framework.utils.Constant;
+import com.j2eefast.framework.utils.UserUtils;
 import org.apache.commons.io.IOUtils;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ManagementService;
@@ -24,8 +25,10 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.ui.common.tenant.TenantProvider;
 import org.flowable.ui.modeler.domain.Model;
 import org.flowable.ui.modeler.serviceapi.ModelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -59,7 +62,8 @@ public class ProcdefService  extends ServiceImpl<ProcessDefinitionMapper, BpmPro
 	protected HistoryService historyService;
 	@Resource
 	protected ProcessDefinitionMapper processDefinitionMapper;
-
+	@Autowired
+	protected TenantProvider tenantProvider;
 	/**
 	 * 页面展示查询翻页
 	 */
@@ -73,6 +77,7 @@ public class ProcdefService  extends ServiceImpl<ProcessDefinitionMapper, BpmPro
 				StrUtil.nullToDefault(modelKey,""),
 				StrUtil.nullToDefault(category,""),
 				StrUtil.nullToDefault(suspensionState,""),
+				StrUtil.nullToDefault(tenantProvider.getTenantId(),""),
 				(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 //		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery()
@@ -206,7 +211,7 @@ public class ProcdefService  extends ServiceImpl<ProcessDefinitionMapper, BpmPro
 			processName += ".bpmn20.xml";
 		}
 		//TODO 添加隔离信息 先定死测试
-		String tenantId = "system";
+		String tenantId = UserUtils.getTenantId();
 		Deployment deployment = repositoryService.createDeployment()
 				.addBytes(processName, bpmnBytes)
 				.name(model.getName())

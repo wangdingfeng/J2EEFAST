@@ -37,14 +37,15 @@ public class SysUserRoleService  extends ServiceImpl<SysUserRoleMapper, SysUserR
 			return;
 		}
 		// 保存用户与角色关系
-//		List<SysUserRoleEntity> list = new ArrayList<>(roleIdList.size());
+		List<SysUserRoleEntity> list = new ArrayList<>(roleIdList.size());
 		for (Long roleId : roleIdList) {
 			SysUserRoleEntity sysUserRoleEntity = new SysUserRoleEntity();
 			sysUserRoleEntity.setUserId(userId);
 			sysUserRoleEntity.setRoleId(roleId);
-//			list.add(sysUserRoleEntity);
-			this.save(sysUserRoleEntity);
+			list.add(sysUserRoleEntity);
+//			this.save(sysUserRoleEntity);
 		}
+		this.saveBatch(list);
 	}
 
 	public List<Long> findRoleIdList(Long userId) {

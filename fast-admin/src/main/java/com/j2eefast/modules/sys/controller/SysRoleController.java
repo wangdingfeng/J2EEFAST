@@ -167,7 +167,7 @@ public class SysRoleController extends BaseController {
 	@RepeatSubmit
 	@BussinessLog(title = "角色管理", businessType = BusinessType.GRANT)
 	@PostMapping("/authUser/cancel")
-	@RequiresRoles(Constant.SU_ADMIN)
+//	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData cancelAuthUser(Long roleId,Long[] userIds){
 		return sysUserRoleService.deleteByUserIdToRoleIdsBatch(roleId,userIds) ? success() : error("修改失败");
@@ -216,7 +216,6 @@ public class SysRoleController extends BaseController {
 	@BussinessLog(title = "角色管理", businessType = BusinessType.INSERT)
 	@RequestMapping(value ="/add" , method = RequestMethod.POST)
 	@RequiresPermissions("sys:role:add")
-	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData add(@Validated SysRoleEntity role) {
 		ValidatorUtil.validateEntity(role);
@@ -230,7 +229,6 @@ public class SysRoleController extends BaseController {
 	@BussinessLog(title = "角色管理", businessType = BusinessType.UPDATE)
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	@RequiresPermissions("sys:role:edit")
-	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData update(@Validated SysRoleEntity role) {
 		ValidatorUtil.validateEntity(role);
@@ -244,7 +242,6 @@ public class SysRoleController extends BaseController {
 	@BussinessLog(title = "角色授权", businessType = BusinessType.GRANT)
 	@RequestMapping(value = "/authorization", method = RequestMethod.POST)
 	@RequiresPermissions("sys:role:authorization")
-	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData authorization(@Validated SysRoleEntity role) {
 		ValidatorUtil.validateEntity(role);
@@ -258,7 +255,6 @@ public class SysRoleController extends BaseController {
 	@BussinessLog(title = "角色管理", businessType = BusinessType.DELETE)
 	@RequestMapping( value = "/del", method = RequestMethod.POST)
 	@RequiresPermissions("sys:role:del")
-	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData delete(Long[] ids) {
 		return sysRoleService.deleteBatchByIds(ids)?success(): error("删除失败!");
@@ -296,10 +292,21 @@ public class SysRoleController extends BaseController {
 	@RepeatSubmit
 	@RequiresPermissions("sys:role:edit")
 	@PostMapping("/changeStatus")
-	@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData changeStatus(SysRoleEntity role){
 		return sysRoleService.changeStatus(role) ? success() : error("角色状态修改失败!");
 	}
 
+
+	/**
+	 * 同步用户
+	 */
+	@RequestMapping(value = "/bpmSynchronizationRole", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseData bpmSynchronizationRole() {
+		if(sysRoleService.bpmSynchronizationRole()){
+			return success();
+		}
+		return error("已经存在!");
+	}
 }

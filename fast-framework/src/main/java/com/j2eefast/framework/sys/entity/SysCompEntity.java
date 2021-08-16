@@ -9,7 +9,9 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j2eefast.common.core.base.entity.BaseEntity;
+import com.j2eefast.common.core.base.entity.annotaion.JsonListFiledIgnore;
 import lombok.Data;
 
 /**
@@ -42,22 +44,20 @@ public class SysCompEntity extends BaseEntity {
 	/**
 	 * 所有父级节点ID集合
 	 */
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String parentIds;
 
 	/**
 	 * 公司所属地区ID集合
 	 */
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String  areaIds;
 
 	/**
 	 * 租户号
 	 */
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String tenantId;
-
-	/**
-	 * 租户名称
-	 */
-	private String tenantName;
 
 	/**
 	 *排序
@@ -87,6 +87,11 @@ public class SysCompEntity extends BaseEntity {
 	private String status;
 
 	/**
+	 * 编码代号
+	 */
+	private String code;
+
+	/**
 	 * 是否假删除-改变标志
 	 */
 	@TableLogic
@@ -97,9 +102,18 @@ public class SysCompEntity extends BaseEntity {
 	 * ztree属性
 	 */
 	@TableField(exist = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Boolean open;
 	@TableField(exist = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<?> list;
+
+	/**
+	 * 是否有子元素
+	 */
+	@TableField(exist = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Boolean isParent;
 
 	/**
 	 * 地区名称
@@ -111,6 +125,7 @@ public class SysCompEntity extends BaseEntity {
 	 * 关联地区List
 	 */
 	@TableField(exist = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private List<Long> deptIdList;
 
 }

@@ -35,6 +35,11 @@ public class UserService  extends ServiceImpl<UserMapper, UserEntity> {
 		return this.updateById(user);
 	}
 
+	public boolean insertOrUpdate(UserEntity user){
+		return  this.saveOrUpdate(user);
+	}
+
+
 	public boolean delById(String id){
 		return this.removeById(id);
 	}
@@ -47,6 +52,7 @@ public class UserService  extends ServiceImpl<UserMapper, UserEntity> {
 			remoteUser.setId(user.getId());
 			remoteUser.setEmail(user.getEmail());
 			remoteUser.setFirstName(user.getFirstName()+"("+user.getId()+")");
+			remoteUser.setTenantId(user.getTenantId());
 			userRepresentations.add(new UserRepresentation(remoteUser));
 		}
 		return userRepresentations;

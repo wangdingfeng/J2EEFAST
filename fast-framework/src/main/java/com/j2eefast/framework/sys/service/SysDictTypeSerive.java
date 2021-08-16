@@ -68,7 +68,7 @@ public class SysDictTypeSerive extends ServiceImpl<SysDictTypeMapper,SysDictType
         for (SysDictTypeEntity dict : dictList){
             if ("0".equals(dict.getStatus())){
                 Ztree ztree = new Ztree();
-                ztree.setId(dict.getId());
+                ztree.setId(String.valueOf(dict.getId()));
                 ztree.setTitle(transDictName(dict));
                 ztree.setName(dict.getDictType());
                 ztrees.add(ztree);

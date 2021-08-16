@@ -1,0 +1,225 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="复杂表格案例" bodyClass="gray-bg animated fadeInRight" isAnimation=false libs=["table"]/>
+<#--<@f.tip class="danger"><strong>重要提示: &nbsp;复杂表格演示案例 </strong>,真对于表格列数据较多,查看不方便等问题提供便捷的设置方案(只演示表格设置其他的点击事件没写可能会有异常、用户页面有点击事件的案例)</@f.tip>-->
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <@f.form id="user-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label><@ctx.i18n text = "登陆账号"/></label>：<input class="form-control" type="text" name="username"/>
+                        </li>
+                        <li>
+                            <@ctx.i18n text = "邮箱"/>: <input class="form-control" type="text" name="email"/>
+                        </li>
+                        <li>
+                            <@ctx.i18n text = "手机号码"/>: <input class="form-control"  type="text" name="mobile"/>
+                        </li>
+                        <li>
+                            <label><@ctx.i18n text = "机构查询"/></label>：
+                            <div class="control-div width-150">
+                                <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                                expandLevel=true
+                                placeholder="请选择上级机构"/>
+                            </div>
+                        </li>
+                        <li>
+                            <label><@ctx.i18n text = "用户状态"/></label>：
+                            <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="opt.form.reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </@f.form>
+        </div>
+        <@table id="bootstrap-table">
+            <@shiro.hasPermission name="sys:user:add">
+                <a class="btn btn-success" onclick="opt.operate.addTab()"><i class="fa fa-plus"></i>&nbsp;<@ctx.i18n text = "新增"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="sys:user:edit">
+                <a class="btn btn-primary single disabled" onclick="opt.operate.edit()"><i class="fa fa-pencil-square-o"></i>&nbsp;<@ctx.i18n text = "修改"/></a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="sys:user:del">
+                <a class="btn btn-danger multiple disabled" onclick="opt.operate.delAll()">
+                    <i class="fa fa-remove"></i> <@ctx.i18n text = "删除"/>
+                </a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="sys:user:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </@shiro.hasPermission>
+        </@table>
+    </div>
+</div>
+<@footer>
+<script type="text/javascript">
+    var editFlag = "${permission.hasPermi('sys:user:edit')}";
+    var delFlag = "${permission.hasPermi('sys:user:del')}";
+    var resetPwdFlag = "${permission.hasPermi('sys:user:resetPwd')}";
+    var visible = ${permission.isPermitteds("sys:user:edit,sys:user:del,sys:user:resetPwd")?string('true', 'false')};
+    var datas = ${dict.getDictListJson('sys_user_show_hide')};
+    var prefix = baseURL + 'sys/user';
+
+    $(function() {
+        initTable();
+    });
+
+    /****复杂表格使用案例**/
+    function initTable() {
+        /* 初始表格对象 */
+        var options = {
+            url: prefix + "/list",
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            sortName: "createTime", // 表格初次加载、请求排序字段
+            fixedColumns: true, // 是否开启左侧冻结列
+            fixedNumber: 3, // 左侧冻结几列
+            rightFixedColumns: true,// 是否开启右侧冻结列
+            rightFixedNumber: 2, //右侧冻结几列
+            clickToSelect: false, //是否启用点击选中行
+            //height: 500, //是否需要固定表格高度
+            uniqueId: "id", /* 唯一ID */
+            showFooter: true, // 是否显示底部统计行 配合 footerFormatter,footerStyle 函数使用
+            showBorder: true, // 是否显示表格边框
+            isFixedColumn: true, // 是否开启固定表格宽度, 当我们的表格列较多则我们只需要设置每列固定宽度开启此项表格会自动出现水平滚动条
+            footerStyle: footerStyle, // 表格底部统计行的样式设置函数
+            columns:[
+                // 注意: 再设计复杂表头的时候、首先需要根据自身业务表格需求、自己想清楚表格需要多少列多少表头行
+                [
+                    // 顶部一级
+                    {
+                        title : '案例表格复杂表头一级表头',
+                        align : 'center', //对齐方式
+                        colspan : 17, // 合并列
+                        style: 'color: #000;' //设置头此行的样式
+                    }
+                ],
+                [
+                    // 二级
+                    {
+                        title : '基本信息',
+                        align : 'center',
+                        colspan : 6
+                    },
+                    {
+                        title : '其他信息',
+                        align : 'center',
+                        colspan : 10
+                    },
+                    {
+                        title: "<@ctx.i18n text = "操作"/>",
+                        rowspan: 3,  //向下合行
+                        align: 'left',visible:visible,class:'action', width: 120,formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="' + editFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "修改"/>" onclick="opt.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i></a> ');
+                        if(row.status === "0"){
+                            actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "停用"/>" onclick="disable(\'' + row.id + '\')"><i class="glyphicon glyphicon-ban-circle"></i></a> ');
+                        }else{
+                            actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "启用"/>" onclick="enable(\'' + row.id + '\')"><i class="glyphicon glyphicon-ok-circle"></i></a> ');
+                        }
+                        actions.push('<a class="' + delFlag + '" href="javascript:void(0)" title="<@ctx.i18n text = "删除"/>" onclick="opt.operate.del(\'' + row.id + '\')"><i class="fa fa-trash-o"></i></a> ');
+                        var info = "<a  class='btn btn-default btn-xs' onclick=javascript:resetPwd(\'" + row.id + "\');><i class='fa icon-key'></i> <@ctx.i18n text = "重置密码"/></a>&nbsp;";
+                        info += "<a  class='btn btn-default btn-xs' onclick=javascript:authRole(\'" + row.id +"\');><i class='fa icon-check'></i> <@ctx.i18n text = "分配角色"/></a>";
+                        actions.push('<a tabindex="0" class="' + resetPwdFlag + '" role="button" data-container="body" ' +
+                            'data-placement="left" data-toggle="popover" data-html="true" data-trigger="hover" ' +
+                            'data-content="'+info+'"><i class="fa fa-chevron-circle-right" title="<@ctx.i18n text = "更多操作"/>"></i></a>');
+                        return actions.join('');}
+                    }
+                ],
+                [
+                    //如果需要多些可以自行添加
+                    {checkbox: true,
+                        field: '_state',
+                        rowspan: 2, //合并行
+                        footColspan: 3, //统计底部行合并
+                        footerFormatter:function (value) {
+                            return '合计:';}
+                    },
+                    {
+                        title : '个人信息',
+                        align : 'center',
+                        colspan : 2
+                    },
+                    {
+                        title : '公司信息(表头个性化)',
+                        align : 'center',
+                        colspan : 3,
+                        style:'background-color: red;color: #000;' // 表头样式设置(只有表头有效)
+                    },
+                    {
+                        title : '联系方式',
+                        align : 'center',
+                        colspan : 8
+                    },
+                    {
+                        title : '操作信息',
+                        align : 'center',
+                        colspan : 2
+                    }
+                ]
+                ,
+                [
+                    {field:'ttd',title: "<@ctx.i18n text = "序号"/>",width:35, formatter: function (value, row, index) {
+                            return $.table.serialNumber(index);
+                        }
+                    },
+                    {field: 'id', title: "用户ID", width: 80,visible: false},
+                    {field: 'username', title: "<@ctx.i18n text = "账号"/>", width: 100,sortable: true,formatter: function(value, row, index){
+                            return '<a class="tb-view" onclick="opt.operate.view(\''+row.id+'\',editFlag,opt.operate.edit)">'+value+'</a>';
+                        }
+                    },
+                    {field: 'name', title:  "<@ctx.i18n text = "姓名"/>",footColspan: 4, width: 100,footerFormatter:function (value) {
+                            return opt.common.formatMoney(12390.97,2,"￥")+'（'+opt.common.moneyToChinese(12390.97) + ')';
+                    }},
+                    {field: 'compName', valign: 'middle', title: "<@ctx.i18n text = "归属公司"/>", width: 120,formatter: function (value, row, index) {
+                            return $.table.tooltip(value,5);}
+                    },
+                    {field: 'deptName', title:  "<@ctx.i18n text = "归属机构"/>", width: 120},
+                    {field: 'roleName', title: "<@ctx.i18n text = "角色"/>", width: 120,formatter: function (value, row, index) {
+                            return $.table.tooltip(value,5);}
+                    },
+                    {field: 'email', title:  "<@ctx.i18n text = "邮箱"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机1"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机2"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机3"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机4"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机5"/>",width:150},
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机6"/>",width:150},
+                    // 注意若表格为复杂表头字段设置visible: false 此行会隐藏 也不会出现
+                    {field: 'mobile', title:  "<@ctx.i18n text = "手机7"/>",width:150,visible: false},
+                    {field: 'status', title: "<@ctx.i18n text = "状态"/>",width:150, formatter: function (value, row, index) {
+                            return $.table.selectDictLabel(datas, value);
+                        }
+                    },
+                    {field: 'createTime', title: "<@ctx.i18n text = "创建时间"/>",width:150}
+                ]
+            ]
+        };
+        $.table.init(options);
+    }
+
+    /**
+     * 底部统计行单元格样式
+     * @param column
+     * @returns {*}
+     */
+    function footerStyle(column) {
+        return {
+            /* field值*/
+            _state: {
+                css: { color: 'red','font-weight': '600','background-color':'#07ca6c;'}
+            },
+            name: {
+                css: { color: '#000','font-weight': '600'}
+            }
+        }[column.field]
+    }
+</script>
+</@footer>
+</@pageTheme>

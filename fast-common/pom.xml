@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.j2eefast</groupId>
         <artifactId>fast</artifactId>
-        <version>2.2.0</version>
+        <version>2.5.0</version>
     </parent>
 
     <artifactId>fast-common</artifactId>
@@ -195,6 +195,13 @@
 			<artifactId>commons-fileupload</artifactId>
 		</dependency>
 
+        <!--FTP 工具类-->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+
          <!-- lisence验证 -->
           <dependency>
               <groupId>de.schlichtherle.truelicense</groupId>
@@ -227,6 +234,13 @@
                   </exclusion>
               </exclusions>
           </dependency>
+
+        <!--U2报表-->
+        <dependency>
+            <groupId>com.bstek.ureport</groupId>
+            <artifactId>ureport2-console</artifactId>
+            <version>2.2.9</version>
+        </dependency>
 
          <!-- 报表工具-->
          <dependency>

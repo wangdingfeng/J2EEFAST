@@ -41,9 +41,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Consumer;
 /**
@@ -161,7 +159,8 @@ public class SqlSessionFactoryCreator {
 		BeanUtil.copyProperties(originGlobalConfig, globalConfig, CopyOptions.create().ignoreError());
 
 
-		mybatisConfiguration.setGlobalConfig(globalConfig);
+
+		GlobalConfigUtils.setGlobalConfig(mybatisConfiguration, globalConfig);
 
 		// TODO 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
 		MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
@@ -223,9 +222,9 @@ public class SqlSessionFactoryCreator {
 		if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
 			Resource[] resource = this.properties.resolveMapperLocations();
 			Resource[] resource1 = new Resource[0];
-//			Resource[] resource2 = new Resource[0];
+			Resource[] resource2 = new Resource[0];
 			if(dbName.equals(DataSourceContext.FLOWABLE_DATASOURCE_NAME)){
-//				Resource[] resource3 = new Resource[0];
+				Resource[] resource3 = new Resource[0];
 				try {
 					resource1 = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 							getResources("classpath*:/META-INF/modeler-mybatis-mappings/*.xml");
@@ -233,9 +232,9 @@ public class SqlSessionFactoryCreator {
 //							getResources("classpath*:mapper/bpm/*.xml");
 //					resource3  = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).
 //							getResources("classpath*:mapper/generator/*.xml");
+//					Resource[] mapper = ArrayUtils.addAll(resource1, resource2);
+//					Resource[] mapperLocations = ArrayUtils.addAll(mapper,resource3);
 					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource);
-//					Resource[] mapperLocations = ArrayUtils.addAll(resource1, resource2);
-//					Resource[] mapper = ArrayUtils.addAll(mapperLocations,resource2);
 					factory.setMapperLocations(mapperLocations);
 				} catch (IOException e) {
 					log.error("异常");
@@ -261,8 +260,9 @@ public class SqlSessionFactoryCreator {
 		}
 		// TODO 注入填充器
 		this.getBeanThen(MetaObjectHandler.class, globalConfig::setMetaObjectHandler);
+
 		// TODO 注入主键生成器
-		this.getBeanThen(IKeyGenerator.class, i -> globalConfig.getDbConfig().setKeyGenerator(i));
+		this.getBeansThen(IKeyGenerator.class, i -> globalConfig.getDbConfig().setKeyGenerators(i));
 		// TODO 注入sql注入器
 		this.getBeanThen(ISqlInjector.class, globalConfig::setSqlInjector);
 		// TODO 注入ID生成器
@@ -288,6 +288,22 @@ public class SqlSessionFactoryCreator {
 	private <T> void getBeanThen(Class<T> clazz, Consumer<T> consumer) {
 		if (this.applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
 			consumer.accept(this.applicationContext.getBean(clazz));
+		}
+	}
+
+	/**
+	 * 检查spring容器里是否有对应的bean,有则进行消费
+	 *
+	 * @param clazz    class
+	 * @param consumer 消费
+	 * @param <T>      泛型
+	 */
+	private <T> void getBeansThen(Class<T> clazz, Consumer<List<T>> consumer) {
+		if (this.applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
+			final Map<String, T> beansOfType = this.applicationContext.getBeansOfType(clazz);
+			List<T> clazzList = new ArrayList<>();
+			beansOfType.forEach((k, v) -> clazzList.add(v));
+			consumer.accept(clazzList);
 		}
 	}
 

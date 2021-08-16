@@ -6,22 +6,23 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
          id AS "id", username AS "username",ipaddr AS "ipaddr", login_location AS "loginLocation", browser AS "browser", os AS "os",
-         mobile AS "mobile", status AS "status", msg AS "msg", login_time AS "loginTime", comp_id AS "compId"
+         mobile AS "mobile", status AS "status", msg AS "msg", login_time AS "loginTime", comp_id AS "compId", user_agent AS "userAgent"
     </sql>
 
     <!--  实体栏位  -->
     <sql id="sysLoginInfoColumns">
-          a.id AS "id"   ,
-          a.username AS "username"   ,
-          a.ipaddr AS "ipaddr"   ,
-          a.login_location AS "loginLocation"   ,
-          a.browser AS "browser"   ,
-          a.os AS "os"   ,
-          a.mobile AS "mobile"   ,
-          a.status AS "status"   ,
-          a.msg AS "msg"   ,
-          a.login_time AS "loginTime"   ,
-          c.name AS "compName"   ,
+          a.id AS "id",
+          a.username AS "username",
+          a.ipaddr AS "ipaddr",
+          a.login_location AS "loginLocation",
+          a.browser AS "browser",
+          a.os AS "os",
+          a.mobile AS "mobile" ,
+          a.status AS "status",
+          a.user_agent AS "userAgent",
+          a.msg AS "msg",
+          a.login_time AS "loginTime",
+          c.name AS "compName",
           a.dept_id AS "deptId"
       </sql>
 

@@ -1,0 +1,159 @@
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="多表联动" isAnimation=false libs=["table","layout-latest"]/>
+<!--上下分割 -->
+<div class="ui-layout-north">
+	<div class="mt5">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5><i class="fa icon-grid"></i> 用户角色</h5>
+                </div>
+                <div class="ibox-content no-padding">
+                    <div class="ui-layout-content">
+        				<@table id="role-table" isNative=true/>
+       			   </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+<div class="ui-layout-center">
+    <div class="padding:10px">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5><i class="fa icon-user"></i> 用户信息</h5>
+                </div>
+                <div class="ibox-content pl5 pr5">
+       			    <@f.form id="user-form">
+       			    	<@f.hidden name="roleKey"/>
+		            </@f.form>
+		            <@table id="user-table" isNative=true>
+		            </@table>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>
+<@footer>
+<script type="text/javascript">
+	var datas = ${dict.getDictListJson('sys_normal_disable')};
+    var dataScope = ${dict.getDictListJson('sys_role_data_scope')};
+	$(function() {
+	        /*初始化页面布局*/
+	        var panehHidden = false;
+	        if ($(this).width() < 767) {
+	            panehHidden = true;
+	        }
+	        /*初始化布局*/
+	        $('body').layout({
+	            north__size: 390
+	            ,onresize: function(){
+					$(window).resize();
+				}
+	        });
+	        
+	        //初始化角色第一个表
+	        initRoleTable();
+	        //初始化用户第二个表
+	        initUserTable();
+	 });
+	 
+	 /**
+	  * 初始化第一个表格数据
+	  */
+	 function initRoleTable(){
+	 		var prefix = baseURL + 'sys/role';
+            var options = {
+                id: "role-table", //多个表指定表格对象ID
+                url: prefix + "/list",
+                sortName: "createTime",
+                uniqueId: "id",
+                showSearch: false,
+                showBorder: true, // 是否显示表格边框
+                showToggle: false,
+                showColumns: false,
+                outcheckbox: false,
+                showRefresh: false,
+                rememberSelected: false,
+                height: 280, //设置固定高度
+                columns: [
+                    {
+						radio: true
+                    },
+                    {
+	                    title: "<@ctx.i18n text = "序号"/>",width:35, formatter: function (value, row, index) {
+	                        return $.table.serialNumber(index);
+	                    }
+	                },
+                    {field: 'id',title: "<@ctx.i18n text = "角色编码"/>", sortable: true},
+                    {field: 'roleName', title: "<@ctx.i18n text = "角色名称"/>"},
+                    {field: 'roleKey', title: "<@ctx.i18n text = "权限字符"/>"},
+                    {field: 'dataScope', title: "<@ctx.i18n text = "数据范围"/>", formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(dataScope, value);
+                    }},
+                    {field: 'roleSort', title: "<@ctx.i18n text = "顺序"/>",sortable:true},
+                    {field: 'status', title: "<@ctx.i18n text = "状态"/>", align: 'center', formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(datas, value);
+                    }},
+                    {field: 'createTime', title: "<@ctx.i18n text = "创建时间"/>",sortable: true}
+                    ]
+                ,onClickRow: function(rows){ //点击行关联查询第二个表
+                    $('#roleKey').val(rows.roleKey);
+                    $.table.search('user-table','user-form');
+                }
+            };
+            $.table.init(options);
+	 }
+	 
+	 /***第二个表**/
+	 var userDatas = ${dict.getDictListJson('sys_user_show_hide')};
+	 function initUserTable(){
+        var prefix = baseURL + 'sys/user';
+        var options = {
+        	id: "user-table",  //多个表指定表格对象ID
+        	formId: "user-form", //查询form表单ID
+            url: prefix + "/list",
+            showSearch: false,
+            showBorder: true, // 是否显示表格边框
+            showToggle: false,
+            showColumns: false,
+            outcheckbox: false,
+            showRefresh: false,
+            pageSize: 12,
+            pageList: [12, 24, 36],
+            sortName: "createTime",
+            uniqueId: "id", /* 唯一ID */
+            columns:[
+                {
+                    title: "<@ctx.i18n text = "序号"/>",width:35, formatter: function (value, row, index) {
+                        return $.table.serialNumber(index);
+                    }
+                },
+                {field: 'id', title: "<@ctx.i18n text = "用户ID"/>", sortable: true, visible: false},
+                {field: 'username', title: "<@ctx.i18n text = "账号"/>",sortable: true
+                },
+                {field: 'name', title:  "<@ctx.i18n text = "姓名"/>"},
+                {field: 'compName', valign: 'middle', title: "<@ctx.i18n text = "归属公司"/>",formatter: function (value, row, index) {
+                        return $.table.tooltip(value,5);}
+                },
+                {field: 'deptName', title:  "<@ctx.i18n text = "归属机构"/>"},
+                {field: 'roleName', title: "<@ctx.i18n text = "角色"/>",formatter: function (value, row, index) {
+                        return $.table.tooltip(value,5);}
+                },
+                {field: 'email', title:  "<@ctx.i18n text = "邮箱"/>"},
+                {field: 'mobile', title:  "<@ctx.i18n text = "手机"/>"},
+                {
+                    field: 'status', title: "<@ctx.i18n text = "状态"/>", formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(userDatas, value);
+                    }
+                },
+                {field: 'createTime', title: "<@ctx.i18n text = "创建时间"/>", sortable: true},
+            ]
+        };
+        $.table.init(options);
+	 }
+</script>
+</@footer>
+</@pageTheme>

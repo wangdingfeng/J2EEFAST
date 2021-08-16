@@ -13,6 +13,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.j2eefast.common.core.utils.HttpContextUtil;
+import com.j2eefast.common.core.utils.ServletUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.oss.cloud.CloudStorageService;
@@ -45,19 +46,19 @@ public class FileUploadUtils {
      * @param bizType 业务类型
      */
     public static void saveFileUpload(Long bizId,String bizType){
-        HttpServletRequest request = HttpContextUtil.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         String fileUploads = request.getParameter(bizType);
         String fileDels = request.getParameter(bizType+"__del");
         //删除关联
         if(ToolUtil.isNotEmpty(fileDels)){
-            String[] dels = StrUtil.split(fileDels,StrUtil.COMMA);
+            List<String> dels = StrUtil.split(fileDels,StrUtil.COMMA);
             for(String fId: dels){
                 ConstantFactory.me().getSysFileUploadService().removeByBizId(Convert.toLong(fId),bizId);
             }
         }
         //新增关联
         if(ToolUtil.isNotEmpty(fileUploads)){
-            String[] files = StrUtil.split(fileUploads,StrUtil.COMMA);
+        	List<String> files = StrUtil.split(fileUploads,StrUtil.COMMA);
             SysFileService sysFileService = SpringUtil.getBean(SysFileService.class);
             for(String fileId: files){
                 if(ConstantFactory.me().getSysFileUploadService().getSysFileUploadByBizId(Convert.toLong(fileId),bizId)){
@@ -195,7 +196,9 @@ public class FileUploadUtils {
         } else {
             extension = "png";
         }
-        String saveName = IdUtil.fastSimpleUUID() + "." + extension ;
+        //文件名称
+        String fileMd5 = IdUtil.fastSimpleUUID();
+        String saveName = fileMd5 + "." + extension ;
         if (StringUtils.isNotBlank(fileName)) {     	
         	saveName = fileName + "." + extension; 
         }
@@ -220,18 +223,18 @@ public class FileUploadUtils {
         try {
             //删除
             FileUploadUtils.me().removeFileUpload(bizId,bizType);
-
+            //本地
             if(ossType == Constant.CloudService.LOCAL.getValue()){
                 FileUtil.writeBytes(data, Global.getAttachPath() + imageUrl);
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+            //阿里云 / 七牛云 / 腾讯 / FTP
+            }else{
                 imageUrl = "attach"+imageUrl;
-                //阿里云
                 CloudStorageService cloud = OSSFactory.build();
                 cloud.upload(data, imageUrl);
                 cloud.shutdown();
             }
             SysFilesEntity sysFile = new SysFilesEntity();
-            sysFile.setFileMd5(ToolUtil.encodingFilename(saveName));
+            sysFile.setFileMd5(fileMd5);
             sysFile.setFileName(saveName);
             sysFile.setFilePath(imageUrl);
             sysFile.setClassify("1");
@@ -245,7 +248,7 @@ public class FileUploadUtils {
 	             sysFileUploadEntity.setFileName(saveName);
 	             sysFileUploadEntity.setFileId(sysFile.getId());
 	             sysFileUploadEntity.setBizType(bizType);
-                ConstantFactory.me().getSysFileUploadService().saveSysFileUpload(sysFileUploadEntity);
+                 ConstantFactory.me().getSysFileUploadService().saveSysFileUpload(sysFileUploadEntity);
             }
         } catch (IORuntimeException e) {
             e.printStackTrace();

@@ -9,14 +9,30 @@
  *       2020-08-06 修复多级菜单情况下点击TAB菜单不切换问题
  *       2020-08-18 解决小窗口菜单点击出现重叠问题
  *       2020-09-29 新增主页加载动画
- * @version 1.0.13
+ * @version 1.1.0
  */
 //菜单添加事件
 +function ($) {
 
-    //主页加载动画
+    //主页初始化加载动作
     opt.domReady(function(){
+        //设置页面模式
+        if(typeof (Storage) !== 'undefined'){
+            var css = opt.storage.get('mode',0);
+            if(typeof  css !== 'undefined' &&
+                css && css.length > 0){
+                $('html').addClass(css)
+            }
+        }
+        //加载动画
         setTimeout(function(){
+            if(typeof (Storage) !== 'undefined'){
+                var _footer = opt.storage.get('_footer');
+                if(typeof  _footer !== 'undefined' &&
+                    _footer && _footer == "1"){
+                    $('body').find('.main-footer').addClass("hidden");
+                }
+            }
             $('.mini-loader').css('display','none').remove();
         },1000);
     });
@@ -371,13 +387,27 @@
                 if(!$("#leftMenu-" + _module).hasClass('active')){
                     $("#leftMenu-" + _module).fadeIn(500).addClass('active');
                 }
+
                 var flag = false;
+
                 $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                     if(that.queryMenu($(this), _id)){
                         flag = true;
                         return;
                     }
                 });
+                //判断菜单树是否有根菜单
+                $('#leftMenu-' + _module).children('.tree-link').each(function (i) {
+                    if($(this).children('a').data('id') == _id){
+                        $(this).children('a').addClass('active');
+                        $(this).addClass('active');
+                    }else{
+                        $(this).children('a').removeClass('active');
+                        $(this).removeClass('active');
+                    }
+                    flag = true;
+                });
+
                 if(flag){
                     $('#leftMenu-' + _module).children('.treeview').each(function (i) {
                         that.recursiveHideMenu($(this));
@@ -386,6 +416,10 @@
                         }
                     });
                 }
+
+
+
+
             }
             /*********************TAB刷新功能***************************/
             if($(this).attr("lay-id") === opt.variable._tabIndex +""){
@@ -416,7 +450,14 @@
                     });
                 })
             }
+        });
+
+        $(ClassName.classType).children('.tree-link').each(function (i) {
+            $(this).on('click',function (event) {
+                that.toggle($(this), event);
+            });
         })
+
         that._tabSwitch();
     };
 
@@ -554,11 +595,9 @@ function scrollTabRight(){
 //设置监听事件
 $(function () {
 
-
-
     /*$(window).on("load",function () {
         setTimeout(function(){
-            opt.unblock(window)
+            //opt.unblock(window)
         }, 50);
     });*/
 
@@ -594,7 +633,7 @@ $(function () {
     $('#switchSkin').on('click', function () {
         var area = ['autopx','autopx'];
         if($(window).width() > 530){
-            area = ["530px", "386px"];
+            area = ["530px", "426px"];
         }
         opt.layer.open({
             type : 2,
@@ -675,6 +714,18 @@ $(function () {
     $('#lockOs').on('click', function () {
         window.location.href  = baseURL + "Account/Lock?" + Math.random();
         return;
+    });
+
+    //查看用户全部内部消息
+    $('#_allMsg').on('click', function () {
+        var data = {
+            href: 'sys/msg/userMsg',
+            icon: 'fa fa-envelope-o',
+            title: $.i18n.prop('查看全部信息'),
+            id: '-123456',
+            module:'_sysInfo'
+        };
+        opt.navTabAdd(data);
     });
 
     // 右键菜单实现
@@ -836,6 +887,51 @@ $(function () {
         var url = hash.substring(1, hash.length);
         $('em[data-url$="' + url + '"]').click();
     };
+
+    //查询用户所有未读消息
+    opt.common.sendAjax({
+        type: "POST",
+        url: "sys/getMsgPush",
+        dataType: "json",
+        success: function (result) {
+            if (result.code == opt.variable.web_status.SUCCESS && result.data && result.data.length > 0) {
+                $("#_msgNum").after(opt.common.sprintf('<span data-index="_new" class="label label-danger">%s</span>',result.data.length));
+                $("#_msgHeader").text(opt.common.sprintf('您有%s条新信息',result.data.length));
+                var html = [];
+                html.push('<ul class="menu">');
+                for(var i=0; i<result.data.length; i++){
+                    var color = "";
+                    if(result.data[i].msgLevel == "1"){
+                        color = 'style="color: #f7c300";font-weight: bold;';
+                    }else if(result.data[i].msgLevel == "2"){
+                        color = 'style="color: red";font-weight: bold;';
+                    }
+                    html.push(opt.common.sprintf('<li><a href="#" data-id="%s"><i class="fa fa-envelope-open-o" %s></i>%s</a></li>',result.data[i].id,color,result.data[i].msgTitle));
+                }
+                html.push('</ul>');
+                $("#_msgCentes").append(html.join(''));
+                $("#_msgCentes").find('a').off('click').on('click',function(){
+                    var id = $(event.currentTarget).data('id');
+                    var data = {
+                        href: 'sys/msg/pushView/'+id,
+                        icon: 'fa fa-envelope-o',
+                        title: $.i18n.prop('内部消息'),
+                        id: id,
+                        module:'_sysInfo'
+                    };
+                    opt.navTabAdd(data);
+                });
+            }
+        },
+        error: function(e){
+            console.error(JSON.stringify(e));
+            if(e.responseJSON.msg){
+                opt.error(e.responseJSON.msg);
+            }
+        }
+    });
+
+    // opt.common.watermark({"watermark_txt":"J2eeFAST 开源版本 v2.2.2"});
     //////////////////////////////////////////////////////////////////
 
 });
@@ -1454,7 +1550,6 @@ $(function () {
 
     Tree.prototype._setUpListeners = function () {
         var that = this;
-
         $(this.element).on('click', this.options.trigger, function (event) {
             that.toggle($(this), event);
         });

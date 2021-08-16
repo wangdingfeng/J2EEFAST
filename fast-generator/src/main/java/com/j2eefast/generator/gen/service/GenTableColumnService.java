@@ -56,7 +56,7 @@ public class GenTableColumnService extends ServiceImpl<GenTableColumnMapper,GenT
         List<Ztree> list = new ArrayList<>();
         for(GenTableColumnEntity tableEntity: page.getRecords()){
             Ztree ztree = new Ztree();
-            ztree.setId(tableEntity.getId());
+            ztree.setId(String.valueOf(tableEntity.getId()));
             ztree.setName(tableEntity.getColumnName() + "("+tableEntity.getColumnComment()+")");
             list.add(ztree);
         }

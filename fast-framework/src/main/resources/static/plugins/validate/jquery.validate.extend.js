@@ -50,9 +50,10 @@ opt.domReady(function(){
 	}, "金额必须大于0并且只能精确到分");
 
 	jQuery.validator.addMethod("compareDate",function(value, element, param){
-		var target = $( param ).val();;
-		var date1 = new Date(Date.parse(target.replace("-", "/")));
-		var date2 = new Date(Date.parse(value.replace("-", "/")));
+		var target = $( param ).val().replace(/-/g, "/");
+		value = value.replace(/-/g, "/");
+		var date1 = Date.parse(target);
+		var date2 = Date.parse(value);
 		return (date1 < date2) && (date2 > new Date());
 	});
 

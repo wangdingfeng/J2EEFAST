@@ -1,1 +1,1 @@
-postgresql 数据库升级脚本
+postgresql 数据库升级脚本目录

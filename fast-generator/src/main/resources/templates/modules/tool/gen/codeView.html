@@ -1,13 +1,13 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="代码预览"  libs=["prism"]>
-<style>
-    body{
-        font-size: 15px !important;
-    }
-    .nav-tabs-custom{margin-bottom:0 !important;box-shadow:none !important;border-radius:0 !important;}
-</style>
-</@header>
+    <@header title="代码预览"  libs=["prism"]>
+        <style>
+            body{
+                font-size: 15px !important;
+            }
+            .nav-tabs-custom{margin-bottom:0 !important;box-shadow:none !important;border-radius:0 !important;}
+        </style>
+    </@header>
     <div class="wrapper">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -42,13 +42,14 @@
             </div>
         </div>
     </div>
-<@footer>
-<script type="text/javascript">
+    <@footer>
+        <script type="text/javascript">
 
-    function onLoadSuccess() {
-        opt.modal.msg("数据正在加载...请稍后");
-    }
+            function onLoadSuccess() {
 
-</script>
-</@footer>
+                opt.modal.msg("数据正在加载...请稍后");
+            }
+
+        </script>
+    </@footer>
 </@pageTheme>

@@ -5,23 +5,14 @@
  */
 package com.j2eefast.modules.demo.contorller;
 
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import com.j2eefast.common.core.controller.BaseController;
-import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.framework.utils.Constant;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.*;
 
 /**
@@ -56,6 +47,15 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/component";
     }
 
+    @GetMapping("/table")
+    public String table(){
+        return urlPrefix + "/table";
+    }
+
+    @GetMapping("/fromTable")
+    public String fromTable(){
+        return urlPrefix + "/fromTable";
+    }
     /**
      * 创建表单视图
      * @return
@@ -66,7 +66,26 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/addfrom";
     }
 
-
+    /**
+     * 图表示例
+     * @return
+     */
+    @RequiresPermissions("sys:demo:addrpert")
+    @GetMapping("/addrpert")
+    public String addrpert() {
+        return urlPrefix + "/addrpert";
+    }
+    
+    
+    /**
+     * 多表联动示例
+     */
+    @RequiresPermissions("sys:demo:multiTable")
+    @GetMapping("/multiTable")
+    public String multiTable() {
+        return urlPrefix + "/multiTable";
+    }
+    
     /**
      * 消息组件
      * @return
@@ -163,11 +182,15 @@ public class SysDemoController extends BaseController {
         return urlPrefix + "/wizard";
     }
 
+
+
     @GetMapping("/test")
     public String test(ModelMap mmap) {
         mmap.put("mode",FileUtil.readUtf8String(Constant.BASE_WEB_HTML +urlPrefix+ "/mode1.txt"));
         return urlPrefix + "/test";
     }
+
+
 
 //    获取redis信息
 //    @RequestMapping(value = "/getRedis", method = RequestMethod.GET)

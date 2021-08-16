@@ -135,15 +135,15 @@ public class LoginUserEntity implements Serializable {
 	 */
 	private Set<String> permissions;
 
-	/**
-	 * 租户编码
-	 */
-	private String tenantCode;
-
-	/**
-	 * 租户的数据源名称
-	 */
-	private String tenantDataSourceName;
+//	/**
+//	 * 租户编码
+//	 */
+//	private String tenantCode;
+//
+//	/**
+//	 * 租户的数据源名称
+//	 */
+//	private String tenantDataSourceName;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
 	private Date loginTime;
@@ -174,7 +174,21 @@ public class LoginUserEntity implements Serializable {
 	 */
 	private String nowLoginLocation;
 
+	/**
+	 * 租户ID
+	 */
+	private String tenantId;
+
+	/**
+	 * 租户名称
+	 */
+	private String tenanName;
+
+	/**
+	 * 是否管理员租户
+	 */
+	private Boolean superTenant;
+
 
 	private String sId;
-
 }

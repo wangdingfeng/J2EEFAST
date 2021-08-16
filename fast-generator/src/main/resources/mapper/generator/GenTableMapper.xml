@@ -397,10 +397,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<where>
 				AND a.name NOT LIKE 'qrtz_%'   <!-- 不显示 计划任务的表-->
 				<if test="tableName != null and tableName != ''">
-					AND a.name LIKE CONCAT('%', #{tableName}, '%')
+					-- AND a.name LIKE CONCAT('%', #{tableName}, '%')
+					AND a.name LIKE '%' +  #{tableName} + '%'
 				</if>
 				<if test="tableComment != null and tableComment != ''">
-					AND k.t_comment LIKE CONCAT('%', #{tableComment}, '%')
+					-- AND k.t_comment LIKE CONCAT('%', #{tableComment}, '%')
+					AND k.t_comment LIKE '%' + #{tableComment} + '%'
 				</if>
 				<if test="notList != null">
 					AND a.name NOT IN

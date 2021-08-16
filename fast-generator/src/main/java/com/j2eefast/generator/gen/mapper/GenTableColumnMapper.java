@@ -5,6 +5,7 @@
  */
 package com.j2eefast.generator.gen.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.j2eefast.generator.gen.entity.GenTableColumnEntity;
 import java.util.List;
@@ -44,6 +45,7 @@ public interface GenTableColumnMapper extends BaseMapper<GenTableColumnEntity> {
 	* @author mfksn001@163.com
 	* @Date: 2020年6月1日
 	 */
+	@InterceptorIgnore(tenantLine = "true")
 	List<GenTableColumnEntity> generateDbTableColumnsByName(@Param("dbType") String dbType ,
                                                             @Param("schema") String schema ,
                                                             @Param("tableName") String tableName);

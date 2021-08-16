@@ -7,8 +7,11 @@ package com.j2eefast.modules.sys.controller;
 
 import java.io.File;
 import java.util.*;
+
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.utils.*;
@@ -124,6 +127,25 @@ public class SysUserController extends BaseController {
 		return urlPrefix + "/edit";
 	}
 
+	@GetMapping("/getAvatar/{userId}")
+	@ResponseBody
+	public ResponseData getAvatar(@PathVariable("userId") Long userId){
+		SysUserEntity user = sysUserService.findUserByUserId(userId);
+//		//获取头像base64信息
+//		StringBuffer avatar = new StringBuffer("");
+//		if(ToolUtil.isNotEmpty(user.getAvatar())){
+//			String filePath = FileUtil.normalize(Global.getRootPath()+ user.getAvatar());
+//			if(FileUtil.exist(filePath)){
+//				String exName = FileUtil.extName(filePath);
+//				avatar.append("data:image/");
+//				avatar.append(exName);
+//				avatar.append(";base64,");
+//				avatar.append(Base64.encode(FileUtil.getInputStream(filePath)));
+//			}
+//		}
+		return success().put("name",user.getName()).put("url", StrUtil.blankToDefault(user.getAvatar(),""));
+	}
+
 	@GetMapping("/view/{userId}")
 	public String view(@PathVariable("userId") Long userId,ModelMap mmap){
 		//check data scope
@@ -236,7 +258,7 @@ public class SysUserController extends BaseController {
 		return urlPrefix + "/resetPwd";
 	}
 
-	@RequiresRoles(Constant.SU_ADMIN)
+	//@RequiresRoles(Constant.SU_ADMIN)
 	@RequiresPermissions("sys:user:resetPwd")
 	@BussinessLog(title = "重置密码", businessType = BusinessType.UPDATE)
 	@RepeatSubmit
@@ -271,9 +293,6 @@ public class SysUserController extends BaseController {
 		}
 		return success();
 	}
-
-
-
 
 
 	/**
@@ -312,7 +331,7 @@ public class SysUserController extends BaseController {
 		if (ToolUtil.isEmpty(user.getPassword())) {
 			return error("密码不能为空");
 		}
-		sysCompService.checkDataScope(user.getId());
+		sysCompService.checkDataScope(user.getCompId());
 		ValidatorUtil.validateEntity(user);
 		return sysUserService.add(user)?success(): error("新增失败!");
 	}
@@ -334,6 +353,8 @@ public class SysUserController extends BaseController {
 		ValidatorUtil.validateEntity(user);
 		return sysUserService.update(user) ? success() : error("修改失败!");
 	}
+
+
 
 
 	/**
@@ -386,7 +407,7 @@ public class SysUserController extends BaseController {
 	@BussinessLog(title = "角色管理", businessType = BusinessType.DELETE)
 	@RequestMapping( value = "/del", method = RequestMethod.POST)
 	@RequiresPermissions("sys:user:del")
-	@RequiresRoles(Constant.SU_ADMIN)
+	//@RequiresRoles(Constant.SU_ADMIN)
 	@ResponseBody
 	public ResponseData delete(Long[] ids) {
 		if(ArrayUtil.contains(ids,UserUtils.getUserId())){
@@ -396,5 +417,17 @@ public class SysUserController extends BaseController {
 		sysUserService.checkDataScope(ids);
 		
 		return sysUserService.delUser(ids)?success(): error("删除失败!");
+	}
+
+	/**
+	 * 同步用户
+	 */
+	@RequestMapping(value = "/bpmSynchronizationUser", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseData bpmSynchronizationUser() {
+		if(sysUserService.bpmSynchronizationUser()){
+			return success();
+		}
+		return error("已经存在!");
 	}
 }

@@ -5,6 +5,7 @@
  */
 package com.j2eefast.flowable.bpm.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,19 +21,24 @@ public interface BpmTaskMapper extends BaseMapper<BpmTaskEntity> {
 	 * @param sql_filter
 	 * @return
 	 */
+	@InterceptorIgnore(tenantLine = "true")
 	Page<BpmTaskEntity> findApplyingTasksPage(IPage<?> params,
 											  @Param("userId") String userId,
+											  @Param("tenantId") String tenantId,
 											  @Param("sql_filter") String sql_filter);
 
 
 	/**
+	 * 多租户模式 忽略自行处理
 	 * 查询已办任务
 	 * @param params
 	 * @param userId
 	 * @param sql_filter
 	 * @return
 	 */
+	@InterceptorIgnore(tenantLine = "true")
 	Page<BpmTaskEntity> findApplyedTasksPage(IPage<?> params,
 											  @Param("userId") String userId,
+											  @Param("tenantId") String tenantId,
 											  @Param("sql_filter") String sql_filter);
 }

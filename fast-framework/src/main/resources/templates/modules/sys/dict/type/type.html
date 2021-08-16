@@ -84,7 +84,7 @@
                     {field: 'id',title: '字典主键', sortable: true},
                     {field: 'dictName', title: '字典名称'},
                     {field: 'dictType', title: '字典类型', formatter: function(value, row, index) {
-                            return '<a href="javascript:void(0)" onclick="_vm.detail(\'' + row.id + '\')">' + value + '</a>';
+                            return '<a class="tb-view" href="javascript:void(0)" onclick="_vm.detail(\'' + row.id + '\')">' + value + '</a>';
                     }},
                     {field: 'status', title: $.i18n.prop("状态"), align: 'center', formatter: function(value, row, index) {
                             return $.table.selectDictLabel(statusDatas, value);

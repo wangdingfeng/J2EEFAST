@@ -1,0 +1,94 @@
+<#--
+  //文件上传控件
+-->
+<#macro fileupload
+                    name
+                    id = ""
+                    bizId = "" <#-- 业务ID-->
+                    bizType = "" <#-- 业务类型-->
+                    uploadType = "all" <#-- 上传文件类型-->
+                    uploadUrl = "sys/comm/upload" <#-- 上传路径-->
+                    fileListUrl = "sys/comm/fileList" <#-- 回显查询路径-->
+                    downloadUrl = "sys/comm/download" <#--文件下载路径 -->
+                    isLazy = true <#-- -->
+                    readonly = false
+                    preview = ""
+                    tipTitle = "" <#--文件上传表格头显示 -->
+                    maxUploadNum = "300"
+                    >
+    <div id="<#if id == "">${name}<#else>${id}</#if>_wup" class="wup_container ">
+        <input id="<#if id == "">${name}<#else>${id}</#if>" name="<#if bizType == "">${name}<#else>${bizType}</#if>" value="" class="wup_input ${uploadType}"
+               data-msg-required="请上传图片"/>
+        <input id="<#if id == "">${name}<#else>${id}</#if>__del" name="<#if bizType == "">${name}<#else>${bizType}</#if>__del" value="" type="hidden"/>
+        <div class="area">
+            <div id="<#if id == "">${name}<#else>${id}</#if>_Uploader" class="wup_<#if uploadType=="image">img<#else>file</#if>">
+                <div class="statusBar" style="display:none;">
+                    <div class="progress">
+                        <span class="text">0%</span>
+                        <span class="percentage"></span>
+                    </div>
+                    <div class="info"></div>
+                    <div class="btns">
+                        <div id="<#if id == "">${name}<#else>${id}</#if>_filePicker2" class="webuploader-container"></div>
+                        <div class="uploadBtn state-pedding">开始上传</div>
+                    </div>
+                </div>
+                <div class="queueList">
+                    <#if uploadType=="image">
+                        <ul id="<#if id == "">${name}<#else>${id}</#if>_fileLists" class="filelist"></ul>
+                    <#else>
+                        <div class="table-responsive">
+                            <table class="table table-striped filetable table-hover">
+                                <tbody id="<#if id == "">${name}<#else>${id}</#if>_fileLists"></tbody>
+                            </table>
+                        </div>
+                    </#if>
+                    <div id="<#if id == "">${name}<#else>${id}</#if>dndArea" class="placeholder">
+                        <div id="<#if id == "">${name}<#else>${id}</#if>_filePicker" class="webuploader-container"></div>
+                        <p><#if !readonly>或将<#if uploadType == "image">照片<#else>文件</#if>拖到这里，最多可选 ${maxUploadNum} <#if uploadType == "image">张<#else>个</#if><#else>无文件附件</#if></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function() {
+                $('#<#if id == "">${name}<#else>${id}</#if>_Uploader').webUploadex({
+                    id: '<#if id == "">${name}<#else>${id}</#if>',
+                    bizId: '${bizId}',
+                    bizType: '${bizType}',
+                    readonly: ${readonly?string('true','false')},
+                    returnPath: false,
+                    filePathInputId: '',
+                    fileNameInputId: '',
+                    uploadType: "${uploadType}",
+                    maxFileSize: 100*1024*1024,
+                    imageAllowSuffixes: '.gif,.bmp,.jpeg,.jpg,.ico,.png,.tif,.tiff,',
+                    mediaAllowSuffixes: '.flv,.swf,.mkv,webm,.mid,.mov,.mp3,.mp4,.m4v,.mpc,.mpeg,.mpg,.swf,.wav,.wma,.wmv,.avi,.rm,.rmi,.rmvb,.aiff,.asf,.ogg,.ogv,',
+                    fileAllowSuffixes: '.doc,.docx,.rtf,.xls,.xlsx,.csv,.ppt,.pptx,.pdf,.vsd,.txt,.md,.xml,.rar,.zip,7z,.tar,.tgz,.jar,.gz,.gzip,.bz2,.cab,.iso,.ipa,.apk,',
+                    chunked: false,
+                    chunkSize: 10485760,
+                    threads: 1,
+                    tipTitle:"${tipTitle}",
+                    maxUploadNum: ${maxUploadNum},
+                    imageMaxWidth: 1024,
+                    imageMaxHeight: 768,
+                    service: {
+                        upload: baseURL +'${uploadUrl}',
+                        download: baseURL + '${downloadUrl}',
+                        fileList: baseURL +'${fileListUrl}'
+                    },
+                    extendParams: {},
+                    isLazy: ${isLazy?string('true','false')},
+                    preview: "${preview}",
+                    callback: function(id, act, $this, fileUploadId, fileUrl, fileName){
+                        if(typeof fileuploadCallback == 'function'){
+                            fileuploadCallback(id, act, $this, fileUploadId, fileUrl, fileName);
+                        }
+                    }
+                });
+            })
+        </script>
+    </@compress>
+</#macro>

@@ -15,22 +15,22 @@ var FLOWABLE = FLOWABLE || {};
 FLOWABLE.URL = {
 
     getModel: function(modelId) {
-        return FLOWABLE.CONFIG.contextRoot + '/app/rest/models/' + modelId + '/editor/json?version=' + Date.now();
+        return FLOWABLE.CONFIG.contextRoot + '/rest/models/' + modelId + '/editor/json?version=' + Date.now();
     },
 
     getStencilSet: function() {
-        return FLOWABLE.CONFIG.contextRoot + '/app/rest/stencil-sets/editor?version=' + Date.now();
+        return FLOWABLE.CONFIG.contextRoot + '/rest/stencil-sets/editor?version=' + Date.now();
     },
     
     getCmmnStencilSet: function() {
-        return FLOWABLE.CONFIG.contextRoot + '/app/rest/stencil-sets/cmmneditor?version=' + Date.now();
+        return FLOWABLE.CONFIG.contextRoot + '/rest/stencil-sets/cmmneditor?version=' + Date.now();
     },
 
     putModel: function(modelId) {
-        return FLOWABLE.CONFIG.contextRoot + '/app/rest/models/' + modelId + '/editor/json';
+        return FLOWABLE.CONFIG.contextRoot + '/rest/models/' + modelId + '/editor/json';
     },
     
     validateModel: function(){
-		return FLOWABLE.CONFIG.contextRoot + '/app/rest/model/validate';
+		return FLOWABLE.CONFIG.contextRoot + '/rest/model/validate';
     }
 };

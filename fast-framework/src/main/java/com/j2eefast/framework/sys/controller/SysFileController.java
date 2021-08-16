@@ -115,15 +115,15 @@ public class SysFileController extends BaseController {
             int ossType = OSSFactory.getOSSType();
             File file0 = null;
             SysFilesEntity sysFile = new SysFilesEntity();
-            //配置的是本地
+            // 配置的是本地
             if(ossType == Constant.CloudService.LOCAL.getValue()) {
             	attachPath = attachPath + relativePath;
                 file0 = FileUtil.touch(attachPath);
                 file.transferTo(file0);
                 attachPath = FileUtil.getAbsolutePath(file0);
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()) {
+            // 第三方配置
+            }else{
                 relativePath = "attach"+relativePath;
-            	//阿里云
                 OSSFactory.build().upload(file.getInputStream(), relativePath);
             }
             sysFile.setFileMd5(fileMd5);
@@ -182,7 +182,7 @@ public class SysFileController extends BaseController {
                     return;
                 }
                 inputStream  = FileUtil.getInputStream(filePath);
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
+            }else{
                 cloud = OSSFactory.build();
                 //阿里云
                 inputStream = cloud.download(relativePath);
@@ -222,8 +222,8 @@ public class SysFileController extends BaseController {
                     return;
                 }
                 inputStream  = FileUtil.getInputStream(filePath);
-            }else if(ossType == Constant.CloudService.ALIYUN.getValue()){
-                //阿里云
+            // 第三方配置
+            }else{
                 cloud = OSSFactory.build();
                 inputStream = cloud.download(relativePath);
             }
@@ -250,30 +250,50 @@ public class SysFileController extends BaseController {
                                HttpServletResponse response,
                                @RequestParam("filePath") String filePath) {
         try {
-            String path = Global.getAttachPath()+filePath;
-            String  fileName = FileUtil.getName(path);
-            if(FileUtil.exist(path)){
-                //设置文件ContentType类型
-                response.setContentType(HttpUtil.getMimeType(fileName));
-                File imageFile = FileUtil.file(path);
-                FileInputStream fis = new FileInputStream(imageFile);
-                byte[] buffer = new byte[1024];
-                ByteArrayOutputStream bos = new ByteArrayOutputStream(fis.available());
-                int len = 0;
-                while (-1 != (len = fis.read(buffer, 0, buffer.length))) {
-                    bos.write(buffer,0,len);
-                }
-                log.info("==============================下载包长度:!" + bos.size() +"   ========================");
-                response.setHeader("Content-Length",bos.size()+ "");
-                fis.close();
-                ServletOutputStream sos = response.getOutputStream();
-                sos.write(bos.toByteArray());
-                sos.flush();
-                sos.close();
-                log.info("==============================下载完成![" + path +"]   ========================");
-                return;
-            }else{
+
+            String md5 = FileUtil.mainName(filePath);
+            SysFilesEntity file = sysFileService.findSysFileByMd5(md5);
+            if(ToolUtil.isEmpty(file)){
                 log.error("文件不存在");
+                return;
+            }
+            int ossType = Integer.parseInt(file.getOssType());
+            //配置的是本地
+            if(ossType == Constant.CloudService.LOCAL.getValue()) {
+                String path = Global.getAttachPath()+filePath;
+                String  fileName = FileUtil.getName(path);
+                if(FileUtil.exist(path)){
+                    //设置文件ContentType类型
+                    response.setContentType(HttpUtil.getMimeType(fileName));
+                    File imageFile = FileUtil.file(path);
+                    FileInputStream fis = new FileInputStream(imageFile);
+                    byte[] buffer = new byte[1024];
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream(fis.available());
+                    int len = 0;
+                    while (-1 != (len = fis.read(buffer, 0, buffer.length))) {
+                        bos.write(buffer,0,len);
+                    }
+                    log.info("==============================下载包长度:!" + bos.size() +"   ========================");
+                    response.setHeader("Content-Length",bos.size()+ "");
+                    fis.close();
+                    ServletOutputStream sos = response.getOutputStream();
+                    sos.write(bos.toByteArray());
+                    sos.flush();
+                    sos.close();
+                    log.info("==============================下载完成![" + path +"]   ========================");
+                    return;
+                }else{
+                    log.error("文件不存在");
+                    return;
+                }
+            }else{
+                CloudStorageService cloud = OSSFactory.build();
+                InputStream inputStream  = cloud.download(file.getFilePath());
+                //转换视图
+                ToolUtil.fileView(response,file.getFileName(),inputStream);
+                if(ossType != Constant.CloudService.LOCAL.getValue()){
+                    cloud.shutdown();
+                }
                 return;
             }
         }catch (Exception e){

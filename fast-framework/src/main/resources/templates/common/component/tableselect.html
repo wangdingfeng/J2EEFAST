@@ -1,0 +1,130 @@
+<#--
+ * All content copyright http://www.j2eefast.com, unless
+ * otherwise indicated. All rights reserved.
+ * No deletion without permission
+ //单多选表组件
+ //主要应用于大数据查询展示选择其实某个或者多个数据
+ //对于参数不理解可以到控件演示component.html 搜索tableselect 修改属性自己看看效果
+ //作者:zhouzhou 2020-12-11
+-->
+<#macro tableselect name
+                    id = ""
+                    url = "sys/user/list" <#-- 访问数据URL、就是表格展示的数据范围url-->
+                    boxTitle = ""
+                    width="1300"
+                    height=""
+                    value=""
+                    labelValue=""
+                    labelName="" <#--标签名称 -->
+                    required=false <#-- 是否必输-->
+                    readonly=false <#-- 是否只读模式-->
+                    class = "form-control" <#-- 输入框样式-->
+                    butClass = "fa fa-fw fa-address-card-o"
+                    isClear = true <#-- 弹出是否出现清除按钮-->
+                    placeholder="请输入值"
+                    correlationId="" <#-- 关联ID-->
+                    checked= true
+                    isorga = true <#-- 是否有机构选择-->
+                    layout = "" <#--当isorga 为true是,支持机构左右侧展示 left, right 空不显示-->
+                    helpTip = ""  <#--帮助提示 -->
+                    separator = "," <#--多选参数分隔符 -->
+                    keyId = "id" <#--表示获取数据id字段名称-->
+                    keyName = "name" <#--表示显示名称 -->
+                    template = false <#-- 控件是否做template用-->
+                    callbackFunName = "tableCallback" <#-- 自定义回调方法-->
+                    tableInfo = "[{field:'username',title:'账号',query:true},{field:'name',title:'姓名'},{field:'compName',title:'归属公司'},
+                                       {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱',query:true},{field:'mobile',title:'手机号码',query:true},
+                                       {field:'status',title:'状态',dict:'sys_user_show_hide',query:true},{field:'createTime',title:'创建时间'}]" <#-- 显示表格信息-->
+                    >
+    <#local  Assname="${id}"/>
+    <#if name != "">
+        <#local Assname="${name}"/>
+    </#if>
+    <#local AssId=""/>
+    <#if id == "">
+        <#local AssId="${Assname}"/>
+    <#else>
+        <#local AssId="${id}"/>
+    </#if>
+    <div class="input-group" id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div" data-url="${url}">
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>" name="<#if name != "">${name}<#else>${AssId}</#if>"  type="hidden" value="${value}"/>
+        <input id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name" <#if labelName!="">name="${labelName}"</#if> type="text" <#if readonly>disabled="disabled"</#if> placeholder="${placeholder}" class="${class}" value="${labelValue}" <#if readonly> readonly=true</#if> <#if required> required</#if>/>
+        <span class="input-group-btn" <#if readonly>disabled="disabled"</#if>  id="<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But"><a  href="javascript:;"><i class="${butClass}"></i></a></span>
+    </div>
+    <#if helpTip!=""><span class="help-block m-b-none"><i class="fa fa-info-circle" style="color: red"></i>${helpTip}</span></#if>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function(){
+                var <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
+                $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>But, #<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").unbind('click').on('click',function(){
+                    if($(this).attr("disabled") && $(this).attr("disabled")!=''){
+                        return;
+                    }
+                    <#if correlationId !="">
+                    var correId = $("#${correlationId}").val();
+                    if(opt.common.isEmpty(correId)){
+                        opt.error("<@ctx.i18n text = "关联信息不能为空"/>");
+                        return;
+                    }
+                    </#if>
+                    var selectId = $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val();
+                    var selectName =  $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val();
+                    var options = {
+                        title: <#if boxTitle =="">"<@ctx.i18n text = "请选择数据"/>" <#else>"${boxTitle}"</#if>,
+                        width: "${width}",
+                        <#if height != "">
+                        height: ${height},
+                        </#if>
+                        url: baseURL + "sys/component/tableselect",
+                        <#-- POST提交组件控制类参数-->
+                        fromData:{
+                            url: <#if correlationId !="">$("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div").data("url") + "/" + correId<#else>$("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Div").data("url")</#if>,
+                            selectName: selectName,
+                            selectId: selectId,
+                            checked: <#if checked?string == "true">"true"<#else>"false"</#if>,
+                            isorga: <#if isorga?string == "true">"true"<#else>"false"</#if>,
+                            tableInfo: "${(tableInfo?replace('\n',''))?json_string}",
+                            keyId: "${keyId}",
+                            keyName: "${keyName}",
+                            layout: "${layout}",
+                            separator: "${separator}"
+                        },
+                        obj: <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data,
+                        main: true,
+                        callBack: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit,
+                        cancel:  func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel
+                        <#if isClear?string == "true">, clear: func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear</#if>
+                    };
+                    opt.modal.openOptions(options);
+                });
+
+                function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>doSubmit(index, layero,selfLayer) {
+                    <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = layero.find("iframe")[0].contentWindow.tableData;
+                    $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val(<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data.keyId);
+                    $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val(<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data.keyName);
+                    if(typeof ${callbackFunName} == 'function'){
+                        ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'ok', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
+                    };
+                    selfLayer.close(index);
+                };
+                <#if isClear?string == "true">
+                function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>clear(index, layero,selfLayer) {
+                    <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data = {};
+                    $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>").val('');
+                    $("#<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>Name").val('');
+                    if(typeof ${callbackFunName} == 'function'){
+                        ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'clear', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
+                    };
+                    selfLayer.close(index);
+                };
+                </#if>
+
+                function func_<#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>cancel(index, layero) {
+                    if(typeof ${callbackFunName} == 'function'){
+                        ${callbackFunName}('<#if !template>${Assname?replace(".","_")}<#else>${Assname}</#if>', 'cancel', index, layero, <#if !template>${AssId?replace(".","_")}<#else>${AssId}</#if>_data);
+                    }
+                }
+            })
+        </script>
+    </@compress>
+</#macro>

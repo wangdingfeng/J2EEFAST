@@ -21,6 +21,7 @@
           a.status AS "status"   ,
           a.error_msg AS "errorMsg"   ,
           a.oper_time AS "operTime"   ,
+          a.user_agent AS "userAgent",
           a.time AS "time"   ,
           a.comp_id AS "compId"   ,
           a.dept_id AS "deptId"

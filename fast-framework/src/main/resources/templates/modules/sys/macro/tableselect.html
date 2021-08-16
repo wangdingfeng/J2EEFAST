@@ -2,424 +2,708 @@
 * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
 * @author ZhouZhou
 * @version 2020-10-29
+* 2021-06-18 新增左右侧机构树查询 当isorga 为true是,支持机构左右侧展示 left, right 空不显示
+* 2021-07-10 新增支持treeselect 组件作为查询
+* 2021-07-25 新增单选支持双击选择
 -->
 <#include "/common/defaultEngine.html"/>
-<@pageTheme mark="true">
-<@header title="表格选择组件" libs=["table","tokenfield"]>
-<style>
-#selectName >span {
-    margin: 0 8px 8px 0;
-    display: inline-block;
-    padding: 5px 5px;
-}
-.label-success {
-    background-color: #5cb85c;
-}
-.close{
-	float: none;
-    height: 100%;
-    padding-right: 0px;
-    margin-left: 4px;
-    font-family: Arial;
-    font-size: 1.2em;
-    line-height: inherit;
-    font-weight: 700;
-    text-shadow: none;
-    opacity: .5;
-}
-.clear{
-color: #dd5a43;
-}
+<@pageTheme mark=true>
+	<#assign zt = 0>
+	<#if isorga && layout?? && (layout?length >0 ) && (layout == "left" || layout == "right")>
+		<@header title="表格选择组件" bodyClass="gray-bg animated fadeInRight" isAnimation=false libs=["table","tokenfield","zTree","layout-latest"]>
+			<style>
+				#selectName >span {
+					margin: 0 8px 8px 0;
+					display: inline-block;
+					padding: 5px 5px;
+				}
+				.label-success {
+					background-color: #5cb85c;
+				}
+				.close{
+					float: none;
+					height: 100%;
+					padding-right: 0px;
+					margin-left: 4px;
+					font-family: Arial;
+					font-size: 1.2em;
+					line-height: inherit;
+					font-weight: 700;
+					text-shadow: none;
+					opacity: .5;
+				}
+				.clear{
+					color: #dd5a43;
+				}
 
-.clear:hover{
-    transform: scale(1.2);
-    opacity: 1;
-    margin: 0 0 2px 3px;
-    display: inline-block;
-    width: 15px;
-    float: none;
-    position: static;
-    text-align: center;
-    opacity: .85;
-    -webkit-transition: all .12s;
-    -o-transition: all .12s;
-    transition: all .12s;
-    vertical-align: middle;
-    cursor: pointer;
-}
-</style>
-</@header>
-<div class="container-div">
-	<div class="row">
-	<#if query>
-	<div class="col-sm-12 search-collapse">
-	<@f.form id="select-form">
-        <div class="select-list">
-			<ul>
-	        	<#list tableInfo as tb>
-	       		<#if tb.query>
-				<#if tb.dict =="">
-				<li>
-					<@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
-				</li>
-				<#else>
-				<li>
-					<@ctx.i18n text = "${tb.title}"/>:
-					<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
-				</li>
-				</#if>
-	       		</#if>
-	        	</#list>
-	            <#if isorga>
-	            <li>
-	                <label><@ctx.i18n text = "机构查询"/></label>：
-	                <div class="control-div width-150">
-	                    <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-	                    expandLevel=true
-	                    placeholder="请选择上级机构"/>
-	                </div>
-	            </li>
-	            </#if>
-	            <li>
-	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
-	                <a class="btn btn-warning btn-rounded btn-sm" onclick="reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
-	            </li>
-            </ul>
-        </div>
-    </@f.form>
-    </div>
-    </#if>
-    </div>
-    <div class= row>
-    	<div class="col-sm-10 pl0">
-    		<@table id="bootstrap-table">
-    		</@table>
-    	</div>
-    	<div class="col-sm-2 pl0 pr0">
-    		<div class="ibox mt10">
-                <div class="ibox-title">
-                    <h5><i class="fa icon-check"></i>  已选中(<span id="selectNum">0</span>)信息</h5>
-                    <i class="fa fa-trash-o pull-right clear" id="clear" title="清空所有选项"></i>
-                </div>
-                <div class="ibox-content pl5 pr5">
-                    <div id="selectName">
-                    </div>
-                </div>
-            </div>
-    	</div>
-    </div>
-</div>
-<@footer>
-<script type="text/javascript">
-	var tableData = {};
-	var name_data = [];
-	<#list tableInfo as table>
-	<#if table.dict !="">
-	var ${table.field}_dict = ${dict.getDictListJson('${table.dict}')};	
+				.container-div {
+					padding: 0px 18px;
+					height: 0%;
+				}
+				.clear:hover{
+					transform: scale(1.2);
+					opacity: 1;
+					margin: 0 0 2px 3px;
+					display: inline-block;
+					width: 15px;
+					float: none;
+					position: static;
+					text-align: center;
+					opacity: .85;
+					-webkit-transition: all .12s;
+					-o-transition: all .12s;
+					transition: all .12s;
+					vertical-align: middle;
+					cursor: pointer;
+				}
+
+			</style>
+		</@header>
+	<#else>
+		<@header title="表格选择组件" libs=["table","tokenfield"]>
+			<style>
+				#selectName >span {
+					margin: 0 8px 8px 0;
+					display: inline-block;
+					padding: 5px 5px;
+				}
+				.label-success {
+					background-color: #5cb85c;
+				}
+				.close{
+					float: none;
+					height: 100%;
+					padding-right: 0px;
+					margin-left: 4px;
+					font-family: Arial;
+					font-size: 1.2em;
+					line-height: inherit;
+					font-weight: 700;
+					text-shadow: none;
+					opacity: .5;
+				}
+				.clear{
+					color: #dd5a43;
+				}
+
+				.clear:hover{
+					transform: scale(1.2);
+					opacity: 1;
+					margin: 0 0 2px 3px;
+					display: inline-block;
+					width: 15px;
+					float: none;
+					position: static;
+					text-align: center;
+					opacity: .85;
+					-webkit-transition: all .12s;
+					-o-transition: all .12s;
+					transition: all .12s;
+					vertical-align: middle;
+					cursor: pointer;
+				}
+			</style>
+		</@header>
 	</#if>
-	</#list>
-    var prefix = baseURL + '${url}';
-    var id_data = [];
-    <#if selectId != ''>
-	<#list selectId?split('${separator}') as x>
-	id_data.push('${x}');
-	</#list>
-    </#if>
-	<#if selectName != ''>
-	<#list selectName?split('${separator}') as x>
-	name_data.push('${x}');
-	</#list>
-	</#if>
-	var initload = false;
-    function initTable(){
-		/* 初始表格对象 */
-		var options = {
-			url: prefix,
-			uniqueId: "${keyId}", /* 唯一ID */
-			showSearch: false,
-			showRefresh: false,
-			showToggle: false,
-			<#if !checked>singleSelect: true,
+<#if isorga && layout?? && (layout?length >0 ) && (layout == "left" || layout == "right")>
+	<div class="ui-layout-<#if layout == "left">west<#else>east</#if>">
+		<div class="box box-main">
+			<div class="box-header">
+				<div class="box-title">
+					<i class="fa icon-grid"></i>组织机构
+				</div>
+				<div class="box-tools pull-right">
+					<a type="button" class="btn btn-box-tool" href="#" onclick="comp()" title="公司管理"><i class="fa fa-edit"></i></a>
+					<button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;"><i class="fa fa-chevron-up"></i></button>
+					<button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠"><i class="fa fa-chevron-down"></i></button>
+					<button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新部门"><i class="fa fa-refresh"></i></button>
+				</div>
+			</div>
+			<div class="ui-layout-content">
+				<div id="tree" class="ztree"></div>
+			</div>
+		</div>
+	</div>
+	<div class="ui-layout-center">
+		</#if>
+
+		<div class="container-div">
+
+			<#if query>
+				<div class="row">
+					<div class="col-sm-12 search-collapse">
+						<@f.form id="select-form">
+							<div class="select-list">
+								<ul>
+									<#assign tag = 0>
+									<#if (queryNum > 4)>
+										<#list tableInfo as tb>
+											<#if tb.query>
+												<#assign tag++>
+												<#if tb.filedQueryZtree>
+													<#assign zt = 1>
+													<li>
+														<label> <@ctx.i18n text = "${tb.title}"/>：
+															<div class="control-div width-120">
+																<@f.treeselect name="${tb.ztree.name}" keyId="${tb.ztree.keyId}" boxTitle="请选择${tb.title}" url="${tb.ztree.url}"
+																expandLevel="${tb.ztree.expandLevel?string('true', 'false')}"
+																isSelectParent= "${tb.ztree.selectParent?string('true', 'false')}"
+																isClear = "${tb.ztree.clear?string('true', 'false')}"
+																checked = "${tb.ztree.checked?string('true', 'false')}"
+																placeholder="请选择${tb.title}"/>
+															</div>
+														</label>
+													</li>
+												<#elseif tb.dict !="">
+													<li>
+														<@ctx.i18n text = "${tb.title}"/>:
+														<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
+													</li>
+												<#else>
+													<li>
+														<@ctx.i18n text = "${tb.title}"/>: <input type="text" class="form-control" name="${tb.field}"/>
+													</li>
+												</#if>
+											</#if>
+											<#if tag == 3>
+												<#if isorga>
+													<#assign tag++>
+													<li>
+														<label><@ctx.i18n text = "机构查询"/></label>：
+														<div class="control-div width-150">
+															<@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+															expandLevel=true
+															placeholder="请选择上级机构"/>
+														</div>
+													</li>
+												</#if>
+											</#if>
+											<#if tag == 4>
+												<#break>
+											</#if>
+										</#list>
+									<#else>
+										<#list tableInfo as tb>
+											<#if tb.query>
+												<#if tb.filedQueryZtree>
+													<#assign zt = 1>
+													<li>
+														<label> <@ctx.i18n text = "${tb.title}"/>：</label>
+														<div class="control-div width-120">
+															<@f.treeselect name="${tb.ztree.name}" keyId="${tb.ztree.keyId}" boxTitle="请选择${tb.title}" url="${tb.ztree.url}"
+															expandLevel="${tb.ztree.expandLevel?string('true', 'false')}"
+															isSelectParent= "${tb.ztree.selectParent?string('true', 'false')}"
+															isClear = "${tb.ztree.clear?string('true', 'false')}"
+															checked = "${tb.ztree.checked?string('true', 'false')}"
+															placeholder="请选择${tb.title}"/>
+														</div>
+													</li>
+												<#elseif tb.dict !="">
+													<li>
+														<label><@ctx.i18n text = "${tb.title}"/>:</label>
+														<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
+													</li>
+												<#else>
+													<li>
+														<label><@ctx.i18n text = "${tb.title}"/>:</label>
+														<input type="text" class="form-control" name="${tb.field}"/>
+													</li>
+												</#if>
+											</#if>
+										</#list>
+										<#if isorga>
+											<li>
+												<label><@ctx.i18n text = "机构查询"/></label>：
+												<div class="control-div width-150">
+													<@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+													expandLevel=true
+													placeholder="请选择上级机构"/>
+												</div>
+											</li>
+										</#if>
+									</#if>
+									<li>
+										<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;<@ctx.i18n text = "查询"/></a>
+										<a class="btn btn-warning btn-rounded btn-sm" onclick="reset()"><i class="fa fa-refresh"></i>&nbsp;<@ctx.i18n text = "重置"/></a>
+										<#if (queryNum > 4)><a class="btn btn-default btn-rounded btn-sm" data-toggle="formMore"><i class="fa fa-angle-double-down"></i>&nbsp;<@ctx.i18n text = "更多"/></a></#if>
+									</li>
+								</ul>
+							</div>
+							<#if (queryNum > 4)>
+								<div class="select-list-more">
+									<ul>
+										<#assign tag = 0>
+										<#if isorga>
+											<#assign kTag = 3>
+										<#else>
+											<#assign kTag = 4>
+										</#if>
+										<#list tableInfo as tb>
+											<#if tb.query>
+												<#assign tag++>
+												<#if (tag > kTag)>
+													<#if tb.filedQueryZtree>
+														<#assign zt = 1>
+														<li>
+															<label> <@ctx.i18n text = "${tb.title}"/>：</label>
+															<div class="control-div width-120">
+																<@f.treeselect name="${tb.ztree.name}" keyId="${tb.ztree.keyId}" boxTitle="请选择${tb.title}" url="${tb.ztree.url}"
+																expandLevel="${tb.ztree.expandLevel?string('true', 'false')}"
+																isSelectParent= "${tb.ztree.selectParent?string('true', 'false')}"
+																isClear = "${tb.ztree.clear?string('true', 'false')}"
+																checked = "${tb.ztree.checked?string('true', 'false')}"
+																placeholder="请选择${tb.title}"/>
+															</div>
+														</li>
+													<#elseif tb.dict !="">
+														<li>
+															<label> <@ctx.i18n text = "${tb.title}"/>：</label>
+															<@f.select name="${tb.field}" dictType="${tb.dict}" blankValue="" blankLabel="所有"/>
+														</li>
+													<#else>
+														<li>
+															<label> <@ctx.i18n text = "${tb.title}"/>：</label>
+															<input type="text" class="form-control" name="${tb.field}"/>
+														</li>
+													</#if>
+												</#if>
+											</#if>
+										</#list>
+									</ul>
+								</div>
+							</#if>
+						</@f.form>
+					</div>
+				</div>
 			</#if>
-			pageSize: 10,
-			pageList: [10, 20, 30],
-			showColumns: false,
-			onSelectData: onSelectData,
-			responseHandler: responseHandler,
-			columns: [
-				<#if checked>
-				{
-					checkbox: true
-				},
-				<#else>
-				{
-					radio: true
-				},
+
+			<div class= row>
+				<#if isorga && layout?? && (layout?length >0 ) && layout == "right">
+					<div class="col-sm-2 pl0 right">
+						<div class="ibox mt10">
+							<div class="ibox-title">
+								<h5><i class="fa icon-check"></i>  已选中(<span id="selectNum">0</span>)信息</h5>
+								<i class="fa fa-trash-o pull-right clear" id="clear" title="清空所有选项"></i>
+							</div>
+							<div class="ibox-content pl5 pr5">
+								<div id="selectName">
+								</div>
+							</div>
+						</div>
+					</div>
 				</#if>
-				{
-					title: "<@ctx.i18n text = "序号"/>", width: 10, formatter: function (value, row, index) {
-						return $.table.serialNumber(index);
+				<div class="col-sm-10 pl0 <#if isorga && layout?? && (layout?length >0 ) && layout == "right">pr0</#if>">
+					<@table id="bootstrap-table">
+					</@table>
+				</div>
+				<#if !(isorga && layout?? && (layout?length >0 ) && layout == "right")>
+					<div class="col-sm-2 pl0 pr0">
+						<div class="ibox mt10">
+							<div class="ibox-title">
+								<h5><i class="fa icon-check"></i>  已选中(<span id="selectNum">0</span>)信息</h5>
+								<i class="fa fa-trash-o pull-right clear" id="clear" title="清空所有选项"></i>
+							</div>
+							<div class="ibox-content pl5 pr5">
+								<div id="selectName">
+								</div>
+							</div>
+						</div>
+					</div>
+				</#if>
+			</div>
+		</div>
+
+		<#if isorga && layout?? && (layout?length >0 ) && (layout == "left" || layout == "right") >
+	</div>
+</#if>
+	<@footer>
+		<script type="text/javascript">
+			var tableData = {};
+			var name_data = [];
+			<#list tableInfo as table>
+			<#if table.dict !="">
+			var ${table.field}_dict = ${dict.getDictListJson('${table.dict}')};
+			</#if>
+			</#list>
+			var prefix = baseURL + '${url}';
+			var id_data = [];
+			<#if selectId != ''>
+			<#list selectId?split('${separator}') as x>
+			id_data.push('${x}');
+			</#list>
+			</#if>
+			<#if selectName != ''>
+			<#list selectName?split('${separator}') as x>
+			name_data.push('${x}');
+			</#list>
+			</#if>
+			var initload = false;
+			function initTable(){
+				/* 初始表格对象 */
+				var options = {
+					url: prefix,
+					uniqueId: "${keyId}", /* 唯一ID */
+					showSearch: false,
+					showRefresh: false,
+					showToggle: false,
+					<#if !checked>singleSelect: true,
+					</#if>
+					pageSize: 10,
+					pageList: [10, 20, 30],
+					showColumns: false,
+					onSelectData: onSelectData,
+					<#if !checked>onDblClickRow: onDblClickRow, </#if>
+					responseHandler: responseHandler,
+					columns: [
+						<#if checked>
+						{
+							checkbox: true
+						},
+						<#else>
+						{
+							radio: true
+						},
+						</#if>
+						{
+							title: "<@ctx.i18n text = "序号"/>", width: 10, formatter: function (value, row, index) {
+								return $.table.serialNumber(index);
+							}
+						}
+						<#list tableInfo as table>
+						,{field: '${table.field}', title: "<@ctx.i18n text = "${table.title}"/>"<#if table.dict!="">, formatter: function (value, row, index) {
+								return $.table.selectDictLabel(${table.field}_dict, value);
+							}</#if>}
+						</#list>
+					]
+				};
+
+				$.table.init(options);
+
+				$("#clear").on('click',function(){
+					$('#selectName').children('span').each(function(){
+						$(this).children('a').trigger('click');
+					});
+				});
+			}
+
+			<#if !checked>
+			function onDblClickRow(){
+				_p.find(".layui-layer-btn0").trigger("click");
+			}
+			</#if>
+
+			function responseHandler(res){
+				if(!initload){
+					initload = true;
+					if(opt.common.isNotEmpty(tableData) && tableData.table && tableData.uniqueId.length > 0){
+						opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], tableData.uniqueId,opt.table.options.uniqueId);
+						opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], tableData.table ,opt.table.options.uniqueId);
+						return true;
+					}
+
+					if(id_data.length > 0){
+						opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], id_data,opt.table.options.uniqueId);
+						var temp = "";
+						for(var i=0; i< id_data.length; i++){
+							temp += '<span class="label label-success" id="s_'+id_data[i]+'">' + name_data[i]+
+									'<a href="#" onclick="rm(this)" class="close" tabindex="'+id_data[i]+'">×</a></span>';
+						}
+						if(temp.length > 0){
+							$("#selectName").html(temp);
+							$("#selectNum").html(name_data.length);
+						}else{
+							$("#selectName").html("");
+							$("#selectNum").html("0");
+						}
+						return true;
 					}
 				}
-				<#list tableInfo as table>
-				,{field: '${table.field}', title: "<@ctx.i18n text = "${table.title}"/>"<#if table.dict!="">, formatter: function (value, row, index) {
-						return $.table.selectDictLabel(${table.field}_dict, value);
-					}</#if>}
-				</#list>
-			]
-		};
+			};
 
-		$.table.init(options);
 
-		$("#clear").on('click',function(){
-			$('#selectName').children('span').each(function(){
-				$(this).children('a').trigger('click');
+			<#if isorga && layout?? && (layout?length >0 )>
+			/*初始化左侧树*/
+			function initZtree() {
+				var options = {
+					url: baseURL+"sys/comp/treeData",
+					displayLen: 12,
+					expandLevel:1,
+					onClick : onClick,
+					check: {
+						enable: false
+					}
+				};
+				$.tree.init(options);
+			}
+
+			/* 点击左侧数节点 回调事件 刷新表格*/
+			function onClick(event, treeId, treeNode) {
+				/* 设置属性值*/
+				$("#compId").val(treeNode.id);
+				$("#compIdName").val(treeNode.name);
+				$.table.search();
+			}
+
+			/* 左侧数刷新事件*/
+			$('#btnRefresh').click(function() {
+				initZtree();
 			});
-		});
-	}
 
-    function responseHandler(res){
-    	if(!initload){
-			initload = true;
-    		if(opt.common.isNotEmpty(tableData) && tableData.table && tableData.uniqueId.length > 0){
-				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], tableData.uniqueId,opt.table.options.uniqueId);
-				opt.table.rememberSelecteds[opt.table.options.id] = _['union']([], tableData.table ,opt.table.options.uniqueId);
-				return true;
-			}
+			/* 左侧树展开事件 */
+			$('#btnExpand').click(function() {
+				$._tree.expandAll(true);
+				$(this).hide();
+				$('#btnCollapse').show();
+			});
 
-    		if(id_data.length > 0){
-				opt.table.rememberSelectedIds[opt.table.options.id] = _['union']([], id_data,opt.table.options.uniqueId);
-				var temp = "";
-				for(var i=0; i< id_data.length; i++){
-					temp += '<span class="label label-success" id="s_'+id_data[i]+'">' + name_data[i]+
-							'<a href="#" onclick="rm(this)" class="close" tabindex="'+id_data[i]+'">×</a></span>';
+			/* 左侧树折叠事件 */
+			$('#btnCollapse').click(function() {
+				$._tree.expandAll(false);
+				$(this).hide();
+				$('#btnExpand').show();
+			});
+			</#if>
+			var _p;
+			function onLoadSuccess(rows,layero, index,_sf){
+				this._p = layero;
+				tableData = rows;
+
+				<#if isorga && layout?? && (layout?length >0 )>
+				/*初始化页面布局*/
+				var panehHidden = false;
+				if ($(this).width() < 767) {
+					panehHidden = true;
 				}
-				if(temp.length > 0){
-					$("#selectName").html(temp);
-					$("#selectNum").html(name_data.length);
+				$('body').layout({
+					west__initClosed: panehHidden,
+					west__size: 200
+				});
+				/* 初始化树表*/
+				initZtree();
+				</#if>
+
+				/*初始化表格*/
+				initTable();
+
+				var temp = "";
+				if(opt.common.isNotEmpty(rows) && rows.table){
+					for(var i=0; i<rows.table.length; i++){
+						temp += '<span class="label label-success" id="s_'+rows.table[i].${keyId}+'">' + rows.table[i].${keyName}
+								+ '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].${keyId}+'">×</a></span>';
+					};
+					if(temp.length > 0){
+						$("#selectName").html(temp);
+						$("#selectNum").html(rows.table.length);
+					}else{
+						$("#selectName").html("");
+						$("#selectNum").html("0");
+					};
+					return true;
+				}
+			};
+
+			function reset(){
+				opt.form.reset();
+				tableData = {};
+				$("#selectName").html("");
+				$("#selectNum").html("0");
+			};
+
+			/**
+			 * 点击回调处理
+			 */
+			function onSelectData(data){
+				if(data.length == opt.table.rememberSelectedIds[opt.table.options.id].length ) {
+					var temp = "";
+					for (var i = 0; i < data.length; i++) {
+						temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+								'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+					};
+					if (temp.length > 0) {
+						$("#selectName").html(temp);
+						$("#selectNum").html(data.length);
+					} else {
+						$("#selectName").html("");
+						$("#selectNum").html("0");
+					}
 				}else{
-					$("#selectName").html("");
-					$("#selectNum").html("0");
-				}
-				return true;
-			}
-		}
-	};
-	function onLoadSuccess(rows,layero, index,_sf){
-		tableData = rows;
-		/*初始化表格*/
-		initTable();
-
-		var temp = "";
-		if(opt.common.isNotEmpty(rows) && rows.table){
-			for(var i=0; i<rows.table.length; i++){
-				temp += '<span class="label label-success" id="s_'+rows.table[i].${keyId}+'">' + rows.table[i].${keyName}
-						+ '<a href="#" onclick="rm(this)" class="close" tabindex="'+rows.table[i].${keyId}+'">×</a></span>';
-			};
-			if(temp.length > 0){
-				$("#selectName").html(temp);
-				$("#selectNum").html(rows.table.length);
-			}else{
-				$("#selectName").html("");
-				$("#selectNum").html("0");
-			};
-			return true;
-		}
-	};
-
-    function reset(){
-    	opt.form.reset();
-		tableData = {};
-		$("#selectName").html("");
-    	$("#selectNum").html("0");
-    };
-    
-    /**
-	 * 点击回调处理
-	 */
-    function onSelectData(data){
-    	if(data.length == opt.table.rememberSelectedIds[opt.table.options.id].length ) {
-			var temp = "";
-			for (var i = 0; i < data.length; i++) {
-				temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
-						'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
-			};
-			if (temp.length > 0) {
-				$("#selectName").html(temp);
-				$("#selectNum").html(data.length);
-			} else {
-				$("#selectName").html("");
-				$("#selectNum").html("0");
-			}
-		}else{
-			if(id_data.length > 0){
-				var notTemp = [];
-				var temp = "";
-				var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
-				for(var i=0; i< tempData.length; i++){
-					var flag = false;
-					for(var j=0; j< data.length; j++){
-						if(tempData[i] == data[j].${keyId}){
-							flag = true;
+					if(id_data.length > 0){
+						var notTemp = [];
+						var temp = "";
+						var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+						for(var i=0; i< tempData.length; i++){
+							var flag = false;
+							for(var j=0; j< data.length; j++){
+								if(tempData[i] == data[j].${keyId}){
+									flag = true;
+								}
+							}
+							if(!flag){
+								notTemp.push(tempData[i]);
+							}
+						}
+						var temp = "";
+						for (var i = 0; i < data.length; i++) {
+							temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
+									'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+						};
+						var num = 0;
+						for (var i = 0; i < id_data.length; i++) {
+							var flag = false;
+							for(var j = 0; j < notTemp.length; j++){
+								if(id_data[i] == notTemp[j]){
+									flag = true;
+									num++;
+								}
+							};
+							if(flag) {
+								temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] +
+										'<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+							}
+						};
+						if (temp.length > 0) {
+							$("#selectName").html(temp);
+							$("#selectNum").html(data.length + num);
+						}
+					}else{
+						var temp = "";
+						for (var i = 0; i < data.length; i++) {
+							temp += '<span id="s_' + data[i].${keyId}  + '" class="label label-success">' + data[i].${keyName} +
+									'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
+						};
+						if (temp.length > 0) {
+							$("#selectName").html(temp);
+							$("#selectNum").html(data.length);
+						} else {
+							$("#selectName").html("");
+							$("#selectNum").html("0");
 						}
 					}
-					if(!flag){
-						notTemp.push(tempData[i]);
+				}
+			};
+
+			function rm(e){
+				var id = $(e).attr('tabindex');
+				var index = '';
+				$("#" + opt.table.options.id).children('tbody').children('tr').each(function(){
+					if($(this).data('uniqueid') == id){
+						index = $(this).data('index');
+					}
+				});
+				if(opt.common.isNotEmpty(index)){
+					$.table.uncheck(index);
+				}else{
+					if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
+
+						var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
+						var rows;
+						if(opt.common.isNotEmpty(selectedRows)) {
+							for(var i=0; i<selectedRows.length; i++){
+								if(selectedRows[i].${keyId} == id){
+									rows = selectedRows[i];
+								}
+							};
+							if(opt.common.isNotEmpty(rows))
+								opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.uniqueId);
+						}
+
+						var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
+						if(opt.common.isNotEmpty(selectedIds)) {
+							var rowIds = [];
+							$("#selectNum").html(selectedIds.length - 1);
+							rowIds.push(id);
+							opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.uniqueId);
+						}
+					}
+					$('#s_'+id).remove();
+				}
+			};
+
+
+			<#if isorga || zt == 1>
+			function treeCallback(id, event, index, layero, nodes) {
+				if(id == "compId"){
+					if(event == "ok"){
+						/* 点击确认按钮直接刷新表格*/
+						$.table.search();
 					}
 				}
-				var temp = "";
-				for (var i = 0; i < data.length; i++) {
-					temp += '<span id="s_' + data[i].${keyId} + '" class="label label-success">' + data[i].${keyName} +
-							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
-				};
-				var num = 0;
-				for (var i = 0; i < id_data.length; i++) {
-					var flag = false;
-					for(var j = 0; j < notTemp.length; j++){
-						if(id_data[i] == notTemp[j]){
-							flag = true;
-							num++;
+				<#list tableInfo as tb>
+				<#if tb.query && tb.filedQueryZtree>
+				if(id == "${tb.ztree.name?replace(".","_")}"){
+					if(event == "ok"){
+						/* 点击确认按钮直接刷新表格*/
+						$.table.search();
+					}
+				}
+				</#if>
+				</#list>
+			};
+			</#if>
+
+			/*提交 */
+			function submitHandler() {
+				tableData = {};
+				var keyId = "";
+				var keyName="";
+				var rows = $.table.selectAllColumnRows();
+				if(opt.common.isEmpty(opt.table.rememberSelectedIds[opt.table.options.id]) || rows.length == opt.table.rememberSelectedIds[opt.table.options.id].length ){
+					for(var i=0; i<rows.length; i++){
+						keyId +=rows[i].${keyId} + '${separator}';
+						keyName += rows[i].${keyName} + '${separator}';
+					};
+					if(keyId.length > 0){
+						keyId = keyId.substr(0,keyId.length -"${separator}".length);
+						keyName = keyName.substr(0,keyName.length -"${separator}".length);
+					}
+					tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
+					return true;
+				}else{
+					/*修复回显问题*/
+					for(var i=0; i<rows.length; i++){
+						keyId +=rows[i].${keyId} + '${separator}';
+						keyName += rows[i].${keyName} + '${separator}';
+					};
+					var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
+					var notTemp = [];
+					for(var i=0; i< tempData.length; i++){
+						var flag = true;
+						for(var j=0; j<rows.length; j++){
+							if(tempData[i] == rows[j].${keyId}){
+								flag = false;
+								break;
+							}
+						};
+						if(flag){
+							notTemp.push(tempData[i]);
+						};
+					};
+					for(var i=0; i<id_data.length; i++){
+						var tableTemp = {};
+						var flag = true;
+						for(var j=0; j< notTemp.length; j++){
+							if(notTemp[j] == id_data[i]){
+								flag = false;
+								break;
+							}
+						};
+						if(!flag){
+							keyId +=id_data[i] + '${separator}';
+							keyName +=name_data[i] + '${separator}';
+							tableTemp.${keyId} = id_data[i];
+							tableTemp.${keyName} = name_data[i];
+							rows.push(tableTemp);
 						}
 					};
-					if(flag) {
-						temp += '<span id="s_' + id_data[i] + '" class="label label-success">' + name_data[i] +
-								'<a href="#" onclick="rm(this)" class="close" tabindex="' + id_data[i] + '">×</a></span>';
+
+					if(keyId.length > 0){
+						keyId = keyId.substr(0,keyId.length -"${separator}".length);
+						keyName = keyName.substr(0,keyName.length -"${separator}".length);
 					}
-				};
-				if (temp.length > 0) {
-					$("#selectName").html(temp);
-					$("#selectNum").html(data.length + num);
-				}
-			}else{
-				var temp = "";
-				for (var i = 0; i < data.length; i++) {
-					temp += '<span id="s_' + data[i].${keyId}  + '" class="label label-success">' + data[i].${keyName} +
-							'<a href="#" onclick="rm(this)" class="close" tabindex="' + data[i].${keyId} + '">×</a></span>';
-				};
-				if (temp.length > 0) {
-					$("#selectName").html(temp);
-					$("#selectNum").html(data.length);
-				} else {
-					$("#selectName").html("");
-					$("#selectNum").html("0");
+					tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:tempData};
+					return true;
 				}
 			}
-		}
-    };
-    
-    function rm(e){
-    	var id = $(e).attr('tabindex');
-    	var index = '';
-    	$("#" + opt.table.options.id).children('tbody').children('tr').each(function(){
-    		if($(this).data('uniqueid') == id){
-    			index = $(this).data('index');
-    		}
-    	});
-    	if(opt.common.isNotEmpty(index)){
-    		$.table.uncheck(index);
-    	}else{
-    		if(opt.common.isNotEmpty(opt.table.options.rememberSelected) && opt.table.options.rememberSelected){
-
-                var selectedRows = opt.table.rememberSelecteds[opt.table.options.id];
-                var rows;
-				if(opt.common.isNotEmpty(selectedRows)) {
-					for(var i=0; i<selectedRows.length; i++){
-						if(selectedRows[i].${keyId} == id){
-							rows = selectedRows[i];
-						}
-					};
-					if(opt.common.isNotEmpty(rows))
-						opt.table.rememberSelecteds[opt.table.options.id] = _['difference'](selectedRows, rows,opt.table.options.uniqueId);
-				}
-
-                var selectedIds = opt.table.rememberSelectedIds[opt.table.options.id];
-                if(opt.common.isNotEmpty(selectedIds)) {
-					var rowIds = [];
-					$("#selectNum").html(selectedIds.length - 1);
-					rowIds.push(id);
-                    opt.table.rememberSelectedIds[opt.table.options.id] = _['difference'](selectedIds, rowIds,opt.table.options.uniqueId);
-                }
-    		}
-    		$('#s_'+id).remove();
-    	}
-    };
-    
-    
-
-    <#if isorga>
-    function treeCallback(id, event, index, layero, nodes) {
-        if(id == "compId"){
-            if(event == "ok"){
-                /* 点击确认按钮直接刷新表格*/
-                $.table.search();
-            }
-        }
-    };
-    </#if>
-
-    /*提交 */
-    function submitHandler() {
-		tableData = {};
-		var keyId = "";
-		var keyName="";
-		var rows = $.table.selectAllColumnRows();
-		if(opt.common.isEmpty(opt.table.rememberSelectedIds[opt.table.options.id]) || rows.length == opt.table.rememberSelectedIds[opt.table.options.id].length ){
-			for(var i=0; i<rows.length; i++){
-				keyId +=rows[i].${keyId} + '${separator}';
-				keyName += rows[i].${keyName} + '${separator}';
-			};
-			if(keyId.length > 0){
-				keyId = keyId.substr(0,keyId.length -"${separator}".length);
-				keyName = keyName.substr(0,keyName.length -"${separator}".length);
-			}
-			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:$.table.selectAllColumns()};
-			return true;
-		}else{
-			/*修复回显问题*/
-			for(var i=0; i<rows.length; i++){
-				keyId +=rows[i].${keyId} + '${separator}';
-				keyName += rows[i].${keyName} + '${separator}';
-			};
-			var tempData = opt.table.rememberSelectedIds[opt.table.options.id];
-			var notTemp = [];
-			for(var i=0; i< tempData.length; i++){
-				var flag = true;
-				for(var j=0; j<rows.length; j++){
-					if(tempData[i] == rows[j].${keyId}){
-						flag = false;
-						break;
-					}
-				};
-				if(flag){
-					notTemp.push(tempData[i]);
-				};
-			};
-			for(var i=0; i<id_data.length; i++){
-				var tableTemp = {};
-				var flag = true;
-				for(var j=0; j< notTemp.length; j++){
-					if(notTemp[j] == id_data[i]){
-						flag = false;
-						break;
-					}
-				};
-				if(!flag){
-					keyId +=id_data[i] + '${separator}';
-					keyName +=name_data[i] + '${separator}';
-					tableTemp.${keyId} = id_data[i];
-					tableTemp.${keyName} = name_data[i];
-					rows.push(tableTemp);
-				}
-			};
-
-			if(keyId.length > 0){
-				keyId = keyId.substr(0,keyId.length -"${separator}".length);
-				keyName = keyName.substr(0,keyName.length -"${separator}".length);
-			}
-			tableData = {table:rows,keyId:keyId,keyName:keyName,uniqueId:tempData};
-			return true;
-		}
-    }
-</script>
-</@footer>
+		</script>
+	</@footer>
 </@pageTheme>

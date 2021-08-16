@@ -1,4 +1,4 @@
-
+<!-- 导入流程对话框-->
 <div class="modal" ng-controller="ImportProcessModelCtrl">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -71,7 +71,7 @@
                 <div class="modal-footer">
                     <loading></loading>
                     <div class="pull-right modeler-processes-error" ng-if="model.error">
-                        <span>{{'PROCESS.POPUP.IMPORT.ERROR' | translate}} <span ng-if="model.errorMessage"> : </span>{{model.errorMessage}}</span>
+                        <span style="color: red">{{'PROCESS.POPUP.IMPORT.ERROR' | translate}} <span ng-if="model.errorMessage"> : </span>{{model.errorMessage}}</span>
                     </div>
                 </div>
             </div>

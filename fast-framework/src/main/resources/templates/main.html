@@ -1,14 +1,13 @@
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="true">
-<@header  title="主页">
-</@header>
-    <div class="row  border-bottom white-bg dashboard-header" xmlns="http://www.w3.org/1999/html">
+<@pageTheme mark=true>
+<@header  title="主页"/>
+    <div class="row  border-bottom white-bg dashboard-header">
         <div class="col-sm-8">
             <h2>J2eeFAST 开源平台</h2>
             <p class="pt5">
             J2eeFAST 是一个 Java EE 企业级快速开发平台，<strong><mark>致力于打造中小企业最好用的开源免费的后台框架平台。</mark></strong>
                 系统基于（Spring Boot、Spring MVC、Apache Shiro、MyBatis-Plus、Freemarker、Bootstrap、AdminLTE）经典技术开发，
-                系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流等)，
+                系统内置核心模块包含众多常用基础功能(在线代码生成功能、组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、license认证、BPM工作流、多租户、在线报表等)，
                 <mark><strong>让你用最低的成本、最高的效率，开发项目，她也适合新手朋友练手</strong></mark>。同时具备，<mark><strong>界面简洁美观、高效、安全、源码可控、版本迭代快、免费技术交流群</strong></mark>等特点。她适用于所有Web应用，她会成为你快速开发项目的好帮手。
             </p>
             </br>
@@ -22,16 +21,15 @@
                 <li>核心框架：Spring Boot 2.X </li>
                 <li>安全框架：Apache Shiro</li>
                 <li>模板引擎：Freemarker</li>
-                <li>工作流引擎：Flowable 6.4.2</li>
+                <li>工作流引擎：Flowable 6.6.0</li>
                 <li>前端：AdminLTE 2.3.8, Bootstrap 3.3.7, Bootstrap-Table 1.11.0, JQuery 3.3.1</li>
-                <li>持久层框架：MyBatis-Plus 3.3.1</li>
+                <li>持久层框架：MyBatis-Plus 3.X</li>
                 <li>定时任务: Quartz</li>
-                <li>数据库连接池：Druid 1.10.1</li>
-                <li>工具类：Hutool 4.5.8</li>
+                <li>数据库连接池：Druid 1.2.6</li>
+                <li>工具类：Hutool 5.7.6</li>
                 <li>更多……</li>
             </ol>
         </div>
-
     </div>
     <div class="gray-bg mt20">
         <div class="row">
@@ -46,10 +44,61 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h5 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#version" href="#v25" aria-expanded="true">v2.5.0<code class="pull-right">2021.08.15</code></a>
+                                        </h5>
+                                    </div>
+                                    <div id="v25" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ol>
+                                                <li>1. 升级mybatisplus到最新版本3.4.3</li>
+                                                <li>2. 升级Flowable 工作流引擎到最新版本6.6.0</li>
+                                                <li>3. 升级hutool到 5.7.6</li>
+                                                <li>4. 升级swagger到 3.0.0</li>
+                                                <li>5. 升级fastjson到最新版1.2.76</li>
+                                                <li>6. fix: issues #I3BOFQ sql注入问题</li>
+                                                <li>7. 修复添加SQLServer数据库源问题</li>
+                                                <li>8. 修复富文本最大化显示问题</li>
+                                                <li>9. 登录滑动验提示图片新增可配置路径</li>
+                                                <li>10.新增初始化数据库、打war包脚本</li>
+                                                <li>11.修改字典表格链接样式</li>
+                                                <li>12.增加ftp依赖</li>
+                                                <li>10.新增首页图标统计样例</li>
+                                                <li>11.新增公司部门编码字段</li>
+                                                <li>12.新增复杂表格、多表联动等演示案例</li>
+                                                <li>13.优化树、表组件</li>
+                                                <li>14.fix: shiro 共享session会话到redis逻辑问题导致切换用户异常情况</li>
+                                                <li>15.优化访问更新redis频率</li>
+                                                <li>16.升级echarts 图表统计到最新版本</li>
+                                                <li>17.新增评论插件</li>
+                                                <li>18.新增系统内部消息评论</li>
+                                                <li>19.调整样式两个登录页面新增多租户选择、优化页面样式、新增主题样式</li>
+                                                <li>20.新引入ace 代码编辑器插件</li>
+                                                <li>21.系统新增多租户模式(SAAS)</li>
+                                                <li>22.整合ureport2 报表插件</li>
+                                                <li>23.新增复杂表格设置问题</li>
+                                                <li>24.修复冻结表格窗体变化导致样式错位问题</li>
+                                                <li>25.优化表格样式</li>
+                                                <li>26.改进启动多次加载系统参数问题</li>
+                                                <li>27.修复用户在线情况不准确问题</li>
+                                                <li>28.新增通过配置实现不同角色展示不同首页</li>
+                                                <li>29.改进系统自动脚本升级</li>
+                                                <li>30.新增日志记录访问代理信息</li>
+                                                <li>31.新增动态表名、数据量大的时候可以做分表处理</li>
+                                                <li>32.修复日志不记录异常情况，耗时统计错误问题、新增记录代理信息字段</li>
+                                                <li>33.整合工作流到系统支持多租户功能</li>
+                                                <li>34.优化查询页面查询条件过多显示问题</li>
+                                                <li>35.优化其他细节</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#version" href="#v21" aria-expanded="true">v2.2.1<code class="pull-right">2021.02.04</code></a>
                                         </h5>
                                     </div>
-                                    <div id="v21" class="panel-collapse collapse in">
+                                    <div id="v21" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <ol>
                                                 <li>1. 升级mybatisplus到最新版本3.4.2.</li>
@@ -496,7 +545,7 @@
                         </p>
                         <p class="mt5"><i class="fa fa-cloud-upload"></i> 关于更新：项目现在会放缓更新、优化细节,演示网站会不定期暂停访问,带来不便尽情谅解!
                         </p>
-                        <p class="mt5"><i class="fa fa-qq"></i> 官方技术交流QQ群：<a href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank">805468934</a>
+                        <p class="mt5"><i class="fa fa-qq"></i> 官方技术交流QQ群：<a href="https://jq.qq.com/?_wv=1027&k=5xTlnN6" target="_blank">805468934①(大群)</a>、<a href="https://jq.qq.com/?_wv=1027&k=mx2H3mNH" target="_blank">805468934②</a>
                         </p>
                         <p class="mt5"><i class="fa fa-envelope-open-o"></i> <strong>免责声明：</strong>
                         <li><strong><a href="https://www.yuque.com/u1174484/j2eefast/mbd8pi" target="_blank" style="color: red;"><u>1. 本项目代码全部开源，免费。但请遵循开源协议!</u></a></strong></li>

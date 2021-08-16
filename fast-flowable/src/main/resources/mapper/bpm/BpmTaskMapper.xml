@@ -16,10 +16,22 @@
             t1.PRIORITY_ as priority
         FROM
             act_ru_task t1
-        INNER JOIN act_ru_execution t2 ON t1.PROC_INST_ID_ = t2.PROC_INST_ID_
-        LEFT JOIN act_ru_identitylink t3 ON t3.TASK_ID_ = t1.ID_
-        LEFT JOIN `act_hi_procinst` t4 ON t1.`PROC_INST_ID_` = t4.`PROC_INST_ID_`
-        LEFT JOIN `act_id_user` u ON u.`ID_` = t4.`START_USER_ID_`
+
+        <!--多租户判断 -->
+        <choose>
+            <when test="tenantId != null and tenantId !=''">
+                INNER JOIN act_ru_execution t2 ON (t1.PROC_INST_ID_ = t2.PROC_INST_ID_ AND t2.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+                LEFT JOIN act_ru_identitylink t3 ON t3.TASK_ID_ = t1.ID_
+                LEFT JOIN `act_hi_procinst` t4 ON (t1.`PROC_INST_ID_` = t4.`PROC_INST_ID_` AND t4.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+                LEFT JOIN `act_id_user` u ON (u.`ID_` = t4.`START_USER_ID_`  AND u.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+            </when>
+            <otherwise>
+                INNER JOIN act_ru_execution t2 ON t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+                LEFT JOIN act_ru_identitylink t3 ON t3.TASK_ID_ = t1.ID_
+                LEFT JOIN `act_hi_procinst` t4 ON t1.`PROC_INST_ID_` = t4.`PROC_INST_ID_`
+                LEFT JOIN `act_id_user` u ON u.`ID_` = t4.`START_USER_ID_`
+            </otherwise>
+        </choose>
         WHERE
             t2.BUSINESS_KEY_ IS NOT NULL
         AND (
@@ -52,6 +64,9 @@
                 )
             )
         )
+        <if test="tenantId != null and tenantId !=''">
+            and t1.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR}
+        </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             and ${sql_filter}
         </if>
@@ -75,14 +90,29 @@
             t6.`apply_type` AS applyType,
             t6.`prefix_url` AS prefixUrl
         FROM
-            act_hi_taskinst t1
-        LEFT JOIN act_hi_procinst t3 ON t1.PROC_INST_ID_ = t3.PROC_INST_ID_
-        LEFT JOIN `act_hi_actinst` t4 ON(t1.PROC_INST_ID_ = t4.PROC_INST_ID_ AND t4.`TASK_ID_` = t1.`ID_`)
-        LEFT JOIN `act_hi_comment` t5 ON(t5.`TASK_ID_` = t1.`ID_` AND t5.`USER_ID_` IS NOT NULL)
-        LEFT JOIN act_id_user t2 ON t5.`USER_ID_` = t2.ID_
-        LEFT JOIN `bpm_task_from` t6 ON t6.`process_definition_key` = t1.`PROC_DEF_ID_`
-        WHERE
-            t1.END_TIME_ IS NOT NULL
+        act_hi_taskinst t1
+        <!--多租户判断 -->
+        <choose>
+            <when test="tenantId != null and tenantId !=''">
+                LEFT JOIN act_hi_procinst t3 ON (t1.PROC_INST_ID_ = t3.PROC_INST_ID_ AND t3.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+                LEFT JOIN `act_hi_actinst` t4 ON (t1.PROC_INST_ID_ = t4.PROC_INST_ID_ AND t4.`TASK_ID_` = t1.`ID_` AND t4.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+                LEFT JOIN `act_hi_comment` t5 ON (t5.`TASK_ID_` = t1.`ID_` AND t5.`USER_ID_` IS NOT NULL)
+                LEFT JOIN act_id_user t2 ON (t5.`USER_ID_` = t2.ID_ AND t2.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR})
+                LEFT JOIN `bpm_task_from` t6 ON (t6.`process_definition_key` = t1.`PROC_DEF_ID_` AND t6.tenant_id =  #{tenantId, jdbcType=VARCHAR})
+                WHERE
+                t1.END_TIME_ IS NOT NULL
+                AND t1.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                LEFT JOIN act_hi_procinst t3 ON t1.PROC_INST_ID_ = t3.PROC_INST_ID_
+                LEFT JOIN `act_hi_actinst` t4 ON (t1.PROC_INST_ID_ = t4.PROC_INST_ID_ AND t4.`TASK_ID_` = t1.`ID_`)
+                LEFT JOIN `act_hi_comment` t5 ON (t5.`TASK_ID_` = t1.`ID_` AND t5.`USER_ID_` IS NOT NULL)
+                LEFT JOIN act_id_user t2 ON t5.`USER_ID_` = t2.ID_
+                LEFT JOIN `bpm_task_from` t6 ON t6.`process_definition_key` = t1.`PROC_DEF_ID_`
+                WHERE
+                t1.END_TIME_ IS NOT NULL
+            </otherwise>
+        </choose>
         <if test="userId != null and userId!=''">
             AND t1.ASSIGNEE_ = #{userId}
         </if>

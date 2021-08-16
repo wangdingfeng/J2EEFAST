@@ -7,7 +7,7 @@ package com.j2eefast.framework.manager.factory;
 
 import java.util.Date;
 import java.util.TimerTask;
-import com.j2eefast.common.core.utils.HttpContextUtil;
+import com.j2eefast.common.core.utils.ServletUtil;
 import com.j2eefast.framework.log.entity.SysLoginInfoEntity;
 import com.j2eefast.framework.log.entity.SysOperLogEntity;
 import com.j2eefast.framework.log.service.SysLoginInfoSerice;
@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.j2eefast.common.core.utils.AddressUtil;
 import com.j2eefast.common.core.utils.SpringUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HtmlUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 
@@ -64,8 +66,9 @@ public class AsyncFactory {
 												 final String message,
 												 final Date loginDate,
 												 final String loginType){
-			final UserAgent userAgent =   UserAgentUtil.parse(HttpContextUtil.getRequest().getHeader("User-Agent"));
-			final String ip = HttpContextUtil.getIp();
+	    	final String bUseraget = ServletUtil.getRequest().getHeader("User-Agent");
+			final UserAgent userAgent =   UserAgentUtil.parse(bUseraget);
+			final String ip = ServletUtil.getIp();
 	        return new TimerTask(){
 	            @Override
 	            public void run(){
@@ -79,6 +82,7 @@ public class AsyncFactory {
 	                logininfor.setIpaddr(ip);
 	                logininfor.setLoginLocation(AddressUtil.getRealAddressByIP(ip));
 	                logininfor.setBrowser(browser);
+	                logininfor.setUserAgent(HtmlUtil.filter(StrUtil.sub(bUseraget, 0, 500)));
 	                logininfor.setOs(os);
 					logininfor.setCompId(compId);
 					logininfor.setDeptId(deptId);
@@ -113,8 +117,9 @@ public class AsyncFactory {
 											 final Long deptId,
 											 final String status,
 											 final String message){
-		final UserAgent userAgent =   UserAgentUtil.parse(HttpContextUtil.getRequest().getHeader("User-Agent"));
-		final String ip = HttpContextUtil.getIp();
+		final String bUseraget = ServletUtil.getRequest().getHeader("User-Agent");
+		final UserAgent userAgent =   UserAgentUtil.parse(bUseraget);
+		final String ip = ServletUtil.getIp();
 		return new TimerTask(){
 			@Override
 			public void run(){
@@ -128,6 +133,7 @@ public class AsyncFactory {
 				logininfor.setIpaddr(ip);
 				logininfor.setLoginLocation(AddressUtil.getRealAddressByIP(ip));
 				logininfor.setBrowser(browser);
+				logininfor.setUserAgent(HtmlUtil.filter(StrUtil.sub(bUseraget, 0, 500)));
 				logininfor.setOs(os);
 				logininfor.setCompId(compId);
 				logininfor.setDeptId(deptId);

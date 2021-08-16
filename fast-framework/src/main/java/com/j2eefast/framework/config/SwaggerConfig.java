@@ -18,7 +18,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Swagger配置 /fast/swagger-ui.html 或者 fast/doc.html
+ * Swagger2 UI访问地址 /fast/swagger-ui.html 或者 fast/doc.html
+ * Swagger3 UI访问地址 /fast/swagger-ui/index.html 或者 fast/doc.html
  */
 @Configuration
 @EnableSwagger2
@@ -26,12 +27,15 @@ public class SwaggerConfig {
 
 	@Bean
 	public Docket createRestApi() {
-		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
+		return new Docket(DocumentationType.OAS_30)
+				.enable(true)
+				.apiInfo(apiInfo()).select()
 				// 加了ApiOperation注解的类，生成接口文档
 				.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
 				// 包下的类，生成接口文档
-				.apis(RequestHandlerSelectors.basePackage("com.j2eefast.flowable.ui"))
-				.paths(PathSelectors.any()).build();
+				//.apis(RequestHandlerSelectors.basePackage("com.j2eefast.flowable.ui"))
+				.paths(PathSelectors.any())
+				.build();
 	}
 
 	private ApiInfo apiInfo() {

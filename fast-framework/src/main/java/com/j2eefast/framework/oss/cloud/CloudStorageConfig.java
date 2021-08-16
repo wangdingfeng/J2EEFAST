@@ -11,7 +11,6 @@ import com.j2eefast.framework.oss.group.QcloudGroup;
 import com.j2eefast.framework.oss.group.QiniuGroup;
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -23,7 +22,7 @@ import java.io.Serializable;
 public class CloudStorageConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// 类型 1：七牛 2：阿里云 3：腾讯云 4: API服务器
+	// 类型 1：七牛 2：阿里云 3：腾讯云 4: FTP
 	@Range(min = 1, max = 4, message = "类型错误")
 	private Integer type;
 

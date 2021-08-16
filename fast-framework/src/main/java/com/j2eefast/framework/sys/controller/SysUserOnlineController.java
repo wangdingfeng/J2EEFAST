@@ -10,20 +10,18 @@ import com.j2eefast.common.core.business.annotaion.BussinessLog;
 import com.j2eefast.common.core.controller.BaseController;
 import com.j2eefast.common.core.enums.BusinessType;
 import com.j2eefast.common.core.shiro.RedisSessionDAO;
-import com.j2eefast.common.core.shiro.ShiroSession;
 import com.j2eefast.common.core.utils.PageUtil;
-import com.j2eefast.common.core.utils.RedisUtil;
 import com.j2eefast.common.core.utils.ResponseData;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.entity.server.OnlineEntity;
-import com.j2eefast.framework.sys.service.SysUserService;
 import com.j2eefast.framework.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.ValidatingSession;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -76,30 +74,27 @@ public class SysUserOnlineController extends BaseController {
         List<OnlineEntity> userList = new ArrayList<>();
         for (Session session : list) {
             if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
-                break;
+                continue;
             }
-            if (session instanceof ShiroSession) {
-                // 如果没有主要字段(除lastAccessTime以外其他字段)发生改变
-                ShiroSession ss = (ShiroSession) session;
-                if (!ss.isChanged()) {
-                    break;
-                }
+
+            if (session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY) == null) {
+                continue;
             }
-            Subject s = new Subject.Builder().session(session).buildSubject();
-            if (s.isAuthenticated()) {
-                OnlineEntity online = new OnlineEntity();
-                LoginUserEntity user = (LoginUserEntity) s.getPrincipal();
-                online.setUserId(user.getId());
-                online.setLoginIp(session.getHost());
-                online.setName(user.getName());
-                online.setUsername(user.getUsername());
-                online.setCompName(user.getCompName());
-                online.setLoginLocation(user.getLoginLocation());
-                online.setLoginStatus(ToolUtil.isNotEmpty(user.getLoginStatus())?user.getLoginStatus():1);
-                online.setSId(session.getId().toString());
-                online.setLoginTime(session.getStartTimestamp());
-                userList.add(online);
-            }
+
+            SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) session
+                    .getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+            OnlineEntity online = new OnlineEntity();
+            LoginUserEntity user = (LoginUserEntity) principalCollection.getPrimaryPrincipal();
+            online.setUserId(user.getId());
+            online.setLoginIp(session.getHost());
+            online.setName(user.getName());
+            online.setUsername(user.getUsername());
+            online.setCompName(user.getCompName());
+            online.setLoginLocation(user.getLoginLocation());
+            online.setLoginStatus(ToolUtil.isNotEmpty(user.getLoginStatus())?user.getLoginStatus():1);
+            online.setSId(session.getId().toString());
+            online.setLoginTime(session.getStartTimestamp());
+            userList.add(online);
         }
         int totalCount = userList.size();
         if(userList.size() <= limit){

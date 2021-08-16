@@ -164,7 +164,8 @@
 		// override these in your code to change the default behavior and style
 		$.blockUI.defaults = {
 			// message displayed when blocking (use null for no message) Math.floor((Math.random() * str.length) + 0)
-			message:  '<div class="loaderbox"><div class="loading-activity"></div> '+str[Math.floor((Math.random() * str.length) + 0)]+'</div>',
+			message:  '<div class="loaderbox"><div class="loading-activity"></div> '
+				+str[Math.floor((Math.random() * str.length) + 0)]+'</div>',
 
 			title: null,		// title string; only used when theme == true
 			draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)
@@ -231,7 +232,7 @@
 			forceIframe: false,
 
 			// z-index for the blocking overlay
-			baseZ: 2000,
+			baseZ: 20000000,
 
 			// set these to true to have the message automatically centered
 			centerX: true, // <-- only effects element blocking (page block controlled via css above)

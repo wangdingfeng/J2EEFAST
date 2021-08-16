@@ -53,7 +53,10 @@
             modalName: "公司",
             columns: [
                 {field: 'selectItem', radio: true},
-                {field: 'name', title: "<@ctx.i18n text = "公司名称"/>", align: "left",halign:"left"},
+                {field: 'name', title: "<@ctx.i18n text = "公司名称"/>", align: "left",halign:"left",formatter: function (value, item, index) {
+                        return '( '+opt.common.nullToStr(item.code,'-')+' ) <a class="tb-view" href="javascript:void(0)" onclick="opt.operate.edit(\'' + item.id + '\')">'+value+'</a>';
+                 }},
+                {field: 'fullName', title: "<@ctx.i18n text = "公司全称"/>",align: "center"},
                 {field: 'type', title: "<@ctx.i18n text = "类型"/>", formatter: function(value, item, index) {
                         return $.table.selectDictLabel(types, item.type);}
                 },

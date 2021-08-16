@@ -1,0 +1,110 @@
+<!-- 系统自动生成 Date:2021-07-23 13:39 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="修改租户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-tenant-edit"  class="form-horizontal">
+    <@f.hidden name="id" value="${sysTenant.id?default('')}"/>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "租户ID"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tenantId" value="${sysTenant.tenantId?default('')}"   required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <span style="color: red; ">* </span>
+            <@ctx.i18n text = "租户名称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tenantName" value="${sysTenant.tenantName?default('')}"   required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "联系人"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="linkman" value="${sysTenant.linkman?default('')}"   />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "联系电话"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="link" value="${sysTenant.link?default('')}"   />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "联系地址"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="address" value="${sysTenant.address?default('')}"   />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "状态"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.radio name="status" dictType="sys_status" value="${sysTenant.status?default('')}"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "备注"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.textarea name="remark" value="${sysTenant.remark?default('')}" />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "sys/tenant";
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-tenant-edit").validate({
+        onkeyup: false,
+        rules:{
+            tenantId: {
+                alnum:true,
+                remote: {
+                    url: prefix + "/checkTenantIdUnique",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        "id": function(){
+                            return opt.common.trim($("#id").val());
+                        },
+                        "tenantId": function() {
+                            return opt.common.trim($("#tenantId").val());
+                        }
+                    },
+                    dataFilter: function(data, type) {
+                        return opt.validate.unique(data);
+                    }
+                }
+            },
+        },
+        focusCleanup: true
+    });
+    </@compress>
+
+    /**
+     * 点击确定回调事件
+     */
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/edit", $('#form-tenant-edit').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>

@@ -41,6 +41,9 @@
         <if test="fromName != null and fromName!=''">and t1.from_name like CONCAT('%',#{fromName},'%')</if>
         <if test="version != null and version!=''">and t2.version like CONCAT('%',#{version},'%')</if>
         <if test="modelKey != null and modelKey!=''">and t1.model_key like CONCAT('%',#{modelKey},'%')</if>
+        <if test="tenantId != null and tenantId !=''">
+            and t2.TENANT_ID_ =  #{tenantId, jdbcType=VARCHAR}
+        </if>
         <if test = "sql_filter !=null and sql_filter!=''">
             and ${sql_filter}
         </if>

@@ -49,7 +49,7 @@ public class LockHandlerInterceptorAdapter extends HandlerInterceptorAdapter {
 				}
 				LoginUserEntity loginUser = UserUtils.getUserInfo();
 				Map<String, String> filterMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-				filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
+//				filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
 				filterMap.put("/logout","anon");
 				filterMap.put("/error","anon");
 				filterMap.put("/Account/login","anon");

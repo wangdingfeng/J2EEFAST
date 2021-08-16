@@ -17,10 +17,10 @@ public class Ztree implements Serializable{
 	private static final long 					serialVersionUID 					= 1L;
 
 	/** 节点ID */
-    private Long id;
+    private String id;
 
     /** 节点父ID */
-    private Long pId;
+    private String pId;
 
     /** 获取节点值 */
     private String name;
@@ -63,22 +63,22 @@ public class Ztree implements Serializable{
         this.isParent = isParent;
     }
 
-    public Long getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(Long id)
+    public void setId(String id)
     {
         this.id = id;
     }
 
-    public Long getpId()
+    public String getpId()
     {
         return pId;
     }
 
-    public void setpId(Long pId)
+    public void setpId(String pId)
     {
         this.pId = pId;
     }

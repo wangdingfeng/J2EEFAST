@@ -37,6 +37,10 @@ public class GroupService extends ServiceImpl<GroupMapper, GroupEntity> {
 		return this.removeById(id);
 	}
 
+	public boolean insertOrUpdate(GroupEntity group){
+		return this.saveOrUpdate(group);
+	}
+
 	public List<GroupRepresentation> findList(String filter){
 		List<GroupRepresentation> result = new ArrayList<>();
 		List<GroupEntity> list =  this.list(new QueryWrapper<GroupEntity>().like(ToolUtil.isNotEmpty(filter),"NAME_",filter));

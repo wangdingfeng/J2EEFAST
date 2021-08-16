@@ -5,6 +5,7 @@
  */
 package com.j2eefast.generator.gen.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.j2eefast.generator.gen.entity.GenTableEntity;
@@ -66,6 +67,7 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 	* @author mfksn001@163.com
 	* @Date: 2020年5月30日
 	*/
+	@InterceptorIgnore(tenantLine = "true")
 	List<GenTableEntity> generateTableList(@Param("dbType") String dbType ,
 			                               @Param("schema") String schema ,
 			                               @Param("tableName")  String tableName,  
@@ -82,6 +84,7 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 	* @author mfksn001@163.com
 	* @Date: 2020年6月1日
 	 */
+	@InterceptorIgnore(tenantLine = "true")
 	List<GenTableEntity> generateTableListByNames(@Param("dbType") String dbType ,
                                                   @Param("schema") String schema,
                                                   @Param("tableNames") String[] tableNames);
@@ -97,6 +100,7 @@ public interface GenTableMapper extends BaseMapper<GenTableEntity> {
 	* @author mfksn001@163.com
 	* @Date: 2020年5月30日
 	*/
+	@InterceptorIgnore(tenantLine = "true")
 	List<GenTableEntity> generateTablePage(IPage<?> params,
 											@Param("dbType") String dbType ,
 											@Param("schema") String schema,

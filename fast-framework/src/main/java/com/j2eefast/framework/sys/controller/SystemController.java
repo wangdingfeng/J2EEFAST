@@ -5,21 +5,26 @@
  */
 package com.j2eefast.framework.sys.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.base.entity.LoginUserEntity;
 import com.j2eefast.common.core.controller.BaseController;
+import com.j2eefast.common.core.utils.ResponseData;
+import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.sys.constant.factory.ConstantFactory;
 import com.j2eefast.framework.sys.entity.SysMenuEntity;
+import com.j2eefast.framework.sys.entity.SysMsgPushEntity;
 import com.j2eefast.framework.sys.service.SysMenuService;
 import com.j2eefast.framework.sys.service.SysModuleService;
+import com.j2eefast.framework.sys.service.SysMsgPushService;
 import com.j2eefast.framework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +39,21 @@ import java.util.Map;
 @Controller
 public class SystemController extends BaseController {
 
+	@Autowired
+	private SysMsgPushService sysMsgPushService;
+
+	/**
+	 * 首页控制
+	 */
+	@Value("#{${web.view.roleMain} ?: null}")
+	private LinkedHashMap<String, String> roleMainMap ;
+
 	/**
 	 * 主页
 	 * @param mmap
 	 * @return
 	 */
-	@RequestMapping(value = { "/", "/index","/index.html" })
+	@GetMapping(value = { "/", "/index","/index.html" })
 	public String index(ModelMap mmap) {
 		LoginUserEntity user = UserUtils.getUserInfo();
 		List<Map<String, Object>> modules = user.getModules();
@@ -52,6 +66,8 @@ public class SystemController extends BaseController {
 		mmap.put("modules",modules);
 		mmap.put("menuList",menuList);
 		mmap.put("user",user);
+		//是否为管理员租户
+		mmap.put("superTenant",user.getSuperTenant());
 		return "index";
 	}
 
@@ -68,6 +84,16 @@ public class SystemController extends BaseController {
 		return "modules/sys/upbw/index";
 	}
 
+	@RequestMapping(value = "/sys/getMsgPush", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData getMsgPush(){
+		SysMsgPushEntity sysMsgPushEntity = new SysMsgPushEntity();
+		sysMsgPushEntity.setUserId(UserUtils.getUserId());
+		sysMsgPushEntity.setIsRead("0");
+		List<SysMsgPushEntity>  sysMsgPushEntityList = sysMsgPushService.findUserList(sysMsgPushEntity);
+		return ToolUtil.isNotEmpty(sysMsgPushEntityList)?ResponseData.success(sysMsgPushEntityList):ResponseData.error("00001","未有新的消息");
+	}
+
 	@GetMapping("static/notice/{htmlNo}")
 	public String statics(@PathVariable("htmlNo") String htmlNo){
 		return "modules/static/" + htmlNo;
@@ -76,8 +102,45 @@ public class SystemController extends BaseController {
 
 
 	@RequestMapping("main")
-	public String main() {
-		return "main";
+	public String main(ModelMap mmap) {
+
+		//默认主页
+		String url = "main";
+
+		if(ToolUtil.isNotEmpty(roleMainMap)){
+			for(String key:roleMainMap.keySet()){
+				//key
+				if(key.indexOf("|") > 0){
+					if(UserUtils.getUserInfo().getRoleKey().size() > 1){
+						continue;
+					}
+					String[] keys = key.split("\\|");
+					if(UserUtils.hasAnyRoleKeys(keys)){
+						url = roleMainMap.get(key);
+						break;
+					}
+				}else if(key.indexOf("&") > 0){
+					String[] keys = key.split("&");
+					if(keys.length == UserUtils.getUserInfo().getRoleKey().size()){
+						if(UserUtils.hasAnyRoleKeys(keys)){
+							url = roleMainMap.get(key);
+							break;
+						}
+					}
+				}else{
+					if(UserUtils.hasRole(StrUtil.trim(key))){
+						url = roleMainMap.get(key);
+						break;
+					}
+				}
+			}
+		}
+
+		mmap.put("compId",UserUtils.getUserInfo().getCompId());
+		mmap.put("user",UserUtils.getUserInfo());
+		mmap.put("compName",UserUtils.getUserInfo().getCompName());
+
+		return url;
 	}
 
 	@RequestMapping("404.html")

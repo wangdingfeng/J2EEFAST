@@ -1,6 +1,7 @@
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
-<@header title="前端组件使用说明" bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage","treeTable"]>
+<@header title="前端组件使用说明" isAnimation=false bodyClass="white-bg" libs=["table","prism","bootstrapSelect","ueditor","fileupload","selectPage","treeTable"]
+attrValue="data-spy='scroll' data-target='#navbar-example2' data-offset='5'">
 <style>
 .form-group .control-label {
     font-weight: normal;
@@ -12,131 +13,577 @@
 </style>
 </@header>
 <div class="wrapper wrapper-content ibox-content">
-<a data-toggle="collapse" href="#c_tip" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">点组件label中的&nbsp;"?"&nbsp;显示源码帮助</span>
-    <@f.tip class="danger"><strong>重要提示: &nbsp;点击组件label中的&nbsp;'?'&nbsp;显示源码帮助 </strong>,J2eeFAST平台 前端模板引擎组件写法类似 HTML 本身控件写法,属性值方式.</@f.tip>
-     <div id="c_tip" class="panel-collapse collapse" >
-    <@f.code>
-        <#noparse>
-        //
-        //页面提示组件标签:<@f.tip>&lt;/@f.tip&gt; 例如上面展示效果
-        //参数: 1. class="info" 不是必输 <#-- 默认 info 蓝色 warning 警告黄色 success 成功绿色 danger 危险红色 -->
-        //     2. icon=""      不是必输 <#-- 提示小图标 默认 fa fa-info -->
-        //栗子 🌰
-        <@f.tip class="warning"><strong>重要提示:</strong>如果选择发布公告,等级是<u>严重</u>才会在登陆页面Top提示,等级是<u>紧急</u>只在登陆之后Top提示,等级是<u>普通</u>则在Top提醒栏提示!&lt;/@f.tip&gt;
-        </#noparse>
-    </@f.code>
-    </div>
-    <@f.form id="form-user-add" class="form-horizontal" style="margin-top: 40px;">
-        <h4 class="form-header h4">常用组件信息</h4>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>输入框组件：</label>
-                    <div class="col-sm-10">
-                        <@f.input name="username" placeholder="请输入登录账号"  butClass="fa fa-envelope-open" required=true helpTip="登录账号数字加字母组合,至少3位"/>
-                        <#-- f.code 是为了演示说明 可以删除-->
-                        <div id="c_hidden" class="panel-collapse collapse" >
+    <div class="row">
+        <div class="col-md-2" >
+            <div class="jft-form-left-navbar">
+                <div id="navbar-example2">
+                    <nav class="navbar">
+                        <ul class="nav">
+                            <li class="active"><a href="#c_tip"><span class="jftn-avbar-item-lin">页面提示组件</span></a></li>
+                            <li><a href="#m_hidden0"><span class="jftn-avbar-item-lin">输入框组件</span></a></li>
+                            <li><a href="#c_time"><span class="jftn-avbar-item-lin">时间组件</span></a></li>
+                            <li><a href="#c_textarea0"><span class="jftn-avbar-item-lin">多行文本组件</span></a></li>
+                            <li><a href="#c_ueditor8"><span class="jftn-avbar-item-lin">HTML文本组件</span></a></li>
+                            <li><a href="#c_imageclip00"><span class="jftn-avbar-item-lin">头像剪辑组件</span></a></li>
+                            <li><a href="#c_select00"><span class="jftn-avbar-item-lin">下拉菜单组件</span></a></li>
+                            <li><a href="#c_ueditor0"><span class="jftn-avbar-item-lin">百度富文本组件</span></a></li>
+                            <li><a href="#c_treeselect0"><span class="jftn-avbar-item-lin">弹出树表组件</span></a></li>
+                            <li><a href="#c_tableselect0"><span class="jftn-avbar-item-lin">弹出表格组件</span></a></li>
+                            <li><a href="#c_fileupload0"><span class="jftn-avbar-item-lin">附件组件</span></a></li>
+                            <li><a href="#c_table0"><span class="jftn-avbar-item-lin">树表异步组件</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10" id="c_tip">
+        <a data-toggle="collapse" href="#c_tip" aria-expanded="true">
+        <i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a>
+        <span style="color: red; ">点组件label中的&nbsp;"?"&nbsp;显示源码帮助</span>
+        <@f.tip class="danger"><strong>重要提示: &nbsp;点击组件label中的&nbsp;'?'&nbsp;显示源码帮助 </strong>,J2eeFAST平台 前端模板引擎组件写法类似 HTML 本身控件写法,属性值方式.</@f.tip>
+         <div id="c_tip" class="panel-collapse collapse" >
+        <@f.code>
+            <#noparse>
+            //
+            //页面提示组件标签:<@f.tip>&lt;/@f.tip&gt; 例如上面展示效果
+            //参数: 1. class="info" 不是必输 <#-- 默认 info 蓝色 warning 警告黄色 success 成功绿色 danger 危险红色 -->
+            //     2. icon=""      不是必输 <#-- 提示小图标 默认 fa fa-info -->
+            //栗子 🌰
+            <@f.tip class="warning"><strong>重要提示:</strong>如果选择发布公告,等级是<u>严重</u>才会在登陆页面Top提示,等级是<u>紧急</u>只在登陆之后Top提示,等级是<u>普通</u>则在Top提醒栏提示!&lt;/@f.tip&gt;
+            </#noparse>
+        </@f.code>
+        </div>
+        <@f.form id="form-user-add" class="form-horizontal" style="margin-top: 40px;">
+            <h4 class="form-header h4">常用组件信息</h4>
+            <div class="row" id="m_hidden0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>输入框组件：</label>
+                        <div class="col-sm-10">
+                            <@f.input name="username" placeholder="请输入登录账号"  butClass="fa fa-envelope-open" required=true helpTip="登录账号数字加字母组合,至少3位"/>
+                            <#-- f.code 是为了演示说明 可以删除-->
+                            <div id="c_hidden" class="panel-collapse collapse" >
+                                <@f.code>
+                                    <#noparse>
+                                        //输入框组件标签:<@f.input/>
+                                        //参数: 1. name 控件name 必输
+                                        2. id 控件id 不是必输 如果不输则与name名称一样
+                                        3. value 控件值 不是必输 默认""
+                                        4. type 控件类型 不是必输 默认 text 多增加 date
+                                        5. dataFormat 时间格式化 不是必输 格式化
+                                        6. dataType  默认 "date" 时间控件显示类型 date 年月日 year 年 month 年月 datetime 详细时间
+                                        6. required 控件在from 不是必输 默认false 表单中是否必输 true为表单中必输
+                                        7. class 输入框控件样式 不是必输 默认form-control
+                                        8. placeholder 控件输入框提示内容 不是必输 默认""
+                                        9. butClass 控件后面追加图标  不是必输 默认""
+                                        10.helpTip 帮助提示 不是必输 默认""
+                                        11.readonly 控件是否可以编辑 不是必输 默认""
+                                        12.maxlength 控件输入最大长度 不是必输 默认 ""
+                                        //栗子 🌰
+                                        <@f.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required=true
+                                        helpTip="登录账号数字加字母组合,至少3位"/>
+
+                                        //表单隐藏域标签:<@f.hidden/>
+                                        //参数: 1. name 控件name 必输
+                                        2. id 控件id 不是必输 如果不输则与name名称一样
+                                        3. value 控件值 不是必输 默认""
+                                        4. type 控件类型 不是必输 默认 hidden
+                                        5. refresh 隐藏域在from 表单中能否被重置按钮清空 不是必输 默认 true
+                                        //栗子 🌰
+                                        <@f.hidden name="id"/>
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_time">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_plaintext" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>文本显示：</label>
+                        <div class="col-sm-8">
+                            <@f.plaintext value="测试"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_plaintext" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>文本显示(若数据为"")：</label>
+                        <div class="col-sm-8">
+                            <@f.plaintext value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <div id="c_plaintext" class="panel-collapse collapse" >
+                                <@f.code>
+                                    <#noparse>
+                                        //下划线显示: <@f.plaintext/>
+                                        //参数:
+                                        1. value 显示值
+                                        2. defaulValue 无数值默认值
+                                        //栗子 🌰
+                                        <@f.plaintext value="测试"/>
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>时间选择：</label>
+                        <div class="col-sm-8">
+                            <@f.input name="date" type="date" dataType="datetime" dataFormat="yyyy-MM-dd HH:mm:ss"
+                            placeholder="请选择时间" dataCallback="$('#EndDate').trigger('click')"  butClass="fa fa-calendar-plus-o" required=true />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>年月选择：</label>
+                        <div class="col-sm-8">
+                            <@f.input name="EndDate" type="date" dataFormat="yyyy-MM-dd"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_textarea0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_textarea" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>多行文本：</label>
+                        <div class="col-sm-10">
+                            <@f.textarea name="text" rows="6"/>
+                            <div id="c_textarea" class="panel-collapse collapse" >
+                            <@f.code>
+                            <#noparse>
+                                //多行文本组件标签: <@f.textarea/>
+                                //参数: 1. name 控件name 必输
+                                       2. id 控件id 不是必输 如果不输则与name名称一样
+                                       3. class 控件样式 不是必输 默认 "form-control"
+                                       4. value 控制值 不是必输 默认 ""
+                                       5. required 控件在from 不是必输 默认 false 表单中是否必输 true为表单中必输
+                                       6. readOnly 控件是否可以修改 不是必输 默认 false
+                                       7. rows 控件多行 不是必输 默认 5
+                                //栗子 🌰
+                                <@f.textarea name="text" rows="6"/>
+                            </#noparse>
+                            </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_ueditor8">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_htmlText" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>信息描述支持html：</label>
+                        <div class="col-sm-10">
+                            <@f.ueditor name="htmlText" toolbars="'simpleupload','attachment'" />
+                            <div id="c_htmlText" class="panel-collapse collapse" >
+                                <@f.code>
+                                    <#noparse>
+                                        //libs["ueditor"]
+                                        //百度富文本组件标签:<@f.ueditor/>
+                                        //参数: 1. name 控件name 必输
+                                        2. id 控件id 不是必输 如果不输则与name名称一样
+                                        3. bizType 用于关联文件数据库
+                                        4. bizId 用于关联文件数据库，管理物理文件
+                                        5. value 控件值 不是必输 默认""
+                                        6. readonly 控件是否可以编辑 不是必输 默认 false
+                                        7. maxlength 最大输入长度默认不限 不是必输
+                                        8. height 控件高度 不是必输 默认"300"
+                                        9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
+                                        10. toolbars="all" 默认工具栏显示所有, text 显示文字信息
+                                        //回调函数
+                                        //webuploaderRefresh(id,html);
+
+                                        //栗子 🌰
+                                        <@f.ueditor name="noticeContent"  value="${noticeContent?html}  />
+                                        //bizType和bizId 如果需要富文件上传的文件，被系统数库记录，请使用两个参数与实体类
+                                        //由于新增实体时没有id(bizId) 因此需要在打面新增页面前产生id到端，${exampleTest.id} 提交前产生id
+                                        <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_imageclip00">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_imageclip" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>图片剪切：</label>
+                        <div class="col-sm-10">
+                            <@f.imageclip name="imgCp"/>
+                             <div id="c_imageclip" class="panel-collapse collapse" >
                             <@f.code>
                                 <#noparse>
-                                    //输入框组件标签:<@f.input/>
+                                    //附件组件标签:<@f.imageclip/>
                                     //参数: 1. name 控件name 必输
-                                    2. id 控件id 不是必输 如果不输则与name名称一样
-                                    3. value 控件值 不是必输 默认""
-                                    4. type 控件类型 不是必输 默认 text 多增加 date
-                                    5. dataFormat 时间格式化 不是必输 格式化
-                                    6. dataType  默认 "date" 时间控件显示类型 date 年月日 year 年 month 年月 datetime 详细时间
-                                    6. required 控件在from 不是必输 默认false 表单中是否必输 true为表单中必输
-                                    7. class 输入框控件样式 不是必输 默认form-control
-                                    8. placeholder 控件输入框提示内容 不是必输 默认""
-                                    9. butClass 控件后面追加图标  不是必输 默认""
-                                    10.helpTip 帮助提示 不是必输 默认""
-                                    11.readonly 控件是否可以编辑 不是必输 默认""
-                                    12.maxlength 控件输入最大长度 不是必输 默认 ""
-                                    //栗子 🌰
-                                    <@f.input name="username" butClass="fa fa-envelope-open" placeholder="请输入登录账号" required=true
-                                    helpTip="登录账号数字加字母组合,至少3位"/>
+                                           id = "" <#-- 控件ID 如果不传则与name一致-->
+                                           value =""
+                                           imageDefault = "${ctxStatic}/static/img/user2-160x160.jpg" <#-- 默认显示-->
+                                           boxTitle = "" <#-- 弹出框 标题-->
+                                           tipHelp = "修改图片"
+                                           ratio = "1/1" <#-- 图片裁剪比例-->
+                                           viewMode = 0 <#-- 显示模式 0 允许图片无限缩小 1不允许图片缩小到图片本身大小以下-->
+                                           isClear = true <#-- 是否有清除按钮-->
+                                           width = 120 <#-- 图片显示宽度-->
+                                           height = 120 <#-- 图片显示高度-->
 
-                                    //表单隐藏域标签:<@f.hidden/>
-                                    //参数: 1. name 控件name 必输
-                                    2. id 控件id 不是必输 如果不输则与name名称一样
-                                    3. value 控件值 不是必输 默认""
-                                    4. type 控件类型 不是必输 默认 hidden
-                                    5. refresh 隐藏域在from 表单中能否被重置按钮清空 不是必输 默认 true
-                                    //栗子 🌰
-                                    <@f.hidden name="id"/>
+                                    //栗子 🌰  ---
+
+                                    //后台使用：创建或删除物理文件和关联
+                                    //  创建 ：exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(), "example_test_avatar", exampleTest.getId()));
+                                     // 在 service 中保存后增加关联关系
+
+                                     //需先生成ID
+                                     exampleTest.setId(new Sequence().nextId());
+                                     //设置avatar url 径路 //图片剪切数据转换
+                                     exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(), "example_test_avatar", exampleTest.getId()));
+                                     if(this.save(exampleTest)){
+                                            ... ...
+                                            return true;
+                                     }
+                                    // 在 service 中保存后删除关联关系和物理文件
+                                    //删除：   FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");
                                 </#noparse>
                             </@f.code>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>时间选择：</label>
-                    <div class="col-sm-8">
-                        <@f.input name="date" type="date" dataType="datetime" dataFormat="yyyy-MM-dd HH:mm:ss"
-                        placeholder="请选择时间"  butClass="fa fa-calendar-plus-o" required=true />
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_hidden" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>年月选择：</label>
-                    <div class="col-sm-8">
-                        <@f.input name="date" type="date" dataFormat="yyyy-MM-dd"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_textarea" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>多行文本：</label>
-                    <div class="col-sm-10">
-                        <@f.textarea name="text" rows="6"/>
-                        <div id="c_textarea" class="panel-collapse collapse" >
-                        <@f.code>
-                        <#noparse>
-                            //多行文本组件标签: <@f.textarea/>
-                            //参数: 1. name 控件name 必输
-                                   2. id 控件id 不是必输 如果不输则与name名称一样
-                                   3. class 控件样式 不是必输 默认 "form-control"
-                                   4. value 控制值 不是必输 默认 ""
-                                   5. required 控件在from 不是必输 默认 false 表单中是否必输 true为表单中必输
-                                   6. readOnly 控件是否可以修改 不是必输 默认 false
-                                   7. rows 控件多行 不是必输 默认 5
-                            //栗子 🌰
-                            <@f.textarea name="text" rows="6"/>
-                        </#noparse>
-                        </@f.code>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_select" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>下拉单选：</label>
+                        <div class="col-sm-4">
+                            <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
+                        </div>
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_select" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>下拉多选：</label>
+                        <div class="col-sm-4">
+                            <@f.select name="businessTypes" multiple=true  dictType="sys_oper_type" required=true/>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_htmlText" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>信息描述支持html：</label>
-                    <div class="col-sm-10">
-                        <@f.ueditor name="htmlText" toolbars="'simpleupload','attachment'" />
-                        <div id="c_htmlText" class="panel-collapse collapse" >
+
+            <div class="row" id="c_select00">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <div id="c_select" class="panel-collapse collapse" >
+                                <@f.code>
+                                    <#noparse>
+                                        //下拉框组件标签: <@f.select/>
+                                        //参数: 1. name 控件name 必输
+                                               2. id 控件id 不是必输 如果不输则与name名称一样
+                                               3. class 控件样式 不是必输 默认 "form-control"
+                                               4. value 控制值 不是必输 默认 ""
+                                               5. required 控件在from 不是必输 默认 false 表单中是否必输 true为表单中必输
+                                               6. readOnly 控件是否可以修改 不是必输 默认 false
+                                               7. butClass 控件后面追加图标  不是必输 默认""
+                                               8. helpTip 帮助提示 不是必输 默认""
+                                               9. dictType 字典类型，从数据从字典里获取 不是必输 默认""
+                                               10.items 列表数据，可接受对象集合后台传入 不是必输
+                                               11.itemLabel 指定列表数据中的什么属性名作为option的标签名 不是必输
+                                               12.itemValue 指定列表数据中的什么属性名作为option的value值 不是必输
+                                               13.status 检测状态 不是必输
+                                               14.multiple 是否多选 不是必输 默认 "false" 单选
+                                               15.blankValue 是否默认有个空白选择项目 不是必输 默认"false"
+                                               16.blankLabel 空白选择默认值 不是必输 默认""
+                                               17.placeholder 默认输入框提示 不是必输 默认 "请输入"
+                                        //此组件页面会有回调事件:
+                                        //回调方法参数: id 回调控件的id,用于区分控件名称,若你的页面有多个下拉框组件
+                                                      event 回调控件的事件 change
+                                                      data 回调控件的数据
+                                        selectCallback(id,event,data);
+                                        * 如果你需要此回调页面添加此函数 不需要则忽略
+
+                                        //从字典获取栗子 🌰:
+                                        <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
+                                        //从后台传入值栗子 🌰:
+                                        <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id"
+                                        required=true/>
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span style="color: red; ">*</span>异步多级联动：</label>
+                        <div class="col-sm-10">
+                            <@f.selectLinkage name="cidy"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_radio" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>单选框：</label>
+                        <div class="col-sm-8">
+                            <@f.radio name="type" dictType="sys_menu_type"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_radio" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>多选框：</label>
+                        <div class="col-sm-8">
+                            <@f.checkbox name="postType" dictType="sys_post_type" required=true/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                          <div id="c_radio" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //单选按钮组件标签: <@f.radio/>
+                                    //参数: 1. name 控件name 必输
+                                           2. id 控件id 不是必输 如果不输则与name名称一样
+                                           3. class 控件样式 不是必输 默认 "radio-box"
+                                           4. value 控制值 不是必输 默认 ""
+                                           5. required 控件在from 不是必输 默认 false
+                                     表单中是否必输 true为表单中必输
+                                           6. readOnly 控件是否可以修改 不是必输 默认 false
+                                           7. helpTip  帮助提示 不是必输 默认""
+                                           8. dictType 字典类型，从字典里获取
+                                    //控件回调事件:
+                                    //回传参数 id 控件名称, data 回传对象, event 回传事件
+                                    redioCallback(id,data,event)
+                                    * 如果你需要此回调页面添加此函数 不需要则忽略
+                                    //栗子 🌰
+                                    <@f.radio name="type" dictType="sys_menu_type"/>
+
+                                    //多选按钮组件标签: <@f.checkbox/>
+                                    //参数: 1. name 控件name 必输
+                                           2. id 控件id 不是必输 如果不输则与name名称一样
+                                           3. class 控件样式 不是必输 默认 "radio-box"
+                                           4. value 控制值 不是必输 默认 ""
+                                           5. required 控件在from 不是必输 默认 false
+                                    表单中是否必输 true为表单中必输
+                                           6. status 检测状态 不是必输 默认 status
+                                           7. dictType 字典类型，从字典里获取  不是必输 默认""
+                                           8. helpTip  帮助提示 不是必输 默认""
+                                           9.items 列表数据，可接受对象集合后台传入 不是必输
+                                           10.itemLabel 指定列表数据中的什么属性名作为option
+                                    的标签名 不是必输
+                                           11.itemValue 指定列表数据中的什么属性名作为option
+                                    的value值 不是必输
+                                    //栗子 🌰
+                                    <@f.checkbox name="postType" dictType="sys_post_type"
+                                    required=true/>
+                                </#noparse>
+                            </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_icon" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> 图标选择控件：</label>
+                        <div class="col-sm-8">
+                            <@f.iconselect name="icon" placeholder="选择图标"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_icon" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> Switch状态控件：</label>
+                        <div class="col-sm-8">
+                            <@f.switch name="status" value="0"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                         <div id="c_icon" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //图标选择组件标签: <@f.iconselect/>
+                                    //参数:  1. name 控件name 必输
+                                            2. id 控件id 不是必输 如果不输则与name名称一样
+                                            3. class 控件样式 不是必输 默认 "radio-box"
+                                            4. value 控制值 不是必输 默认 ""
+                                            5. required 控件在from 不是必输 默认 false
+                                    表单中是否必输 true为表单中必输
+                                            6. readOnly 控件是否可以修改 不是必输 默认 false
+                                            7. helpTip  帮助提示 不是必输 默认""
+                                            8. width 弹出窗口宽 不是必输
+                                            9. height 弹出窗口高 不是必输
+                                            10.isClear 弹出窗体是否有清除按钮 不是必输
+                                            11.boxTitle 弹出窗体title 不是必输
+                                    //控件回调事件:
+                                    //回传参数 id 控件名称, data 回传对象, event 回传事件
+                                    iconCallback(id,event,index, layero, icon)
+                                    * 如果你需要此回调页面添加此函数 不需要则忽略
+                                    //栗子 🌰
+                                    <@f.iconselect name="icon" placeholder="选择图标"/>
+
+                                    //switch开关组件标签: <@f.switch/>
+                                    //参数:  1. name 控件name 必输
+                                            2. id 控件id 不是必输 如果不输则与name名称一样
+                                            3. value 控制值 不是必输 默认 ""
+                                    //栗子 🌰
+                                    <@f.switch name="status" value="0"/>
+                                </#noparse>
+                            </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_treeselect0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_treeselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>选择树组件：</label>
+                        <div class="col-sm-10">
+                            <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                            expandLevel=true
+                            placeholder="请选择上级机构"/>
+                             <div id="c_treeselect" class="panel-collapse collapse" >
+                            <@f.code>
+                                <#noparse>
+                                    //树选择组件标签:<@f.treeselect/>
+                                    //参数: 1. name 控件name 必输
+                                           2. id 控件id 不是必输 如果不输则与name名称一样
+                                           3. value 控件值 不是必输 默认""
+                                           4. boxTitle 弹出窗体标题 默认""
+                                           5. width 弹出窗口宽 不是必输 默认"380"
+                                           6. height 弹出窗口高 不是必输 默认""
+                                           7. labelValue 页面显示值 不是必输 默认""
+                                           8. checked 树是否多选 不是必输 默认 false
+                                           9. radioType 当checked=false 单选时 控制同级单选互斥还是整个树互斥 all 整个树互斥 level, checked=true 多选此值无效
+                                           10.required 控件在from 不是必输 默认false 表单中是否必输 true为表单中必输
+                                           11.readonly 控件是否可以编辑 不是必输 默认""
+                                           12.correlationId 控件关联ID 不是必输
+                                           13.correlationValue 控件关联值 不是必输
+                                           14.expandLevel 是否展开树 默认 false
+                                           15.isParentIds 单选是否需要获取树的父节点集合 false
+                                           16.parenName 单选父节点集合Name 默认 "parentIds"
+                                           17.parenIdsValue 所有父节点集合默认值
+                                           18.isSelectParent 是否只能选中叶子节点 false
+                                           19.isInput 是否允许手动label框输入 默认 false
+                                           20.isClear  弹出是否出现清除按钮 默认 true
+                                           21.placeholder 输入提示 默认 请输入值
+                                           22.helpTip 帮助提示 默认 ""
+                                    //回调函数
+                                    //treeCallback(id, event, index, layero, nodes);
+
+                                    //栗子 🌰
+                                    <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
+                                    expandLevel=true placeholder="请选择上级机构"/>
+
+                                    //关联
+                                    <@f.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" value="${user.deptId?default('')}"
+                                    labelValue="${user.deptName?default('')}" correlationId="compId" isSelectParent=true  placeholder="请选择归属部门"/>
+                                </#noparse>
+                            </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_tableselect0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_tableselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>弹窗表格形式,单、多选组件：</label>
+                        <div class="col-sm-10">
+                            <@f.tableselect name="selectuser" boxTitle="多选用户信息" checked=false layout="right" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
+                       {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                       {field:'status',title:'状态',dict:'sys_user_show_hide',query: true},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
+                            <div id="c_tableselect" class="panel-collapse collapse" >
+                                <@f.code>
+                                    <#noparse>
+                                        //弹出选择标签(适用于大数据):<@f.tableselect/>
+                                        //参数:
+                                        1. name 控件name 必输
+                                        2. id 控件id 不是必输 如果不输则与name名称一样
+                                        3. boxTitle 弹窗标题
+                                        4. tableInfo 显示表格列信息 必输
+                                        tableInfo 说明：字段为JS数组对象 与表格$.table columns 含义相似
+                                        {
+                                            field:'表格字段标签',title:'列表头名称',query:'此列是否做查询',dict:'表格列字典转换', ztree:'字段使用treeselect组件'
+                                            ztree对象字段url,keyId,expandLevel,isClear,name,isSelectParent,checked 含义与treeselect组件一样目前只开放这些字段
+                                        }
+                                        5. placeholder 提示值
+                                        6. width="1200" 弹出宽度
+                                        7. height="" 高度
+                                        8. value="" 值
+                                        9. labelValue="" 显示值
+                                        10. labelName="" <#--标签名称 -->
+                                        11. required=false <#-- 是否必输-->
+                                        12. readonly 控件是否可以编辑 不是必输 默认"false"
+                                        13. checked=true <#-- true多选 false 单选 默认多选 -->
+                                        14. class = "form-control" <#-- 输入框样式-->
+                                        15. butClass = "fa fa-fw fa-address-card-o"
+                                        16. isClear = true <#-- 弹出是否出现清除按钮-->
+                                        17. url = "sys/user/list" <#-- 访问数据URL-->
+                                        18. keyId = "id" <#--表示获取数据id字段名称 -->
+                                        19. keyName = "name" <#--表示显示名称 -->
+                                        //回调函数
+                                        //tableCallback(id, event, index, layero, nodes);
+
+                                        //栗子 🌰
+                                        <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},
+                                        {field:'compName',title:'归属公司'},{field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
+                                        {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
+                                    </#noparse>
+                                </@f.code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="c_ueditor0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_ueditor" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>百度富文本：</label>
+                        <div class="col-sm-10">
+                            <@f.ueditor name="noticeContent"/>
+                             <div id="c_ueditor" class="panel-collapse collapse" >
                             <@f.code>
                                 <#noparse>
                                     //libs["ueditor"]
                                     //百度富文本组件标签:<@f.ueditor/>
                                     //参数: 1. name 控件name 必输
-                                    2. id 控件id 不是必输 如果不输则与name名称一样
-                                    3. bizType 用于关联文件数据库
-                                    4. bizId 用于关联文件数据库，管理物理文件
-                                    5. value 控件值 不是必输 默认""
-                                    6. readonly 控件是否可以编辑 不是必输 默认 false
-                                    7. maxlength 最大输入长度默认不限 不是必输
-                                    8. height 控件高度 不是必输 默认"300"
-                                    9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
-                                    10. toolbars="all" 默认工具栏显示所有, text 显示文字信息
+                                           2. id 控件id 不是必输 如果不输则与name名称一样
+                                           3. bizType 用于关联文件数据库
+                                           4. bizId 用于关联文件数据库，管理物理文件
+                                           5. value 控件值 不是必输 默认""
+                                           6. readonly 控件是否可以编辑 不是必输 默认"false"
+                                           7. maxlength 最大输入长度默认不限 不是必输
+                                           8. height 控件高度 不是必输 默认"300"
+                                           9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
                                     //回调函数
                                     //webuploaderRefresh(id,html);
 
@@ -147,497 +594,123 @@
                                     <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
                                 </#noparse>
                             </@f.code>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_imageclip" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>图片剪切：</label>
-                    <div class="col-sm-10">
-                        <@f.imageclip name="imgCp"/>
-                         <div id="c_imageclip" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //附件组件标签:<@f.imageclip/>
-                                //参数: 1. name 控件name 必输
-                                       id = "" <#-- 控件ID 如果不传则与name一致-->
-                                       value =""
-                                       imageDefault = "${ctxStatic}/static/img/user2-160x160.jpg" <#-- 默认显示-->
-                                       boxTitle = "" <#-- 弹出框 标题-->
-                                       tipHelp = "修改图片"
-                                       ratio = "1/1" <#-- 图片裁剪比例-->
-                                       viewMode = 0 <#-- 显示模式 0 允许图片无限缩小 1不允许图片缩小到图片本身大小以下-->
-                                       isClear = true <#-- 是否有清除按钮-->
-                                       width = 120 <#-- 图片显示宽度-->
-                                       height = 120 <#-- 图片显示高度-->
-                               
-                                //栗子 🌰  --- 
-                                
-                                //后台使用：创建或删除物理文件和关联
-                                //  创建 ：exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(), "example_test_avatar", exampleTest.getId()));  
-                                 // 在 service 中保存后增加关联关系       
-                                 
-                                 //需先生成ID
-                                 exampleTest.setId(new Sequence().nextId());
-                                 //设置avatar url 径路 //图片剪切数据转换
-                                 exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(), "example_test_avatar", exampleTest.getId()));	                                                                        
-                                 if(this.save(exampleTest)){
-                                        ... ...											
-                                        return true;
-                                 } 
-                                // 在 service 中保存后删除关联关系和物理文件                                                                                                         
-                                //删除：   FileUploadUtils.me().removeFileUpload(id,"example_test_avatar");				
-                            </#noparse>
-                        </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_select" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>下拉单选：</label>
-                    <div class="col-sm-4">
-                        <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
-                    </div>
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_select" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>下拉多选：</label>
-                    <div class="col-sm-4">
-                        <@f.select name="businessTypes" multiple=true  dictType="sys_oper_type" required=true/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10">
-                    <div id="c_select" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //下拉框组件标签: <@f.select/>
-                                //参数: 1. name 控件name 必输
-                                       2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. class 控件样式 不是必输 默认 "form-control"
-                                       4. value 控制值 不是必输 默认 ""
-                                       5. required 控件在from 不是必输 默认 false 表单中是否必输 true为表单中必输
-                                       6. readOnly 控件是否可以修改 不是必输 默认 false
-                                       7. butClass 控件后面追加图标  不是必输 默认""
-                                       8. helpTip 帮助提示 不是必输 默认""
-                                       9. dictType 字典类型，从数据从字典里获取 不是必输 默认""
-                                       10.items 列表数据，可接受对象集合后台传入 不是必输
-                                       11.itemLabel 指定列表数据中的什么属性名作为option的标签名 不是必输
-                                       12.itemValue 指定列表数据中的什么属性名作为option的value值 不是必输
-                                       13.status 检测状态 不是必输
-                                       14.multiple 是否多选 不是必输 默认 "false" 单选
-                                       15.blankValue 是否默认有个空白选择项目 不是必输 默认"false"
-                                       16.blankLabel 空白选择默认值 不是必输 默认""
-                                       17.placeholder 默认输入框提示 不是必输 默认 "请输入"
-                                //此组件页面会有回调事件:
-                                //回调方法参数: id 回调控件的id,用于区分控件名称,若你的页面有多个下拉框组件
-                                              event 回调控件的事件 change
-                                              data 回调控件的数据
-                                selectCallback(id,event,data);
-                                * 如果你需要此回调页面添加此函数 不需要则忽略
-
-                                //从字典获取栗子 🌰:
-                                <@f.select name="status" dictType="sys_normal_disable" blankValue="" blankLabel="所有"/>
-                                //从后台传入值栗子 🌰:
-                                <@f.select name="roleIdList" multiple = true value="${selectRoles}"  items=roles itemLabel="roleName" itemValue="id"
-                                required=true/>
-                            </#noparse>
-                        </@f.code>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><span style="color: red; ">*</span>异步多级联动：</label>
-                    <div class="col-sm-10">
-                        <@f.selectLinkage name="cidy"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_radio" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>单选框：</label>
-                    <div class="col-sm-8">
-                        <@f.radio name="type" dictType="sys_menu_type"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_radio" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>多选框：</label>
-                    <div class="col-sm-8">
-                        <@f.checkbox name="postType" dictType="sys_post_type" required=true/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10">
-                      <div id="c_radio" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //单选按钮组件标签: <@f.radio/>
-                                //参数: 1. name 控件name 必输
-                                       2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. class 控件样式 不是必输 默认 "radio-box"
-                                       4. value 控制值 不是必输 默认 ""
-                                       5. required 控件在from 不是必输 默认 false
-                                 表单中是否必输 true为表单中必输
-                                       6. readOnly 控件是否可以修改 不是必输 默认 false
-                                       7. helpTip  帮助提示 不是必输 默认""
-                                       8. dictType 字典类型，从字典里获取
-                                //控件回调事件:
-                                //回传参数 id 控件名称, data 回传对象, event 回传事件
-                                redioCallback(id,data,event)
-                                * 如果你需要此回调页面添加此函数 不需要则忽略
-                                //栗子 🌰
-                                <@f.radio name="type" dictType="sys_menu_type"/>
-
-                                //多选按钮组件标签: <@f.checkbox/>
-                                //参数: 1. name 控件name 必输
-                                       2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. class 控件样式 不是必输 默认 "radio-box"
-                                       4. value 控制值 不是必输 默认 ""
-                                       5. required 控件在from 不是必输 默认 false
-                                表单中是否必输 true为表单中必输
-                                       6. status 检测状态 不是必输 默认 status
-                                       7. dictType 字典类型，从字典里获取  不是必输 默认""
-                                       8. helpTip  帮助提示 不是必输 默认""
-                                       9.items 列表数据，可接受对象集合后台传入 不是必输
-                                       10.itemLabel 指定列表数据中的什么属性名作为option
-                                的标签名 不是必输
-                                       11.itemValue 指定列表数据中的什么属性名作为option
-                                的value值 不是必输
-                                //栗子 🌰
-                                <@f.checkbox name="postType" dictType="sys_post_type"
-                                required=true/>
-                            </#noparse>
-                        </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_icon" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> 图标选择控件：</label>
-                    <div class="col-sm-8">
-                        <@f.iconselect name="icon" placeholder="选择图标"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><a data-toggle="collapse" href="#c_icon" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> Switch状态控件：</label>
-                    <div class="col-sm-8">
-                        <@f.switch name="status" value="0"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10">
-                     <div id="c_icon" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //图标选择组件标签: <@f.iconselect/>
-                                //参数:  1. name 控件name 必输
-                                        2. id 控件id 不是必输 如果不输则与name名称一样
-                                        3. class 控件样式 不是必输 默认 "radio-box"
-                                        4. value 控制值 不是必输 默认 ""
-                                        5. required 控件在from 不是必输 默认 false
-                                表单中是否必输 true为表单中必输
-                                        6. readOnly 控件是否可以修改 不是必输 默认 false
-                                        7. helpTip  帮助提示 不是必输 默认""
-                                        8. width 弹出窗口宽 不是必输
-                                        9. height 弹出窗口高 不是必输
-                                        10.isClear 弹出窗体是否有清除按钮 不是必输
-                                        11.boxTitle 弹出窗体title 不是必输
-                                //控件回调事件:
-                                //回传参数 id 控件名称, data 回传对象, event 回传事件
-                                iconCallback(id,event,index, layero, icon)
-                                * 如果你需要此回调页面添加此函数 不需要则忽略
-                                //栗子 🌰
-                                <@f.iconselect name="icon" placeholder="选择图标"/>
-
-                                //switch开关组件标签: <@f.switch/>
-                                //参数:  1. name 控件name 必输
-                                        2. id 控件id 不是必输 如果不输则与name名称一样
-                                        3. value 控制值 不是必输 默认 ""
-                                //栗子 🌰
-                                <@f.switch name="status" value="0"/>
-                            </#noparse>
-                        </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_treeselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>选择树组件：</label>
-                    <div class="col-sm-10">
-                        <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-                        expandLevel=true
-                        placeholder="请选择上级机构"/>
-                         <div id="c_treeselect" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //树选择组件标签:<@f.treeselect/>
-                                //参数: 1. name 控件name 必输
-                                       2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. value 控件值 不是必输 默认""
-                                       4. boxTitle 弹出窗体标题 默认""
-                                       5. width 弹出窗口宽 不是必输 默认"380"
-                                       6. height 弹出窗口高 不是必输 默认""
-                                       7. labelValue 页面显示值 不是必输 默认""
-                                       8. checked 树是否多选 不是必输 默认"false"
-                                       9. radioType 当checked=false 单选时 控制同级单选互斥还是整个树互斥 all 整个树互斥 level, checked=true 多选此值无效
-                                       10.required 控件在from 不是必输 默认false 表单中是否必输 true为表单中必输
-                                       11.readonly 控件是否可以编辑 不是必输 默认""
-                                       12.correlationId 控件关联ID 不是必输
-                                       13.correlationValue 控件关联值 不是必输
-                                       14.expandLevel 是否展开树 默认 false
-                                       15.isParentIds 单选是否需要获取树的父节点集合 false
-                                       16.parenName 单选父节点集合Name 默认 "parentIds"
-                                       17.parenIdsValue 所有父节点集合默认值
-                                       18.isSelectParent 是否只能选中叶子节点 false
-                                       19.isInput 是否允许手动label框输入 默认 "false"
-                                       20.isClear  弹出是否出现清除按钮 默认 "true"
-                                       21.placeholder 输入提示 默认 请输入值
-                                       22.helpTip 帮助提示 默认 ""
-                                //回调函数
-                                //treeCallback(id, event, index, layero, nodes);
-
-                                //栗子 🌰
-                                <@f.treeselect name="compId" boxTitle="请选择归属机构" url="sys/comp/treeData"
-                                expandLevel=true placeholder="请选择上级机构"/>
-
-                                //关联
-                                <@f.treeselect  name="deptId" boxTitle="请选择归属部门" url="sys/dept/selectZtree" value="${user.deptId?default('')}"
-                                labelValue="${user.deptName?default('')}" correlationId="compId" isSelectParent=true  placeholder="请选择归属部门"/>
-                            </#noparse>
-                        </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_tableselect" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>弹窗表格形式,单、多选组件：</label>
-                    <div class="col-sm-10">
-                        <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
-                   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
-                   {field:'status',title:'状态',dict:'sys_user_show_hide',query: true},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
-                        <div id="c_tableselect" class="panel-collapse collapse" >
+            <div class="row" id="c_fileupload0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_fileupload" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>图片上传：</label>
+                        <div class="col-sm-10">
+                            <@f.fileupload name="uploadImageFile1" uploadType="image" />
+                             <div id="c_fileupload" class="panel-collapse collapse" >
                             <@f.code>
                                 <#noparse>
-                                    //弹出选择标签(适用于大数据):<@f.tableselect/>
-                                    //参数:
-                                    1. name 控件name 必输
-                                    2. id 控件id 不是必输 如果不输则与name名称一样
-                                    3. boxTitle 弹窗标题
-                                    4. tableInfo 显示表格列信息 必输
-                                    tableInfo 说明：字段为JS数组对象 与表格$.table columns 含义相似
-                                    {
-                                        field:'表格字段标签',title:'列表头名称',query:'此列是否做查询',dict:'表格列字典转换'
-                                    }
-                                    5. placeholder 提示值
-                                    6. width="1200" 弹出宽度
-                                    7. height="" 高度
-                                    8. value="" 值
-                                    9. labelValue="" 显示值
-                                    10. labelName="" <#--标签名称 -->
-                                    11. required=false <#-- 是否必输-->
-                                    12. readonly 控件是否可以编辑 不是必输 默认"false"
-                                    13. checked=true <#-- true多选 false 单选 默认多选 -->
-                                    14. class = "form-control" <#-- 输入框样式-->
-                                    15. butClass = "fa fa-fw fa-address-card-o"
-                                    16. isClear = true <#-- 弹出是否出现清除按钮-->
-                                    17. url = "sys/user/list" <#-- 访问数据URL-->
-                                    18. keyId = "id" <#--表示获取数据id字段名称 -->
-                                    19. keyName = "name" <#--表示显示名称 -->
-                                    //回调函数
-                                    //tableCallback(id, event, index, layero, nodes);
+                                    //附件组件标签:<@f.fileupload/>
+                                    //参数: 1. name 控件name 必输
+                                           name
+                                           id = ""
+                                           bizId = ""  业务ID 用于关联实体
+                                           bizType = ""  业务类型  用于关联实体
+                                           uploadType = "all"  上传文件类型  image:图片
+                                           uploadUrl = "sys/comm/upload"  上传路径，  如果修改需要自己行完成controller
+                                           fileListUrl = "sys/comm/fileList" 回显查询路径  如果修改需要自己行完成controller
+                                           downloadUrl = "sys/comm/download" 文件下载路径  如果修改需要自己行完成controller
+                                           isLazy = true
+                                           preview = ""
+                                           maxUploadNum = "300"   最大上传文件数据
 
-                                    //栗子 🌰
-                                    <@f.tableselect name="selectuser" boxTitle="多选用户信息" tableInfo = "[{field:'username',title:'账号'},{field:'name',title:'姓名',query: true},{field:'compName',title:'归属公司'},
-                                    {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱'},{field:'mobile',title:'手机号码'},
-                                    {field:'status',title:'状态',dict:'sys_user_show_hide'},{field:'createTime',title:'创建时间'}]"  placeholder="表格弹出式页面，实用于大数据，搜索选择，" />
+                                    //栗子 🌰  --- bizId 业务实体ID ,bizType 业务实体类型(一般使用，表名_文件类型号)：以便多关联附件
+                                   // 上传图片：
+                                     <@f.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="image"/>
+                                   // 文件样式上传：
+                                     <@f.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="all"/>
 
+                                    //后台使用：创建或删除物理文件和关联
+                                    //  创建 ：FileUploadUtils.saveFileUpload(pkId,"example_test_img");
+                                     // 在 service 中保存后增加关联关系
+                                     if(this.save(exampleTest)){
+                                          //更新关联附件信息
+                                            Long pkId =  exampleTest.getId();
+                                            FileUploadUtils.saveFileUpload(pkId,"example_test_img");
+                                            return true;
+                                     }
+                                    // 在 service 中保存后删除关联关系和物理文件
+                                    //删除：    FileUploadUtils.me().removeFileUpload(id,"example_test_img");
                                 </#noparse>
                             </@f.code>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_ueditor" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>百度富文本：</label>
-                    <div class="col-sm-10">
-                        <@f.ueditor name="noticeContent"/>
-                         <div id="c_ueditor" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //libs["ueditor"]
-                                //百度富文本组件标签:<@f.ueditor/>
-                                //参数: 1. name 控件name 必输
-                                       2. id 控件id 不是必输 如果不输则与name名称一样
-                                       3. bizType 用于关联文件数据库
-                                       4. bizId 用于关联文件数据库，管理物理文件
-                                       5. value 控件值 不是必输 默认""
-                                       6. readonly 控件是否可以编辑 不是必输 默认"false"
-                                       7. maxlength 最大输入长度默认不限 不是必输
-                                       8. height 控件高度 不是必输 默认"300"
-                                       9. type = "html" 获取数据类型 html (整个html的内容), content (内容), txt(纯文本), plaintxt (带格式的纯文本)
-                                //回调函数
-                                //webuploaderRefresh(id,html);
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_fileupload" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>文件上传：</label>
+                        <div class="col-sm-10">
+                            <@f.fileupload name="uploadFile" bizType="temp_file" uploadType="all"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                //栗子 🌰
-                                <@f.ueditor name="noticeContent"  value="${noticeContent?html}  />
-                                //bizType和bizId 如果需要富文件上传的文件，被系统数库记录，请使用两个参数与实体类  
-                                //由于新增实体时没有id(bizId) 因此需要在打面新增页面前产生id到端，${exampleTest.id} 提交前产生id
-                                <@f.ueditor name="remark"  value="${(exampleTest.remark?html)?default('')}" height=200  type="content"   bizType="example_test"  bizId="${exampleTest.id}"  />
-                            </#noparse>
-                        </@f.code>
+            <div class="row" id="c_table0">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            <a data-toggle="collapse" href="#c_treeTable" aria-expanded="true">
+                                <i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp
+                            </a>
+                            <span style="color: red; ">*</span>树表异步分页实例：
+                        </label>
+                        <div class="col-sm-10">
+                            <@table id="bootstrap-tree-table"/>
+                            <div id="c_treeTable" class="panel-collapse collapse">
+                                <@f.code>
+                                    <#noparse>
+                                        //树表格标签:<@table id="bootstrap-tree-table"/>
+                                        //参数:
+                                        1. id 控件id 必输
+                                        2. 与普通表格一样支持上面功能按钮. 例如:
+                                        <@table id="bootstrap-tree-table">
+                                        <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i><@ctx.i18n text = "展开/折叠"/></a>
+                                        </@table>
+                                        JS.函数参数简单说明:
+                                        url: 数据请求url
+                                        id: 控制对象ID
+                                        height: 设置表格高度
+                                        rootIdValue: 树根节点 id
+                                        sortName: 排序字段
+                                        sortOrder: 默认升序
+                                        async: 是否为异步分页加载数据
+                                        toolbar: 工具栏名称
+                                        striped: false,
+                                        pageSize: 一页条数
+                                        pageList:  分页数据库
+                                        asynUrl: 异步点击请求url
+                                        $.treeTable.init(options);
+                                        普通树表实例请看- 机构、公司 业务
+                                        异步分页树实例请看- 行政区域 业务
+                                    </#noparse>
+                                </@f.code>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </@f.form>
+        <div class="hr-line-dashed"></div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_fileupload" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a> <span style="color: red; ">*</span>图片上传：</label>
-                    <div class="col-sm-10">
-                        <@f.fileupload name="uploadImageFile1" uploadType="image" />
-                         <div id="c_fileupload" class="panel-collapse collapse" >
-                        <@f.code>
-                            <#noparse>
-                                //附件组件标签:<@f.fileupload/>
-                                //参数: 1. name 控件name 必输
-                                       name
-                                       id = ""
-                                       bizId = ""  业务ID 用于关联实体
-                                       bizType = ""  业务类型  用于关联实体
-                                       uploadType = "all"  上传文件类型  image:图片
-                                       uploadUrl = "sys/comm/upload"  上传路径，  如果修改需要自己行完成controller
-                                       fileListUrl = "sys/comm/fileList" 回显查询路径  如果修改需要自己行完成controller
-                                       downloadUrl = "sys/comm/download" 文件下载路径  如果修改需要自己行完成controller 
-			                           isLazy = true 
-			                           preview = ""
-			                           maxUploadNum = "300"   最大上传文件数据
-                               
-                                //栗子 🌰  --- bizId 业务实体ID ,bizType 业务实体类型(一般使用，表名_文件类型号)：以便多关联附件
-                               // 上传图片：
-                                 <@f.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="image"/>
-                               // 文件样式上传：
-                                 <@f.fileupload name="upload_file" bizId="${exampleTest.id}" bizType="example_test_file" isLazy=true preview="true" uploadType="all"/>
-                                                 
-                                //后台使用：创建或删除物理文件和关联
-                                //  创建 ：FileUploadUtils.saveFileUpload(pkId,"example_test_img");	
-                                 // 在 service 中保存后增加关联关系                                                                                 
-                                 if(this.save(exampleTest)){
-                                      //更新关联附件信息						
-                                        Long pkId =  exampleTest.getId();								
-                                        FileUploadUtils.saveFileUpload(pkId,"example_test_img");												
-                                        return true;
-								 } 
-                                // 在 service 中保存后删除关联关系和物理文件                                                                                                         
-                                //删除：    FileUploadUtils.me().removeFileUpload(id,"example_test_img");									
-                            </#noparse>
-                        </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><a data-toggle="collapse" href="#c_fileupload" aria-expanded="true"><i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp;</a><span style="color: red; ">*</span>文件上传：</label>
-                    <div class="col-sm-10">
-                        <@f.fileupload name="uploadFile" bizType="temp_file" uploadType="all"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">
-                        <a data-toggle="collapse" href="#c_treeTable" aria-expanded="true">
-                            <i class="fa fa-question-circle-o" title="点我，显示源码帮助"></i> &nbsp
-                        </a>
-                        <span style="color: red; ">*</span>树表异步分页实例：
-                    </label>
-                    <div class="col-sm-10">
-                        <@table id="bootstrap-tree-table"/>
-                        <div id="c_treeTable" class="panel-collapse collapse" >
-                            <@f.code>
-                                <#noparse>
-                                    //树表格标签:<@table id="bootstrap-tree-table"/>
-                                    //参数:
-                                    1. id 控件id 必输
-                                    2. 与普通表格一样支持上面功能按钮. 例如:
-                                    <@table id="bootstrap-tree-table">
-                                    <a class="btn btn-info" id="expandAllBtn"><i class="fa fa-exchange"></i><@ctx.i18n text = "展开/折叠"/></a>
-                                    </@table>
-                                    JS.函数参数简单说明:
-                                    url: 数据请求url
-                                    id: 控制对象ID
-                                    height: 设置表格高度
-                                    rootIdValue: 树根节点 id
-                                    sortName: 排序字段
-                                    sortOrder: 默认升序
-                                    async: 是否为异步分页加载数据
-                                    toolbar: 工具栏名称
-                                    striped: false,
-                                    pageSize: 一页条数
-                                    pageList:  分页数据库
-                                    asynUrl: 异步点击请求url
-                                    $.treeTable.init(options);
-                                    普通树表实例请看- 机构、公司 业务
-                                    异步分页树实例请看- 行政区域 业务
-                                </#noparse>
-                            </@f.code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </@f.form>
-    <div class="hr-line-dashed"></div>
+    </div>
 </div>
 <@footer>
 <script type="text/javascript">
 
     // -----
+
     /**
      * 树表实例
      **/
@@ -672,6 +745,9 @@
             ]
         };
         $.treeTable.init(options);
+
+
+
     });
     // -------
 

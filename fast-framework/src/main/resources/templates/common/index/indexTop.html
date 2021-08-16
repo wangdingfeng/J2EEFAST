@@ -53,7 +53,43 @@
         </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav" id="top-navbar-menu">
-                <!-- Messages: style can be found in dropdown.less-->
+                <#--租户选择 -->
+                <#if superTenant?? && superTenant>
+                <li class="dropdown messages-menu">
+                <a href="#" onclick="$('#switchTenanSelectBut').click();"
+                   title="<@ctx.i18n text = "当前租户:"/> (${user.tenanName?default("-")})">
+                    <i class="fa fa-institution"></i>
+                    <span class="hidden-xs"><@ctx.i18n text = "当前租户:"/> (${user.tenanName?default("-")})</span>
+                </a>
+                <div class="hide">
+                    <@f.treeselect name="switchTenanSelect" boxTitle="租户切换" isClear=false width="300" height="500" url="sys/tenant/findTenantTree"
+                    callbackFunName="switchTenanSelectCallback" value="${user.tenantId?default('')}" labelValue="${user.tenanName?default('-')}" expandLevel=true/>
+                </div>
+                </li>
+                <script>
+                    /*选择租户回调*/
+                    function switchTenanSelectCallback(id,event,index, layero, nodes){
+                        if(id == 'switchTenanSelect' && event == 'ok') {
+                            if (opt.common.isNotEmpty(nodes.id)) {
+                                var option = {
+                                    url: "sys/tenant/switchTenant",
+                                    type: "POST",
+                                    data: {"tenantId": nodes.id, "tenantName": nodes.name},
+                                    success: function (result) {
+                                        if (result.code == opt.variable.web_status.SUCCESS) {
+                                            opt.storage.set("tenantId", nodes.id, 0);
+                                            location.reload();
+                                        } else {
+                                            opt.error(result.msg);
+                                        }
+                                    }
+                                };
+                                opt.common.sendAjax(option);
+                            }
+                        }
+                    }
+                </script>
+                </#if>
                 <li class="dropdown messages-menu">
                     <a href="#" id="fullScreen" data-toggle="tooltip"
                        data-placement="bottom"
@@ -82,11 +118,24 @@
                     </a>
                 </li>
                 <!-- Notifications: style can be found in dropdown.less -->
-                <li class="dropdown messages-menu">
-                    <a href="#" data-toggle="control-sidebar">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+<#--                <li class="dropdown messages-menu">-->
+<#--                    <a href="#" data-toggle="control-sidebar">-->
+<#--                        <i class="fa fa-bell-o"></i>-->
+<#--                        <span class="label label-warning">10</span>-->
+<#--                    </a>-->
+<#--                </li>-->
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bell-o" id="_msgNum"></i>
+<#--                        <span class="label label-warning">10</span>-->
                     </a>
+                    <ul class="dropdown-menu">
+                        <li class="header" id="_msgHeader">您有0条新信息</li>
+                        <li id="_msgCentes">
+                        </li>
+                        <li class="footer"><a id="_allMsg">查看全部信息</a></li>
+<#--                        ${ctxStatic}/sys/msg/userMsg-->
+                    </ul>
                 </li>
                 <!--  -->
                 <li class="dropdown tasks-menu">
@@ -136,6 +185,7 @@
                                 </div>
                                 <div class="col-xs-6 text-right">
                                   <a id="switchSkin" href="javascript:void(0);"><i class="fa fa-dashboard"></i> <@ctx.i18n text = "切换主题"/></a>
+                                  <span data-index="_new" class="label label-danger" style="top: -9px;"><@ctx.i18n text = "新"/></span>
                                 </div>
                                 <!-- <div class="col-xs-4 text-center">
                                   <a href="#">Friends</a>

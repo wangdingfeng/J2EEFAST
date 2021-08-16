@@ -5,6 +5,7 @@
  */
 package com.j2eefast.framework.sys.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,6 +32,7 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
                                  @Param("compId") String compId,
                                  @Param("deptId") String deptId,
                                  @Param("name") String name,
+                                 @Param("roleKey") String roleKey,
                                  @Param("sql_filter") String sql_filter);
 
 
@@ -117,8 +119,9 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @param userName
      * @return
      */
-    SysUserEntity findUserByUserName(@Param("userName") String userName);
-
+    @InterceptorIgnore(tenantLine = "true")
+    SysUserEntity findUserByUserName(@Param("userName") String userName,
+                                    @Param("tenantId") String tenantId);
 
     /**
      * 免密登录通过第三方授权id查询用户情况
@@ -134,7 +137,9 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @param mobile
      * @return
      */
-    SysUserEntity findUserByMobile(@Param("mobile") String mobile);
+    @InterceptorIgnore(tenantLine = "true")
+    SysUserEntity findUserByMobile(@Param("mobile") String mobile,
+                                   @Param("tenantId") String tenantId);
 
 
     /**
@@ -142,7 +147,9 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @param email
      * @return
      */
-    SysUserEntity findUserByEmail(@Param("email") String email);
+    @InterceptorIgnore(tenantLine = "true")
+    SysUserEntity findUserByEmail(@Param("email") String email,
+                                  @Param("tenantId") String tenantId);
 
 
     /**

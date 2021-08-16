@@ -45,7 +45,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     private boolean kickoutAfter = false;
 
     private SessionManager sessionManager;
-    @Value("${fast.csrf.enabled: false}")
+    @Value("#{ @environment['fast.csrf.enabled'] ?: false }")
     private boolean csrfEnabled;
 
     @Autowired
@@ -100,7 +100,9 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
         }catch (Exception e){
             log.error("error getting system parameter [SYS_IS_LOGIN]",e);
         }
-
+        //如果有登录,判断是否访问的为静态资源，如果是游客允许访问的静态资源,直接返回true
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        String path = httpServletRequest.getServletPath();
         Subject subject = getSubject(request, response);
         //检查是否已经登录
         if(!subject.isAuthenticated() && !subject.isRemembered()) {
@@ -108,8 +110,8 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
             return true;
         }
         //如果有登录,判断是否访问的为静态资源，如果是游客允许访问的静态资源,直接返回true
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        String path = httpServletRequest.getServletPath();
+//        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+//        String path = httpServletRequest.getServletPath();
         // 如果是静态文件，则返回true
         if (isStaticFile(path)){
             return true;
@@ -194,7 +196,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
 
     private boolean isStaticFile(String path) {
         Map<String, String> filterMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-        filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
+//        filterMap.put(Constant.RESOURCE_URLPREFIX + "/**","anon");
         filterMap.put("/logout","anon");
         filterMap.put("/error","anon");
         filterMap.put("/Account/login","anon");

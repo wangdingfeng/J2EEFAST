@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class MybatisPulsMetaObjectHandler  implements MetaObjectHandler {
 
-    @Value("${mybatis-plus.global-config.db-config.logic-not-delete-value: 0}")
+    @Value("#{ @environment['mybatis-plus.global-config.db-config.logic-not-delete-value'] ?: '0' }")
     private String logicDeleteValue;
 
 	/**

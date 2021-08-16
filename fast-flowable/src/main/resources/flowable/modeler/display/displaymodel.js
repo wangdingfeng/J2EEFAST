@@ -58,6 +58,7 @@ var processDefinitionId = modelDiv.attr('data-process-definition-id');
 //模型类型
 var modelType = modelDiv.attr('data-model-type');
 var isDebuggerEnabled = modelDiv.attr("data-debugger-enabled") == "true";
+// 是否需要选择
 var isSelectEnabled = modelDiv.attr("data-select-enabled") == "true";
 // Support for custom background colors for activities
 var customActivityColors = modelDiv.attr('data-activity-color-mapping');
@@ -231,7 +232,7 @@ function _addHoverLogic(element, type, defaultColor)
     });
 
     //设置提示
-    _showTip(jQuery(topBodyRect.node), element);
+    if(!isSelectEnabled) _showTip(jQuery(topBodyRect.node), element);
 
     topBodyRect.mouseover(function() {
         paper.getById(element.id).attr({"stroke":HOVER_COLOR});
@@ -274,17 +275,17 @@ if (modelType == 'runtime') {
 	// }
 
     if (historyModelId && historyModelId != "") {
-        modelUrl = baseURL  + "app/rest/process-instances/history/" + historyModelId + "/model-json"
+        modelUrl = baseURL  + "rest/process-instances/history/" + historyModelId + "/model-json"
     } else {
         if (modelId && modelId != "") {
             if (isDebuggerEnabled) {
-                modelUrl = baseURL + "app/rest/process-instances/debugger/" + modelId + "/model-json"
+                modelUrl = baseURL + "rest/process-instances/debugger/" + modelId + "/model-json"
             } else {
-                modelUrl = baseURL + "app/rest/process-instances/" + modelId + "/model-json"
+                modelUrl = baseURL + "rest/process-instances/" + modelId + "/model-json"
             }
         } else {
             if (processDefinitionId && processDefinitionId != "") {
-                modelUrl = baseURL + "app/rest/process-definitions/" + processDefinitionId + "/model-json"
+                modelUrl = baseURL + "rest/process-definitions/" + processDefinitionId + "/model-json"
             }
         }
     }
@@ -321,6 +322,7 @@ function _showProcessDiagram() {
             }
 
             INITIAL_CANVAS_HEIGHT = data.diagramHeight + 50;
+
             canvasWidth = INITIAL_CANVAS_WIDTH;
             canvasHeight = INITIAL_CANVAS_HEIGHT;
             viewBoxWidth = INITIAL_CANVAS_WIDTH;

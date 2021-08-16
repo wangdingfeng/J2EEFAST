@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.framework.sys.mapper.SysMsgCommentsMapper">
+
+    <resultMap type="SysMsgCommentsEntity" id="SysMsgCommentsResult">
+        <result property="id" column="id"/>
+        <result property="msgId" column="msg_id"/>
+        <result property="replyId" column="reply_id"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="commentsDate" column="comments_date"/>
+        <result property="isReply" column="is_reply"/>
+        <result property="createTime"    column="create_time"/>
+    </resultMap>
+    
+    <!--  实体栏位  --> 
+    <sql id="sysMsgCommentsColumns">
+         a.id AS "id" ,
+         a.msg_id AS "msgId" ,
+         a.reply_id AS "replyId" ,
+         a.content AS "content" ,
+         a.user_id AS "userId" ,
+         a.user_name AS "userName" ,
+         a.comments_date AS "commentsDate" ,
+         a.is_reply AS "isReply",
+         a.create_time
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findSysMsgCommentsById"  resultType="com.j2eefast.framework.sys.entity.SysMsgCommentsEntity" >
+        SELECT
+        <include refid="sysMsgCommentsColumns"/>
+		FROM  sys_msg_comments a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.framework.sys.entity.SysMsgCommentsEntity">
+        SELECT
+        <include refid="sysMsgCommentsColumns"/>
+        ,u.avatar as "avatar"
+        FROM sys_msg_comments a
+        LEFT JOIN sys_user u ON u.id = a.user_id
+		<where>
+            <if test="msgId != null "> AND a.msg_id = #{msgId} </if>
+            <if test="replyId != null "> AND a.reply_id = #{replyId} </if>
+            <if test="content != null  and content != ''"> AND a.content = #{content} </if>
+            <if test="userId != null  and userId != ''"> AND a.user_id = #{userId} </if>
+            <if test="userName != null  and userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{userName},'%')
+            </if>
+            <if test="commentsDate != null "> AND a.comments_date = #{commentsDate} </if>
+            <if test="isReply != null  and isReply != ''"> AND a.is_reply = #{isReply} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.framework.sys.entity.SysMsgCommentsEntity">
+        SELECT
+        <include refid="sysMsgCommentsColumns"/>
+        ,u.avatar as "avatar"
+        FROM sys_msg_comments a
+        LEFT JOIN sys_user u ON u.id = a.user_id
+        <where>
+            <if test="sysMsgComments.msgId != null "> AND a.msg_id = #{sysMsgComments.msgId} </if>
+            <if test="sysMsgComments.replyId != null "> AND a.reply_id = #{sysMsgComments.replyId} </if>
+            <if test="sysMsgComments.content != null  and sysMsgComments.content != ''"> AND a.content = #{sysMsgComments.content} </if>
+            <if test="sysMsgComments.userId != null  and sysMsgComments.userId != ''"> AND a.user_id = #{sysMsgComments.userId} </if>
+            <if test="sysMsgComments.userName != null  and sysMsgComments.userName != ''">
+                AND a.user_name LIKE
+                CONCAT('%',#{sysMsgComments.userName},'%')
+            </if>
+            <if test="sysMsgComments.commentsDate != null "> AND a.comments_date = #{sysMsgComments.commentsDate} </if>
+            <if test="sysMsgComments.isReply != null  and sysMsgComments.isReply != ''"> AND a.is_reply = #{sysMsgComments.isReply} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="setIsReply">
+        UPDATE sys_msg_comments SET is_reply = #{isReple} WHERE id = #{id}
+    </update>
+</mapper>

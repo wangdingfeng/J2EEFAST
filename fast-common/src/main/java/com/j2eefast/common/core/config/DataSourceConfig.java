@@ -31,7 +31,7 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-	@Value("${fast.jta.enabled}")
+	@Value("#{ @environment['fast.jta.enabled'] ?: false }")
 	private boolean enabled;
 
 	/**

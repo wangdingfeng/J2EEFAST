@@ -1,0 +1,9 @@
+1.此目录下为J2eeFAST系统前端页面组件目录
+  单多选表组件tableselect --> tableInfo 特别说明:
+  tableInfo 传值为对象数组:
+  [{field:'username',title:'账号',query:true},{field:'name',title:'姓名'},{field:'compName',title:'归属公司'},
+   {field:'deptName',title:'归属机构'},{field:'email',title:'邮箱',query:true},{field:'mobile',title:'手机号码',query:true},
+   {field:'status',title:'状态',dict:'sys_user_show_hide',query:true},{field:'createTime',title:'创建时间'}]
+  对象与页面表格  $.table 相似, field: 字段名称(对应表格请求到页面的字段) title:表格显示的表头名称 query: 字段是否显示查询
+  dict: 当query为true 此值去字典字段代表表格此字段转换字典数据  ztree: 此参数为对象 比如: ztree: {url:'ass/types/treeData',expandLevel:true,isSelectParent:true,keyId:'name',name:'type'}
+  ztree 对象的参数与treeselect组件参数含义一样 但是只有 url,keyId,expandLevel,isClear,name,isSelectParent,checked 其他字段暂未开放 设置会报错 *注意*

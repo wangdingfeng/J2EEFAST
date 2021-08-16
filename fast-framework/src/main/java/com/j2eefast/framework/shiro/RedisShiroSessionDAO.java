@@ -11,6 +11,7 @@ import com.j2eefast.framework.utils.RedisKeys;
 
 /**
  * shiro session dao
+ * @author huanzhou
  */
 @Component
 public class RedisShiroSessionDAO extends EnterpriseCacheSessionDAO {

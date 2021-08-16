@@ -1,18 +1,6 @@
 <#include "/common/defaultEngine.html">
-<@pageTheme mark="true">
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <#import "/common/springctx.ftl" as ctx>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<meta http-equiv="Content-Language" content="zh-CN">
-<meta name="referrer" content="always">
-<meta name="robots" content="index, follow">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="PoweredByJ2eeFast"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<title>登录 - J2eeFAST J2eefast.com</title>
-<link href="${ctxStatic}/static/img/favicon.ico" rel="shortcut icon">
+<@pageTheme mark=true>
+<@header title="登录" isPAS=false >
 <#-- Bootstrap 3.3.7 -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/bootstrap.min.css">
 <#-- Font Awesome -->
@@ -27,13 +15,14 @@
 <link rel="stylesheet" href="${ctxStatic}/static/css/iCheck/all.css">
 <#-- jQuery toast 提示框  -->
 <link rel="stylesheet" href="${ctxStatic}/static/css/jquery.toast.min.css">
-<link rel="stylesheet" href="${ctxStatic}/static/css/style.min.css?V=${config.getDvVersion()}">
+<link rel="stylesheet" href="${ctxStatic}/static/js/fast-ui.min.css?V=${config.getDvVersion()}">
 <link rel="stylesheet" href="${ctxStatic}/static/css/index.min.css?V=${config.getDvVersion()}">
 <link type="text/css" rel="stylesheet" href="${ctxStatic}/static/css/oschina/oschina.css">
 <#if verification>
 <link rel="stylesheet" href="${ctxStatic}/static/plugins/captcha/css/verify.min.css">
 </#if>
 <style>[v-cloak]{display:none !important;} .checkbox label{padding-left: 0px;}</style>
+</@header>
 <body class="sc animated fadeInLeft" style="min-height: 660px;">
 <#include "/common/notice.html">
 <#include "/common/upgrade.html"><!-- 如果客户浏览器版本过低，则显示浏览器升级提示-->
@@ -127,37 +116,39 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <#if config.getKey("SYS_IS_OAUTH") == "0">
+
                                 <div class="form-item">
                                     <div class="social-auth-links text-center">
+                                        <#if config.getKey("SYS_IS_OAUTH") == "0">
                                         <div class="oauth-title">
                                             <span class="text-muted"> 其他方式登录 </span>
                                         </div>
                                         <div class="oauth-list">
                                             <div class="item" title="<@ctx.i18n text = "使用 Gitee 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                                 <a href="${ctxStatic}/auth/gitee">
-                                                    <img src="${ctxStatic}/static/img/gitee.svg"/>
+                                                    <img src="${ctxStatic}/static/img/login/gitee.svg"/>
                                                 </a>
                                             </div>
                                             <div class="item" title="<@ctx.i18n text = "使用 GitHub 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                                 <a href="${ctxStatic}/auth/github">
-                                                    <img src="${ctxStatic}/static/img/github.svg"/>
+                                                    <img src="${ctxStatic}/static/img/login/github.svg"/>
                                                 </a>
                                             </div>
                                             <div class="item" title="<@ctx.i18n text = "使用 OsChina 账号授权登录"/>" data-toggle="tooltip" data-placement="top">
                                                 <a href="${ctxStatic}/auth/oschina">
-                                                <img src="${ctxStatic}/static/img/oschina.svg"/>
+                                                <img src="${ctxStatic}/static/img/login/oschina.svg"/>
                                                 </a>
                                             </div>
                                             <div class="item" title="<@ctx.i18n text = "功能开发中..."/>" data-toggle="tooltip" data-placement="top">
                                                 <a href="#">
-                                                    <img src="${ctxStatic}/static/img/qq-no.svg"/>
+                                                    <img src="${ctxStatic}/static/img/login/qq-no.svg"/>
                                                 </a>
                                             </div>
                                         </div>
+                                        </#if>
+                                        <#include "/common/index/compatibility.html"/>
                                     </div>
                                 </div>
-                                </#if>
                             </div>
                         </form>
                     </div>
@@ -367,6 +358,14 @@
                 error : function() {}
             });
             </#if>
+
+            /* 设置页面模式*/
+            if(typeof (Storage) !== 'undefined'){
+                var css = window.localStorage.getItem('mode');
+                if(typeof  css !== 'undefined' && css && css.length > 0){
+                    $('html').addClass(css)
+                }
+            };
 
             /*设置tooltip*/
             $('[data-toggle="tooltip"]').each(function () {

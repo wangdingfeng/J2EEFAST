@@ -1,10 +1,19 @@
+/**
+ * Copyright (c) 2020-Now http://www.j2eefast.com All rights reserved.
+ * No deletion without permission
+ */
 package com.j2eefast.flowable.bpm.config;
 
 import org.activiti.compatibility.spring.SpringFlowable5CompatibilityHandlerFactory;
+import org.flowable.common.engine.api.async.AsyncTaskExecutor;
 import org.flowable.common.engine.impl.EngineDeployer;
 import org.flowable.engine.impl.rules.RulesDeployer;
 import org.flowable.spring.SpringProcessEngineConfiguration;
+import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.flowable.spring.job.service.SpringAsyncExecutor;
+import org.flowable.ui.common.tenant.DefaultTenantProvider;
+import org.flowable.ui.modeler.repository.ModelRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -16,8 +25,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 
 /**
- * <p></p>
- *
+ * 工作流配置类 - 屏蔽flowable 自带多租户插件
  * @author: zhouzhou
  * @date: 2020-04-16 14:23
  * @web: http://www.j2eefast.com
@@ -27,22 +35,16 @@ import java.util.ArrayList;
 @DependsOn("transactionManager")
 @ComponentScan(basePackages ={
         "org.flowable.ui.modeler",
-        "org.flowable.ui.common"
+		"org.flowable.ui.modeler.repository",
+		"org.flowable.ui.modeler.service",
+		"org.flowable.ui.common.tenant",
+		"org.flowable.ui.common.repository"
 		,"org.flowable.ui.task.service.debugger"
-})
-public class FlowableConfig {
-
-
-//	@Bean(name = "fastTransactionManager")
-//	public DataSourceTransactionManager getDataSourceTransactionManager(@Qualifier("flowableSourcePrimary")DataSource dataSource) {
-//		DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
-//		dataSourceTransactionManager.setDataSource(dataSource);
-//		return dataSourceTransactionManager;
-//	}
+},excludeFilters=@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,value = {DefaultTenantProvider.class}))
+public class FlowableConfig{
 
 	@Bean(name = "processEngineConfiguration")
 	public SpringProcessEngineConfiguration getSpringProcessEngineConfiguration(@Qualifier("flowableSourcePrimary") DataSource dataSource
-//			, @Qualifier("fastTransactionManager") DataSourceTransactionManager transactionManager
 			,@Qualifier("transactionManager") PlatformTransactionManager transactionManager
 	) {
 		SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
@@ -55,7 +57,7 @@ public class FlowableConfig {
 		//启用任务关系计数
 		configuration.setEnableTaskRelationshipCounts(true);
 		//启动同步功能 一定要启动否则报错
-		configuration.setAsyncExecutor(springAsyncExecutor());
+		//configuration.setAsyncExecutor(springAsyncExecutor());
 
 		configuration.setCustomPostDeployers(new ArrayList<EngineDeployer>(){
 			private static final long serialVersionUID = 4041439225480991716L;
@@ -66,18 +68,17 @@ public class FlowableConfig {
 		return configuration;
 	}
 
-	@Bean
-	public SpringAsyncExecutor springAsyncExecutor() {
-		SpringAsyncExecutor springAsyncExecutor = new SpringAsyncExecutor();
-		springAsyncExecutor.setTaskExecutor(processTaskExecutor());
-		springAsyncExecutor.setDefaultAsyncJobAcquireWaitTimeInMillis(1000);
-		springAsyncExecutor.setDefaultTimerJobAcquireWaitTimeInMillis(1000);
-		return springAsyncExecutor;
-	}
+//	@Bean
+//	public SpringAsyncExecutor springAsyncExecutor() {
+//		SpringAsyncExecutor springAsyncExecutor = new SpringAsyncExecutor();
+//		springAsyncExecutor.setTaskExecutor((AsyncTaskExecutor) processTaskExecutor());
+//		springAsyncExecutor.setDefaultAsyncJobAcquireWaitTimeInMillis(1000);
+//		springAsyncExecutor.setDefaultTimerJobAcquireWaitTimeInMillis(1000);
+//		return springAsyncExecutor;
+//	}
 
 	/**
 	 * 兼容V5
-	 *
 	 * @return
 	 */
 	@Bean
@@ -94,5 +95,4 @@ public class FlowableConfig {
 	public UuidGenerator uuidGenerator() {
 		return new UuidGenerator();
 	}
-
 }

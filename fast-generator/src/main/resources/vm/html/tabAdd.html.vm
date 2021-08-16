@@ -983,13 +983,9 @@ ${pageTheme}
 #end
 #if($c.edit && !$c.pk)
                 ,{field: '${c.javaField}',align: 'center',title: '${com}',formatter: function(value, row, index) {
-#if($c.htmlType == "input")
-                    var html = opt.common.sprintf("<input class='form-control' type='text' name='${classEnty}[%s].${c.javaField}' value='%s'>", index, value);
-                    return html;
-#end
-#if($c.htmlType == "datetime")
+#if($c.htmlType == "input" || $c.htmlType == "datetime")
                     var data = {"index":index,"field":"${c.javaField}","value":value};
-                    return opt.template('datetime',data);
+                    return opt.template('${c.htmlType}',data);
 #end
                 }}
 #end
@@ -1003,13 +999,89 @@ ${pageTheme}
         var count = $("#" + opt.table.options.id).bootstrapTable('getData').length;
         var row = {
             index: count + 1
+#set($xFlag = -1)
+#foreach($c in $childColumns)
+#if($c.validation && ($c.validation.indexOf("V") != -1 || $c.validation.indexOf("P") != -1
+|| $c.validation.indexOf("N") != -1 || $c.validation.indexOf("R") != -1
+|| $c.validation.indexOf("J") != -1 || $c.validation.indexOf("Z") != -1
+|| $c.validation.indexOf("Y") != -1 || $c.validation.indexOf("S") != -1
+|| $c.validation.indexOf("I") != -1 || $c.validation.indexOf("H") != -1
+|| $c.validation.indexOf("A") != -1)
+)
+#set($xFlag = $xFlag+1)
+#break
+#end
+#end
 #foreach($c in $childColumns)
 #if($c.edit && !$c.pk)
             ,${c.javaField}:""
 #end
 #end
         };
-        $.table.addColumn(row);
+        $.table.addColumn(row#if($fFlag != -1),function childValidate(data){
+            /*子表单校验*/
+#foreach($column in $childColumns)
+#if($column.validation && $column.insert)
+#set($field = $column.javaField.substring(0,1).toUpperCase() + $column.javaField.substring(1))
+#if($column.validation.indexOf("V") != -1 || $column.validation.indexOf("P") != -1
+||$column.validation.indexOf("N") != -1 || $column.validation.indexOf("R") != -1
+|| $column.validation.indexOf("J") != -1 || $column.validation.indexOf("Z") != -1
+|| $column.validation.indexOf("Y") != -1 || $column.validation.indexOf("S") != -1
+|| $column.validation.indexOf("I") != -1 || $column.validation.indexOf("H") != -1
+|| $column.validation.indexOf("A") != -1
+)
+            $('#${column.javaField}_'+(data.index-1)).rules("add", {
+#if($column.validation.indexOf("N") != -1)
+                digits:true,
+#end
+#if($column.validation.indexOf("P") != -1)
+                isMobile:true,
+#end
+#if($column.validation.indexOf("R") != -1)
+                date:true,
+#end
+#if($column.validation.indexOf("Y") != -1)
+                email:true,
+#end
+#if($column.validation.indexOf("Z") != -1)
+                isABC:true,
+#end
+#if($column.validation.indexOf("J") != -1)
+                decimalsValue:true,
+#end
+#if($column.validation.indexOf("I") != -1)
+                isIp:true,
+#end
+#if($column.validation.indexOf("S") != -1)
+                isIdentity:true,
+#end
+#if($column.validation.indexOf("H") != -1)
+                isName:true,
+#end
+#if($column.validation.indexOf("A") != -1)
+                alnum:true,
+#end
+#if($column.validation.indexOf("V") != -1)
+                remote: {
+                        url: prefix + "/check${field}Unique",
+                        type: "POST",
+                        dataType: "html",
+                        self: false,
+                        data: {
+                            "$column.javaField": function() {
+                                return opt.common.trim($('#${column.javaField}_'+(data.index-1)).val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return opt.validate.unique(data);
+                        }
+                }
+#end
+             });
+#end
+#end
+#end
+        }#end);
     }
 #end
 
@@ -1022,6 +1094,9 @@ ${pageTheme}
 </@footer>
 #if($table.master)
 #set($classEnty = $childTable.className.substring(0,1).toLowerCase() + $childTable.className.substring(1))
+#set($a=0)
+#set($b=0)
+#set($e=0)
 #foreach($c in $childColumns)
 #set($dictType=$c.dictType)
 #set($parentheseIndex=$c.columnComment.indexOf("（"))
@@ -1031,14 +1106,36 @@ ${pageTheme}
 #set($com=$c.columnComment)
 #end
 #if($c.edit && !$c.pk)
-#if($c.htmlType == "datetime")
+#if($c.htmlType == "datetime" && $a==0)
+#set($a=1)
 <script id="datetime" type="text/template">//<!--
-    <div>
-        <input class="form-control time-input" name="${classEnty}[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
-    </div>
+        <@f.input id="{{d.field}}_{{d.index}}" name="${classEnty}[{{d.index}}].{{d.field}}" type="date" dataType="datetime" value="{{d.value}}" dataFormat="yyyy-MM-dd"
+                            placeholder="请选择日期"  butClass="fa fa-calendar-plus-o"/>
 //-->
 </script>
-#break
+#end
+#if($c.htmlType == "time" && $b==0)
+#set($a=1)
+<script id="time" type="text/template">//<!--
+        <@f.input id="{{d.field}}_{{d.index}}" name="${classEnty}[{{d.index}}].{{d.field}}" type="date" dataType="datetime" value="{{d.value}}" dataFormat="yyyy-MM-dd HH:mm:ss"
+                            placeholder="请选择时间"  butClass="fa fa-calendar-plus-o"/>
+//-->
+</script>
+#end
+#if($c.htmlType == "input" && $e==0)
+#set($e=1)
+<script id="input" type="text/template">//<!--
+    <@f.input id="{{d.field}}_{{d.index}}" name="${classEnty}[{{d.index}}].{{d.field}}" #if($c.required)
+    required=true#end #if($c.info && $c.info !="")#if($c.circleType == "R")helpTip="${c.editInfo}"#end#end/>
+//-->
+</script>
+#end
+#if($c.htmlType == "textarea" && $f==0)
+#set($f=1)
+<script id="time" type="text/template">//<!--
+    <@f.textarea id="{{d.field}}_{{d.index}}" name="${classEnty}[{{d.index}}].{{d.field}}" #if($c.required) required=true#end/>
+//-->
+</script>
 #end
 #end
 #end

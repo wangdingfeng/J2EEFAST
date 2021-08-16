@@ -160,7 +160,7 @@ public class DataSourceContext {
 		//添加到全局配置里
 		DATA_SOURCES_CONF.put(dataSourceName, druidProperties);
 
-		if(PropertiesUtils.getInstance().getProperty(ConfigConstant.JTA_ENABLED_YML).equals(ConfigConstant.TRUE)) {
+		if((Boolean) PropertiesUtils.getInstance().get(ConfigConstant.JTA_ENABLED_YML)) {
 			return AtomikosFactory.create(dataSourceName, druidProperties);
 		}else {
 			DruidDataSource dataSource = new DruidDataSource();

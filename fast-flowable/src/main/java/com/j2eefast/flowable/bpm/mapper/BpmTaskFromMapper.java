@@ -17,5 +17,6 @@ public interface BpmTaskFromMapper  extends BaseMapper<BpmTaskFromEntity> {
 									  @Param("fromName") String fromName,
 									  @Param("version") String version,
 									  @Param("modelKey") String modelKey,
+									  @Param("tenantId") String tenantId,
 									  @Param("sql_filter") String sql_filter);
 }

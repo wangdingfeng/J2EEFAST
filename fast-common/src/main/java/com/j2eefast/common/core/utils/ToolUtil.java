@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.extra.ftp.Ftp;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.OshiUtil;
@@ -29,6 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import cn.hutool.core.util.NumberUtil;
@@ -45,6 +49,42 @@ public class ToolUtil{
 
 	private static int 							counter 							= 0;
 
+    public static final String[] DEFAULT_ALLOWED_EXTENSION = {
+            // 图片
+            "bmp", "gif", "jpg", "jpeg", "png",
+            // word excel powerpoint
+            "doc", "docx", "xls", "xlsx", "ppt", "pptx", "html", "htm", "txt",
+            // 压缩文件
+            "rar", "zip", "gz", "bz2",
+            // 视频格式
+            "mp4", "avi", "rmvb",
+            // pdf
+            "pdf" };
+
+
+    /**
+     * 检查文件是否可下载
+     *
+     * @param resource 需要下载的文件
+     * @return true 正常 false 非法
+     */
+    public static boolean checkAllowDownload(String resource)
+    {
+        // 禁止目录上跳级别
+        if (StringUtils.contains(resource, ".."))
+        {
+            return false;
+        }
+
+        // 检查允许下载的文件规则
+        if (ArrayUtils.contains(DEFAULT_ALLOWED_EXTENSION, FileUtil.extName(resource)))
+        {
+            return true;
+        }
+
+        // 不在允许下载的文件规则
+        return false;
+    }
 	
 	/**
      * 获取随机字符,自定义长度
@@ -80,6 +120,27 @@ public class ToolUtil{
 			throw new RxcException(message,code);
 		}
 	}
+
+    /**
+     * 字符串大写字母个数
+     * @param str
+     * @return
+     */
+	public static int charUpperCaseLen(String str){
+        if (isEmpty(str)) {
+            return 0;
+        }
+        int len = 0;
+        char[] buffer = str.toCharArray();
+        for (int i = 0; i < buffer.length; i++) {
+             char ch = buffer[i];
+            if (Character.isUpperCase(ch)) {
+                len ++;
+            }
+        }
+        return len;
+    }
+
 
 	
 	/**
@@ -821,4 +882,39 @@ public class ToolUtil{
         byte[] encoded = key.getEncoded();
         return encoded;
     }
+
+    public static String getLocalBpmDbPath(String dbName,String fileName) {
+        String realPath = ToolUtil.class.getClassLoader().getResource("")
+                .getFile();
+        java.io.File file = new java.io.File(realPath);
+        realPath = file.getAbsolutePath();
+        try {
+            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        realPath = realPath.substring(0,realPath.indexOf("fast-admin")) + "db"+File.separator+dbName+File.separator+"bpm"+File.separator+fileName+".sql";
+        realPath = FileUtil.normalize(realPath);
+        return realPath;
+    }
+
+    public static String getLocalCoreDbPath(String dbName,String fileName) {
+        String realPath = ToolUtil.class.getClassLoader().getResource("")
+                .getFile();
+        java.io.File file = new java.io.File(realPath);
+        realPath = file.getAbsolutePath();
+        try {
+            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        realPath = realPath.substring(0,realPath.indexOf("fast-admin")) + "db"+File.separator+dbName+File.separator+fileName+".sql";
+        realPath = FileUtil.normalize(realPath);
+        return realPath;
+    }
+
+//    public static void main(String[] args) {
+//        Ftp ftp = new Ftp("192.168.20.110",21,"ftp","zhouhuan");
+//        ftp.download("attach/file/2021/02/09/","ca296385a464b91bdbff567015519efa.jpg",FileUtil.touch(""));
+//    }
 }

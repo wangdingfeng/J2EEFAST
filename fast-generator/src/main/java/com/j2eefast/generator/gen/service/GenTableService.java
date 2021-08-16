@@ -111,7 +111,7 @@ public class GenTableService extends ServiceImpl<GenTableMapper,GenTableEntity> 
             List<Ztree> list = new ArrayList<>();
             for(GenTableEntity tableEntity: page.getRecords()){
                 Ztree ztree = new Ztree();
-                ztree.setId(tableEntity.getId());
+                ztree.setId(String.valueOf(tableEntity.getId()));
                 ztree.setName(tableEntity.getTableName() + "("+tableEntity.getTableComment()+")");
                 list.add(ztree);
             }

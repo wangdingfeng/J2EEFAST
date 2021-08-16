@@ -1,0 +1,106 @@
+<#--
+ //导向组件
+-->
+<#macro wizard
+                id
+                selected = 0 <#--初始导向 -->
+                theme = "arrows" <#--导向样式 default, arrows, dots, progress -->
+                animation = "slide-horizontal" <#--导向切换样式 , none,fade,slide-vertical,slide-swing,slide-horizontal -->
+                toolbarButtonPosition = "center" <#-- 导向工具按钮显示位置 left, right, center-->
+                refresh = "" <#--重置名称默认空 没有, 例如转账 完成之后可以再转一笔 -->
+                complete = "完成" <#--完成按钮字 -->
+                isPrev = true <#--是否需要上一步 -->
+                >
+    <div id="${id}">
+        <#nested>
+    </div>
+    <@compress single_line=true>
+        <script type="text/javascript">
+            $(function() {
+                if ($.fn.smartWizard === undefined) {
+                    opt.error("wizard 插件未引入,请模板引擎header Lis中引入!!");
+                    return;
+                }
+                var refresh = $('<button type="button" class="btn btn-sm btn-primary hide"' +
+                    ' id="${id}_refresh"><i class="fa fa-refresh"></i> <@ctx.i18n text = "${refresh}"/></button>')
+                    .on('click', function(){
+                        $('#${id}').smartWizard("reset");
+                        return true;
+                    });
+                var prev = $('<button type="button" class="btn btn-sm btn-danger hide"' +
+                    ' id="${id}_prev"><i class="fa fa-mail-reply"></i> <@ctx.i18n text = "上一步"/></button>')
+                    .on('click',function(){
+                        $('#${id}').smartWizard("prev");
+                        return true;
+                    });
+                var next = $('<button type="button" class="btn btn-sm btn-warning"' +
+                    ' id="${id}_next"><i class="fa fa-share"></i> <@ctx.i18n text = "下一步"/></button>')
+                    .on('click',function(){
+                        $('#${id}').smartWizard("next");
+                        return true;
+                    });
+
+                var complete = $('<button type="button" class="btn btn-sm btn-success hide" ' +
+                    'id="${id}_complete"><i class="fa fa-check"></i> <@ctx.i18n text = "${complete}"/></button>').on('click',function(){
+                    if(typeof wizardCallback == 'function' ){
+                        wizardCallback('${id}', 'ok');
+                    }
+                });
+                /* 初始化*/
+                $('#${id}').smartWizard({
+                    selected: ${selected},
+                    theme: '${theme}',
+                    /* darkMode: true, */
+                    transition: {
+                        animation: '${animation}'
+                    },
+                    toolbarSettings: {
+                        toolbarButtonPosition: '${toolbarButtonPosition}',
+                        showNextButton: false,
+                        showPreviousButton: false,
+                        toolbarExtraButtons: [refresh, prev,next,complete]
+                    }
+                });
+
+                /* 显示步骤时将触发事件 */
+                $('#${id}').on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+                    if(typeof wizardCallback == 'function' ){
+                        wizardCallback('${id}', 'showStep',e, anchorObject, stepNumber, stepDirection, stepPosition);
+                    }
+                    if(stepPosition === 'first') {
+                        $("#${id}_next").removeClass('hide');
+                    }
+                    <#if isPrev>
+                    if(stepPosition === 'first') {
+                        $("#${id}_prev").addClass('hide');
+                    }else{
+                        $("#${id}_prev").removeClass('hide');
+                    }
+                    </#if>
+                    if(stepPosition === 'last'){
+                        $("#${id}_prev").addClass('hide');
+                        $("#${id}_next").addClass('hide');
+                        $("#${id}_complete").removeClass('hide');
+                        <#if refresh != "">
+                        $("#${id}_refresh").removeClass('hide');
+                        </#if>
+                    }else{
+                        $("#${id}_refresh").addClass('hide');
+                        $("#${id}_complete").addClass('hide');
+                    }
+                });
+
+                /* 该事件在离开某个步骤之前触发 */
+                $('#${id}').on("leaveStep", function(e, anchorObject, currentStepNumber, nextStepNumber, stepDirection) {
+                    if(stepDirection == 'forward'){
+                        if(typeof wizardCallback == 'function' ){
+                            return wizardCallback('${id}', 'leaveStep',e, anchorObject, currentStepNumber, nextStepNumber, stepDirection);
+                        }
+                        return true;
+                    }
+                    return true;
+                });
+            })
+        </script>
+    </@compress>
+</#macro>

@@ -7,6 +7,8 @@ package com.j2eefast.common.core.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -32,7 +34,7 @@ public class AddressUtil {
      public static String getRealAddressByIP(String ip) {
         String address = "XX XX";
         // 内网不查询
-        if (NetUtil.isInnerIP(ip)){
+        if (!Validator.isIpv4(ip) || NetUtil.isInnerIP(ip)){
             return "内网IP";
         }
         JSONObject obj;

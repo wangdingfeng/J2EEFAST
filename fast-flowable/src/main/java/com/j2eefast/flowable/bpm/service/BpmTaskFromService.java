@@ -14,6 +14,8 @@ import com.j2eefast.common.core.utils.PageUtil;
 import com.j2eefast.flowable.bpm.entity.BpmTaskFromEntity;
 import com.j2eefast.flowable.bpm.mapper.BpmTaskFromMapper;
 import com.j2eefast.framework.utils.Constant;
+import org.flowable.ui.common.tenant.TenantProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,7 +34,8 @@ public class BpmTaskFromService extends ServiceImpl<BpmTaskFromMapper, BpmTaskFr
 
 	@Resource
 	private BpmTaskFromMapper bpmTaskFromMapper;
-
+	@Autowired
+	protected TenantProvider tenantProvider;
 	/**
 	 * 页面翻页
 	 * @param params
@@ -46,6 +49,7 @@ public class BpmTaskFromService extends ServiceImpl<BpmTaskFromMapper, BpmTaskFr
 				StrUtil.nullToDefault(fromName,""),
 				StrUtil.nullToDefault(version,""),
 				StrUtil.nullToDefault(modelKey,""),
+				StrUtil.nullToDefault(tenantProvider.getTenantId(),""),
 				(String) params.get(Constant.SQL_FILTER));
 		return new PageUtil(page);
 	}

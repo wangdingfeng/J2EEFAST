@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.crypto.SM4;
@@ -99,6 +100,42 @@ public class PropertiesUtils {
 			}
 			configFiles = configSet.toArray(new String[configSet.size()]);
 			INSTANCE = new PropertiesUtils(configFiles);
+
+
+			// J2eeFAST 赋值系统加密数据
+			if(ToolUtil.isEmpty(INSTANCE.get("machineCode"))){
+				INSTANCE.put("machineCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
+						(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
+				INSTANCE.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
+						(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_VERIFY_KEY)).substring(0,6));
+				INSTANCE.put("pCIp",StrUtil.cleanBlank(StrUtil.join(StrUtil.COMMA,ConfigConstant.FAST_IPS)));
+			}
+
+			try{
+				// J2eeFAST 2020-12-18 23:05:53 动态设置系统环境
+				if(ToolUtil.isEmpty(INSTANCE.get("management.health.rabbit.enabled"))){
+					INSTANCE.put("management.health.rabbit.enabled",INSTANCE.get(ConfigConstant.FLOWABLE_ENABLED_YML));
+				}
+
+				if(ToolUtil.isEmpty(INSTANCE.get("spring.jta.enabled")) && !(Boolean) INSTANCE.get(ConfigConstant.JTA_ENABLED_YML)){
+					INSTANCE.put("spring.jta.enabled",false);
+				}
+
+				if(ToolUtil.isNotEmpty(INSTANCE.get(ConfigConstant.FLOWABLE_ENABLED_YML))
+						&& (Boolean)INSTANCE.get(ConfigConstant.FLOWABLE_ENABLED_YML)
+						&& ToolUtil.isEmpty(INSTANCE.get("flowable.common.app.idm-url"))){
+					String path = (String) INSTANCE.get(ConfigConstant.SERVER_SERVLET_CONTEXTPATH);
+					if(path.equals(StrUtil.SLASH)){
+						path = path + "bpm";
+					}else if(StrUtil.endWith(path,StrUtil.SLASH)){
+						path = path + "bpm";
+					}else{
+						path = path + "/bpm";
+					}
+					INSTANCE.put("flowable.common.app.idm-url",path);
+				}
+			}catch (Exception e){}
+
 		}
 	}
 
@@ -124,7 +161,7 @@ public class PropertiesUtils {
         				bean.setResources(resource);
         				for (Map.Entry<Object,Object> entry : bean.getObject().entrySet()){
         					properties.put(StringUtils.defaultString(String.valueOf(entry.getKey())),
-									StringUtils.defaultString(String.valueOf(entry.getValue())));
+									entry.getValue());
         				}
     					configSet.add(location);
         			}
@@ -133,22 +170,6 @@ public class PropertiesUtils {
     			log.error("Load " + location + " failure. ", e);
 			}
 		}
-		// J2eeFAST 赋值系统加密数据
-		properties.put("machineCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
-				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_KEY)));
-		properties.put("checkCode",HexUtil.encodeHexStr(SM4.encryptData_ECB(HexUtil.decodeHex
-				(ConfigConstant.FAST_OS_SN),ConfigConstant.FAST_VERIFY_KEY)).substring(0,6));
-		properties.put("pCIp",StrUtil.cleanBlank(StrUtil.join(StrUtil.COMMA,ConfigConstant.FAST_IPS)));
-
-		try{
-			// J2eeFAST 2020-12-18 23:05:53 动态设置系统环境
-			if(properties.getProperty(ConfigConstant.FLOWABLE_ENABLED_YML).equals("false")){
-				properties.put("management.health.rabbit.enabled",false);
-			}
-			if(!properties.getProperty(ConfigConstant.JTA_ENABLED_YML).equals("true")){
-				properties.put("spring.jta.enabled",false);
-			}
-		}catch (Exception e){}
 	}
 	
 	/**
@@ -163,6 +184,10 @@ public class PropertiesUtils {
 	 */
 	public Properties getProperties() {
 		return properties;
+	}
+
+	public void put(Object key, Object value){
+		properties.put(key,value);
 	}
 	
 	/**
@@ -181,6 +206,11 @@ public class PropertiesUtils {
 	
 	// 正则表达式预编译
 	private static Pattern p1 = Pattern.compile("\\$\\{.*?\\}");
+
+
+	public  Object get(String key){
+      return properties.get(key);
+	}
 
 	/**
 	 * 获取属性值，取不到从System.getProperty()获取，都取不到返回null

@@ -5,6 +5,7 @@
  */
 package com.j2eefast.framework.config;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import com.j2eefast.common.core.adapter.SecurityKeyInterceptorAdapter;
 import com.j2eefast.common.core.constants.ConfigConstant;
 import com.j2eefast.common.core.license.interceptor.LicenseCheckInterceptor;
 import com.j2eefast.common.core.utils.CookieUtil;
+import com.j2eefast.common.core.utils.SpringUtil;
 import com.j2eefast.framework.interceptor.RepeatSubmitInterceptor;
 import com.j2eefast.framework.utils.Constant;
 import com.j2eefast.framework.utils.Global;
@@ -41,8 +43,11 @@ public class WebConfig implements WebMvcConfigurer {
 
 
 
-	@Value("${spring.messages.defaultLocale: zh_CN}")
+	@Value("#{ @environment['spring.messages.defaultLocale'] ?: 'zh_CN' }")
 	private String defaultLocale;
+	@Value("#{${web.adapter.registry} ?: null}")
+	private LinkedHashMap<String, String> adapterRegistry ;
+
 	@Autowired
 	private SecurityKeyInterceptorAdapter securityKeyInterceptorAdapter;
 
@@ -64,7 +69,11 @@ public class WebConfig implements WebMvcConfigurer {
         /**工作流资源拦截 若不用可以屏蔽*/
 		registry.addResourceHandler("/flowable/**").addResourceLocations("classpath:/flowable/");
         /** 本地文件上传路径 */
-        registry.addResourceHandler(Constant.RESOURCE_URLPREFIX + "/**").addResourceLocations("file:" + Global.getRootPath());
+        registry.addResourceHandler("/**").addResourceLocations("file:" + Global.getAvatarPath(),"file:" + Global.getEditorPath());
+		/** swagger配置 */
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
 //    /**
@@ -93,6 +102,11 @@ public class WebConfig implements WebMvcConfigurer {
     	registry.addInterceptor(securityKeyInterceptorAdapter).addPathPatterns("/**");
         registry.addInterceptor(lockHandlerInterceptorAdapter).addPathPatterns("/**");
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
+		if(ToolUtil.isNotEmpty(adapterRegistry)){
+			for(String key: adapterRegistry.keySet()){
+				registry.addInterceptor(SpringUtil.getBean(key)).addPathPatterns(adapterRegistry.get(key));
+			}
+		}
     }
     
 	@Override
