@@ -140,6 +140,7 @@ public class ExampleAsyncTreeController extends BaseController{
 		ValidatorUtil.validateEntity(exampleAsyncTree);
         return exampleAsyncTreeService.updateExampleAsyncTreeById(exampleAsyncTree)? success(): error("修改失败!");
     }
+    
     /**
      * 删除
      */

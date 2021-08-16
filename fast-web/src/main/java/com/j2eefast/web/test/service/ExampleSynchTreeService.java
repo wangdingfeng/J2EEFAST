@@ -109,8 +109,8 @@ public class ExampleSynchTreeService extends ServiceImpl<ExampleSynchTreeMapper,
 		List<Ztree> ztrees = new ArrayList<Ztree>();
 		for (ExampleSynchTreeEntity exampleSynchTree : exampleSynchTreeList){
 			Ztree ztree = new Ztree();
-			ztree.setId(exampleSynchTree.getId());
-			ztree.setpId(exampleSynchTree.getParentId());
+			ztree.setId(String.valueOf(exampleSynchTree.getId()));
+			ztree.setpId(String.valueOf(exampleSynchTree.getParentId()));
 			ztree.setName(exampleSynchTree.getName());
 			ztree.setTitle(exampleSynchTree.getName());
 			ztrees.add(ztree);

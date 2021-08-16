@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.j2eefast.common.core.utils.ToolUtil;
 import com.j2eefast.framework.utils.Constant;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import javax.annotation.Resource;
@@ -121,8 +123,8 @@ public class ExampleAsyncTreeService extends ServiceImpl<ExampleAsyncTreeMapper,
 		List<Ztree> ztrees = new ArrayList<Ztree>();
 		for (ExampleAsyncTreeEntity exampleAsyncTree : exampleAsyncTreeList){
 			Ztree ztree = new Ztree();
-			ztree.setId(exampleAsyncTree.getId());
-			ztree.setpId(exampleAsyncTree.getParentId());
+			ztree.setId(String.valueOf(exampleAsyncTree.getId()));
+			ztree.setpId(String.valueOf(exampleAsyncTree.getParentId()));
 			ztree.setName(exampleAsyncTree.getName());
 			ztree.setTitle(exampleAsyncTree.getName());
 			ztrees.add(ztree);

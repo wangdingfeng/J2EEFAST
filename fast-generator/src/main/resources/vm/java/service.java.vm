@@ -456,8 +456,8 @@ public class ${ClassName}Service extends ServiceImpl<${ClassName}Mapper,${ClassN
 #set($TreeCode=$treeCode.substring(0,1).toUpperCase() + ${treeCode.substring(1)})
 #set($TreeParentCode=$treeParentCode.substring(0,1).toUpperCase() + ${treeParentCode.substring(1)})
 #set($TreeName=$treeName.substring(0,1).toUpperCase() + ${treeName.substring(1)})
-			ztree.setId(${className}.get${TreeCode}());
-			ztree.setpId(${className}.get${TreeParentCode}());
+			ztree.setId(String.valueOf(${className}.get${TreeCode}()));
+			ztree.setpId(String.valueOf(${className}.get${TreeParentCode}()));
 			ztree.setName(${className}.get${TreeName}());
 			ztree.setTitle(${className}.get${TreeName}());
 			ztrees.add(ztree);

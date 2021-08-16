@@ -58,7 +58,7 @@ public class RequiresPermissionsAspect {
                         tempExcludes.add(url[i]);
                     }
                 }
-                String path = ServletUtil.getRequest().getRequestURI();
+                String path = ServletUtil.getRequest().getServletPath();
                 //排除特例
                 if(ToolUtil.isNotEmpty(tempExcludes)){
                     boolean flag = false;

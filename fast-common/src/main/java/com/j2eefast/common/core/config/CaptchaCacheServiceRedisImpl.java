@@ -25,7 +25,7 @@ public class CaptchaCacheServiceRedisImpl implements CaptchaCacheService {
     /**
      * 缓存过期时间(秒)
      */
-    @Value("${aj.captcha.cache-number: 1800}")
+    @Value("#{ @environment['aj.captcha.cache-number'] ?: 1800 }")
     private long timingClear;
 
     @Override
