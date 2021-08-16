@@ -28,7 +28,7 @@ import com.j2eefast.framework.utils.FileUploadUtils;
 /**
  * 单范例Service接口
  * @author: ZhouZhou
- * @date 2021-08-15 21:35:17
+ * @date 2021-08-16 20:41:56
  */
 @Service
 public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTestEntity> {

@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 /**
  * example_test Mapper接口
  * @author: ZhouZhou
- * @date 2021-08-15 21:35:17
+ * @date 2021-08-16 20:41:56
  */
 public interface ExampleTestMapper extends BaseMapper<ExampleTestEntity> {
 
