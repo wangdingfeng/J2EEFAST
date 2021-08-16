@@ -4,29 +4,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.j2eefast.web.test.mapper.ExampleTestMapper">
 
-    <resultMap type="ExampleTestEntity" id="ExampleTestResult">
-        <result property="id" column="id"/>
-        <result property="code" column="code"/>
-        <result property="name" column="name"/>
-        <result property="email" column="email"/>
-        <result property="avatar" column="avatar"/>
-        <result property="phone" column="phone"/>
-        <result property="sex" column="sex"/>
-        <result property="age" column="age"/>
-        <result property="joinDate" column="join_date"/>
-        <result property="leaveDate" column="leave_date"/>
-        <result property="compId" column="comp_id"/>
-        <result property="deptId" column="dept_id"/>
-        <result property="addr" column="addr"/>
-        <result property="addrinfo" column="addrinfo"/>
-        <result property="delFlag" column="del_flag"/>
-        <result property="createBy" column="create_by"/>
-        <result property="remark" column="remark"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="createTime" column="create_time"/>
-    </resultMap>
-    
     <!--  实体栏位  --> 
     <sql id="exampleTestColumns">
          a.id AS "id" ,
@@ -82,6 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 CONCAT('%',#{name},'%')
             </if>
             <if test="email != null  and email != ''"> AND a.email = #{email} </if>
+            <if test="phone != null  and phone != ''"> AND a.phone = #{phone} </if>
+            <if test="sex != null  and sex != ''"> AND a.sex = #{sex} </if>
+            <if test="age != null "> AND a.age = #{age} </if>
+            <if test="compId != null "> AND a.comp_id = #{compId} </if>
         </where>
     </select>
 
@@ -99,6 +80,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 CONCAT('%',#{exampleTest.name},'%')
             </if>
             <if test="exampleTest.email != null  and exampleTest.email != ''"> AND a.email = #{exampleTest.email} </if>
+            <if test="exampleTest.phone != null  and exampleTest.phone != ''"> AND a.phone = #{exampleTest.phone} </if>
+            <if test="exampleTest.sex != null  and exampleTest.sex != ''"> AND a.sex = #{exampleTest.sex} </if>
+            <if test="exampleTest.age != null "> AND a.age = #{exampleTest.age} </if>
+            <if test="exampleTest.compId != null "> AND a.comp_id = #{exampleTest.compId} </if>
             <if test = "sql_filter !=null and sql_filter!=''">
                 AND ${sql_filter}
             </if>

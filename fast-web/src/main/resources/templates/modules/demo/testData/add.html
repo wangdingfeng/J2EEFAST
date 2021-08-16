@@ -1,4 +1,4 @@
-<!-- 系统自动生成 Date:2020-12-21 10:42 -->
+<!-- 系统自动生成 Date:2021-08-15 21:35 -->
 <#include "/common/defaultEngine.html"/>
 <@pageTheme mark="${config.optimize()?string('true', 'false')}">
 <@header title="新增单范例" bodyClass="white-bg" libs=["bootstrapSelect","fileupload","selectPage","table"]/>
@@ -268,8 +268,8 @@
                     return columnIndex + $.table.serialNumber(index);
                 }}
                 ,{field: 'workCompany',align: 'center',title: '工作公司',formatter: function(value, row, index) {
-                    var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].workCompany' value='%s'>", index, value);
-                    return html;
+                    var data = {"index":index,"field":"workCompany","value":value};
+                    return opt.template('input',data);
                 }}
                 ,{field: 'startTime',align: 'center',title: '起始时间',formatter: function(value, row, index) {
                     var data = {"index":index,"field":"startTime","value":value};
@@ -280,8 +280,8 @@
                     return opt.template('datetime',data);
                 }}
                 ,{field: 'jobs',align: 'center',title: '在职岗位',formatter: function(value, row, index) {
-                    var html = opt.common.sprintf("<input class='form-control' type='text' name='exampleTestChild[%s].jobs' value='%s'>", index, value);
-                    return html;
+                    var data = {"index":index,"field":"jobs","value":value};
+                    return opt.template('input',data);
                 }}
             ]
         };
@@ -297,7 +297,9 @@
             ,endTime:""
             ,jobs:""
         };
-        $.table.addColumn(row);
+        $.table.addColumn(row,function childValidate(data){
+            /*子表单校验*/
+        });
     }
 
     function submitHandler() {
@@ -307,10 +309,13 @@
     }
 </script>
 </@footer>
+<script id="input" type="text/template">//<!--
+    <@f.input id="{{d.field}}_{{d.index}}" name="exampleTestChild[{{d.index}}].{{d.field}}"  />
+//-->
+</script>
 <script id="datetime" type="text/template">//<!--
-    <div>
-        <input class="form-control time-input" name="exampleTestChild[{{d.index}}].{{d.field}}"  data-type="date"   value="{{d.value}}" data-format="yyyy-MM-dd" type="text"/>
-    </div>
+        <@f.input id="{{d.field}}_{{d.index}}" name="exampleTestChild[{{d.index}}].{{d.field}}" type="date" dataType="datetime" value="{{d.value}}" dataFormat="yyyy-MM-dd"
+                            placeholder="请选择日期"  butClass="fa fa-calendar-plus-o"/>
 //-->
 </script>
 </@pageTheme>

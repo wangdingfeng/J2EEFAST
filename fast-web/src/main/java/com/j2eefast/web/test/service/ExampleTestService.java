@@ -22,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
-import com.baomidou.mybatisplus.core.toolkit.Sequence;
+import com.j2eefast.common.db.utils.DbUtil;
 import com.j2eefast.framework.utils.FileUploadUtils;
 
 /**
  * 单范例Service接口
  * @author: ZhouZhou
- * @date 2020-12-21 10:42:57
+ * @date 2021-08-15 21:35:17
  */
 @Service
 public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTestEntity> {
@@ -50,6 +50,14 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
         queryWrapper.like(ToolUtil.isNotEmpty(name), "name", name);
 		String email = (String) params.get("email");
         queryWrapper.eq(ToolUtil.isNotEmpty(email), "email", email);
+		String phone = (String) params.get("phone");
+        queryWrapper.eq(ToolUtil.isNotEmpty(phone), "phone", phone);
+		String sex = (String) params.get("sex");
+        queryWrapper.eq(ToolUtil.isNotEmpty(sex), "sex", sex);
+		String age = (String) params.get("age");
+        queryWrapper.eq(ToolUtil.isNotEmpty(age), "age", age);
+		String compId = (String) params.get("compId");
+        queryWrapper.eq(ToolUtil.isNotEmpty(compId), "comp_id", compId);
 		Page<ExampleTestEntity> page = exampleTestMapper.selectPage(new Query<ExampleTestEntity>(params).getPage(), queryWrapper);
 		return new PageUtil(page);
     }
@@ -101,10 +109,9 @@ public class ExampleTestService extends ServiceImpl<ExampleTestMapper,ExampleTes
 	@Transactional(rollbackFor = Exception.class)
 	public boolean addExampleTest(ExampleTestEntity exampleTest){
 		//事先生成id
-		exampleTest.setId((new Sequence().nextId()));
+		exampleTest.setId(DbUtil.getDbId());
 		//图片剪切数据转换
 		exampleTest.setAvatar(FileUploadUtils.saveImgBase64(exampleTest.getAvatar(),"example_test_avatar",exampleTest.getId()));
-
 		if(this.save(exampleTest)){
 			//更新关联附件信息
 			Long pkId =  exampleTest.getId();
