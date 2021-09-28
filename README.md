@@ -2,7 +2,7 @@
  **1. 更新登录加密改为非对称加密使用SM2 SM3 SM4 穿插加密登录。通过JS端国密加密函数** 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0928/140529_98e591ed_1816537.png "屏幕截图.png")
 
- **2.更新Ureport2 支持权限设置、数据权限过滤** 
+ **2.更新Ureport2 支持权限设置、数据权限过滤、支持多租户模式、支持多源数据后台动态添加实时生效** 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0928/212255_c5ea0dcd_1816537.png "屏幕截图.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0928/212228_ab6bb8d1_1816537.png "屏幕截图.png")
  **3.新增短信验证码登录、优化免密登录 通过配置即可实现** 
