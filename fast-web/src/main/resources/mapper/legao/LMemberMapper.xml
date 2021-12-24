@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.web.legao.mapper.LMemberMapper">
+
+    <!--  实体栏位  --> 
+    <sql id="lMemberColumns">
+         a.id AS "id" ,
+         a.name AS "name" ,
+         a.phone AS "phone" ,
+         a.gender AS "gender" ,
+         a.email AS "email" ,
+         a.amount AS "amount" ,
+         a.duration AS "duration" ,
+         a.del_flag AS "delFlag" ,
+         a.status AS "status" ,
+         a.create_by AS "createBy" ,
+         a.update_by AS "updateBy" ,
+         a.update_time AS "updateTime" ,
+         a.remark AS "remark" ,
+         a.tenant_id AS "tenantId" 
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findLMemberById"  resultType="com.j2eefast.web.legao.entity.LMemberEntity" >
+        SELECT
+        <include refid="lMemberColumns"/>
+		FROM  l_member a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.web.legao.entity.LMemberEntity">
+        SELECT
+        <include refid="lMemberColumns"/>
+        FROM l_member a
+		<where>
+            a.del_flag = '0'
+            <if test="name != null  and name != ''">
+                AND a.name LIKE
+                CONCAT('%',#{name},'%')
+            </if>
+            <if test="phone != null  and phone != ''"> AND a.phone = #{phone} </if>
+            <if test="gender != null  and gender != ''"> AND a.gender = #{gender} </if>
+            <if test="email != null  and email != ''"> AND a.email = #{email} </if>
+            <if test="amount != null "> AND a.amount = #{amount} </if>
+            <if test="duration != null "> AND a.duration = #{duration} </if>
+            <if test="status != null  and status != ''"> AND a.status = #{status} </if>
+            <if test="tenantId != null  and tenantId != ''"> AND a.tenant_id = #{tenantId} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.web.legao.entity.LMemberEntity">
+        SELECT
+        <include refid="lMemberColumns"/>
+        FROM l_member a
+        <where>
+            a.del_flag = '0'
+            <if test="lMember.name != null  and lMember.name != ''">
+                AND a.name LIKE
+                CONCAT('%',#{lMember.name},'%')
+            </if>
+            <if test="lMember.phone != null  and lMember.phone != ''"> AND a.phone = #{lMember.phone} </if>
+            <if test="lMember.gender != null  and lMember.gender != ''"> AND a.gender = #{lMember.gender} </if>
+            <if test="lMember.email != null  and lMember.email != ''"> AND a.email = #{lMember.email} </if>
+            <if test="lMember.amount != null "> AND a.amount = #{lMember.amount} </if>
+            <if test="lMember.duration != null "> AND a.duration = #{lMember.duration} </if>
+            <if test="lMember.status != null  and lMember.status != ''"> AND a.status = #{lMember.status} </if>
+            <if test="lMember.tenantId != null  and lMember.tenantId != ''"> AND a.tenant_id = #{lMember.tenantId} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+</mapper>

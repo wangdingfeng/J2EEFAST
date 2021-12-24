@@ -24,7 +24,7 @@ if (typeof jQuery === "undefined") {
             // 默认加载提示名人名言 如果不用 false
             loadTip:true,
             // 是否开启水印
-            isWatermark:true,
+            isWatermark:false,
             // 表格类型
             table_type : {
                 bootstrapTable: 0,

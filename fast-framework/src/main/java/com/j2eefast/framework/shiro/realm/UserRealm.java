@@ -96,6 +96,8 @@ public class UserRealm extends AuthorizingRealm {
 				throw new IncorrectCredentialsException(e.getMessage(), e);
 			}else if(e.getCode().equals("50004")) {
 				throw new UnknownAccountException(e.getMessage(), e);
+			}else if(e.getCode().equals("50010")){
+				throw new AuthenticationException(e.getMessage(), e);
 			}
 		}catch (Exception e){
 			log.error("对用户[" + username + "]进行登录验证..验证未通过:{}", e.getMessage());

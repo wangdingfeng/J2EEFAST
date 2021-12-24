@@ -21,6 +21,7 @@ import com.j2eefast.framework.sys.mapper.SysModuleMapper;
 import com.j2eefast.framework.sys.mapper.SysTenantMapper;
 import com.j2eefast.framework.sys.mapper.SysUserMapper;
 import com.j2eefast.framework.utils.UserUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import cn.hutool.core.util.ReUtil;
@@ -251,7 +252,9 @@ public class SysLoginService implements AuthService {
 			List<Long> roleList = ConstantFactory.me().getRoleIds(userId);
 			List<String> roleNameList = new ArrayList<>();
 			List<String> roleKeyList = new ArrayList<>();
-
+			if(CollectionUtils.isEmpty(roleList)){
+				throw new RxcException("对不起，当前用户暂无角色。请联系管理员配置角色信息！","50010");
+			}
 			//根居角色ID获取模块列表
 			List<SysModuleEntity> modules = this.sysModuleMapper.findModuleByRoleIds(roleList);
 			List<Map<String, Object>>  results = new ArrayList<>(modules.size());

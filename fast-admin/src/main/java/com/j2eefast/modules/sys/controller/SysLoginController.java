@@ -31,6 +31,7 @@ import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.HexUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ import com.j2eefast.framework.utils.UserUtils;
  * @date 2018-11-14 23:28
  */
 @Controller
+@Slf4j
 public class SysLoginController extends BaseController {
 
 	@Autowired
@@ -219,16 +221,26 @@ public class SysLoginController extends BaseController {
 		}catch (ServiceException e){
 			return error("50006",ToolUtil.message("sys.login.sm4"));
 		}
-		catch (AuthenticationException e) {
-			RxcException ex = (RxcException) e.getCause();
-			String msg = ToolUtil.message("sys.login.failure");
-			if(!ToolUtil.isEmpty(e.getMessage())){
-				msg = e.getMessage();
+		catch (Exception e) {
+			if(e instanceof RxcException){
+				RxcException ex = (RxcException) e.getCause();
+				String msg = ToolUtil.message("sys.login.failure");
+				if(!ToolUtil.isEmpty(e.getMessage())){
+					msg = e.getMessage();
+				}
+				if("50004".equals(ex.getCode())) {
+					return error(ex.getCode(),ex.getMessage());
+				}
+				return error(msg);
+			}else if(e instanceof AuthenticationException){
+				log.error("系统异常!",e);
+				return error(e.getMessage());
 			}
-			if("50004".equals(ex.getCode())) {
-				return error(ex.getCode(),ex.getMessage());
+			else{
+				log.error("系统异常!",e);
+				return error("登陆失败");
 			}
-			return error(msg);
+
 		}
 		return success("登录成功!");
 	}

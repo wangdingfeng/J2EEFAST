@@ -57,8 +57,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
 
-    @Autowired
-    private LicenseCheckInterceptor LicenseCheckInterceptor;
+//    @Autowired
+//    private LicenseCheckInterceptor LicenseCheckInterceptor;
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -98,7 +98,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(LicenseCheckInterceptor).addPathPatterns("/**");
+//        registry.addInterceptor(LicenseCheckInterceptor).addPathPatterns("/**");
     	registry.addInterceptor(securityKeyInterceptorAdapter).addPathPatterns("/**");
         registry.addInterceptor(lockHandlerInterceptorAdapter).addPathPatterns("/**");
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");

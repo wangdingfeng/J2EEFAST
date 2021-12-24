@@ -1,0 +1,38 @@
+<!-- 系统自动生成 Date:2021-12-21 15:12 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="分配用户" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+  <@f.form id="form-table-add"  class="form-horizontal">
+  <@f.hidden name="tableId" value="${id?default('')}"/>
+  <div class="form-group">
+    <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+      <@ctx.i18n text = "会员"/>：
+    </label>
+    <div class="col-sm-8">
+      <@f.select name="memberId" items=memberSelect itemLabel="phone" itemValue="id" blankValue="true"/>
+    </div>
+  </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+  var prefix = baseURL + "legao/table"
+  $("#memberId").change(function(){
+    var drugData = $(this).val();
+    if(drugData != 'true'){
+      opt.operate.get(baseURL+"/legao/member/"+drugData,function (res){
+        var data = res.data;
+        var memberHtml = '<div class="form-group"><label class="col-sm-3 control-label">会员名：</label><div class="col-sm-8">'+data.name+'</div></div>';
+        memberHtml += '<div class="form-group"><label class="col-sm-3 control-label">所剩时长：</label><div class="col-sm-8">'+data.duration+'</div></div>';
+        $(".form-horizontal").append(memberHtml);
+      })
+    }
+  })
+
+  function submitHandler() {
+    opt.operate.save(prefix + "/dist", $('#form-table-add').serialize());
+  }
+</script>
+</@footer>
+</@pageTheme>

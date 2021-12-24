@@ -5,7 +5,6 @@
  */
 package com.j2eefast;
 
-import com.bstek.ureport.console.UReportServlet;
 import com.j2eefast.common.core.io.PropertiesUtils;
 import com.j2eefast.framework.utils.Constant;
 import org.slf4j.Logger;
@@ -14,12 +13,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
-import javax.servlet.Servlet;
 
 /**
  * @Description:项目启动入口
@@ -44,20 +39,7 @@ public class FastApplication extends SpringBootServletInitializer {
 			//启动成功打印
 			if(!PropertiesUtils.getInstance().
 					getProperty(Constant.BANNER).equals(Constant.FALSE)){
-				System.out.println("-------------------------------------------------------------------\n"
-						+ "//             ┏┓   ┏┓					//\n"
-						+ "//            ┏┛┻━━━┛┻┓                  //\n"
-						+ "//            ┃   ☃   ┃				//\n"
-						+ "//            ┃ ┳┛ ┗┳ ┃                  //\n"
-						+ "//            ┃   ┻   ┃                  //\n"
-						+ "//            ┗━┓   ┏━┛                  //\n"
-						+ "//              ┃   ┗━━━┓				//\n"
-						+ "//              ┃神兽保佑┣┓            //\n"
-						+ "//              ┃启动成功!┏┛				//\n"
-						+ "//              ┗┓┓┏━┳┓┏┛				//\n"
-						+ "//               ┃┫┫  ┃┫┫				//\n"
-						+ "//               ┗┻┛  ┗┻┛				//\n"
-						+ "-------------------------------------------------------------------");
+				System.out.println("-------------启动成功---------------");
 			}
 		}catch (Exception e) {
 			log.error("项目启动异常:",e);

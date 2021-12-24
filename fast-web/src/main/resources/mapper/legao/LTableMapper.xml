@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.web.legao.mapper.LTableMapper">
+
+    <!--  实体栏位  --> 
+    <sql id="lTableColumns">
+         a.id AS "id" ,
+         a.table_num AS "tableNum" ,
+         a.table_name AS "tableName" ,
+         a.status AS "status" ,
+         a.del_flag AS "delFlag" ,
+         a.create_by AS "createBy" ,
+         a.create_time AS "createTime" ,
+         a.update_by AS "updateBy" ,
+         a.update_time AS "updateTime" ,
+         a.remark AS "remark" 
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findLTableById"  resultType="com.j2eefast.web.legao.entity.LTableEntity" >
+        SELECT
+        <include refid="lTableColumns"/>
+		FROM  l_table a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.web.legao.entity.LTableEntity">
+        SELECT
+        <include refid="lTableColumns"/>
+        FROM l_table a
+		<where>
+            a.del_flag = '0'
+            <if test="tableNum != null "> AND a.table_num = #{tableNum} </if>
+            <if test="tableName != null  and tableName != ''">
+                AND a.table_name LIKE
+                CONCAT('%',#{tableName},'%')
+            </if>
+            <if test="status != null  and status != ''"> AND a.status = #{status} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.web.legao.vo.LTableVo">
+        SELECT
+        <include refid="lTableColumns"/>
+        ,c.phone AS 'member.phone',
+        c.duration AS 'member.duration',
+        c.amount AS 'member.amount',
+        b.create_time AS 'startTime'
+        FROM l_table a LEFT JOIN l_member_table b ON a.id=b.table_id AND b.status=0
+        LEFT JOIN l_member c ON b.member_id=c.id
+        <where>
+            a.del_flag = '0'
+            <if test="lTable.tableNum != null "> AND a.table_num = #{lTable.tableNum} </if>
+            <if test="lTable.tableName != null  and lTable.tableName != ''">
+                AND a.table_name LIKE
+                CONCAT('%',#{lTable.tableName},'%')
+            </if>
+            <if test="lTable.status != null  and lTable.status != ''"> AND a.status = #{lTable.status} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+</mapper>

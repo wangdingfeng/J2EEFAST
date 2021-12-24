@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2eefast.web.legao.mapper.LMemberTableMapper">
+
+    <!--  实体栏位  --> 
+    <sql id="lMemberTableColumns">
+         a.id AS "id" ,
+         a.member_id AS "memberId" ,
+         a.table_id AS "tableId" ,
+         a.start_amount AS "startAmount" ,
+         a.start_duration AS "startDuration" ,
+         a.end_amount AS "endAmount" ,
+         a.end_duration AS "endDuration" ,
+         a.del_flag AS "delFlag" ,
+         a.status AS "status" ,
+         a.create_by AS "createBy" ,
+         a.create_time AS "createTime" ,
+         a.update_by AS "updateBy" ,
+         a.update_time AS "updateTime" ,
+         a.remark AS "remark" 
+    </sql>
+
+    <!--  根据主键获取实体   -->
+    <select id="findLMemberTableById"  resultType="com.j2eefast.web.legao.entity.LMemberTableEntity" >
+        SELECT
+        <include refid="lMemberTableColumns"/>
+		FROM  l_member_table a
+		WHERE a.id = '${id}'
+    </select>
+
+    <!--  根据获取实体List   -->
+    <select id="findList" resultType="com.j2eefast.web.legao.entity.LMemberTableEntity">
+        SELECT
+        <include refid="lMemberTableColumns"/>
+        FROM l_member_table a
+		<where>
+            a.del_flag = '0'
+            <if test="memberId != null "> AND a.member_id = #{memberId} </if>
+            <if test="tableId != null "> AND a.table_id = #{tableId} </if>
+            <if test="startAmount != null "> AND a.start_amount = #{startAmount} </if>
+            <if test="startDuration != null "> AND a.start_duration = #{startDuration} </if>
+            <if test="endAmount != null "> AND a.end_amount = #{endAmount} </if>
+            <if test="endDuration != null "> AND a.end_duration = #{endDuration} </if>
+            <if test="status != null  and status != ''"> AND a.status = #{status} </if>
+        </where>
+    </select>
+
+    <!-- 根据获取实体 page -->
+    <select id="findPage" resultType="com.j2eefast.web.legao.entity.LMemberTableEntity">
+        SELECT
+        <include refid="lMemberTableColumns"/>
+        FROM l_member_table a
+        <where>
+            a.del_flag = '0'
+            <if test="lMemberTable.memberId != null "> AND a.member_id = #{lMemberTable.memberId} </if>
+            <if test="lMemberTable.tableId != null "> AND a.table_id = #{lMemberTable.tableId} </if>
+            <if test="lMemberTable.startAmount != null "> AND a.start_amount = #{lMemberTable.startAmount} </if>
+            <if test="lMemberTable.startDuration != null "> AND a.start_duration = #{lMemberTable.startDuration} </if>
+            <if test="lMemberTable.endAmount != null "> AND a.end_amount = #{lMemberTable.endAmount} </if>
+            <if test="lMemberTable.endDuration != null "> AND a.end_duration = #{lMemberTable.endDuration} </if>
+            <if test="lMemberTable.status != null  and lMemberTable.status != ''"> AND a.status = #{lMemberTable.status} </if>
+            <if test = "sql_filter !=null and sql_filter!=''">
+                AND ${sql_filter}
+            </if>
+        </where>
+    </select>
+
+</mapper>

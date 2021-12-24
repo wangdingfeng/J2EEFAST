@@ -1,0 +1,54 @@
+<!-- 系统自动生成 Date:2021-12-21 15:12 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="修改乐高店桌号" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-table-edit"  class="form-horizontal">
+    <@f.hidden name="id" value="${id?default('')}"/>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+            <@ctx.i18n text = "桌号"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tableNum" value="${lTable.tableNum?default('')}" required=true  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+            <@ctx.i18n text = "桌名"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="tableName" value="${lTable.tableName?default('')}" required=true  />
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="col-sm-3 control-label">
+            <@ctx.i18n text = "备注"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="remark" value="${lTable.remark?default('')}"   />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "legao/table";
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-table-edit").validate({
+        focusCleanup: true
+    });
+    </@compress>
+
+    /**
+     * 点击确定回调事件
+     */
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/edit", $('#form-table-edit').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>

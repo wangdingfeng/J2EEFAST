@@ -1,0 +1,90 @@
+<!-- 系统自动生成 Date:2021-12-21 14:31 -->
+<#include "/common/defaultEngine.html"/>
+<@pageTheme mark="${config.optimize()?string('true', 'false')}">
+<@header title="新增会员" bodyClass="white-bg" libs=["bootstrapSelect"]/>
+<div class="wrapper wrapper-content ibox-content">
+<@f.form id="form-member-add"  class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+        <@ctx.i18n text = "名称"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="name" required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"><span style="color: red; ">*</span>
+        <@ctx.i18n text = "手机号"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="phone" maxlength="11" butClass="fa fa-fw fa-mobile" required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "性别"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.select name="gender" dictType="sys_user_sex" blankValue="" blankLabel="所有"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "邮箱"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="email" class="form-control email" butClass="fa fa-fw fa-envelope" maxlength="50" placeholder="请输入邮箱"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+        <@ctx.i18n text = "金额"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="amount" required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+        <@ctx.i18n text = "时长(分钟)"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="duration" required=true />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"> <span style="color: red; ">*</span>
+            <@ctx.i18n text = "状态状态"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.radio name="status" dictType="sys_normal_disable"/>
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="col-sm-3 control-label">
+        <@ctx.i18n text = "备注"/>：
+        </label>
+        <div class="col-sm-8">
+            <@f.input name="remark"  />
+        </div>
+    </div>
+</@f.form>
+</div>
+<@footer>
+<script type="text/javascript">
+    var prefix = baseURL + "legao/member"
+    /**表单验证*/
+    <@compress single_line=true>
+    $("#form-member-add").validate({
+        focusCleanup: true
+    });
+    </@compress>
+
+    function submitHandler() {
+        if (opt.validate.form()) {
+            opt.operate.save(prefix + "/add", $('#form-member-add').serialize());
+        }
+    }
+</script>
+</@footer>
+</@pageTheme>
